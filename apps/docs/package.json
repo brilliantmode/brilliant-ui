@@ -11,6 +11,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@brilliant-ui/registry": "workspace:*",
     "@brilliant-ui/tokens": "workspace:*",
     "@fontsource-variable/instrument-sans": "catalog:",
     "@fontsource/ibm-plex-mono": "catalog:",

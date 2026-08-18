@@ -59,6 +59,9 @@ importers:
 
   apps/docs:
     dependencies:
+      '@brilliant-ui/registry':
+        specifier: workspace:*
+        version: link:../../packages/registry
       '@brilliant-ui/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
