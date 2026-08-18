@@ -64,8 +64,8 @@ export const spacing = {
 
 export const typography = {
   fontFamily: {
-    sans: "Inter, ui-sans-serif, system-ui, sans-serif",
-    mono: "Geist Mono, ui-monospace, SFMono-Regular, monospace",
+    sans: '"Instrument Sans Variable", "Instrument Sans", ui-sans-serif, system-ui, sans-serif',
+    mono: '"IBM Plex Mono", ui-monospace, SFMono-Regular, monospace',
   },
   fontSize: {
     xs: ["0.75rem", "1rem"],

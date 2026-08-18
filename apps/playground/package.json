@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@brilliant-ui/tokens": "workspace:*",
+    "@fontsource-variable/instrument-sans": "catalog:",
+    "@fontsource/ibm-plex-mono": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

@@ -4,6 +4,8 @@ packages:
 
 catalog:
   "@biomejs/biome": ^2.2.0
+  "@fontsource-variable/instrument-sans": ^5.2.6
+  "@fontsource/ibm-plex-mono": ^5.2.6
   "@types/node": ^22.0.0
   "@types/react": ^19.0.0
   "@types/react-dom": ^19.0.0

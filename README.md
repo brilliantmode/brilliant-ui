@@ -29,6 +29,13 @@ pnpm --filter @brilliant-ui/cli dev -- init
 | `@brilliant-ui/docs` | Documentation application shell |
 | `@brilliant-ui/playground` | Component development application shell |
 
+## Typography
+
+Brilliant UI uses Instrument Sans for interface typography and IBM Plex Mono for code, identifiers,
+and technical data. The token package declares these families but does not bundle font files into
+consumer applications. Self-host them, load them through your application framework, or install
+`@fontsource-variable/instrument-sans` and `@fontsource/ibm-plex-mono`.
+
 Read [ARCHITECTURE.md](./ARCHITECTURE.md) for package boundaries and design decisions.
 
 ## Principles

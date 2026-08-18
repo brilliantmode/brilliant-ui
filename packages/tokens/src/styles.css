@@ -42,14 +42,37 @@
   --brilliant-border: oklch(0.872 0.01 258.338);
   --brilliant-ring: oklch(0.623 0.214 259.815);
   --brilliant-radius: 0.625rem;
-  --brilliant-font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
-  --brilliant-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --brilliant-font-sans:
+    "Instrument Sans Variable", "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --brilliant-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
   --brilliant-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.06);
   --brilliant-shadow-md: 0 4px 12px oklch(0 0 0 / 0.08);
   --brilliant-duration-fast: 120ms;
   --brilliant-duration-normal: 200ms;
   --brilliant-ease-enter: cubic-bezier(0, 0, 0, 1);
   --brilliant-ease-exit: cubic-bezier(0.3, 0, 1, 1);
+}
+
+body {
+  font-family: var(--brilliant-font-sans);
+  font-feature-settings: "kern", "liga", "case";
+  font-stretch: 100%;
+  font-weight: 450;
+  text-rendering: optimizeLegibility;
+}
+
+:where(h1, h2, h3, [data-brilliant-heading]) {
+  font-stretch: 95%;
+  font-weight: 620;
+  letter-spacing: -0.025em;
+}
+
+:where(code, kbd, pre, samp) {
+  font-family: var(--brilliant-font-mono);
+}
+
+:where(table, [data-numeric]) {
+  font-variant-numeric: tabular-nums;
 }
 
 .dark,
