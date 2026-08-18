@@ -19,6 +19,8 @@ pnpm --filter @brilliant-ui/cli dev -- init
 ```
 
 CLI commands accept `--cwd`, `--force`, `--dry-run`, `--yes`, and `--silent` for scripted installs.
+When `components.json` is present, `brilliant-ui init` maps existing shadcn/ui aliases and CSS
+placement into `brilliant-ui.json`.
 
 ## Workspace
 

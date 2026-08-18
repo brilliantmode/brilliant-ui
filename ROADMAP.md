@@ -112,7 +112,7 @@ Goal: make themes, the registry, and shadcn compatibility reliable enough for co
 
 ### shadcn/ui compatibility
 
-- [ ] Read and map existing `components.json` configuration.
+- [x] Read and map existing `components.json` configuration.
 - [ ] Import official shadcn registry items without source modification.
 - [ ] Preserve shadcn aliases, CSS variables, and file placement conventions.
 - [ ] Add a compatibility test fixture for supported Next.js and Vite projects.
@@ -120,7 +120,7 @@ Goal: make themes, the registry, and shadcn compatibility reliable enough for co
 
 ### CLI productionization
 
-- [ ] Detect framework, source directory, TypeScript, Tailwind, and aliases.
+- [x] Detect framework, source directory, TypeScript, Tailwind, and aliases.
 - [ ] Add interactive and non-interactive initialization.
 - [ ] Install required dependencies through npm, pnpm, yarn, or Bun.
 - [ ] Show a dry-run diff before overwriting files.
