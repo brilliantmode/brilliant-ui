@@ -36,7 +36,8 @@ and technical data. The token package declares these families but does not bundl
 consumer applications. Self-host them, load them through your application framework, or install
 `@fontsource-variable/instrument-sans` and `@fontsource/ibm-plex-mono`.
 
-Read [ARCHITECTURE.md](./ARCHITECTURE.md) for package boundaries and design decisions.
+Read [ARCHITECTURE.md](./ARCHITECTURE.md) for package boundaries and design decisions. The
+version-controlled implementation backlog lives in [ROADMAP.md](./ROADMAP.md).
 
 ## Principles
 
