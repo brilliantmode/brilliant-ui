@@ -6,9 +6,9 @@ accessible primitives, application blocks, and tooling for production software.
 
 ## Status
 
-Brilliant UI is in **Phase 1: foundation**. The current workspace establishes the monorepo,
-strict TypeScript policy, design-token pipeline, registry contract, and CLI. APIs may change
-before the first stable release.
+Brilliant UI is moving from **Phase 1: foundation** into **Phase 2: core infrastructure**. The
+current workspace establishes the monorepo, strict TypeScript policy, design-token pipeline,
+theme contracts, registry contract, and CLI. APIs may change before the first stable release.
 
 ## Quick start
 
@@ -23,6 +23,7 @@ pnpm --filter @brilliant-ui/cli dev -- init
 | Package | Purpose |
 | --- | --- |
 | `@brilliant-ui/tokens` | Typed tokens and Tailwind v4-compatible CSS variables |
+| `@brilliant-ui/themes` | Typed theme contracts, brand overrides, and SSR-safe theme helpers |
 | `@brilliant-ui/core` | Shared type-safe utilities and configuration contracts |
 | `@brilliant-ui/registry` | Machine-readable component registry and AI metadata |
 | `@brilliant-ui/cli` | `brilliant-ui init`, `add`, and `update` commands |

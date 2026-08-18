@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { motion, primitiveColors, tokens, typography } from "./index.js";
+import {
+  motion,
+  primitiveColors,
+  semanticColors,
+  semanticColorTokens,
+  tokenArtifacts,
+  tokens,
+  typography,
+} from "./index.js";
 
 describe("design tokens", () => {
   it("uses OKLCH for every primitive brand color", () => {
@@ -16,5 +24,18 @@ describe("design tokens", () => {
   it("uses the Brilliant UI typeface pairing", () => {
     expect(typography.fontFamily.sans).toContain("Instrument Sans");
     expect(typography.fontFamily.mono).toContain("IBM Plex Mono");
+  });
+
+  it("defines every semantic color in light and dark themes", () => {
+    for (const token of semanticColorTokens) {
+      expect(semanticColors.light[token]).toBeTruthy();
+      expect(semanticColors.dark[token]).toBeTruthy();
+    }
+  });
+
+  it("exports CSS, JSON, and Tailwind artifacts from the token source", () => {
+    expect(tokenArtifacts.css).toContain("--brilliant-background");
+    expect(JSON.parse(tokenArtifacts.json)).toMatchObject({ typography });
+    expect(tokenArtifacts.tailwindTheme.colors.primary).toBe("var(--brilliant-primary)");
   });
 });

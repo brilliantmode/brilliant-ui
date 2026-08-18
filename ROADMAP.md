@@ -55,9 +55,9 @@ Goal: establish a dependable workspace, tooling contract, CLI skeleton, and toke
 - [x] Map semantic variables into Tailwind CSS v4.
 - [x] Add reduced-motion defaults.
 - [x] Establish Instrument Sans and IBM Plex Mono typography.
-- [ ] Generate CSS, TypeScript, and JSON artifacts from one token source.
+- [x] Generate CSS, TypeScript, and JSON artifacts from one token source.
 - [ ] Add token schema validation and snapshot tests.
-- [ ] Define density modes and high-contrast token contracts.
+- [x] Define density modes and high-contrast token contracts.
 
 ### CLI and registry skeleton
 
@@ -81,22 +81,22 @@ Goal: make themes, the registry, and shadcn compatibility reliable enough for co
 
 ### Theme engine
 
-- [ ] Create `@brilliant-ui/themes` with typed semantic theme contracts.
-- [ ] Add system, light, dark, and explicit theme selection.
-- [ ] Add SSR-safe theme initialization without a flash of incorrect theme.
+- [x] Create `@brilliant-ui/themes` with typed semantic theme contracts.
+- [x] Add system, light, dark, and explicit theme selection.
+- [x] Add SSR-safe theme initialization without a flash of incorrect theme.
 - [ ] Add theme persistence and cross-tab synchronization.
-- [ ] Add tenant/brand theme overrides with validation.
-- [ ] Add density modes: comfortable, compact, and touch.
-- [ ] Add forced-colors and high-contrast behavior.
+- [x] Add tenant/brand theme overrides with validation.
+- [x] Add density modes: comfortable, compact, and touch.
+- [x] Add forced-colors and high-contrast behavior.
 - [ ] Document Next.js and Vite integration.
 
 ### Token pipeline
 
 - [ ] Move primitive and semantic tokens into a validated source format.
-- [ ] Generate TypeScript, CSS variables, Tailwind mappings, and JSON metadata.
-- [ ] Detect missing semantic tokens across light and dark themes.
+- [x] Generate TypeScript, CSS variables, Tailwind mappings, and JSON metadata.
+- [x] Detect missing semantic tokens across light and dark themes.
 - [ ] Add automated contrast validation for interactive states.
-- [ ] Publish token artifacts without application/runtime dependencies.
+- [x] Publish token artifacts without application/runtime dependencies.
 
 ### Registry service
 

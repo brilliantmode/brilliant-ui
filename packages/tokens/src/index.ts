@@ -123,17 +123,168 @@ export const opacity = {
 
 export const borderWidth = { 0: "0", 1: "1px", 2: "2px" } as const;
 
+export const semanticColorTokens = [
+  "background",
+  "foreground",
+  "surface",
+  "surface-raised",
+  "muted",
+  "muted-foreground",
+  "primary",
+  "primary-foreground",
+  "secondary",
+  "secondary-foreground",
+  "critical",
+  "critical-foreground",
+  "border",
+  "ring",
+] as const;
+
+export type SemanticColorToken = (typeof semanticColorTokens)[number];
+
+export type SemanticColorScale = Readonly<Record<SemanticColorToken, string>>;
+
+export const semanticColors = {
+  light: {
+    background: primitiveColors.neutral[50],
+    foreground: primitiveColors.neutral[900],
+    surface: primitiveColors.neutral[0],
+    "surface-raised": primitiveColors.neutral[0],
+    muted: primitiveColors.neutral[100],
+    "muted-foreground": primitiveColors.neutral[600],
+    primary: primitiveColors.brand[600],
+    "primary-foreground": primitiveColors.neutral[0],
+    secondary: primitiveColors.neutral[200],
+    "secondary-foreground": primitiveColors.neutral[800],
+    critical: "oklch(0.577 0.245 27.325)",
+    "critical-foreground": "oklch(0.985 0 0)",
+    border: primitiveColors.neutral[300],
+    ring: primitiveColors.brand[500],
+  },
+  dark: {
+    background: primitiveColors.neutral[950],
+    foreground: primitiveColors.neutral[100],
+    surface: "oklch(0.18 0.03 263)",
+    "surface-raised": primitiveColors.neutral[900],
+    muted: primitiveColors.neutral[800],
+    "muted-foreground": primitiveColors.neutral[400],
+    primary: primitiveColors.brand[400],
+    "primary-foreground": primitiveColors.neutral[950],
+    secondary: primitiveColors.neutral[800],
+    "secondary-foreground": primitiveColors.neutral[100],
+    critical: "oklch(0.704 0.191 22.216)",
+    "critical-foreground": primitiveColors.neutral[950],
+    border: "oklch(1 0 0 / 0.12)",
+    ring: primitiveColors.brand[400],
+  },
+  highContrast: {
+    background: primitiveColors.neutral[0],
+    foreground: primitiveColors.neutral[1000],
+    surface: primitiveColors.neutral[0],
+    "surface-raised": primitiveColors.neutral[0],
+    muted: primitiveColors.neutral[100],
+    "muted-foreground": primitiveColors.neutral[900],
+    primary: "oklch(0.35 0.22 262)",
+    "primary-foreground": primitiveColors.neutral[0],
+    secondary: primitiveColors.neutral[100],
+    "secondary-foreground": primitiveColors.neutral[1000],
+    critical: "oklch(0.42 0.22 27)",
+    "critical-foreground": primitiveColors.neutral[0],
+    border: primitiveColors.neutral[1000],
+    ring: primitiveColors.neutral[1000],
+  },
+} as const satisfies Record<"light" | "dark" | "highContrast", SemanticColorScale>;
+
+export const density = {
+  comfortable: {
+    controlHeight: "2.5rem",
+    controlPaddingX: spacing[4],
+    controlGap: spacing[2],
+  },
+  compact: {
+    controlHeight: "2rem",
+    controlPaddingX: spacing[3],
+    controlGap: spacing[1.5],
+  },
+  touch: {
+    controlHeight: "2.75rem",
+    controlPaddingX: spacing[5],
+    controlGap: spacing[3],
+  },
+} as const;
+
 export const tokens = {
   borderWidth,
   breakpoints,
+  density,
   elevation,
   motion,
   opacity,
   primitiveColors,
   radii,
+  semanticColors,
   spacing,
   typography,
   zIndex,
 } as const;
 
 export type BrilliantTokens = typeof tokens;
+
+function cssVariables(values: Readonly<Record<string, string | number>>, prefix: string): string {
+  return Object.entries(values)
+    .map(([name, value]) => `  --${prefix}-${name}: ${value};`)
+    .join("\n");
+}
+
+function semanticColorVariables(scale: SemanticColorScale): string {
+  return semanticColorTokens.map((token) => `  --brilliant-${token}: ${scale[token]};`).join("\n");
+}
+
+export const tokenArtifacts = {
+  css: [
+    ":root {",
+    semanticColorVariables(semanticColors.light),
+    `  --brilliant-radius: ${radii.lg};`,
+    `  --brilliant-font-sans: ${typography.fontFamily.sans};`,
+    `  --brilliant-font-mono: ${typography.fontFamily.mono};`,
+    `  --brilliant-shadow-sm: ${elevation[1]};`,
+    `  --brilliant-shadow-md: ${elevation[2]};`,
+    cssVariables(motion.duration, "brilliant-duration"),
+    `  --brilliant-ease-enter: ${motion.easing.enter};`,
+    `  --brilliant-ease-exit: ${motion.easing.exit};`,
+    `  --brilliant-control-height: ${density.comfortable.controlHeight};`,
+    `  --brilliant-control-padding-x: ${density.comfortable.controlPaddingX};`,
+    `  --brilliant-control-gap: ${density.comfortable.controlGap};`,
+    "}",
+    "",
+    '.dark, [data-theme="dark"] {',
+    semanticColorVariables(semanticColors.dark),
+    `  --brilliant-shadow-sm: ${elevation[1].replace("0.06", "0.24")};`,
+    `  --brilliant-shadow-md: ${elevation[2].replace("4px 12px", "6px 18px").replace("0.08", "0.32")};`,
+    "}",
+    "",
+    '[data-contrast="high"] {',
+    semanticColorVariables(semanticColors.highContrast),
+    "}",
+  ].join("\n"),
+  json: JSON.stringify(tokens, null, 2),
+  tailwindTheme: {
+    colors: Object.fromEntries(
+      semanticColorTokens.map((token) => [token, `var(--brilliant-${token})`]),
+    ) as Record<SemanticColorToken, string>,
+    fontFamily: {
+      sans: "var(--brilliant-font-sans)",
+      mono: "var(--brilliant-font-mono)",
+    },
+    radius: {
+      sm: "calc(var(--brilliant-radius) - 0.25rem)",
+      md: "calc(var(--brilliant-radius) - 0.125rem)",
+      lg: "var(--brilliant-radius)",
+      xl: "calc(var(--brilliant-radius) + 0.125rem)",
+    },
+    shadow: {
+      sm: "var(--brilliant-shadow-sm)",
+      md: "var(--brilliant-shadow-md)",
+    },
+  },
+} as const;

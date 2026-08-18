@@ -51,6 +51,9 @@
   --brilliant-duration-normal: 200ms;
   --brilliant-ease-enter: cubic-bezier(0, 0, 0, 1);
   --brilliant-ease-exit: cubic-bezier(0.3, 0, 1, 1);
+  --brilliant-control-height: 2.5rem;
+  --brilliant-control-padding-x: 1rem;
+  --brilliant-control-gap: 0.5rem;
 }
 
 body {
@@ -94,6 +97,54 @@ body {
   --brilliant-ring: oklch(0.707 0.165 254.624);
   --brilliant-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.24);
   --brilliant-shadow-md: 0 6px 18px oklch(0 0 0 / 0.32);
+}
+
+[data-contrast="high"] {
+  --brilliant-background: oklch(1 0 0);
+  --brilliant-foreground: oklch(0 0 0);
+  --brilliant-surface: oklch(1 0 0);
+  --brilliant-surface-raised: oklch(1 0 0);
+  --brilliant-muted: oklch(0.967 0.003 264.542);
+  --brilliant-muted-foreground: oklch(0.21 0.034 264.665);
+  --brilliant-primary: oklch(0.35 0.22 262);
+  --brilliant-primary-foreground: oklch(1 0 0);
+  --brilliant-secondary: oklch(0.967 0.003 264.542);
+  --brilliant-secondary-foreground: oklch(0 0 0);
+  --brilliant-critical: oklch(0.42 0.22 27);
+  --brilliant-critical-foreground: oklch(1 0 0);
+  --brilliant-border: oklch(0 0 0);
+  --brilliant-ring: oklch(0 0 0);
+}
+
+[data-density="compact"] {
+  --brilliant-control-height: 2rem;
+  --brilliant-control-padding-x: 0.75rem;
+  --brilliant-control-gap: 0.375rem;
+}
+
+[data-density="touch"] {
+  --brilliant-control-height: 2.75rem;
+  --brilliant-control-padding-x: 1.25rem;
+  --brilliant-control-gap: 0.75rem;
+}
+
+@media (forced-colors: active) {
+  :root {
+    --brilliant-background: Canvas;
+    --brilliant-foreground: CanvasText;
+    --brilliant-surface: Canvas;
+    --brilliant-surface-raised: Canvas;
+    --brilliant-muted: Canvas;
+    --brilliant-muted-foreground: CanvasText;
+    --brilliant-primary: Highlight;
+    --brilliant-primary-foreground: HighlightText;
+    --brilliant-secondary: ButtonFace;
+    --brilliant-secondary-foreground: ButtonText;
+    --brilliant-critical: Mark;
+    --brilliant-critical-foreground: MarkText;
+    --brilliant-border: CanvasText;
+    --brilliant-ring: Highlight;
+  }
 }
 
 @keyframes brilliant-enter {
