@@ -100,12 +100,12 @@ Goal: make themes, the registry, and shadcn compatibility reliable enough for co
 
 ### Registry service
 
-- [ ] Define a versioned JSON schema for registries and items.
-- [ ] Validate registry items during build and publication.
-- [ ] Generate the registry index and per-item JSON artifacts.
+- [x] Define a versioned JSON schema for registries and items.
+- [x] Validate registry items during build and publication.
+- [x] Generate the registry index and per-item JSON artifacts.
 - [ ] Support components, blocks, templates, themes, layouts, and animations.
-- [ ] Resolve transitive registry dependencies deterministically.
-- [ ] Verify file checksums and reject path traversal.
+- [x] Resolve transitive registry dependencies deterministically.
+- [x] Verify file checksums and reject path traversal.
 - [ ] Add local, remote, and authenticated registry adapters.
 - [ ] Publish a static registry from the documentation application.
 - [ ] Add registry contract and fixture tests.
@@ -124,7 +124,7 @@ Goal: make themes, the registry, and shadcn compatibility reliable enough for co
 - [ ] Add interactive and non-interactive initialization.
 - [ ] Install required dependencies through npm, pnpm, yarn, or Bun.
 - [ ] Show a dry-run diff before overwriting files.
-- [ ] Add `--cwd`, `--yes`, `--dry-run`, `--force`, and `--silent` flags.
+- [x] Add `--cwd`, `--yes`, `--dry-run`, `--force`, and `--silent` flags.
 - [ ] Add structured errors, exit codes, telemetry policy, and debug logging.
 - [ ] Add end-to-end fixtures for Next.js and Vite.
 - [ ] Publish a prerelease CLI package.

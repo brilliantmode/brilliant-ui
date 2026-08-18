@@ -26,4 +26,20 @@ describe("CLI project workflow", () => {
     await initProject(context);
     await expect(initProject(context)).rejects.toThrow("already exists");
   });
+
+  it("previews writes during dry runs", async () => {
+    const cwd = await mkdtemp(join(tmpdir(), "brilliant-ui-test-"));
+    const messages: string[] = [];
+    const context = {
+      cwd,
+      dryRun: true,
+      force: false,
+      log: (message: string) => messages.push(message),
+    };
+
+    await initProject(context);
+
+    await expect(readFile(join(cwd, "brilliant-ui.json"), "utf8")).rejects.toThrow("ENOENT");
+    expect(messages).toContain("Would create brilliant-ui.json");
+  });
 });

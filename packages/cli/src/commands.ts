@@ -1,13 +1,14 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { type BrilliantConfig, defaultConfig } from "@brilliant-ui/core";
-import { findRegistryItem } from "@brilliant-ui/registry";
+import { checksumContent, resolveRegistryDependencies } from "@brilliant-ui/registry";
 
 const CONFIG_FILE = "brilliant-ui.json";
 const MANIFEST_FILE = ".brilliant-ui/manifest.json";
 
 export interface CommandContext {
   readonly cwd: string;
+  readonly dryRun?: boolean;
   readonly force: boolean;
   readonly log: (message: string) => void;
 }
@@ -46,6 +47,18 @@ async function writeJson(path: string, value: unknown): Promise<void> {
   await writeFile(path, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
+async function writeJsonForContext(
+  path: string,
+  value: unknown,
+  context: CommandContext,
+): Promise<void> {
+  if (context.dryRun) {
+    context.log(`Would write ${relative(context.cwd, path)}`);
+    return;
+  }
+  await writeJson(path, value);
+}
+
 function aliasRoot(alias: string): string {
   if (!alias.startsWith("@/")) {
     throw new Error(
@@ -61,8 +74,8 @@ export async function initProject(context: CommandContext): Promise<void> {
     throw new Error(`${CONFIG_FILE} already exists. Pass --force to replace it.`);
   }
 
-  await writeJson(configPath, defaultConfig);
-  context.log(`Created ${CONFIG_FILE}`);
+  await writeJsonForContext(configPath, defaultConfig, context);
+  context.log(`${context.dryRun ? "Would create" : "Created"} ${CONFIG_FILE}`);
   context.log("Next: import @brilliant-ui/tokens/styles.css from your global stylesheet.");
 }
 
@@ -72,9 +85,12 @@ export async function addItems(names: readonly string[], context: CommandContext
   const manifest = await readManifest(context.cwd);
   const installed = { ...manifest.items } as Record<string, readonly string[]>;
 
-  for (const name of names) {
-    const item = findRegistryItem(name);
-    if (!item) throw new Error(`Unknown registry item "${name}".`);
+  for (const item of resolveRegistryDependencies(names)) {
+    for (const file of item.files) {
+      if (file.checksum && file.checksum !== checksumContent(file.content)) {
+        throw new Error(`Checksum mismatch for registry item "${item.name}" file "${file.path}".`);
+      }
+    }
 
     const written: string[] = [];
     for (const file of item.files) {
@@ -87,10 +103,12 @@ export async function addItems(names: readonly string[], context: CommandContext
       if ((await exists(outputPath)) && !context.force) {
         throw new Error(`${relativePath} already exists. Pass --force to replace it.`);
       }
-      await mkdir(dirname(outputPath), { recursive: true });
-      await writeFile(outputPath, file.content, "utf8");
+      if (!context.dryRun) {
+        await mkdir(dirname(outputPath), { recursive: true });
+        await writeFile(outputPath, file.content, "utf8");
+      }
       written.push(relativePath);
-      context.log(`Added ${relativePath}`);
+      context.log(`${context.dryRun ? "Would add" : "Added"} ${relativePath}`);
     }
     installed[item.name] = written;
     if (item.dependencies.length > 0) {
@@ -98,7 +116,11 @@ export async function addItems(names: readonly string[], context: CommandContext
     }
   }
 
-  await writeJson(join(context.cwd, MANIFEST_FILE), { version: 1, items: installed });
+  await writeJsonForContext(
+    join(context.cwd, MANIFEST_FILE),
+    { version: 1, items: installed },
+    context,
+  );
 }
 
 export async function updateItems(

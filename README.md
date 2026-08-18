@@ -18,6 +18,8 @@ pnpm build
 pnpm --filter @brilliant-ui/cli dev -- init
 ```
 
+CLI commands accept `--cwd`, `--force`, `--dry-run`, `--yes`, and `--silent` for scripted installs.
+
 ## Workspace
 
 | Package | Purpose |
