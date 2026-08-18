@@ -1,0 +1,30 @@
+{
+  "name": "@brilliant-ui/cli",
+  "version": "0.1.0",
+  "description": "Install and manage Brilliant UI source in React applications",
+  "type": "module",
+  "bin": {
+    "brilliant-ui": "./dist/bin.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsx src/bin.ts",
+    "lint": "biome check src",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@brilliant-ui/core": "workspace:*",
+    "@brilliant-ui/registry": "workspace:*"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@types/node": "catalog:",
+    "tsx": "^4.20.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

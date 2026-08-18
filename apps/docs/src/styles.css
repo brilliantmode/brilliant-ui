@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@import "@brilliant-ui/tokens/styles.css";
+
+* {
+  border-color: var(--brilliant-border);
+}
+html {
+  font-family: var(--brilliant-font-sans);
+}
+body {
+  margin: 0;
+}
+::selection {
+  background: oklch(0.707 0.165 254.624 / 0.28);
+}

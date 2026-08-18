@@ -1,0 +1,107 @@
+@theme inline {
+  --color-background: var(--brilliant-background);
+  --color-foreground: var(--brilliant-foreground);
+  --color-surface: var(--brilliant-surface);
+  --color-surface-raised: var(--brilliant-surface-raised);
+  --color-muted: var(--brilliant-muted);
+  --color-muted-foreground: var(--brilliant-muted-foreground);
+  --color-primary: var(--brilliant-primary);
+  --color-primary-foreground: var(--brilliant-primary-foreground);
+  --color-secondary: var(--brilliant-secondary);
+  --color-secondary-foreground: var(--brilliant-secondary-foreground);
+  --color-critical: var(--brilliant-critical);
+  --color-critical-foreground: var(--brilliant-critical-foreground);
+  --color-border: var(--brilliant-border);
+  --color-ring: var(--brilliant-ring);
+  --radius-sm: calc(var(--brilliant-radius) - 0.25rem);
+  --radius-md: calc(var(--brilliant-radius) - 0.125rem);
+  --radius-lg: var(--brilliant-radius);
+  --radius-xl: calc(var(--brilliant-radius) + 0.125rem);
+  --font-sans: var(--brilliant-font-sans);
+  --font-mono: var(--brilliant-font-mono);
+  --shadow-sm: var(--brilliant-shadow-sm);
+  --shadow-md: var(--brilliant-shadow-md);
+  --animate-enter: brilliant-enter var(--brilliant-duration-normal) var(--brilliant-ease-enter);
+  --animate-exit: brilliant-exit var(--brilliant-duration-fast) var(--brilliant-ease-exit);
+}
+
+:root {
+  color-scheme: light;
+  --brilliant-background: oklch(0.985 0.002 247.839);
+  --brilliant-foreground: oklch(0.21 0.034 264.665);
+  --brilliant-surface: oklch(1 0 0);
+  --brilliant-surface-raised: oklch(1 0 0);
+  --brilliant-muted: oklch(0.967 0.003 264.542);
+  --brilliant-muted-foreground: oklch(0.446 0.03 256.802);
+  --brilliant-primary: oklch(0.546 0.245 262.881);
+  --brilliant-primary-foreground: oklch(1 0 0);
+  --brilliant-secondary: oklch(0.928 0.006 264.531);
+  --brilliant-secondary-foreground: oklch(0.278 0.033 256.848);
+  --brilliant-critical: oklch(0.577 0.245 27.325);
+  --brilliant-critical-foreground: oklch(0.985 0 0);
+  --brilliant-border: oklch(0.872 0.01 258.338);
+  --brilliant-ring: oklch(0.623 0.214 259.815);
+  --brilliant-radius: 0.625rem;
+  --brilliant-font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --brilliant-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --brilliant-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.06);
+  --brilliant-shadow-md: 0 4px 12px oklch(0 0 0 / 0.08);
+  --brilliant-duration-fast: 120ms;
+  --brilliant-duration-normal: 200ms;
+  --brilliant-ease-enter: cubic-bezier(0, 0, 0, 1);
+  --brilliant-ease-exit: cubic-bezier(0.3, 0, 1, 1);
+}
+
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --brilliant-background: oklch(0.13 0.028 261.692);
+  --brilliant-foreground: oklch(0.967 0.003 264.542);
+  --brilliant-surface: oklch(0.18 0.03 263);
+  --brilliant-surface-raised: oklch(0.21 0.034 264.665);
+  --brilliant-muted: oklch(0.278 0.033 256.848);
+  --brilliant-muted-foreground: oklch(0.707 0.022 261.325);
+  --brilliant-primary: oklch(0.707 0.165 254.624);
+  --brilliant-primary-foreground: oklch(0.13 0.028 261.692);
+  --brilliant-secondary: oklch(0.278 0.033 256.848);
+  --brilliant-secondary-foreground: oklch(0.967 0.003 264.542);
+  --brilliant-critical: oklch(0.704 0.191 22.216);
+  --brilliant-critical-foreground: oklch(0.13 0.028 261.692);
+  --brilliant-border: oklch(1 0 0 / 0.12);
+  --brilliant-ring: oklch(0.707 0.165 254.624);
+  --brilliant-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.24);
+  --brilliant-shadow-md: 0 6px 18px oklch(0 0 0 / 0.32);
+}
+
+@keyframes brilliant-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.25rem) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes brilliant-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(0.125rem) scale(0.99);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@brilliant-ui/tokens",
+  "version": "0.1.0",
+  "description": "Design tokens and theme primitives for Brilliant UI",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist",
+    "src/styles.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./src/styles.css"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "biome check src",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

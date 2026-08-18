@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@import "@brilliant-ui/tokens/styles.css";
+body {
+  margin: 0;
+  font-family: var(--brilliant-font-sans);
+}
