@@ -8,14 +8,18 @@
   },
   "scripts": {
     "build": "turbo build",
+    "changeset": "changeset",
     "dev": "turbo dev",
+    "license:check": "pnpm licenses list --prod",
     "lint": "turbo lint",
+    "release:version": "changeset version",
     "test": "turbo test",
     "typecheck": "turbo typecheck",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.0",
+    "@changesets/cli": "^3.0.0",
     "turbo": "^2.5.0",
     "typescript": "^5.9.0",
     "vitest": "^3.2.0"

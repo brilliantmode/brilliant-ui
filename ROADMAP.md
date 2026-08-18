@@ -42,10 +42,10 @@ Goal: establish a dependable workspace, tooling contract, CLI skeleton, and toke
 - [x] Add Vitest and a repository-wide verification command.
 - [x] Establish package boundaries and public API policy.
 - [x] Add documentation and playground application shells.
-- [ ] Add Changesets for versioning and release notes.
-- [ ] Add GitHub Actions for lint, typecheck, tests, and builds.
-- [ ] Add dependency review, license checking, and secret scanning.
-- [ ] Add contribution templates, code of conduct, and security policy.
+- [x] Add Changesets for versioning and release notes.
+- [x] Add GitHub Actions for lint, typecheck, tests, and builds.
+- [x] Add dependency review, license checking, and secret scanning.
+- [x] Add contribution templates, code of conduct, and security policy.
 
 ### Design tokens
 
