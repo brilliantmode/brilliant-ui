@@ -3348,7 +3348,7 @@ function HeaderPreview() {
     <header className="relative z-20 w-full border-b border-border bg-background/95 text-foreground backdrop-blur">
       <div className="relative mx-auto flex min-h-14 max-w-screen-2xl items-center gap-3 px-4 md:px-6">
         <a
-          className="inline-flex items-center gap-2 font-semibold tracking-[-0.015em]"
+          className="inline-flex items-center gap-2 font-semibold tracking-[-0.015em] md:border-r md:border-border md:pr-5"
           href="#header-preview"
         >
           <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
@@ -3375,7 +3375,7 @@ function HeaderPreview() {
           className={[
             "absolute inset-x-0 top-full grid gap-1 border-b border-border bg-background p-3 shadow-md",
             menuOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0",
-            "md:static md:ml-4 md:flex md:visible md:translate-y-0 md:items-center md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:shadow-none",
+            "md:static md:ml-1 md:flex md:visible md:translate-y-0 md:items-center md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:shadow-none",
           ].join(" ")}
         >
           {[
