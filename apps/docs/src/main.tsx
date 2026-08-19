@@ -6240,7 +6240,13 @@ function AppHeader({
   theme: "dark" | "light";
 }) {
   return (
-    <Header behavior="elevate" border position="sticky" scrollThreshold={24}>
+    <Header
+      behavior="elevate"
+      border
+      className="xl:col-span-2"
+      position="sticky"
+      scrollThreshold={24}
+    >
       <HeaderContainer>
         <button
           aria-controls="mobile-docs-nav"
@@ -6634,14 +6640,6 @@ function App() {
       >
         Skip to content
       </a>
-      <AppHeader
-        activeRoute={activeRoute}
-        onMenuClick={() => setMobileNavOpen(true)}
-        onNavigate={navigate}
-        onSearchOpen={openSearch}
-        onThemeToggle={toggleTheme}
-        theme={theme}
-      />
       <MobileDocsNav
         activeRoute={activeRoute}
         onClose={() => setMobileNavOpen(false)}
@@ -6657,11 +6655,11 @@ function App() {
         open={searchOpen}
       />
 
-      <main
+      <div
         className={`mx-auto grid max-w-screen-2xl motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "md:grid-cols-[72px_minmax(0,1fr)] xl:grid-cols-[72px_minmax(0,1fr)_280px]" : "md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]"}`}
       >
         <aside
-          className={`sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-visible border-r border-border py-6 md:block motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "px-3" : "px-6"}`}
+          className={`sticky top-0 hidden h-screen overflow-visible border-r border-border py-6 md:row-span-2 md:block motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "px-3" : "px-6"}`}
         >
           <DocsNav
             activeRoute={activeRoute}
@@ -6674,7 +6672,15 @@ function App() {
           />
         </aside>
 
-        <div
+        <AppHeader
+          activeRoute={activeRoute}
+          onMenuClick={() => setMobileNavOpen(true)}
+          onNavigate={navigate}
+          onSearchOpen={openSearch}
+          onThemeToggle={toggleTheme}
+          theme={theme}
+        />
+        <main
           className="min-w-0 max-w-full overflow-hidden px-4 py-10 md:px-8 lg:px-10"
           id="content"
         >
@@ -7811,10 +7817,10 @@ find "$TMP_DEMO" -maxdepth 4 -type f | sort`}</CodeBlock>
               </a>
             </section>
           ) : null}
-        </div>
+        </main>
 
         <StatusRail firstItemTitle={selectedItem?.title ?? firstItem?.title ?? "None"} />
-      </main>
+      </div>
       <AppFooter onNavigate={navigate} />
     </div>
   );
