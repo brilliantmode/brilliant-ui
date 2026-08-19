@@ -181,6 +181,7 @@ export function ButtonGroup({
   ...props
 }: ButtonGroupProps) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: A button group may contain non-form actions, so fieldset is not equivalent.
     <div
       className={[
         "inline-flex items-stretch [&>*]:relative [&>*]:z-0 [&>*:focus-visible]:z-10",
@@ -489,13 +490,14 @@ export function Avatar({ className = "", size = "md", ...props }: AvatarProps) {
 
 export interface AvatarImageProps extends ImgHTMLAttributes<HTMLImageElement> {}
 
-export function AvatarImage({ className = "", onError, ...props }: AvatarImageProps) {
+export function AvatarImage({ alt, className = "", onError, ...props }: AvatarImageProps) {
   const [failed, setFailed] = useState(false);
 
   if (failed) return null;
 
   return (
     <img
+      alt={alt}
       className={[
         "absolute inset-0 size-full rounded-full object-cover motion-safe:animate-enter motion-reduce:animate-none",
         className,
@@ -710,7 +712,7 @@ const labelSource = `import type { LabelHTMLAttributes } from "react";
 
 export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {}
 
-export function Label({ className = "", ...props }: LabelProps) {
+export function Label({ children, className = "", htmlFor, ...props }: LabelProps) {
   return (
     <label
       className={[
@@ -718,8 +720,11 @@ export function Label({ className = "", ...props }: LabelProps) {
         "peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
         className,
       ].join(" ")}
+      htmlFor={htmlFor}
       {...props}
-    />
+    >
+      {children}
+    </label>
   );
 }
 `;
@@ -1170,7 +1175,7 @@ const variants = {
   primary: "bg-primary",
 } as const;
 
-export interface SeparatorProps extends HTMLAttributes<HTMLDivElement> {
+export interface SeparatorProps extends HTMLAttributes<HTMLElement> {
   decorative?: boolean;
   orientation?: "horizontal" | "vertical";
   variant?: keyof typeof variants;
@@ -1183,16 +1188,19 @@ export function Separator({
   variant = "default",
   ...props
 }: SeparatorProps) {
+  const separatorClassName = [
+    "shrink-0 border-0",
+    orientation === "horizontal" ? "h-[0.5px] w-full" : "h-full w-[0.5px]",
+    variants[variant],
+    className,
+  ].join(" ");
+
+  if (decorative) return <div className={separatorClassName} {...props} />;
+
   return (
-    <div
-      aria-orientation={decorative ? undefined : orientation}
-      className={[
-        "shrink-0",
-        orientation === "horizontal" ? "h-[0.5px] w-full" : "h-full w-[0.5px]",
-        variants[variant],
-        className,
-      ].join(" ")}
-      role={decorative ? "none" : "separator"}
+    <hr
+      aria-orientation={orientation}
+      className={separatorClassName}
       {...props}
     />
   );
@@ -1384,7 +1392,7 @@ const fileUploadSource =
 const photoUploadSource =
   '// biome-ignore-all lint/style/useTemplate: Concatenation keeps this copied source safe to serialize in the registry.\n\n"use client";\n\nimport type { HTMLAttributes } from "react";\nimport { useEffect, useState } from "react";\nimport {\n  FileUpload,\n  FileUploadDescription,\n  FileUploadDropzone,\n  FileUploadError,\n  FileUploadIcon,\n  FileUploadTitle,\n  FileUploadTrigger,\n} from "./file-upload";\nimport { Photo, PhotoFallback, PhotoImage } from "./photo";\n\nexport interface PhotoUploadProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {\n  accept?: string;\n  alt?: string;\n  capture?: "environment" | "user";\n  crop?: "circle" | "rectangle" | "square";\n  defaultFile?: File | null;\n  disabled?: boolean;\n  file?: File | null;\n  maxSize?: number;\n  onFileChange?: (file: File | null) => void;\n  onRemove?: () => void;\n  progress?: number;\n  ratio?: number | string;\n  src?: string;\n}\n\nexport function PhotoUpload({\n  accept = "image/jpeg,image/png,image/webp",\n  alt = "Selected photo preview",\n  capture,\n  className = "",\n  crop = "square",\n  defaultFile = null,\n  disabled = false,\n  file: controlledFile,\n  maxSize = 5 * 1024 * 1024,\n  onFileChange,\n  onRemove,\n  progress,\n  ratio = 4 / 3,\n  src,\n  ...props\n}: PhotoUploadProps) {\n  const [internalFile, setInternalFile] = useState<File | null>(defaultFile);\n  const [previewUrl, setPreviewUrl] = useState<string | null>(null);\n  const [sourceRemoved, setSourceRemoved] = useState(false);\n  const file = controlledFile === undefined ? internalFile : controlledFile;\n\n  useEffect(() => {\n    if (!file) {\n      setPreviewUrl(null);\n      return;\n    }\n\n    const nextUrl = URL.createObjectURL(file);\n    setPreviewUrl(nextUrl);\n    return () => URL.revokeObjectURL(nextUrl);\n  }, [file]);\n\n  useEffect(() => {\n    setSourceRemoved(false);\n  }, [src]);\n\n  const commitFile = (nextFile: File | null) => {\n    if (controlledFile === undefined) setInternalFile(nextFile);\n    setSourceRemoved(nextFile === null);\n    onFileChange?.(nextFile);\n  };\n\n  const removePhoto = () => {\n    commitFile(null);\n    onRemove?.();\n  };\n\n  const displaySrc = previewUrl ?? (sourceRemoved ? undefined : src);\n  const hasProgress = typeof progress === "number";\n  const clampedProgress = hasProgress ? Math.min(100, Math.max(0, progress)) : 0;\n\n  return (\n    <FileUpload\n      accept={accept}\n      className={className}\n      disabled={disabled}\n      files={file ? [file] : []}\n      maxFiles={1}\n      maxSize={maxSize}\n      onFilesChange={(files) => commitFile(files[0] ?? null)}\n      {...(capture ? { capture } : {})}\n      {...props}\n    >\n      {displaySrc ? (\n        <Photo\n          className="group w-full"\n          crop={crop}\n          radius={crop === "circle" ? "full" : "md"}\n          ratio={ratio}\n          variant="surface"\n        >\n          <PhotoFallback>Photo preview unavailable</PhotoFallback>\n          <PhotoImage alt={alt} src={displaySrc} />\n          <span\n            aria-hidden="true"\n            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/55 via-transparent to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 motion-safe:transition-opacity motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none"\n          />\n          <div className="absolute inset-x-3 bottom-3 grid gap-2">\n            <div className="flex translate-y-1 items-center justify-end gap-2 opacity-100 motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-focus-within:translate-y-0 sm:group-focus-within:opacity-100 motion-reduce:transform-none motion-reduce:transition-none">\n              <FileUploadTrigger className="border-transparent bg-background/92 shadow-sm backdrop-blur hover:bg-background">\n                Replace\n              </FileUploadTrigger>\n              <button\n                className="inline-flex h-8 items-center justify-center rounded-[0.25rem] bg-background/92 px-3 text-xs font-medium text-critical shadow-sm backdrop-blur hover:bg-background active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"\n                disabled={disabled}\n                onClick={removePhoto}\n                type="button"\n              >\n                Remove\n              </button>\n            </div>\n            {hasProgress ? (\n              <span\n                aria-label="Photo upload progress"\n                aria-valuemax={100}\n                aria-valuemin={0}\n                aria-valuenow={clampedProgress}\n                className="h-1 overflow-hidden rounded-full bg-background/35 backdrop-blur"\n                role="progressbar"\n              >\n                <span\n                  className="block h-full rounded-full bg-primary motion-safe:transition-[width] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none"\n                  style={{ width: clampedProgress + "%" }}\n                />\n              </span>\n            ) : null}\n          </div>\n        </Photo>\n      ) : (\n        <FileUploadDropzone className="min-h-56">\n          <span>\n            <FileUploadIcon>\n              <svg\n                aria-hidden="true"\n                className="size-5"\n                fill="none"\n                stroke="currentColor"\n                strokeLinecap="round"\n                strokeLinejoin="round"\n                strokeWidth="1.75"\n                viewBox="0 0 24 24"\n              >\n                <path d="M4 8.5h3l1.5-2h7l1.5 2h3v9.5H4V8.5Z" />\n                <circle cx="12" cy="13" r="3" />\n              </svg>\n            </FileUploadIcon>\n            <FileUploadTitle>Drop a photo here or click to browse</FileUploadTitle>\n            <FileUploadDescription>JPEG, PNG, or WebP up to 5 MB.</FileUploadDescription>\n          </span>\n        </FileUploadDropzone>\n      )}\n      <FileUploadError />\n    </FileUpload>\n  );\n}\n';
 
-const fieldSource = `import type { HTMLAttributes } from "react";
+const fieldSource = `import type { HTMLAttributes, LabelHTMLAttributes } from "react";
 
 export interface FieldProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -1392,8 +1400,8 @@ export function Field({ className = "", ...props }: FieldProps) {
   return <div className={["grid gap-2", className].join(" ")} {...props} />;
 }
 
-export function FieldLabel({ className = "", ...props }: HTMLAttributes<HTMLLabelElement>) {
-  return <label className={["text-sm font-medium leading-none", className].join(" ")} {...props} />;
+export function FieldLabel({ children, className = "", htmlFor, ...props }: LabelHTMLAttributes<HTMLLabelElement>) {
+  return <label className={["text-sm font-medium leading-none", className].join(" ")} htmlFor={htmlFor} {...props}>{children}</label>;
 }
 
 export function FieldDescription({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {
@@ -2033,12 +2041,21 @@ export interface ContextMenuProps extends HTMLAttributes<HTMLDivElement> {}
 export function ContextMenu({ children, className = "", ...props }: ContextMenuProps) {
   const [open, setOpen] = useState(false);
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: Context-menu triggers preserve arbitrary consumer semantics and provide keyboard access.
     <div
       className={["relative", className].join(" ")}
+      onKeyDown={(event) => {
+        if (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10")) {
+          event.preventDefault();
+          setOpen(true);
+        }
+      }}
       onContextMenu={(event) => {
         event.preventDefault();
         setOpen(true);
       }}
+      // biome-ignore lint/a11y/noNoninteractiveTabindex: Generic context-menu triggers require keyboard focus without changing consumer semantics.
+      tabIndex={0}
       {...props}
     >
       {children}
@@ -2535,8 +2552,8 @@ export function useToast() {
   return context;
 }
 
-export function ToastRegion({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div aria-live="polite" className={cx("fixed right-4 bottom-4 z-50 grid w-[min(22rem,calc(100vw-2rem))] gap-2", className)} role="region" {...props} />;
+export function ToastRegion({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  return <section aria-live="polite" className={cx("fixed right-4 bottom-4 z-50 grid w-[min(22rem,calc(100vw-2rem))] gap-2", className)} {...props} />;
 }
 
 export function Toast({
@@ -2609,7 +2626,7 @@ export function CommandList({ className = "", ...props }: HTMLAttributes<HTMLDiv
 }
 
 export function CommandItem({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={["rounded-[0.25rem] px-2 py-1.5 text-sm hover:bg-muted", className].join(" ")} role="option" {...props} />;
+  return <div className={["rounded-[0.25rem] px-2 py-1.5 text-sm hover:bg-muted", className].join(" ")} role="option" tabIndex={-1} {...props} />;
 }
 `;
 
@@ -2619,7 +2636,6 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
-  DetailsHTMLAttributes,
   HTMLAttributes,
   ReactNode,
 } from "react";
@@ -3452,6 +3468,7 @@ export function ApplicationShellNavItem({
   active = false,
   children,
   className = "",
+  href,
   icon,
   onClick,
   ...props
@@ -3471,6 +3488,7 @@ export function ApplicationShellNavItem({
           : "text-muted-foreground hover:bg-muted hover:text-foreground",
         className,
       )}
+      href={href}
       {...props}
       onClick={(event) => {
         onClick?.(event);
@@ -3534,6 +3552,7 @@ export function ApplicationShellNavGroupItem({
   children,
   className = "",
   description,
+  href,
   media,
   onClick,
   trailing,
@@ -3556,6 +3575,7 @@ export function ApplicationShellNavGroupItem({
           : "text-muted-foreground hover:bg-muted hover:text-foreground",
         className,
       )}
+      href={href}
       {...props}
       onClick={(event) => {
         onClick?.(event);

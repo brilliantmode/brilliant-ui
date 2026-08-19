@@ -2377,7 +2377,7 @@ const tsxKeywords = new Set([
   "type",
 ]);
 
-type CodeLanguage = "bash" | "css" | "tsx";
+type CodeLanguage = "bash" | "css" | "ts" | "tsx";
 
 function highlightInlineCode(line: string, language: CodeLanguage): ReactNode {
   if (language === "bash") {

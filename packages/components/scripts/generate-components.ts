@@ -1,6 +1,8 @@
+import { execFile } from "node:child_process";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import { registry } from "../../registry/src/index.ts";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -8,6 +10,7 @@ const outputRoot = resolve(packageRoot, "src/generated");
 const tokensRoot = resolve(packageRoot, "../tokens/src");
 const animationsRoot = resolve(packageRoot, "../animations/src");
 const packageKinds = new Set(["block", "component", "layout"]);
+const execFileAsync = promisify(execFile);
 
 function packageSource(source: string): string {
   return source
@@ -52,4 +55,26 @@ await writeFile(
   resolve(packageRoot, "src/styles.css"),
   `${tokenStyles.trim()}\n\n/* Tailwind v4 scans the compiled package instead of requiring app-owned source files. */\n@source "../dist";\n`,
   "utf8",
+);
+
+const generatedSources = [
+  outputRoot,
+  resolve(packageRoot, "src/animations.ts"),
+  resolve(packageRoot, "src/tokens.ts"),
+];
+
+await execFileAsync("pnpm", ["exec", "biome", "format", "--write", ...generatedSources], {
+  cwd: packageRoot,
+});
+await execFileAsync(
+  "pnpm",
+  [
+    "exec",
+    "biome",
+    "check",
+    "--write",
+    "--only=assist/source/organizeImports",
+    ...generatedSources,
+  ],
+  { cwd: packageRoot },
 );
