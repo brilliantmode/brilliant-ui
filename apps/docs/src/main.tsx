@@ -17,6 +17,7 @@ const navItems = [
   ["Textarea", "#textarea"],
   ["Checkbox", "#checkbox"],
   ["Switch", "#switch"],
+  ["Radio Group", "#radio-group"],
   ["Alert", "#alert"],
   ["Separator", "#separator"],
   ["Skeleton", "#skeleton"],
@@ -182,6 +183,22 @@ export function Example() {
 
 export function Example() {
   return <Switch aria-label="Enable sync" defaultChecked />;
+}`,
+  "radio-group": `import { RadioGroup, RadioItem } from "@/components/ui/radio-group";
+
+export function Example() {
+  return (
+    <RadioGroup aria-label="Billing plan" size="md">
+      <RadioItem defaultChecked label="Pro" name="plan" value="pro" />
+      <RadioItem
+        description="SAML, SCIM, audit logs"
+        label="Enterprise"
+        name="plan"
+        value="enterprise"
+        variant="default"
+      />
+    </RadioGroup>
+  );
 }`,
   alert: `import {
   Alert,
@@ -459,6 +476,41 @@ function ComponentMiniPreview({ name }: { name: string }) {
 
   if (name === "switch") {
     return <SwitchPreview />;
+  }
+
+  if (name === "radio-group") {
+    return (
+      <fieldset aria-label="Billing plan" className="grid gap-3">
+        {(
+          [
+            ["pro", "Pro", "Usage, members, and API controls", true],
+            ["enterprise", "Enterprise", "SAML, SCIM, audit logs", false],
+          ] as const
+        ).map(([value, label, description, checked]) => (
+          <label className="group/radio flex cursor-pointer items-start gap-3 text-sm" key={value}>
+            <span className="relative mt-0.5 inline-grid size-5 shrink-0 place-items-center">
+              <input
+                className="peer absolute inset-0 z-10 size-5 cursor-pointer appearance-none rounded-full opacity-0"
+                defaultChecked={Boolean(checked)}
+                name="preview-plan"
+                type="radio"
+                value={String(value)}
+              />
+              <span className="pointer-events-none grid size-5 place-items-center rounded-full border border-control-border bg-background shadow-[inset_0_1px_0_color-mix(in_oklch,white_70%,transparent),inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_12%,transparent)] transition-[background-color,border-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] peer-active:scale-[0.9] peer-checked:border-primary peer-checked:bg-primary peer-checked:shadow-[inset_0_1px_0_color-mix(in_oklch,white_22%,transparent),0_1px_2px_oklch(0_0_0/0.08)] peer-focus-visible:ring-1 peer-focus-visible:ring-ring peer-checked:[&_[data-indicator]]:scale-100 peer-checked:[&_[data-indicator]]:opacity-100">
+                <span
+                  className="size-2 scale-50 rounded-full bg-primary-foreground opacity-0 transition-[opacity,transform] duration-[var(--brilliant-duration-fast)]"
+                  data-indicator=""
+                />
+              </span>
+            </span>
+            <span className="grid gap-0.5">
+              <span className="font-medium tracking-[-0.01em]">{label}</span>
+              <span className="text-xs text-muted-foreground">{description}</span>
+            </span>
+          </label>
+        ))}
+      </fieldset>
+    );
   }
 
   if (name === "alert") {
@@ -884,6 +936,7 @@ export function Example() {
                   {item.name === "card" ||
                   item.name === "text" ||
                   item.name === "checkbox" ||
+                  item.name === "radio-group" ||
                   item.name === "separator" ||
                   item.name === "skeleton" ? (
                     <div className="space-y-3">
@@ -913,27 +966,35 @@ export function Example() {
                                     ["default", "Normal selection state."],
                                     ["critical", "Destructive or high-risk selection context."],
                                   ]
-                                : item.name === "separator"
+                                : item.name === "radio-group"
                                   ? [
-                                      ["default", "Standard divider using the border token."],
-                                      ["muted", "Subtle divider for dense grouped content."],
-                                      ["primary", "Branded or active section divider."],
+                                      ["default", "Normal single-choice selection."],
+                                      ["critical", "High-risk or destructive choice context."],
                                     ]
-                                  : item.name === "skeleton"
+                                  : item.name === "separator"
                                     ? [
-                                        ["surface", "Default loading placeholder."],
-                                        ["raised", "Slightly stronger placeholder hierarchy."],
-                                        ["primary", "Branded loading placeholder, used sparingly."],
+                                        ["default", "Standard divider using the border token."],
+                                        ["muted", "Subtle divider for dense grouped content."],
+                                        ["primary", "Branded or active section divider."],
                                       ]
-                                    : [
-                                        ["default", "Normal UI copy."],
-                                        ["muted", "Secondary or supporting copy."],
-                                        ["glow", "Premium, active, or AI-ready emphasis."],
-                                        [
-                                          "shimmer",
-                                          "Generating, syncing, or live processing text.",
-                                        ],
-                                      ]
+                                    : item.name === "skeleton"
+                                      ? [
+                                          ["surface", "Default loading placeholder."],
+                                          ["raised", "Slightly stronger placeholder hierarchy."],
+                                          [
+                                            "primary",
+                                            "Branded loading placeholder, used sparingly.",
+                                          ],
+                                        ]
+                                      : [
+                                          ["default", "Normal UI copy."],
+                                          ["muted", "Secondary or supporting copy."],
+                                          ["glow", "Premium, active, or AI-ready emphasis."],
+                                          [
+                                            "shimmer",
+                                            "Generating, syncing, or live processing text.",
+                                          ],
+                                        ]
                             ).map(([variant, use]) => (
                               <tr className="border-b border-border last:border-b-0" key={variant}>
                                 <td className="px-4 py-3 font-mono text-xs">{variant}</td>
@@ -954,6 +1015,12 @@ export function Example() {
                         <p className="text-sm leading-6 text-muted-foreground">
                           Use <code>variant=&quot;critical&quot;</code> only when selecting the
                           option has destructive or high-risk meaning.
+                        </p>
+                      ) : item.name === "radio-group" ? (
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Use <code>variant=&quot;critical&quot;</code> on an individual{" "}
+                          <code>RadioItem</code> only when the choice itself carries risk. Items in
+                          the same group should share the same <code>name</code>.
                         </p>
                       ) : item.name === "separator" ? (
                         <p className="text-sm leading-6 text-muted-foreground">
@@ -1014,7 +1081,7 @@ export function Example() {
                     </div>
                   ) : null}
 
-                  {item.name === "checkbox" ? (
+                  {item.name === "checkbox" || item.name === "radio-group" ? (
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Sizes</h3>
                       <div className="overflow-auto rounded-lg border border-border">
@@ -1026,11 +1093,21 @@ export function Example() {
                             </tr>
                           </thead>
                           <tbody>
-                            {[
-                              ["sm", "Dense tables and compact filter menus."],
-                              ["md", "Default form rows and settings lists."],
-                              ["lg", "Prominent settings rows, approvals, and touch-friendly UI."],
-                            ].map(([size, use]) => (
+                            {(item.name === "radio-group"
+                              ? [
+                                  ["sm", "Dense settings panels and compact filters."],
+                                  ["md", "Default form rows and preference groups."],
+                                  ["lg", "Prominent plan, permission, or approval choices."],
+                                ]
+                              : [
+                                  ["sm", "Dense tables and compact filter menus."],
+                                  ["md", "Default form rows and settings lists."],
+                                  [
+                                    "lg",
+                                    "Prominent settings rows, approvals, and touch-friendly UI.",
+                                  ],
+                                ]
+                            ).map(([size, use]) => (
                               <tr className="border-b border-border last:border-b-0" key={size}>
                                 <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>
                                 <td className="px-4 py-3 text-muted-foreground">{use}</td>

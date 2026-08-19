@@ -153,7 +153,7 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 
 - [ ] Button and button group. Button shipped; button group remains.
 - [ ] Input, textarea, and field primitives. Input, textarea, and label shipped; field primitives remain.
-- [ ] Checkbox, switch, radio group, and slider. Checkbox and switch shipped; radio group and slider remain.
+- [ ] Checkbox, switch, radio group, and slider. Checkbox, switch, and radio group shipped; slider remains.
 - [ ] Select and combobox.
 - [ ] Dialog, alert dialog, drawer, and sheet.
 - [ ] Popover, tooltip, hover card, and context menu.
@@ -166,7 +166,7 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 
 ### Near-term primitive backlog
 
-- [ ] Radio group with keyboard roving focus and form semantics.
+- [x] Radio group with native keyboard and form semantics.
 - [ ] Slider with range support, marks, disabled state, and keyboard control.
 - [ ] Progress and spinner with determinate, indeterminate, and reduced-motion states.
 - [ ] Avatar with fallback initials, image loading/error states, and status presence.

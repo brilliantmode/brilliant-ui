@@ -557,6 +557,132 @@ export function Switch({
 }
 `;
 
+const radioGroupSource = `import type { FieldsetHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
+
+const variants = {
+  default: {
+    control:
+      "border-control-border bg-background peer-checked:border-primary peer-checked:bg-primary",
+    indicator: "bg-primary-foreground",
+  },
+  critical: {
+    control:
+      "border-control-border bg-background peer-checked:border-critical peer-checked:bg-critical",
+    indicator: "bg-critical-foreground",
+  },
+} as const;
+
+const sizes = {
+  sm: {
+    root: "gap-2",
+    item: "gap-2 text-sm",
+    control: "size-4",
+    indicator: "size-1.5",
+  },
+  md: {
+    root: "gap-2.5",
+    item: "gap-2.5 text-sm",
+    control: "size-5",
+    indicator: "size-2",
+  },
+  lg: {
+    root: "gap-3",
+    item: "gap-3 text-base",
+    control: "size-6",
+    indicator: "size-2.5",
+  },
+} as const;
+
+export interface RadioGroupProps extends FieldsetHTMLAttributes<HTMLFieldSetElement> {
+  orientation?: "horizontal" | "vertical";
+  size?: keyof typeof sizes;
+}
+
+export function RadioGroup({
+  className = "",
+  orientation = "vertical",
+  size = "md",
+  ...props
+}: RadioGroupProps) {
+  return (
+    <fieldset
+      className={[
+        orientation === "horizontal" ? "flex flex-wrap items-center" : "grid",
+        sizes[size].root,
+        className,
+      ].join(" ")}
+      data-orientation={orientation}
+      data-size={size}
+      {...props}
+    />
+  );
+}
+
+export interface RadioItemProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "size"> {
+  description?: ReactNode;
+  label: ReactNode;
+  size?: keyof typeof sizes;
+  variant?: keyof typeof variants;
+}
+
+export function RadioItem({
+  className = "",
+  description,
+  label,
+  size = "md",
+  variant = "default",
+  ...props
+}: RadioItemProps) {
+  return (
+    <label
+      className={[
+        "group/radio flex cursor-pointer items-start text-foreground has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50",
+        sizes[size].item,
+        className,
+      ].join(" ")}
+    >
+      <span className={["relative mt-0.5 inline-grid shrink-0 place-items-center", sizes[size].control].join(" ")}>
+        <input
+          className={[
+            "peer absolute inset-0 z-10 cursor-pointer appearance-none rounded-full opacity-0 disabled:cursor-not-allowed",
+            sizes[size].control,
+          ].join(" ")}
+          type="radio"
+          {...props}
+        />
+        <span
+          aria-hidden="true"
+          className={[
+            "pointer-events-none grid place-items-center rounded-full border-hairline shadow-[inset_0_1px_0_color-mix(in_oklch,white_70%,transparent),inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_12%,transparent)]",
+            "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+            "peer-hover:shadow-[inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_18%,transparent),0_1px_2px_oklch(0_0_0/0.06)]",
+            "peer-active:scale-[0.9] peer-focus-visible:ring-1 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-0",
+            "peer-checked:shadow-[inset_0_1px_0_color-mix(in_oklch,white_22%,transparent),0_1px_2px_oklch(0_0_0/0.08)] peer-checked:[&_[data-indicator]]:opacity-100 peer-checked:[&_[data-indicator]]:motion-safe:scale-100",
+            sizes[size].control,
+            variants[variant].control,
+          ].join(" ")}
+        >
+          <span
+            className={[
+              "rounded-full opacity-0 motion-safe:scale-50 motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+              sizes[size].indicator,
+              variants[variant].indicator,
+            ].join(" ")}
+            data-indicator=""
+          />
+        </span>
+      </span>
+      <span className="grid gap-0.5">
+        <span className="font-medium tracking-[-0.01em]">{label}</span>
+        {description ? (
+          <span className="text-sm leading-5 text-muted-foreground">{description}</span>
+        ) : null}
+      </span>
+    </label>
+  );
+}
+`;
+
 const alertSource = `import type { HTMLAttributes } from "react";
 
 const variants = {
@@ -866,6 +992,32 @@ export const registry = [
       accessibility: ["Uses a native checkbox with role switch.", "Pair with a visible label."],
       usage: ["Use for settings that take effect immediately."],
       avoid: ["Do not use for form submission choices that need review."],
+    },
+  },
+  {
+    name: "radio-group",
+    title: "Radio Group",
+    description: "A native radio choice group with tokenized states and dot micro UX.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "radio-group.tsx", content: radioGroupSource, target: "ui/radio-group.tsx" }],
+    metadata: {
+      purpose: "Lets users choose exactly one option from a related set.",
+      slots: ["root", "item", "input", "control", "indicator", "label", "description"],
+      accessibility: [
+        "Uses native radio inputs for form submission and keyboard behavior.",
+        "Give related items the same name.",
+        "Label the group with a legend or aria-label.",
+        "Focus is always visible for keyboard users.",
+      ],
+      usage: [
+        "Use for mutually exclusive choices.",
+        "Use description for plan, permission, or policy context.",
+        "Use orientation horizontal only for short, low-density choices.",
+        "Use variant critical only for high-risk choices.",
+      ],
+      avoid: ["Do not use when multiple selections are allowed; use Checkbox instead."],
     },
   },
   {
