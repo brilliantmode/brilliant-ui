@@ -1851,7 +1851,7 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
               </span>
               <button
                 aria-label={copied ? "Code copied" : "Copy code"}
-                className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-[0.25rem] border border-white/12 bg-white/6 px-2 text-xs font-medium text-code-foreground transition-[background-color,border-color,color,transform] hover:border-white/20 hover:bg-white/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                className="inline-grid size-7 shrink-0 place-items-center rounded-[0.25rem] border border-white/12 bg-white/6 text-code-foreground transition-[background-color,border-color,color,transform] hover:border-white/20 hover:bg-white/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 onClick={copyCode}
                 type="button"
               >
@@ -1883,7 +1883,6 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
                     <path d="M3 10.5V4.5A1.5 1.5 0 0 1 4.5 3h6" />
                   </svg>
                 )}
-                <span>{copied ? "Copied" : "Copy"}</span>
               </button>
             </div>
             <CodeBlock className="rounded-none border-0 shadow-none">{code}</CodeBlock>
