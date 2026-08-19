@@ -1457,7 +1457,10 @@ export function Example() {
       scrollThreshold={24}
     >
       <HeaderContainer>
-        <HeaderBrand href="/">Brilliant</HeaderBrand>
+        <HeaderBrand href="/">
+          <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
+          <span>Brilliant</span>
+        </HeaderBrand>
         <HeaderMobileTrigger />
         <HeaderNav>
           <HeaderLink active href="/dashboard">Dashboard</HeaderLink>
@@ -1510,7 +1513,7 @@ export function Example() {
           </FooterNav>
         </FooterMain>
         <FooterBottom>
-          <span>© 2026 Brilliant UI</span>
+          <span>© 2026 Brilliant Mode</span>
           <div className="flex gap-4">
             <FooterLink href="/privacy">Privacy</FooterLink>
             <FooterLink href="/terms">Terms</FooterLink>
@@ -3344,8 +3347,12 @@ function HeaderPreview() {
   return (
     <header className="relative z-20 w-full border-b border-border bg-background/95 text-foreground backdrop-blur">
       <div className="relative mx-auto flex min-h-14 max-w-screen-2xl items-center gap-3 px-4 md:px-6">
-        <a className="font-semibold tracking-[-0.015em]" href="#header-preview">
-          Brilliant
+        <a
+          className="inline-flex items-center gap-2 font-semibold tracking-[-0.015em]"
+          href="#header-preview"
+        >
+          <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
+          <span>Brilliant</span>
         </a>
         <button
           aria-expanded={menuOpen}
@@ -3437,7 +3444,7 @@ function FooterPreview() {
           </nav>
         </div>
         <div className="mt-8 flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
-          <span>© 2026 Brilliant UI</span>
+          <span>© 2026 Brilliant Mode</span>
           <div className="flex gap-4">
             <a className="hover:text-foreground" href="#footer-privacy">
               Privacy
@@ -5113,7 +5120,8 @@ function AppHeader({
           </span>
         </button>
         <HeaderBrand href="/" onClick={(event) => onNavigate(event, "/")}>
-          Brilliant UI
+          <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
+          <span className="hidden sm:inline">Brilliant UI</span>
         </HeaderBrand>
         <HeaderNav className="!hidden min-w-0 flex-1 overflow-x-auto md:!flex">
           {topNavItems.map(([label, href]) => (
@@ -5272,7 +5280,7 @@ function AppFooter({ onNavigate }: { onNavigate: NavigateHandler }) {
           </FooterNav>
         </FooterMain>
         <FooterBottom className="mt-8">
-          <span>© 2026 Brilliant UI</span>
+          <span>© 2026 Brilliant Mode</span>
           <span>App-owned components. Brandable by design.</span>
         </FooterBottom>
       </FooterContainer>

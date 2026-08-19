@@ -4807,6 +4807,7 @@ export const registry = [
         "Active links expose aria-current=page.",
         "The mobile trigger exposes its expanded state and supports Escape to close.",
         "Navigation destinations remain real anchors.",
+        "Decorative logo images inside HeaderBrand should use an empty alt when adjacent brand text supplies the accessible name.",
         "Reveal motion is disabled when the user prefers reduced motion.",
       ],
       usage: [
@@ -4815,6 +4816,7 @@ export const registry = [
         "Style data-scrolled, data-scroll-direction, and data-visibility states to change color, transparency, density, or other presentation.",
         "Use onScrollStateChange when scroll state must change rendered content such as a logo or action set.",
         "Use HeaderContainer to constrain content width and align the brand, navigation, and actions.",
+        "Place an img, inline SVG, or framework image component inside HeaderBrand alongside optional brand text.",
         "Use HeaderMobileTrigger to expose the navigation below the mobile breakpoint.",
       ],
       avoid: [
