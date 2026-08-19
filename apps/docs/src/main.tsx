@@ -2645,7 +2645,7 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
         id={`${panelId}-preview-panel`}
         role="tabpanel"
       >
-        <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-background p-6">
+        <div className="relative min-w-0 max-w-full overflow-visible rounded-lg border border-border bg-background p-6">
           {children}
         </div>
       </div>
