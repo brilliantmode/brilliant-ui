@@ -95,11 +95,15 @@ describe("registry", () => {
     expect(source).toContain("export function ApplicationShellHeaderAction");
     expect(source).toContain("export function ApplicationShellHeaderBrand");
     expect(source).toContain("export function ApplicationShellSidebarToggle");
+    expect(source).toContain("export function ApplicationShellSidebarHeader");
     expect(source).toContain("collapsed?: boolean");
     expect(source).toContain("defaultCollapsed?: boolean");
     expect(source).toContain("onCollapsedChange?: (collapsed: boolean) => void");
     expect(source).toContain("data-collapsed={collapsed}");
     expect(source).toContain('aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}');
+    expect(source).toContain("transition-[grid-template-columns]");
+    expect(source).toContain("transition-[max-width,opacity]");
+    expect(source).not.toContain("group-data-[collapsed=true]/sidebar:hidden");
   });
 
   it("ships a functional native file upload", () => {

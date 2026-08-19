@@ -3109,7 +3109,7 @@ export function ApplicationShell({
     <ApplicationShellContext.Provider value={value}>
       <div
         className={cx(
-          "min-h-screen bg-background text-foreground md:grid motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none",
+          "min-h-screen bg-background text-foreground md:grid motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
           collapsed
             ? "md:grid-cols-[4.5rem_minmax(0,1fr)]"
             : "md:grid-cols-[17.5rem_minmax(0,1fr)]",
@@ -3253,7 +3253,22 @@ export function ApplicationShellSidebarToggle({
       }}
       type={type}
     >
-      {children ?? <span aria-hidden="true">{collapsed ? "›" : "‹"}</span>}
+      {children ?? (
+        <svg
+          aria-hidden="true"
+          className="size-4"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+          viewBox="0 0 24 24"
+        >
+          <rect height="16" rx="2" width="18" x="3" y="4" />
+          <path d="M9 4v16" />
+          <path d={collapsed ? "m13 9 3 3-3 3" : "m16 9-3 3 3 3"} />
+        </svg>
+      )}
     </button>
   );
 }
@@ -3289,11 +3304,26 @@ export function ApplicationShellSidebar({ className = "", ...props }: HTMLAttrib
   );
 }
 
+export function ApplicationShellSidebarHeader({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cx(
+        "-mx-4 mb-4 flex shrink-0 items-center gap-2 border-b border-border px-4 pb-4 md:group-data-[collapsed=true]/sidebar:-mx-2 md:group-data-[collapsed=true]/sidebar:justify-center md:group-data-[collapsed=true]/sidebar:px-2",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
 export function ApplicationShellBrand({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
     <a
       className={cx(
-        "-mx-4 mb-4 flex items-center gap-3 border-b border-border px-4 pb-4 text-foreground outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring md:group-data-[collapsed=true]/sidebar:justify-center md:group-data-[collapsed=true]/sidebar:[&>span]:hidden",
+        "flex min-w-0 max-w-[14rem] flex-1 items-center gap-3 overflow-hidden whitespace-nowrap rounded-[0.25rem] text-foreground opacity-100 outline-none focus-visible:ring-1 focus-visible:ring-ring md:group-data-[collapsed=true]/sidebar:pointer-events-none md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
         className,
       )}
       {...props}
@@ -3332,7 +3362,7 @@ export function ApplicationShellSearch({ className = "", ...props }: AnchorHTMLA
   return (
     <a
       className={cx(
-        "mb-5 flex h-9 items-center gap-2 rounded-[0.375rem] border-hairline border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm md:group-data-[collapsed=true]/sidebar:justify-center md:group-data-[collapsed=true]/sidebar:px-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:hidden md:group-data-[collapsed=true]/sidebar:[&>span:not(:first-child)]:hidden",
+        "mb-5 flex h-9 items-center gap-2 rounded-[0.375rem] border-hairline border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm [&>kbd]:overflow-hidden [&>kbd]:transition-[max-width,opacity,padding,border-width] [&>span:not(:first-child)]:overflow-hidden [&>span:not(:first-child)]:transition-[max-width,opacity] md:group-data-[collapsed=true]/sidebar:justify-center md:group-data-[collapsed=true]/sidebar:px-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:max-w-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:border-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:p-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:opacity-0 md:group-data-[collapsed=true]/sidebar:[&>span:not(:first-child)]:max-w-0 md:group-data-[collapsed=true]/sidebar:[&>span:not(:first-child)]:opacity-0 motion-safe:[&>kbd]:duration-[var(--brilliant-duration-normal)] motion-safe:[&>span:not(:first-child)]:duration-[var(--brilliant-duration-normal)] motion-reduce:[&>kbd]:transition-none motion-reduce:[&>span:not(:first-child)]:transition-none",
         "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         className,
       )}
@@ -3353,7 +3383,7 @@ export function ApplicationShellNavSection({
 }: HTMLAttributes<HTMLDivElement> & { title: string }) {
   return (
     <section className={cx("grid gap-1", className)} {...props}>
-      <h2 className="px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground md:group-data-[collapsed=true]/sidebar:sr-only">
+      <h2 className="max-h-6 overflow-hidden whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground opacity-100 md:group-data-[collapsed=true]/sidebar:max-h-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-height,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none">
         {title}
       </h2>
       <div className="grid gap-0.5">{children}</div>
@@ -3403,7 +3433,7 @@ export function ApplicationShellNavItem({
           {icon}
         </span>
       ) : null}
-      <span className="min-w-0 truncate md:group-data-[collapsed=true]/sidebar:hidden">{children}</span>
+      <span className="min-w-0 max-w-[12rem] truncate opacity-100 md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none">{children}</span>
     </a>
   );
 }
@@ -3476,7 +3506,7 @@ export function ApplicationShellNavGroupItem({
       }}
     >
       {media}
-      <span className="min-w-0 flex-1 md:group-data-[collapsed=true]/sidebar:hidden">
+      <span className="min-w-0 max-w-[12rem] flex-1 overflow-hidden opacity-100 md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none">
         <span className="block truncate text-sm font-medium text-foreground">{children}</span>
         {description ? (
           <span className="mt-0.5 block truncate text-sm leading-5 text-muted-foreground">
@@ -3484,7 +3514,7 @@ export function ApplicationShellNavGroupItem({
           </span>
         ) : null}
       </span>
-      {trailing ? <span className="shrink-0 text-muted-foreground md:group-data-[collapsed=true]/sidebar:hidden">{trailing}</span> : null}
+      {trailing ? <span className="max-w-8 shrink-0 overflow-hidden text-muted-foreground opacity-100 md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none">{trailing}</span> : null}
     </a>
   );
 }
@@ -3618,7 +3648,7 @@ export function ApplicationShellProfileTrigger({
       {...props}
     >
       {media}
-      <span className="min-w-0 flex-1 md:group-data-[collapsed=true]/sidebar:hidden">
+      <span className="min-w-0 max-w-[12rem] flex-1 overflow-hidden opacity-100 md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none">
         <span className="block truncate text-sm font-medium">{children}</span>
         {description ? (
           <span className="mt-0.5 block truncate text-xs leading-5 text-muted-foreground">
@@ -3627,7 +3657,7 @@ export function ApplicationShellProfileTrigger({
         ) : null}
       </span>
       {trailing ? (
-        <span className="shrink-0 text-muted-foreground transition-transform group-open/profile:rotate-180 motion-reduce:transition-none md:group-data-[collapsed=true]/sidebar:hidden">
+        <span className="max-w-8 shrink-0 overflow-hidden text-muted-foreground opacity-100 transition-[max-width,opacity,transform] group-open/profile:rotate-180 md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none">
           {trailing}
         </span>
       ) : null}
@@ -4997,6 +5027,7 @@ export const registry = [
         "mobile-trigger",
         "sidebar-toggle",
         "sidebar",
+        "sidebar-header",
         "sidebar-content",
         "sidebar-footer",
         "brand",
@@ -5031,7 +5062,7 @@ export const registry = [
       ],
       usage: [
         "Use as the top-level frame for authenticated product screens.",
-        "Use ApplicationShellSidebarToggle for desktop collapse and expand behavior; mobile navigation remains controlled by ApplicationShellMobileTrigger.",
+        "Place ApplicationShellSidebarToggle inside ApplicationShellSidebarHeader, aligned opposite the brand; mobile navigation remains controlled by ApplicationShellMobileTrigger.",
         "Use collapsed and onCollapsedChange when sidebar state must be controlled or persisted by the application.",
         "Keep primary navigation in ApplicationShellSidebar.",
         "Use NavItem for simple destinations and NavGroupItem for inbox/account rows with secondary text.",

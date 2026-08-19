@@ -1714,6 +1714,7 @@ export function Example() {
   ApplicationShellSidebar,
   ApplicationShellSidebarContent,
   ApplicationShellSidebarFooter,
+  ApplicationShellSidebarHeader,
   ApplicationShellSidebarToggle,
   ApplicationShellProfile,
   ApplicationShellProfileMenu,
@@ -1724,14 +1725,17 @@ export function Example() {
   return (
     <ApplicationShell>
       <ApplicationShellSidebar>
+        <ApplicationShellSidebarHeader>
+          <ApplicationShellBrand href="/">
+            <img alt="" className="size-9" src="/images/brilliant-mark.svg" />
+            <span>
+              <span className="block text-sm font-semibold">Brilliant</span>
+              <span className="block text-xs text-muted-foreground">Component system</span>
+            </span>
+          </ApplicationShellBrand>
+          <ApplicationShellSidebarToggle />
+        </ApplicationShellSidebarHeader>
         <ApplicationShellSidebarContent>
-        <ApplicationShellBrand href="/">
-          <img alt="" className="size-9" src="/images/brilliant-mark.svg" />
-          <span>
-            <span className="block text-sm font-semibold">Brilliant</span>
-            <span className="block text-xs text-muted-foreground">Component system</span>
-          </span>
-        </ApplicationShellBrand>
         <ApplicationShellSearch href="/search">
           <span aria-hidden="true">⌕</span>
           <span className="flex-1">Search docs</span>
@@ -1801,7 +1805,6 @@ export function Example() {
       <div className="min-w-0">
         <ApplicationShellHeader>
           <ApplicationShellMobileTrigger />
-          <ApplicationShellSidebarToggle />
           <ApplicationShellHeaderBrand href="/">
             <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
             <span className="hidden sm:inline">Brilliant</span>
@@ -5259,28 +5262,60 @@ function ComponentMiniPreview({ name }: { name: string }) {
     return (
       <div className="overflow-hidden rounded-[0.5rem] border border-border bg-background shadow-sm">
         <div
-          className={`grid min-h-[32rem] transition-[grid-template-columns] duration-200 ${applicationShellCollapsed ? "md:grid-cols-[4.5rem_minmax(0,1fr)]" : "md:grid-cols-[17.5rem_minmax(0,1fr)]"}`}
+          className={`grid min-h-[32rem] motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${applicationShellCollapsed ? "md:grid-cols-[4.5rem_minmax(0,1fr)]" : "md:grid-cols-[17.5rem_minmax(0,1fr)]"}`}
         >
           <aside
-            className={`flex h-[32rem] flex-col overflow-hidden border-b border-border bg-background transition-[padding] duration-200 md:border-b-0 md:border-r ${applicationShellCollapsed ? "p-2" : "p-4"}`}
+            className={`flex h-[32rem] flex-col overflow-hidden border-b border-border bg-background md:border-b-0 md:border-r motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${applicationShellCollapsed ? "p-2" : "p-4"}`}
           >
             <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <div
                 className={`mb-4 flex items-center gap-3 border-b border-border pb-4 ${applicationShellCollapsed ? "justify-center" : "-mx-4 px-4"}`}
               >
-                <img alt="" className="size-9" src="/images/brilliant-mark.svg" />
-                <div className={applicationShellCollapsed ? "hidden" : ""}>
+                <img
+                  alt=""
+                  className={`size-9 shrink-0 opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-9"}`}
+                  src="/images/brilliant-mark.svg"
+                />
+                <div
+                  className={`overflow-hidden whitespace-nowrap opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
+                >
                   <div className="text-sm font-semibold tracking-tight">Brilliant</div>
                   <div className="text-xs text-muted-foreground">Component system</div>
                 </div>
+                <button
+                  aria-expanded={!applicationShellCollapsed}
+                  aria-label={applicationShellCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                  className={`grid size-9 shrink-0 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground ${applicationShellCollapsed ? "" : "ml-auto"}`}
+                  onClick={() => setApplicationShellCollapsed((collapsed) => !collapsed)}
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="size-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.8"
+                    viewBox="0 0 24 24"
+                  >
+                    <rect height="16" rx="2" width="18" x="3" y="4" />
+                    <path d="M9 4v16" />
+                    <path d={applicationShellCollapsed ? "m13 9 3 3-3 3" : "m16 9-3 3 3 3"} />
+                  </svg>
+                </button>
               </div>
               <div
                 className={`mb-4 flex h-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface text-sm text-muted-foreground shadow-sm ${applicationShellCollapsed ? "justify-center px-0" : "px-3"}`}
               >
                 <span aria-hidden="true">⌕</span>
-                <span className={applicationShellCollapsed ? "hidden" : "flex-1"}>Search docs</span>
+                <span
+                  className={`overflow-hidden opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40 flex-1"}`}
+                >
+                  Search docs
+                </span>
                 <kbd
-                  className={`rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[0.65rem] ${applicationShellCollapsed ? "hidden" : ""}`}
+                  className={`overflow-hidden rounded bg-background font-mono text-[0.65rem] opacity-100 motion-safe:transition-[max-width,opacity,padding,border-width] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 border-0 p-0 opacity-0" : "max-w-8 border border-border px-1.5 py-0.5"}`}
                 >
                   /
                 </kbd>
@@ -5288,7 +5323,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
               <div className="grid gap-4">
                 <section className="grid gap-1">
                   <h4
-                    className={`px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground ${applicationShellCollapsed ? "sr-only" : ""}`}
+                    className={`overflow-hidden whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground opacity-100 motion-safe:transition-[max-height,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-h-0 opacity-0" : "max-h-6"}`}
                   >
                     Main
                   </h4>
@@ -5305,14 +5340,18 @@ function ComponentMiniPreview({ name }: { name: string }) {
                         <span className="grid size-5 place-items-center rounded-[0.3125rem] border border-border bg-background text-[0.55rem]">
                           □
                         </span>
-                        <span className={applicationShellCollapsed ? "hidden" : ""}>{item}</span>
+                        <span
+                          className={`overflow-hidden whitespace-nowrap opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
+                        >
+                          {item}
+                        </span>
                       </div>
                     ))}
                   </div>
                 </section>
                 <section className="grid gap-1.5">
                   <h4
-                    className={`px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground ${applicationShellCollapsed ? "sr-only" : ""}`}
+                    className={`overflow-hidden whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground opacity-100 motion-safe:transition-[max-height,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-h-0 opacity-0" : "max-h-6"}`}
                   >
                     Inboxes
                   </h4>
@@ -5334,7 +5373,9 @@ function ComponentMiniPreview({ name }: { name: string }) {
                       >
                         {title.slice(0, 1)}
                       </span>
-                      <span className={applicationShellCollapsed ? "hidden" : "min-w-0"}>
+                      <span
+                        className={`min-w-0 overflow-hidden opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
+                      >
                         <span className="block truncate text-sm font-medium text-foreground">
                           {title}
                         </span>
@@ -5383,14 +5424,16 @@ function ComponentMiniPreview({ name }: { name: string }) {
                     DR
                     <span className="absolute right-0 bottom-0 size-2.5 rounded-full border border-background bg-emerald-500" />
                   </span>
-                  <span className={applicationShellCollapsed ? "hidden" : "min-w-0 flex-1"}>
+                  <span
+                    className={`min-w-0 flex-1 overflow-hidden opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
+                  >
                     <span className="block truncate text-sm font-medium">Dianne Russell</span>
                     <span className="block truncate text-xs text-muted-foreground">
                       dianne@brilliant.dev
                     </span>
                   </span>
                   <span
-                    className={`text-muted-foreground transition-transform group-open:rotate-180 ${applicationShellCollapsed ? "hidden" : ""}`}
+                    className={`overflow-hidden text-muted-foreground opacity-100 transition-[max-width,opacity,transform] group-open:rotate-180 ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-8"}`}
                   >
                     ⌃
                   </span>
@@ -5400,15 +5443,6 @@ function ComponentMiniPreview({ name }: { name: string }) {
           </aside>
           <div className="min-w-0">
             <header className="flex h-14 items-center gap-3 border-b border-border px-4">
-              <button
-                aria-expanded={!applicationShellCollapsed}
-                aria-label={applicationShellCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-                className="hidden size-9 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground md:grid"
-                onClick={() => setApplicationShellCollapsed((collapsed) => !collapsed)}
-                type="button"
-              >
-                <span aria-hidden="true">{applicationShellCollapsed ? "›" : "‹"}</span>
-              </button>
               <a className="inline-flex items-center gap-2 text-sm font-semibold" href="/">
                 <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
                 <span className="hidden lg:inline">Brilliant</span>
@@ -5798,32 +5832,62 @@ function DocsSearchDialog({
 
 function DocsSidebarHeader({
   collapsed,
+  onCollapsedToggle,
   onNavigate,
   onSearchOpen,
 }: {
   collapsed: boolean;
+  onCollapsedToggle?: () => void;
   onNavigate: NavigateHandler | undefined;
   onSearchOpen: () => void;
 }) {
   return (
     <div className="mb-5 space-y-3">
-      <a
-        className={`flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}
-        href="/"
-        onClick={(event) => onNavigate?.(event, "/")}
-      >
-        <span className="grid size-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-sm font-semibold tracking-tight text-foreground shadow-sm">
-          B
-        </span>
-        <span className={collapsed ? "hidden" : "min-w-0"}>
-          <span className="block truncate text-sm font-semibold tracking-tight text-foreground">
-            Brilliant UI
+      <div className={`flex items-start gap-2 ${collapsed ? "justify-center" : ""}`}>
+        <a
+          className={`flex min-w-0 flex-1 items-center gap-3 overflow-hidden whitespace-nowrap opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${collapsed ? "pointer-events-none max-w-0 opacity-0" : "max-w-[14rem]"}`}
+          href="/"
+          onClick={(event) => onNavigate?.(event, "/")}
+        >
+          <span className="grid size-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-sm font-semibold tracking-tight text-foreground shadow-sm">
+            B
           </span>
-          <span className="block truncate text-xs leading-5 text-muted-foreground">
-            Component system
+          <span className="min-w-0">
+            <span className="block truncate text-sm font-semibold tracking-tight text-foreground">
+              Brilliant UI
+            </span>
+            <span className="block truncate text-xs leading-5 text-muted-foreground">
+              Component system
+            </span>
           </span>
-        </span>
-      </a>
+        </a>
+        {onCollapsedToggle ? (
+          <button
+            aria-expanded={!collapsed}
+            aria-label={
+              collapsed ? "Expand documentation sidebar" : "Collapse documentation sidebar"
+            }
+            className="inline-flex size-9 shrink-0 items-center justify-center rounded-[0.25rem] text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97] motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none"
+            onClick={onCollapsedToggle}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="size-4"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.8"
+              viewBox="0 0 24 24"
+            >
+              <rect height="16" rx="2" width="18" x="3" y="4" />
+              <path d="M9 4v16" />
+              <path d={collapsed ? "m13 9 3 3-3 3" : "m16 9-3 3 3 3"} />
+            </svg>
+          </button>
+        ) : null}
+      </div>
       <button
         aria-haspopup="dialog"
         className={`flex h-9 w-full items-center gap-2 rounded-[0.5rem] border border-border bg-surface text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground ${collapsed ? "justify-center px-0" : "px-3"}`}
@@ -5833,9 +5897,13 @@ function DocsSidebarHeader({
         <span aria-hidden="true" className="text-base leading-none">
           ⌕
         </span>
-        <span className={collapsed ? "sr-only" : "min-w-0 flex-1 truncate"}>Search docs</span>
+        <span
+          className={`min-w-0 flex-1 overflow-hidden truncate opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${collapsed ? "max-w-0 opacity-0" : "max-w-[12rem]"}`}
+        >
+          Search docs
+        </span>
         <kbd
-          className={`rounded-[0.25rem] border border-border bg-background px-1.5 py-0.5 font-mono text-[0.65rem] text-muted-foreground ${collapsed ? "hidden" : ""}`}
+          className={`overflow-hidden rounded-[0.25rem] bg-background font-mono text-[0.65rem] text-muted-foreground opacity-100 motion-safe:transition-[max-width,opacity,padding,border-width] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${collapsed ? "max-w-0 border-0 p-0 opacity-0" : "max-w-8 border border-border px-1.5 py-0.5"}`}
         >
           /
         </kbd>
@@ -5878,7 +5946,7 @@ function DocsNavGroup({
   return (
     <section className="pb-4 last:pb-0">
       <h2
-        className={`mb-2 px-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground ${collapsed ? "sr-only" : ""}`}
+        className={`overflow-hidden whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground opacity-100 motion-safe:transition-[max-height,margin,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none ${collapsed ? "mb-0 max-h-0 opacity-0" : "mb-2 max-h-6"}`}
       >
         {group.label}
       </h2>
@@ -5899,7 +5967,11 @@ function DocsNavGroup({
               title={collapsed ? label : undefined}
             >
               <NavIcon active={isRouteActive(activeRoute, href)} label={label} />
-              <span className={collapsed ? "sr-only" : "min-w-0 truncate"}>{label}</span>
+              <span
+                className={`min-w-0 overflow-hidden truncate opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${collapsed ? "max-w-0 opacity-0" : "max-w-[12rem]"}`}
+              >
+                {label}
+              </span>
             </a>
           </li>
         ))}
@@ -5911,11 +5983,13 @@ function DocsNavGroup({
 function DocsNav({
   activeRoute,
   collapsed = false,
+  onCollapsedToggle,
   onNavigate,
   onSearchOpen,
 }: {
   activeRoute: NavHref;
   collapsed?: boolean;
+  onCollapsedToggle?: () => void;
   onNavigate?: NavigateHandler;
   onSearchOpen: () => void;
 }) {
@@ -5925,6 +5999,7 @@ function DocsNav({
         collapsed={collapsed}
         onNavigate={onNavigate}
         onSearchOpen={onSearchOpen}
+        {...(onCollapsedToggle ? { onCollapsedToggle } : {})}
       />
       <div>
         {navGroups.map((group) => (
@@ -5960,18 +6035,14 @@ function AppHeader({
   onMenuClick,
   onNavigate,
   onSearchOpen,
-  onSidebarToggle,
   onThemeToggle,
-  sidebarCollapsed,
   theme,
 }: {
   activeRoute: NavHref;
   onMenuClick: () => void;
   onNavigate: NavigateHandler;
   onSearchOpen: () => void;
-  onSidebarToggle: () => void;
   onThemeToggle: () => void;
-  sidebarCollapsed: boolean;
   theme: "dark" | "light";
 }) {
   return (
@@ -5987,30 +6058,6 @@ function AppHeader({
           <span aria-hidden="true" className="text-lg leading-none">
             ☰
           </span>
-        </button>
-        <button
-          aria-expanded={!sidebarCollapsed}
-          aria-label={
-            sidebarCollapsed ? "Expand documentation sidebar" : "Collapse documentation sidebar"
-          }
-          className="hidden size-9 shrink-0 items-center justify-center rounded-[0.25rem] text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97] motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none md:inline-flex"
-          onClick={onSidebarToggle}
-          type="button"
-        >
-          <svg
-            aria-hidden="true"
-            className="size-4"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.8"
-            viewBox="0 0 24 24"
-          >
-            <rect height="16" rx="2" width="18" x="3" y="4" />
-            <path d="M9 4v16" />
-            <path d={sidebarCollapsed ? "m13 9 3 3-3 3" : "m16 9-3 3 3 3"} />
-          </svg>
         </button>
         <HeaderBrand href="/" onClick={(event) => onNavigate(event, "/")}>
           <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
@@ -6397,9 +6444,7 @@ function App() {
         onMenuClick={() => setMobileNavOpen(true)}
         onNavigate={navigate}
         onSearchOpen={openSearch}
-        onSidebarToggle={() => setSidebarCollapsed((collapsed) => !collapsed)}
         onThemeToggle={toggleTheme}
-        sidebarCollapsed={sidebarCollapsed}
         theme={theme}
       />
       <MobileDocsNav
@@ -6416,14 +6461,15 @@ function App() {
       />
 
       <main
-        className={`mx-auto grid max-w-screen-2xl motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${sidebarCollapsed ? "md:grid-cols-[72px_minmax(0,1fr)] xl:grid-cols-[72px_minmax(0,1fr)_280px]" : "md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]"}`}
+        className={`mx-auto grid max-w-screen-2xl motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "md:grid-cols-[72px_minmax(0,1fr)] xl:grid-cols-[72px_minmax(0,1fr)_280px]" : "md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]"}`}
       >
         <aside
-          className={`sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-y-auto border-r border-border py-6 [scrollbar-width:none] transition-[padding] duration-[var(--brilliant-duration-normal)] md:block [&::-webkit-scrollbar]:hidden ${sidebarCollapsed ? "px-3" : "px-6"}`}
+          className={`sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-y-auto border-r border-border py-6 [scrollbar-width:none] md:block [&::-webkit-scrollbar]:hidden motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "px-3" : "px-6"}`}
         >
           <DocsNav
             activeRoute={activeRoute}
             collapsed={sidebarCollapsed}
+            onCollapsedToggle={() => setSidebarCollapsed((collapsed) => !collapsed)}
             onNavigate={navigate}
             onSearchOpen={openSearch}
           />
