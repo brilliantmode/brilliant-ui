@@ -10,6 +10,14 @@ import {
 } from "react";
 import { createRoot } from "react-dom/client";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./components/ui/card";
+import {
   FileUpload,
   FileUploadDescription,
   FileUploadDropzone,
@@ -480,6 +488,111 @@ export function BillingUsageBlock() {
     title: "Billing usage summary",
   },
 ] as const;
+
+const cardExampleCode = {
+  analytics: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+
+export function Example() {
+  const [range, setRange] = useState<"7d" | "30d">("30d");
+  const value = range === "30d" ? "$128,430" : "$31,280";
+  return (
+    <Card className="mx-auto max-w-xl" variant="elevated">
+      <CardHeader className="flex-row items-start justify-between space-y-0">
+        <div><CardDescription>Net revenue</CardDescription><CardTitle className="mt-1 text-2xl">{value}</CardTitle></div>
+        <div className="flex rounded border border-border p-0.5">
+          {(["7d", "30d"] as const).map((option) => (
+            <button className="rounded-sm px-2 py-1 text-xs data-[active=true]:bg-muted" data-active={range === option} key={option} onClick={() => setRange(option)} type="button">{option}</button>
+          ))}
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-center gap-2 text-xs text-primary"><span>↑ 12.4%</span><span className="text-muted-foreground">from previous period</span></div>
+        <svg aria-label="Revenue trend" className="mt-4 h-20 w-full text-primary" viewBox="0 0 320 80"><path d="M2 67 C48 63 49 36 93 43 S143 60 180 31 S250 44 318 8" fill="none" stroke="currentColor" strokeWidth="2" /></svg>
+      </CardContent>
+    </Card>
+  );
+}`,
+  project: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+
+export function Example() {
+  return (
+    <Card className="mx-auto max-w-xl" interactive variant="surface">
+      <CardHeader>
+        <div className="flex items-center justify-between"><span className="text-xs font-medium text-primary">IN PROGRESS</span><details className="relative"><summary aria-label="Project actions" className="cursor-pointer list-none px-2">•••</summary><div className="absolute right-0 z-10 mt-1 w-32 rounded border border-border bg-surface p-1 shadow-md"><a className="block w-full rounded-sm px-2 py-1.5 text-left text-xs hover:bg-muted" href="#archive-project">Archive project</a></div></details></div>
+        <CardTitle>Enterprise migration</CardTitle>
+        <CardDescription>Move identity and billing services to the new stack.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex justify-between text-xs"><span>Progress</span><span>68%</span></div>
+        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted"><div className="h-full w-[68%] rounded-full bg-primary" /></div>
+      </CardContent>
+      <CardFooter className="justify-between">
+        <div className="flex -space-x-2"><span className="sr-only">Project members</span>{["AR", "MK", "JL"].map((name) => <span className="grid size-7 place-items-center rounded-full border-2 border-surface bg-muted text-[10px]" key={name}>{name}</span>)}</div>
+        <span className="text-xs text-muted-foreground">Due Sep 24</span>
+      </CardFooter>
+    </Card>
+  );
+}`,
+  billing: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+
+export function Example() {
+  return (
+    <Card className="mx-auto max-w-xl" variant="surface">
+      <CardHeader className="flex-row items-start justify-between space-y-0"><div><CardTitle>Scale plan</CardTitle><CardDescription>Renews Aug 30</CardDescription></div><span className="rounded bg-primary/10 px-2 py-1 text-xs text-primary">Active</span></CardHeader>
+      <CardContent>
+        <div className="flex items-end justify-between"><strong className="text-2xl">7.8M</strong><span className="text-xs text-muted-foreground">of 10M events</span></div>
+        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted"><div className="h-full w-[78%] bg-primary" /></div>
+      </CardContent>
+      <CardFooter className="justify-between"><span className="text-sm">$840 / month</span><a className="rounded bg-primary px-3 py-2 text-xs font-medium text-primary-foreground" href="#billing-settings">Manage plan</a></CardFooter>
+    </Card>
+  );
+}`,
+  integration: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+
+export function Example() {
+  const [connected, setConnected] = useState(false);
+  return (
+    <Card className="mx-auto max-w-xl" variant={connected ? "accent" : "surface"}>
+      <CardHeader className="flex-row items-start gap-3 space-y-0">
+        <span className="grid size-10 place-items-center rounded bg-foreground text-background">S</span>
+        <div className="min-w-0 flex-1"><CardTitle>Stripe</CardTitle><CardDescription>Sync subscriptions and invoices.</CardDescription></div>
+        <button aria-pressed={connected} className="rounded border border-border px-3 py-2 text-xs font-medium" onClick={() => setConnected((value) => !value)} type="button">{connected ? "Disconnect" : "Connect"}</button>
+      </CardHeader>
+      <CardContent className="flex items-center gap-2 text-xs text-muted-foreground"><span className={connected ? "size-2 rounded-full bg-primary" : "size-2 rounded-full bg-muted-foreground/40"} />{connected ? "Connected and syncing" : "Not connected"}</CardContent>
+    </Card>
+  );
+}`,
+  media: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+
+export function Example() {
+  return (
+    <Card className="mx-auto max-w-xl overflow-hidden" interactive variant="surface">
+      <img alt="Sunlit concrete atrium" className="aspect-[16/8] w-full object-cover" src="/images/photo-architecture.jpg" />
+      <CardHeader><CardTitle>New York workspace</CardTitle><CardDescription>Architecture reference · updated today</CardDescription></CardHeader>
+      <CardContent className="flex flex-wrap gap-2">{["Interior", "Concrete", "Natural light"].map((tag) => <span className="rounded bg-muted px-2 py-1 text-xs" key={tag}>{tag}</span>)}</CardContent>
+      <CardFooter className="justify-between text-xs text-muted-foreground"><span>24 assets</span><a className="font-medium text-foreground" href="#media-collection">Open collection →</a></CardFooter>
+    </Card>
+  );
+}`,
+  activity: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+
+export function Example() {
+  const [expanded, setExpanded] = useState(false);
+  const events = expanded ? ["Deployment completed", "Review approved", "Build queued", "Branch created"] : ["Deployment completed", "Review approved"];
+  return (
+    <Card className="mx-auto max-w-xl" variant="surface">
+      <CardHeader className="flex-row items-start justify-between space-y-0"><div><CardTitle>Release activity</CardTitle><CardDescription>Production · v2.8.0</CardDescription></div><span className="rounded bg-primary/10 px-2 py-1 text-xs text-primary">Healthy</span></CardHeader>
+      <CardContent>
+        <ol className="space-y-3">{events.map((event, index) => <li className="flex gap-3 text-sm" key={event}><span className="mt-1.5 size-2 rounded-full bg-primary" /><span className="flex-1">{event}</span><time className="text-xs text-muted-foreground">{index + 2}m</time></li>)}</ol>
+        <button className="mt-4 text-xs font-medium text-primary" onClick={() => setExpanded((value) => !value)} type="button">{expanded ? "Show less" : "View all activity"}</button>
+      </CardContent>
+    </Card>
+  );
+}`,
+} as const;
 
 const usageByComponent = {
   button: `import { Button } from "@/components/ui/button";
@@ -3343,6 +3456,239 @@ function PhotoUploadPreview() {
   );
 }
 
+function CardExamplePreview({ example }: { example: keyof typeof cardExampleCode }) {
+  const [range, setRange] = useState<"7d" | "30d">("30d");
+  const [connected, setConnected] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
+  if (example === "analytics") {
+    const value = range === "30d" ? "$128,430" : "$31,280";
+    return (
+      <Card className="mx-auto max-w-xl" variant="elevated">
+        <CardHeader className="flex-row items-start justify-between space-y-0">
+          <div>
+            <CardDescription>Net revenue</CardDescription>
+            <CardTitle className="mt-1 text-2xl">{value}</CardTitle>
+          </div>
+          <div className="flex rounded-[0.25rem] border border-border p-0.5">
+            {(["7d", "30d"] as const).map((option) => (
+              <button
+                className="rounded-sm px-2 py-1 text-xs data-[active=true]:bg-muted"
+                data-active={range === option}
+                key={option}
+                onClick={() => setRange(option)}
+                type="button"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-2 text-xs text-primary">
+            <span>↑ 12.4%</span>
+            <span className="text-muted-foreground">from previous period</span>
+          </div>
+          <svg
+            aria-label="Revenue trend"
+            className="mt-4 h-20 w-full text-primary"
+            viewBox="0 0 320 80"
+          >
+            <path
+              d="M2 67 C48 63 49 36 93 43 S143 60 180 31 S250 44 318 8"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+          </svg>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (example === "project") {
+    return (
+      <Card className="mx-auto max-w-xl" interactive variant="surface">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-primary">IN PROGRESS</span>
+            <details className="relative">
+              <summary aria-label="Project actions" className="cursor-pointer list-none px-2">
+                •••
+              </summary>
+              <div className="absolute right-0 z-10 mt-1 w-32 rounded border border-border bg-surface p-1 shadow-md">
+                <a
+                  className="block w-full rounded-sm px-2 py-1.5 text-left text-xs hover:bg-muted"
+                  href="#archive-project"
+                >
+                  Archive project
+                </a>
+              </div>
+            </details>
+          </div>
+          <CardTitle>Enterprise migration</CardTitle>
+          <CardDescription>Move identity and billing services to the new stack.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-between text-xs">
+            <span>Progress</span>
+            <span>68%</span>
+          </div>
+          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
+            <div className="h-full w-[68%] rounded-full bg-primary" />
+          </div>
+        </CardContent>
+        <CardFooter className="justify-between">
+          <div className="flex -space-x-2">
+            <span className="sr-only">Project members</span>
+            {["AR", "MK", "JL"].map((name) => (
+              <span
+                className="grid size-7 place-items-center rounded-full border-2 border-surface bg-muted text-[10px]"
+                key={name}
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+          <span className="text-xs text-muted-foreground">Due Sep 24</span>
+        </CardFooter>
+      </Card>
+    );
+  }
+
+  if (example === "billing") {
+    return (
+      <Card className="mx-auto max-w-xl" variant="surface">
+        <CardHeader className="flex-row items-start justify-between space-y-0">
+          <div>
+            <CardTitle>Scale plan</CardTitle>
+            <CardDescription>Renews Aug 30</CardDescription>
+          </div>
+          <span className="rounded-[0.25rem] bg-primary/10 px-2 py-1 text-xs text-primary">
+            Active
+          </span>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-end justify-between">
+            <strong className="text-2xl">7.8M</strong>
+            <span className="text-xs text-muted-foreground">of 10M events</span>
+          </div>
+          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted">
+            <div className="h-full w-[78%] bg-primary" />
+          </div>
+        </CardContent>
+        <CardFooter className="justify-between">
+          <span className="text-sm">$840 / month</span>
+          <a
+            className="rounded bg-primary px-3 py-2 text-xs font-medium text-primary-foreground"
+            href="#billing-settings"
+          >
+            Manage plan
+          </a>
+        </CardFooter>
+      </Card>
+    );
+  }
+
+  if (example === "integration") {
+    return (
+      <Card className="mx-auto max-w-xl" variant={connected ? "accent" : "surface"}>
+        <CardHeader className="flex-row items-start gap-3 space-y-0">
+          <span className="grid size-10 place-items-center rounded-[0.375rem] bg-foreground text-background">
+            S
+          </span>
+          <div className="min-w-0 flex-1">
+            <CardTitle>Stripe</CardTitle>
+            <CardDescription>Sync subscriptions and invoices.</CardDescription>
+          </div>
+          <button
+            aria-pressed={connected}
+            className="rounded border border-border px-3 py-2 text-xs font-medium"
+            onClick={() => setConnected((value) => !value)}
+            type="button"
+          >
+            {connected ? "Disconnect" : "Connect"}
+          </button>
+        </CardHeader>
+        <CardContent className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span
+            className={
+              connected
+                ? "size-2 rounded-full bg-primary"
+                : "size-2 rounded-full bg-muted-foreground/40"
+            }
+          />
+          {connected ? "Connected and syncing" : "Not connected"}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (example === "media") {
+    return (
+      <Card className="mx-auto max-w-xl overflow-hidden" interactive variant="surface">
+        <img
+          alt="Sunlit concrete atrium"
+          className="aspect-[16/8] w-full object-cover"
+          src={photoArchitectureImage}
+        />
+        <CardHeader>
+          <CardTitle>New York workspace</CardTitle>
+          <CardDescription>Architecture reference · updated today</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-2">
+          {["Interior", "Concrete", "Natural light"].map((tag) => (
+            <span className="rounded-[0.25rem] bg-muted px-2 py-1 text-xs" key={tag}>
+              {tag}
+            </span>
+          ))}
+        </CardContent>
+        <CardFooter className="justify-between text-xs text-muted-foreground">
+          <span>24 assets</span>
+          <a className="font-medium text-foreground" href="#media-collection">
+            Open collection →
+          </a>
+        </CardFooter>
+      </Card>
+    );
+  }
+
+  const events = expanded
+    ? ["Deployment completed", "Review approved", "Build queued", "Branch created"]
+    : ["Deployment completed", "Review approved"];
+  return (
+    <Card className="mx-auto max-w-xl" variant="surface">
+      <CardHeader className="flex-row items-start justify-between space-y-0">
+        <div>
+          <CardTitle>Release activity</CardTitle>
+          <CardDescription>Production · v2.8.0</CardDescription>
+        </div>
+        <span className="rounded-[0.25rem] bg-primary/10 px-2 py-1 text-xs text-primary">
+          Healthy
+        </span>
+      </CardHeader>
+      <CardContent>
+        <ol className="space-y-3">
+          {events.map((event, index) => (
+            <li className="flex gap-3 text-sm" key={event}>
+              <span className="mt-1.5 size-2 rounded-full bg-primary" />
+              <span className="flex-1">{event}</span>
+              <time className="text-xs text-muted-foreground">{index + 2}m</time>
+            </li>
+          ))}
+        </ol>
+        <button
+          className="mt-4 text-xs font-medium text-primary"
+          onClick={() => setExpanded((value) => !value)}
+          type="button"
+        >
+          {expanded ? "Show less" : "View all activity"}
+        </button>
+      </CardContent>
+    </Card>
+  );
+}
+
 function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "header") {
     return <HeaderPreview />;
@@ -5381,6 +5727,64 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                             </div>
                             <ExamplePanel code={photoExampleCode[example]}>
                               <PhotoExamplePreview example={example} />
+                            </ExamplePanel>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    {item.name === "card" ? (
+                      <div className="grid gap-8">
+                        <div>
+                          <h3 className="text-lg font-semibold">Real-world examples</h3>
+                          <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+                            Rich compositions built from the same Card slots. These are usage
+                            patterns, not additional locked card variants.
+                          </p>
+                        </div>
+                        {(
+                          [
+                            [
+                              "analytics",
+                              "Analytics metric",
+                              "A range-controlled KPI with comparison context and a compact trend.",
+                            ],
+                            [
+                              "project",
+                              "Project status",
+                              "Progress, ownership, deadline, and a compact action hierarchy.",
+                            ],
+                            [
+                              "billing",
+                              "Billing usage",
+                              "Plan status, quota consumption, renewal context, and a clear action.",
+                            ],
+                            [
+                              "integration",
+                              "Integration state",
+                              "A functional connect state that updates the card treatment and status.",
+                            ],
+                            [
+                              "media",
+                              "Media collection",
+                              "Image-led content with metadata, tags, counts, and navigation.",
+                            ],
+                            [
+                              "activity",
+                              "Expandable activity",
+                              "A dense timeline that reveals additional events without leaving context.",
+                            ],
+                          ] as const
+                        ).map(([example, title, description]) => (
+                          <div className="space-y-3" key={example}>
+                            <div>
+                              <h4 className="font-semibold">{title}</h4>
+                              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                                {description}
+                              </p>
+                            </div>
+                            <ExamplePanel code={cardExampleCode[example]}>
+                              <CardExamplePreview example={example} />
                             </ExamplePanel>
                           </div>
                         ))}
