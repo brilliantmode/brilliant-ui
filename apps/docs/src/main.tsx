@@ -9,6 +9,16 @@ const navItems = [
   ["shadcn", "#shadcn"],
   ["Components", "#components"],
   ["Button", "#button"],
+  ["Badge", "#badge"],
+  ["Card", "#card"],
+  ["Input", "#input"],
+  ["Label", "#label"],
+  ["Textarea", "#textarea"],
+  ["Checkbox", "#checkbox"],
+  ["Switch", "#switch"],
+  ["Alert", "#alert"],
+  ["Separator", "#separator"],
+  ["Skeleton", "#skeleton"],
   ["Foundations", "#foundations"],
   ["Blocks", "#blocks"],
   ["Theming", "#theming"],
@@ -104,6 +114,82 @@ const premiumSystems = [
   ["Access control", "Roles, permissions, policy builder, audit explorer, identity timeline"],
   ["SaaS operations", "Billing, usage meters, API keys, webhooks, members, feature flags"],
 ] as const;
+
+const usageByComponent = {
+  badge: `import { Badge } from "@/components/ui/badge";
+
+export function Example() {
+  return <Badge variant="primary">Live</Badge>;
+}`,
+  card: `import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+export function Example() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Usage</CardTitle>
+        <CardDescription>Current billing period</CardDescription>
+      </CardHeader>
+      <CardContent>2.4M events</CardContent>
+    </Card>
+  );
+}`,
+  input: `import { Input } from "@/components/ui/input";
+
+export function Example() {
+  return <Input placeholder="workspace@company.com" type="email" />;
+}`,
+  label: `import { Label } from "@/components/ui/label";
+
+export function Example() {
+  return <Label htmlFor="workspace">Workspace name</Label>;
+}`,
+  textarea: `import { Textarea } from "@/components/ui/textarea";
+
+export function Example() {
+  return <Textarea placeholder="Add a launch note..." />;
+}`,
+  checkbox: `import { Checkbox } from "@/components/ui/checkbox";
+
+export function Example() {
+  return <Checkbox aria-label="Require approval" defaultChecked />;
+}`,
+  switch: `import { Switch } from "@/components/ui/switch";
+
+export function Example() {
+  return <Switch aria-label="Enable sync" defaultChecked />;
+}`,
+  alert: `import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+
+export function Example() {
+  return (
+    <Alert variant="primary">
+      <AlertTitle>Sync complete</AlertTitle>
+      <AlertDescription>All records are current.</AlertDescription>
+    </Alert>
+  );
+}`,
+  separator: `import { Separator } from "@/components/ui/separator";
+
+export function Example() {
+  return <Separator />;
+}`,
+  skeleton: `import { Skeleton } from "@/components/ui/skeleton";
+
+export function Example() {
+  return <Skeleton className="h-4 w-48" />;
+}`,
+} as const;
 
 function Badge({ children, tone = "muted" }: { children: ReactNode; tone?: "muted" | "ready" }) {
   return (
@@ -456,23 +542,36 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
 
             <CodeBlock>{`npx brilliant-ui add ${registry.map((item) => item.name).join(" ")}`}</CodeBlock>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {registry.map((item) => (
-                <a
-                  className="rounded-lg border border-border bg-surface p-5 hover:border-primary/30"
-                  href={`#${item.name}`}
-                  key={item.name}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <h3 className="font-semibold">{item.title}</h3>
-                    <Badge tone="ready">available</Badge>
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.description}</p>
-                  <div className="mt-4 rounded-[0.375rem] border border-border bg-background p-3">
-                    <ComponentMiniPreview name={item.name} />
-                  </div>
-                </a>
-              ))}
+            <div className="overflow-auto rounded-lg border border-border">
+              <table className="w-full border-collapse text-sm">
+                <thead className="bg-muted text-left">
+                  <tr>
+                    <th className="border-b border-border px-4 py-3 font-medium">Component</th>
+                    <th className="border-b border-border px-4 py-3 font-medium">Purpose</th>
+                    <th className="border-b border-border px-4 py-3 font-medium">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {registry.map((item) => (
+                    <tr className="border-b border-border last:border-b-0" key={item.name}>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        <a
+                          className="font-medium text-primary hover:underline"
+                          href={`#${item.name}`}
+                        >
+                          {item.title}
+                        </a>
+                      </td>
+                      <td className="min-w-80 px-4 py-3 text-muted-foreground">
+                        {item.metadata.purpose}
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge tone="ready">available</Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
 
@@ -612,6 +711,71 @@ export function Example() {
               </div>
             </details>
           </section>
+
+          {registry
+            .filter((item) => item.name !== "button")
+            .map((item) => {
+              const usage = usageByComponent[item.name as keyof typeof usageByComponent];
+
+              return (
+                <section className="mx-auto max-w-4xl space-y-6 pb-14" key={item.name}>
+                  <div className="scroll-mt-24 border-b border-border pb-4" id={item.name}>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h2 className="text-3xl font-semibold tracking-tight">{item.title}</h2>
+                      <Badge tone="ready">available</Badge>
+                    </div>
+                    <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+                      {item.description}
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h3 className="text-lg font-semibold">Installation</h3>
+                    <CodeBlock>{`npx brilliant-ui add ${item.name}`}</CodeBlock>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h3 className="text-lg font-semibold">Usage</h3>
+                    <CodeBlock>{usage}</CodeBlock>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h3 className="text-lg font-semibold">Preview</h3>
+                    <div className="rounded-lg border border-border bg-background p-6">
+                      <ComponentMiniPreview name={item.name} />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-semibold">Anatomy</h3>
+                      <div className="flex flex-wrap gap-2 rounded-lg border border-border bg-surface p-4">
+                        {item.metadata.slots.map((slot) => (
+                          <Badge key={slot}>{slot}</Badge>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-semibold">Micro UX</h3>
+                      <div className="rounded-lg border border-border bg-surface p-4 text-sm leading-6 text-muted-foreground">
+                        Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing
+                        states are guarded with reduced-motion behavior in the generated source.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h3 className="text-lg font-semibold">Accessibility</h3>
+                    <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
+                      {item.metadata.accessibility.map((note) => (
+                        <li key={note}>{note}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </section>
+              );
+            })}
 
           <section className="mx-auto max-w-4xl space-y-6 pb-14">
             <SectionHeading
