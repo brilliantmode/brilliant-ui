@@ -110,7 +110,7 @@ const variants = {
   primary:
     "border border-foreground bg-foreground text-background shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-background/30 before:content-[''] hover:-translate-y-0.5 hover:shadow-md active:translate-y-0",
   secondary:
-    "border border-border bg-surface text-foreground shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-background/80 before:content-[''] hover:-translate-y-0.5 hover:bg-muted active:translate-y-0",
+    "border border-border bg-surface text-foreground shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-background/80 before:content-[''] hover:-translate-y-0.5 hover:bg-muted hover:shadow-md active:translate-y-0",
   outline:
     "border border-border bg-background text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-border)] hover:border-foreground hover:bg-muted",
   ghost: "text-foreground hover:bg-muted",
@@ -140,7 +140,7 @@ export function Button({
   return (
     <button
       className={[
-        "relative isolate inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden rounded-lg font-medium",
+        "relative isolate inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden rounded-[0.375rem] font-medium",
         "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         "focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",

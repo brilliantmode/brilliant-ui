@@ -49,8 +49,30 @@
   --brilliant-shadow-md: 0 4px 12px oklch(0 0 0 / 0.08);
   --brilliant-duration-fast: 120ms;
   --brilliant-duration-normal: 200ms;
+  --brilliant-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --brilliant-ease-enter: cubic-bezier(0, 0, 0, 1);
   --brilliant-ease-exit: cubic-bezier(0.3, 0, 1, 1);
+  --brilliant-ease-spring: linear(
+    0,
+    0.009,
+    0.035 2.1%,
+    0.141,
+    0.281 6.7%,
+    0.723 12.9%,
+    0.938 16.7%,
+    1.017,
+    1.077 20.9%,
+    1.121 22.9%,
+    1.137,
+    1.144 25.1%,
+    1.143 27.1%,
+    1.126 30.7%,
+    1.051 40.8%,
+    1.017 46.4%,
+    0.997 53.4%,
+    0.991 61.1%,
+    1
+  );
   --brilliant-control-height: 2.5rem;
   --brilliant-control-padding-x: 1rem;
   --brilliant-control-gap: 0.5rem;
