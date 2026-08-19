@@ -33,6 +33,15 @@ const navItems = [
   ["CLI", "#cli"],
 ] as const;
 
+const topNavItems = [
+  ["Docs", "#getting-started"],
+  ["Components", "#components"],
+  ["Foundations", "#foundations"],
+  ["Blocks", "#blocks"],
+  ["Theming", "#theming"],
+  ["CLI", "#cli"],
+] as const;
+
 const buttonVariants = [
   [
     "Default",
@@ -845,12 +854,16 @@ function App() {
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-screen-2xl items-center gap-6 px-4 md:px-6">
-          <a className="text-sm font-semibold tracking-tight" href="/">
+          <a className="shrink-0 whitespace-nowrap text-sm font-semibold tracking-tight" href="/">
             Brilliant UI
           </a>
-          <nav className="hidden items-center gap-5 text-sm text-muted-foreground md:flex">
-            {navItems.slice(1).map(([label, href]) => (
-              <a className="hover:text-foreground" href={href} key={href}>
+          <nav className="hidden min-w-0 items-center gap-5 overflow-hidden text-sm text-muted-foreground md:flex">
+            {topNavItems.map(([label, href]) => (
+              <a
+                className="shrink-0 whitespace-nowrap hover:text-foreground"
+                href={href}
+                key={href}
+              >
                 {label}
               </a>
             ))}
