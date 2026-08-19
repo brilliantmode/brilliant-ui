@@ -19,7 +19,7 @@ const buttonVariants = [
   [
     "Default",
     "Save changes",
-    "border border-transparent bg-primary text-primary-foreground hover:-translate-y-px hover:bg-primary/92 hover:shadow-sm active:translate-y-0 active:scale-[0.99] active:bg-primary/88 active:shadow-none",
+    "border border-transparent bg-primary text-primary-foreground hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.99] active:bg-primary/88",
   ],
   [
     "Secondary",
