@@ -284,7 +284,6 @@ function ComponentMiniPreview({ name }: { name: string }) {
       <input
         className="h-9 w-full rounded-[0.25rem] border border-border bg-background px-3 text-sm shadow-sm"
         placeholder="workspace@company.com"
-        readOnly
       />
     );
   }
@@ -297,9 +296,8 @@ function ComponentMiniPreview({ name }: { name: string }) {
         </label>
         <input
           className="h-9 w-full rounded-[0.25rem] border border-border bg-background px-3 text-sm"
+          defaultValue="Acme"
           id="label-preview-workspace"
-          readOnly
-          value="Acme"
         />
       </div>
     );
@@ -310,7 +308,6 @@ function ComponentMiniPreview({ name }: { name: string }) {
       <textarea
         className="min-h-20 w-full resize-none rounded-[0.25rem] border border-border bg-background px-3 py-2 text-sm shadow-sm"
         placeholder="Add a launch note..."
-        readOnly
       />
     );
   }
