@@ -289,8 +289,8 @@ function SwitchPreview() {
           role="switch"
           type="checkbox"
         />
-        <span className="pointer-events-none h-6 w-10 rounded-full border border-transparent bg-secondary shadow-inner transition-[background-color,border-color,box-shadow] duration-[var(--brilliant-duration-fast)] peer-checked:bg-primary peer-checked:shadow-[inset_0_1px_0_color-mix(in_oklch,white_20%,transparent),0_0_0_1px_color-mix(in_oklch,var(--brilliant-primary)_14%,transparent)] peer-focus-visible:ring-1 peer-focus-visible:ring-ring" />
-        <span className="pointer-events-none absolute left-0.5 size-5 rounded-full bg-surface shadow-sm transition-[transform,box-shadow] duration-[var(--brilliant-duration-normal)] ease-[var(--brilliant-ease-spring)] will-change-transform peer-active:scale-x-110 peer-active:scale-y-90 peer-checked:translate-x-4 peer-checked:shadow-[0_1px_3px_oklch(0_0_0/0.14)]" />
+        <span className="pointer-events-none h-6 w-10 rounded-full border border-transparent bg-secondary shadow-inner transition-[background-color,border-color,box-shadow] duration-[var(--brilliant-duration-fast)] peer-checked:bg-primary peer-checked:shadow-none peer-focus-visible:ring-1 peer-focus-visible:ring-ring" />
+        <span className="pointer-events-none absolute left-0.5 size-5 rounded-full bg-surface shadow-sm transition-[transform,box-shadow] duration-[var(--brilliant-duration-normal)] ease-[var(--brilliant-ease-spring)] will-change-transform peer-active:scale-x-110 peer-active:scale-y-90 peer-checked:translate-x-4 peer-checked:shadow-sm" />
       </span>
       <span className="text-sm">{enabled ? "Enabled" : "Disabled"}</span>
     </label>
