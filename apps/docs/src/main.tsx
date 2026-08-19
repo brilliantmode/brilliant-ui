@@ -1770,7 +1770,7 @@ function CodeBlock({
   return (
     <pre
       className={[
-        "max-w-full overflow-auto rounded-lg border border-border bg-code p-4 font-mono text-sm leading-6 text-code-foreground shadow-sm",
+        "max-w-full overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-words [overflow-wrap:anywhere] rounded-lg border border-border bg-code p-4 font-mono text-sm leading-6 text-code-foreground shadow-sm",
         className,
       ].join(" ")}
     >
