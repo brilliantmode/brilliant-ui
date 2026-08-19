@@ -20,6 +20,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@brilliant-ui/animations": "workspace:*",
     "@brilliant-ui/core": "workspace:*",
     "@radix-ui/react-slot": "catalog:",
     "class-variance-authority": "catalog:",

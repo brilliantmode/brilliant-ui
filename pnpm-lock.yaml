@@ -216,6 +216,9 @@ importers:
 
   packages/components:
     dependencies:
+      '@brilliant-ui/animations':
+        specifier: workspace:*
+        version: link:../animations
       '@brilliant-ui/core':
         specifier: workspace:*
         version: link:../core

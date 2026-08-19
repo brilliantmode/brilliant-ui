@@ -1,9 +1,32 @@
 import { describe, expect, it, vi } from "vitest";
-import { animationPresets, prefersReducedMotion, reducedMotionPreset } from "./index.js";
+import {
+  animationPresets,
+  microDurations,
+  microEasings,
+  microUx,
+  microUxClasses,
+  prefersReducedMotion,
+  reducedMotionPreset,
+} from "./index.js";
 
 describe("animation presets", () => {
   it("defines enter, exit, disclosure, and feedback presets", () => {
-    expect(Object.keys(animationPresets)).toEqual(["enter", "exit", "disclosure", "feedback"]);
+    expect(Object.keys(animationPresets)).toEqual([
+      "enter",
+      "exit",
+      "disclosure",
+      "feedback",
+      "press",
+      "lift",
+      "pulse",
+    ]);
+  });
+
+  it("defines micro UX timing, easing, and class primitives", () => {
+    expect(microDurations.quick).toBe("120ms");
+    expect(microEasings.spring).toContain("linear(");
+    expect(microUxClasses.press).toContain("active:scale");
+    expect(microUx("base", "lift")).toContain("hover:-translate-y-0.5");
   });
 
   it("collapses motion duration for reduced-motion fallbacks", () => {

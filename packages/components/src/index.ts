@@ -3,6 +3,7 @@ import { type ClassValue, clsx } from "clsx";
 import type { ComponentPropsWithoutRef, ElementType } from "react";
 import { twMerge } from "tailwind-merge";
 
+export { type MicroUxClass, microUx, microUxClasses } from "@brilliant-ui/animations";
 export { cva, type VariantProps } from "class-variance-authority";
 export { Slot };
 

@@ -53,6 +53,7 @@ const buttonProps = [
 const foundations = [
   ["Tokens", "OKLCH color, spacing, radius, elevation, typography, motion, and density tokens."],
   ["Themes", "Light, dark, system preference, high-contrast, and brand override contracts."],
+  ["Micro UX", "Reusable press, lift, reveal, focus, loading, and reduced-motion primitives."],
   ["Registry", "Versioned items with metadata, dependency resolution, checksums, and safe paths."],
   ["CLI", "Project init, shadcn alias mapping, dry runs, forced updates, and manifests."],
 ] as const;
@@ -103,7 +104,7 @@ function PreviewButton({ children, className }: { children: ReactNode; className
     <button
       className={[
         "relative isolate inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden rounded-lg font-medium",
-        "transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-150",
+        "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         "disabled:pointer-events-none disabled:opacity-50",
         className,

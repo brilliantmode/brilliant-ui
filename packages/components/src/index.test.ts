@@ -4,6 +4,7 @@ import {
   componentStates,
   dataStateAttributes,
   defineComponentAnatomy,
+  microUx,
   stateClasses,
 } from "./index.js";
 
@@ -15,6 +16,7 @@ describe("component infrastructure", () => {
   it("defines common component states and shared classes", () => {
     expect(componentStates).toContain("focus-visible");
     expect(stateClasses.focusRing).toContain("focus-visible:ring-2");
+    expect(microUx("base", "press")).toContain("active:scale");
   });
 
   it("records anatomy for generated component metadata", () => {
