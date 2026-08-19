@@ -5960,7 +5960,7 @@ function AppHeader({
           <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
           <span className="hidden sm:inline">Brilliant UI</span>
         </HeaderBrand>
-        <HeaderNav align="center" className="!hidden min-w-0 flex-1 overflow-x-auto md:!flex">
+        <HeaderNav align="center" className="!hidden min-w-0 flex-1 md:!flex">
           {topNavItems.map(([label, href]) => (
             <HeaderLink
               active={isTopNavActive(activeRoute, href)}
