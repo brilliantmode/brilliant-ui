@@ -1279,7 +1279,11 @@ import { Button } from "@/components/ui/button";
 
 export function Example() {
   return (
-    <Header position="sticky">
+    <Header
+      behavior="elevate"
+      position="sticky"
+      scrollThreshold={24}
+    >
       <HeaderContainer>
         <HeaderBrand href="/">Brilliant</HeaderBrand>
         <HeaderMobileTrigger />
@@ -4633,7 +4637,7 @@ function AppHeader({
   onNavigate: NavigateHandler;
 }) {
   return (
-    <Header position="sticky">
+    <Header behavior="elevate" position="sticky" scrollThreshold={24}>
       <HeaderContainer>
         <button
           aria-controls="mobile-docs-nav"
@@ -5303,7 +5307,7 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                     item.name === "empty-state" ? (
                       <div className="space-y-3">
                         <h3 className="text-lg font-semibold">
-                          {item.name === "header" ? "Positioning" : "Variants"}
+                          {item.name === "header" ? "Positioning and scroll behavior" : "Variants"}
                         </h3>
                         <div className="overflow-auto rounded-lg border border-border">
                           <table className="w-full border-collapse text-sm">
@@ -5320,9 +5324,30 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                             <tbody>
                               {(item.name === "header"
                                 ? [
-                                    ["sticky", "Stays at the viewport top while content scrolls."],
-                                    ["static", "Remains in normal document flow and scrolls away."],
-                                    ["fixed", "Pins to the viewport and overlays page content."],
+                                    [
+                                      'position="sticky"',
+                                      "Stays at the viewport top while content scrolls.",
+                                    ],
+                                    [
+                                      'position="static"',
+                                      "Remains in normal document flow and scrolls away.",
+                                    ],
+                                    [
+                                      'position="fixed"',
+                                      "Pins to the viewport and overlays page content.",
+                                    ],
+                                    [
+                                      'behavior="elevate"',
+                                      "Remains visible and gains subtle separation after the threshold.",
+                                    ],
+                                    [
+                                      'behavior="reveal"',
+                                      "Hides while scrolling down and returns while scrolling up.",
+                                    ],
+                                    [
+                                      'behavior="none"',
+                                      "Exposes scroll state without applying built-in presentation.",
+                                    ],
                                   ]
                                 : item.name === "footer"
                                   ? [
@@ -5452,8 +5477,16 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                             <code>position=&quot;sticky&quot;</code> is the default. Use{" "}
                             <code>position=&quot;static&quot;</code> for a non-sticky header. Fixed
                             headers overlay content, so the application must reserve matching top
-                            space. Mobile navigation, Escape handling, and the animated menu icon
-                            are built into the component.
+                            space. Style <code>data-scrolled</code>,{" "}
+                            <code>data-scroll-direction</code>, and <code>data-visibility</code> to
+                            change colors, transparency, borders, or density. Use{" "}
+                            <code>onScrollStateChange</code> when scroll state needs to swap
+                            rendered content such as a logo or action. For a fully custom color
+                            treatment, set <code>behavior=&quot;none&quot;</code> and style{" "}
+                            <code>data-[scrolled=true]:bg-primary</code> plus{" "}
+                            <code>data-[scrolled=true]:text-primary-foreground</code>. Mobile
+                            navigation, Escape handling, reduced-motion behavior, and the animated
+                            menu icon are built in.
                           </p>
                         ) : item.name === "footer" ? (
                           <p className="text-sm leading-6 text-muted-foreground">

@@ -1,13 +1,27 @@
 "use client";
 
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 const positions = {
   static: "relative",
   sticky: "sticky top-0",
   fixed: "fixed inset-x-0 top-0",
 } as const;
+
+const behaviors = {
+  none: "",
+  elevate:
+    "data-[scrolled=true]:border-border data-[scrolled=true]:bg-background/95 data-[scrolled=true]:shadow-sm",
+  reveal:
+    "data-[scrolled=true]:border-border data-[scrolled=true]:bg-background/95 data-[scrolled=true]:shadow-sm data-[visibility=hidden]:-translate-y-full data-[visibility=visible]:translate-y-0",
+} as const;
+
+export interface HeaderScrollState {
+  direction: "down" | "none" | "up";
+  scrolled: boolean;
+  visibility: "hidden" | "visible";
+}
 
 interface HeaderContextValue {
   closeMenu: () => void;
@@ -28,18 +42,30 @@ function useHeader() {
 }
 
 export interface HeaderProps extends HTMLAttributes<HTMLElement> {
+  behavior?: keyof typeof behaviors;
   defaultMenuOpen?: boolean;
+  onScrollStateChange?: (state: HeaderScrollState) => void;
   position?: keyof typeof positions;
+  scrollThreshold?: number;
 }
 
 export function Header({
+  behavior = "elevate",
   children,
   className = "",
   defaultMenuOpen = false,
+  onScrollStateChange,
   position = "sticky",
+  scrollThreshold = 16,
   ...props
 }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(defaultMenuOpen);
+  const [scrollState, setScrollState] = useState<HeaderScrollState>({
+    direction: "none",
+    scrolled: false,
+    visibility: "visible",
+  });
+  const scrollStateRef = useRef(scrollState);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -49,6 +75,51 @@ export function Header({
     document.addEventListener("keydown", closeOnEscape);
     return () => document.removeEventListener("keydown", closeOnEscape);
   }, [menuOpen]);
+
+  useEffect(() => {
+    let frame = 0;
+    let previousY = window.scrollY;
+
+    const updateScrollState = () => {
+      const currentY = window.scrollY;
+      const delta = currentY - previousY;
+      const direction =
+        Math.abs(delta) < 2 ? scrollStateRef.current.direction : delta > 0 ? "down" : "up";
+      const scrolled = currentY > scrollThreshold;
+      const visibility =
+        behavior === "reveal" && scrolled && direction === "down" ? "hidden" : "visible";
+      const nextState: HeaderScrollState = { direction, scrolled, visibility };
+      const previousState = scrollStateRef.current;
+
+      previousY = currentY;
+      frame = 0;
+
+      if (
+        previousState.direction === nextState.direction &&
+        previousState.scrolled === nextState.scrolled &&
+        previousState.visibility === nextState.visibility
+      ) {
+        return;
+      }
+
+      scrollStateRef.current = nextState;
+      setScrollState(nextState);
+      onScrollStateChange?.(nextState);
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateScrollState);
+    };
+
+    updateScrollState();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [behavior, onScrollStateChange, scrollThreshold]);
 
   const value = useMemo(
     () => ({
@@ -63,12 +134,17 @@ export function Header({
     <HeaderContext.Provider value={value}>
       <header
         className={cx(
-          "z-40 w-full border-b border-border bg-background/95 text-foreground backdrop-blur supports-[backdrop-filter]:bg-background/82",
-          "motion-safe:transition-[background-color,border-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+          "z-40 w-full border-b border-transparent bg-background/80 text-foreground backdrop-blur",
+          "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transform-none motion-reduce:transition-none",
           positions[position],
+          behaviors[behavior],
           className,
         )}
+        data-behavior={behavior}
         data-position={position}
+        data-scroll-direction={scrollState.direction}
+        data-scrolled={scrollState.scrolled}
+        data-visibility={scrollState.visibility}
         {...props}
       >
         {children}
