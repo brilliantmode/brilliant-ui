@@ -5,10 +5,13 @@ import "./styles.css";
 
 const navItems = [
   ["Getting Started", "#getting-started"],
+  ["Why Brilliant", "#why-brilliant"],
+  ["shadcn", "#shadcn"],
   ["Components", "#components"],
   ["Button", "#button"],
   ["Foundations", "#foundations"],
   ["Blocks", "#blocks"],
+  ["Theming", "#theming"],
   ["CLI", "#cli"],
 ] as const;
 
@@ -55,11 +58,36 @@ const buttonProps = [
 ] as const;
 
 const foundations = [
-  ["Tokens", "OKLCH color, spacing, radius, elevation, typography, motion, and density tokens."],
+  ["Tokens", "Brandable OKLCH color, radius, elevation, typography, density, and motion tokens."],
   ["Themes", "Light, dark, system preference, high-contrast, and brand override contracts."],
   ["Micro UX", "Reusable press, lift, reveal, focus, loading, and reduced-motion primitives."],
-  ["Registry", "Versioned items with metadata, dependency resolution, checksums, and safe paths."],
+  ["Registry", "Versioned shadcn-compatible items with metadata, checksums, and safe paths."],
   ["CLI", "Project init, shadcn alias mapping, dry runs, forced updates, and manifests."],
+] as const;
+
+const differentiators = [
+  [
+    "shadcn-compatible source",
+    "Install editable source into your app, keep the familiar aliases, and own the generated files.",
+  ],
+  [
+    "Micro UX built in",
+    "Press, lift, reveal, loading, and reduced-motion behavior ship inside component recipes.",
+  ],
+  [
+    "Enterprise defaults",
+    "Crisp system typography, restrained motion, keyboard focus, high contrast, and dense layouts.",
+  ],
+  [
+    "Product blocks",
+    "SaaS, enterprise, data, and AI screens sit above primitives so teams start closer to real apps.",
+  ],
+] as const;
+
+const shadcnFlow = [
+  ["Initialize", "npx brilliant-ui init"],
+  ["Add components", "npx brilliant-ui add button dialog dropdown-menu"],
+  ["Own the source", "Edit components/ui/* exactly like a shadcn project"],
 ] as const;
 
 const blockGroups = [
@@ -69,6 +97,12 @@ const blockGroups = [
   ["AI", "Prompt input, chat thread, tool calls, citations, agent status"],
   ["SaaS", "Billing, API keys, webhooks, members, feature flags"],
   ["Enterprise", "Permissions, roles, policies, org tree, access timeline"],
+] as const;
+
+const premiumSystems = [
+  ["AI workspace", "Prompt input, tool-call timeline, citations, approvals, agent status"],
+  ["Access control", "Roles, permissions, policy builder, audit explorer, identity timeline"],
+  ["SaaS operations", "Billing, usage meters, API keys, webhooks, members, feature flags"],
 ] as const;
 
 function Badge({ children, tone = "muted" }: { children: ReactNode; tone?: "muted" | "ready" }) {
@@ -128,6 +162,14 @@ function CodeBlock({ children }: { children: string }) {
   );
 }
 
+function MiniTerminal({ children }: { children: string }) {
+  return (
+    <pre className="overflow-auto rounded-lg border border-border bg-foreground p-4 text-sm leading-6 text-background">
+      <code>{children}</code>
+    </pre>
+  );
+}
+
 function App() {
   const firstItem = registry[0];
 
@@ -169,32 +211,76 @@ function App() {
 
         <div className="min-w-0 px-4 py-10 md:px-8 lg:px-10">
           <section className="mx-auto max-w-4xl pb-14" id="getting-started">
-            <Badge tone="ready">React source components</Badge>
+            <Badge tone="ready">shadcn-compatible enterprise UI</Badge>
             <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-5xl">
-              Build with copy-owned components and production tokens.
+              shadcn-compatible components with premium micro UX built in.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
-              Brilliant UI follows the familiar UI framework docs pattern: install the CLI, add
-              source components, customize them in your app, and rely on shared tokens and registry
-              metadata underneath.
+              Brilliant UI keeps the copy-owned shadcn workflow, then adds brandable tokens,
+              enterprise-grade defaults, restrained animation primitives, and product-ready blocks
+              for SaaS, internal tools, and AI apps.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a
-                className="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground"
+                className="inline-flex h-9 items-center rounded-[0.25rem] bg-primary px-4 text-sm font-medium text-primary-foreground"
                 href="#cli"
               >
                 Get started
               </a>
               <a
-                className="inline-flex h-9 items-center rounded-md border border-border px-4 text-sm font-medium"
+                className="inline-flex h-9 items-center rounded-[0.25rem] border border-border px-4 text-sm font-medium"
                 href="#components"
               >
                 Browse components
               </a>
             </div>
             <div className="mt-8">
-              <CodeBlock>{`pnpm --filter @brilliant-ui/cli dev -- init
-pnpm --filter @brilliant-ui/cli dev -- add button`}</CodeBlock>
+              <MiniTerminal>{`npx brilliant-ui init
+npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
+            </div>
+          </section>
+
+          <section className="mx-auto max-w-4xl space-y-6 pb-14">
+            <SectionHeading
+              description="The reason to use Brilliant instead of plain generated components."
+              id="why-brilliant"
+            >
+              Why Brilliant
+            </SectionHeading>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {differentiators.map(([title, description]) => (
+                <article className="rounded-lg border border-border bg-surface p-5" key={title}>
+                  <h3 className="font-semibold">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="mx-auto max-w-4xl space-y-6 pb-14">
+            <SectionHeading
+              description="Brilliant UI is the front door for shadcn-compatible source components."
+              id="shadcn"
+            >
+              Built on the shadcn model
+            </SectionHeading>
+            <div className="rounded-lg border border-border bg-surface">
+              <div className="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
+                {shadcnFlow.map(([title, command]) => (
+                  <div className="p-5" key={title}>
+                    <p className="font-semibold">{title}</p>
+                    <p className="mt-2 font-mono text-xs text-muted-foreground">{command}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="border-t border-border p-5">
+                <p className="text-sm leading-6 text-muted-foreground">
+                  The generated files follow shadcn conventions: Radix where appropriate, Tailwind
+                  semantic classes, editable source, components aliases, and app-owned code. The
+                  Brilliant layer adds tokens, micro UX, enterprise styling, metadata, and product
+                  composition rules.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -231,7 +317,8 @@ pnpm --filter @brilliant-ui/cli dev -- add button`}</CodeBlock>
               </div>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
                 Displays a button or a component that looks like a button. Use it for actions inside
-                forms, dialogs, toolbars, and application screens.
+                forms, dialogs, toolbars, and application screens. Motion, focus, disabled, and
+                reduced-motion behavior are part of the generated source.
               </p>
             </div>
 
@@ -321,7 +408,24 @@ export function Example() {
                 </li>
                 <li>Icon-only buttons must include an accessible label.</li>
                 <li>Keyboard focus is visible through the shared Brilliant focus ring.</li>
+                <li>Micro animations are disabled through reduced-motion media preferences.</li>
               </ul>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Micro UX contract</h3>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {[
+                  ["Hover", "Raised buttons lift by 1px and increase elevation."],
+                  ["Press", "Actions compress to 99% scale for tactile feedback."],
+                  ["Reduce", "Motion is wrapped in motion-safe / motion-reduce classes."],
+                ].map(([title, description]) => (
+                  <article className="rounded-lg border border-border bg-surface p-4" key={title}>
+                    <p className="font-medium">{title}</p>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+                  </article>
+                ))}
+              </div>
             </div>
 
             <details className="rounded-lg border border-border bg-surface">
@@ -361,11 +465,28 @@ export function Example() {
 
           <section className="mx-auto max-w-4xl space-y-6 pb-14">
             <SectionHeading
-              description="Planned higher-level product blocks. These stay marked planned until implementation lands."
+              description="Higher-level systems that make Brilliant more than primitive wrappers."
               id="blocks"
             >
-              Blocks
+              Product systems
             </SectionHeading>
+            <div className="grid gap-4">
+              {premiumSystems.map(([title, description]) => (
+                <article
+                  className="rounded-lg border border-border bg-surface p-5 hover:border-primary/30"
+                  key={title}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="font-semibold">{title}</h3>
+                    <Badge>planned</Badge>
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+                </article>
+              ))}
+            </div>
+            <div className="pt-2">
+              <h3 className="text-lg font-semibold">Block families</h3>
+            </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {blockGroups.map(([title, description]) => (
                 <article className="rounded-lg border border-border bg-surface p-5" key={title}>
@@ -376,6 +497,34 @@ export function Example() {
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
                 </article>
               ))}
+            </div>
+          </section>
+
+          <section className="mx-auto max-w-4xl space-y-6 pb-14">
+            <SectionHeading
+              description="The default indigo is only a starting point; production apps can own their brand."
+              id="theming"
+            >
+              Brand theming
+            </SectionHeading>
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
+              <CodeBlock>{`:root {
+  --brilliant-primary: oklch(0.54 0.23 276);
+  --brilliant-primary-foreground: oklch(1 0 0);
+  --brilliant-ring: oklch(0.61 0.22 276);
+}
+
+[data-brand="acme"] {
+  --brilliant-primary: oklch(0.62 0.18 145);
+  --brilliant-ring: oklch(0.62 0.18 145);
+}`}</CodeBlock>
+              <div className="rounded-lg border border-border bg-surface p-5">
+                <p className="font-semibold">What changes?</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Buttons, focus rings, badges, charts, blocks, and future components inherit
+                  semantic tokens instead of hardcoded colors.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -414,6 +563,10 @@ find "$TMP_DEMO" -maxdepth 4 -type f | sort`}</CodeBlock>
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted-foreground">Registry items</dt>
                   <dd className="font-medium">{registry.length}</dd>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <dt className="text-muted-foreground">Micro UX</dt>
+                  <dd className="font-medium">built in</dd>
                 </div>
               </dl>
             </div>
