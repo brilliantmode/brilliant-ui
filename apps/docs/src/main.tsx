@@ -2628,6 +2628,67 @@ function ComponentMiniPreview({ name }: { name: string }) {
   );
 }
 
+const navIcons: Record<string, ReactNode> = {
+  Accordion: <path d="M7 8h10M7 12h10M7 16h10" />,
+  "Alert Dialog": <path d="M12 8v4m0 4h.01M4 19h16L12 5 4 19Z" />,
+  "Application Shell": <path d="M4 6h16M8 6v14M4 20h16" />,
+  "Aspect Ratio": <path d="M4 8V5h3m10 0h3v3M7 19H4v-3m16 0v3h-3" />,
+  Avatar: <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4 20a8 8 0 0 1 16 0" />,
+  Badge: <path d="m12 4 2.1 4.3 4.7.7-3.4 3.3.8 4.7-4.2-2.2L7.8 17l.8-4.7L5.2 9l4.7-.7L12 4Z" />,
+  Blocks: <path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" />,
+  Breadcrumb: <path d="m6 8 4 4-4 4m8-8 4 4-4 4" />,
+  Button: <path d="M7 8h10a4 4 0 0 1 0 8H7a4 4 0 0 1 0-8Z" />,
+  "Button Group": <path d="M4 8h6v8H4V8Zm6 0h10v8H10V8Z" />,
+  CLI: <path d="m5 8 4 4-4 4m7 0h7" />,
+  Calendar: <path d="M7 3v4m10-4v4M4 9h16M5 5h14v15H5V5Z" />,
+  Card: <path d="M4 6h16v12H4V6Zm3 4h5m-5 4h8" />,
+  Carousel: <path d="M8 6h12v12H8V6ZM4 9v6" />,
+  Checkbox: <path d="M5 5h14v14H5V5Zm4 7 2 2 4-5" />,
+  Collapsible: <path d="M6 9h12M9 5l3 3 3-3M9 19l3-3 3 3" />,
+  Combobox: <path d="M5 7h14v10H5V7Zm4 3h6m-6 4h4" />,
+  Command: <path d="M8 8H6a2 2 0 1 1 2-2v12a2 2 0 1 1-2-2h12a2 2 0 1 1-2 2V6a2 2 0 1 1 2 2H8Z" />,
+  Components: <path d="M4 7h7v7H4V7Zm9 3h7v7h-7v-7Z" />,
+  "Context Menu": <path d="M5 6h14M5 12h10M5 18h7" />,
+  "Date Input": <path d="M7 3v4m10-4v4M5 5h14v15H5V5Zm4 8h6" />,
+  Dialog: <path d="M5 6h14v12H5V6Zm4 4h6m-6 4h4" />,
+  Drawer: <path d="M5 5h14v14H5V5Zm3 10h8" />,
+  "Dropdown Menu": <path d="M5 7h14v4H5V7Zm2 8h10m-3-2 3 3 3-3" />,
+  "Empty State": <path d="M5 7h14v10H5V7Zm4 5h6" />,
+  Field: <path d="M5 7h14M5 12h14M5 17h9" />,
+  Form: <path d="M7 4h10v16H7V4Zm3 5h4m-4 4h4m-4 4h2" />,
+  Foundations: <path d="M12 4 4 8l8 4 8-4-8-4Zm-6 8 6 3 6-3m-12 4 6 3 6-3" />,
+  "Getting Started": <path d="M5 12h12m-5-5 5 5-5 5" />,
+  "Hover Card": <path d="M5 6h14v10H5V6Zm3 13h8" />,
+  Input: <path d="M5 8h14v8H5V8Zm3 4h8" />,
+  Label: <path d="M4 7h10l6 5-6 5H4V7Z" />,
+  Menubar: <path d="M4 7h16M4 12h16M4 17h16" />,
+  "Navigation Menu": <path d="M4 6h16M4 12h12M4 18h8" />,
+  Pagination: <path d="m8 8-4 4 4 4m8-8 4 4-4 4" />,
+  Popover: <path d="M6 5h12v10H9l-3 4V5Z" />,
+  Progress: <path d="M5 12h14M5 12h8" />,
+  "Radio Group": <path d="M8 8h.01M8 16h.01M12 8h7M12 16h7" />,
+  Scrollbar: <path d="M8 4h8v16H8V4Zm5 3h1v6h-1" />,
+  "Scroll Area": <path d="M7 4h10v16H7V4Zm7 3h1v7h-1" />,
+  Select: <path d="M5 8h14v8H5V8Zm10 3 2 2 2-2" />,
+  Separator: <path d="M5 12h14" />,
+  Sheet: <path d="M5 5h14v14H5V5Zm10 0v14" />,
+  shadcn: <path d="m7 17 10-10M10 20l10-10" />,
+  Skeleton: <path d="M5 8h14M5 12h10M5 16h12" />,
+  Slider: <path d="M5 12h14m-5 0a2 2 0 1 0 0 .01" />,
+  Spinner: <path d="M12 3a9 9 0 1 0 9 9" />,
+  Switch: <path d="M8 8h8a4 4 0 0 1 0 8H8a4 4 0 0 1 0-8Zm7 4h.01" />,
+  Table: <path d="M4 6h16v12H4V6Zm0 4h16M9 6v12" />,
+  Tabs: <path d="M5 6h5v4H5V6Zm7 0h7v4h-7V6ZM5 10h14v8H5v-8Z" />,
+  Text: <path d="M5 6h14M9 6v12m-4 0h8" />,
+  Textarea: <path d="M5 6h14v12H5V6Zm3 4h8m-8 4h6" />,
+  Theming: (
+    <path d="M12 3a9 9 0 0 0 0 18h1a2 2 0 0 0 1-3.7 1 1 0 0 1 .6-1.8H16A5 5 0 0 0 16 5a9 9 0 0 0-4-2Z" />
+  ),
+  Toast: <path d="M6 7h12v9H9l-3 3V7Z" />,
+  Tooltip: <path d="M6 6h12v8H9l-3 4V6Z" />,
+  "Why Brilliant": <path d="M12 3 4 7v6c0 4 3.4 6.7 8 8 4.6-1.3 8-4 8-8V7l-8-4Z" />,
+};
+
 function DocsSidebarHeader() {
   return (
     <div className="mb-5 space-y-3">
@@ -2645,7 +2706,7 @@ function DocsSidebarHeader() {
         </span>
       </a>
       <a
-        className="flex h-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
+        className="flex h-9 items-center gap-2 rounded-[0.5rem] border border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
         href="#components"
       >
         <span aria-hidden="true" className="text-base leading-none">
@@ -2660,19 +2721,23 @@ function DocsSidebarHeader() {
   );
 }
 
-function NavGlyph({ active }: { active: boolean }) {
+function NavIcon({ active, label }: { active: boolean; label: string }) {
   return (
-    <span
+    <svg
       aria-hidden="true"
       className={[
-        "mt-px grid size-5 shrink-0 place-items-center rounded-[0.3125rem] border transition-colors",
-        active
-          ? "border-primary/30 bg-primary/10 text-primary"
-          : "border-border bg-background text-muted-foreground",
+        "size-4 shrink-0 transition-colors",
+        active ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
       ].join(" ")}
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.85"
+      viewBox="0 0 24 24"
     >
-      <span className="size-1.5 rounded-[0.1875rem] border border-current" />
-    </span>
+      {navIcons[label] ?? <path d="M5 12h14" />}
+    </svg>
   );
 }
 
@@ -2687,7 +2752,7 @@ function DocsNavGroup({
 }) {
   return (
     <section className="pb-4 last:pb-0">
-      <h2 className="mb-1.5 px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+      <h2 className="mb-2 px-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
         {group.label}
       </h2>
       <ul className="space-y-0.5">
@@ -2696,15 +2761,15 @@ function DocsNavGroup({
             <a
               aria-current={activeHref === href ? "location" : undefined}
               className={[
-                "group flex items-center gap-2 rounded-[0.375rem] px-2 py-1.5 text-sm leading-5 transition-colors",
+                "group flex h-8 items-center gap-3 rounded-[0.5rem] px-2.5 text-sm leading-5 transition-colors",
                 activeHref === href
-                  ? "bg-muted font-medium text-foreground"
+                  ? "bg-primary/8 font-medium text-foreground shadow-[inset_0_0_0_0.5px_oklch(0.707_0.165_254.624/0.12)]"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               ].join(" ")}
               href={href}
               onClick={onNavigate}
             >
-              <NavGlyph active={activeHref === href} />
+              <NavIcon active={activeHref === href} label={label} />
               <span className="min-w-0 truncate">{label}</span>
             </a>
           </li>
