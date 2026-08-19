@@ -1396,9 +1396,22 @@ function HighlightedCode({ children, language }: { children: string; language: C
   );
 }
 
-function CodeBlock({ children, language = "tsx" }: { children: string; language?: CodeLanguage }) {
+function CodeBlock({
+  children,
+  className = "",
+  language = "tsx",
+}: {
+  children: string;
+  className?: string;
+  language?: CodeLanguage;
+}) {
   return (
-    <pre className="overflow-auto rounded-lg border border-border bg-code p-4 font-mono text-sm leading-6 text-code-foreground shadow-sm">
+    <pre
+      className={[
+        "overflow-auto rounded-lg border border-border bg-code p-4 font-mono text-sm leading-6 text-code-foreground shadow-sm",
+        className,
+      ].join(" ")}
+    >
       <code>
         <HighlightedCode language={language}>{children}</HighlightedCode>
       </code>
@@ -1408,6 +1421,32 @@ function CodeBlock({ children, language = "tsx" }: { children: string; language?
 
 function ExamplePanel({ children, code }: { children: ReactNode; code: string }) {
   const [activeTab, setActiveTab] = useState<"code" | "preview">("preview");
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+
+    const timeout = window.setTimeout(() => setCopied(false), 1600);
+    return () => window.clearTimeout(timeout);
+  }, [copied]);
+
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = code;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      setCopied(true);
+    }
+  };
 
   return (
     <div className="space-y-3">
@@ -1441,7 +1480,21 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
         {activeTab === "preview" ? (
           <div className="rounded-lg border border-border bg-background p-6">{children}</div>
         ) : (
-          <CodeBlock>{code}</CodeBlock>
+          <div className="overflow-hidden rounded-lg border border-border bg-code shadow-sm">
+            <div className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-2">
+              <span className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.14em] text-code-comment">
+                TSX
+              </span>
+              <button
+                className="inline-flex h-7 items-center rounded-[0.25rem] border border-white/10 bg-white/5 px-2.5 text-xs font-medium text-code-foreground transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                onClick={copyCode}
+                type="button"
+              >
+                {copied ? "Copied" : "Copy code"}
+              </button>
+            </div>
+            <CodeBlock className="rounded-none border-0 shadow-none">{code}</CodeBlock>
+          </div>
         )}
       </div>
     </div>
