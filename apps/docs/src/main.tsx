@@ -959,7 +959,7 @@ function SheetPreview() {
 
       {open ? (
         <div className="absolute inset-0 bg-foreground/20 motion-safe:animate-enter motion-reduce:animate-none">
-          <div className="absolute top-0 right-0 h-full w-72 border-l border-border bg-surface shadow-md motion-safe:animate-enter motion-reduce:animate-none">
+          <div className="absolute top-0 right-0 h-full w-72 border-l border-border bg-surface shadow-md motion-safe:animate-slide-in-from-right motion-reduce:animate-none">
             <div className="flex items-start justify-between gap-3 border-b border-border p-4">
               <div>
                 <h3 className="text-sm font-semibold">Workspace settings</h3>

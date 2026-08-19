@@ -1606,6 +1606,13 @@ const sides = {
   bottom: "mt-auto mb-0 w-full max-w-none",
 } as const;
 
+const sideMotion = {
+  right: "open:motion-safe:animate-slide-in-from-right",
+  left: "open:motion-safe:animate-slide-in-from-left",
+  top: "open:motion-safe:animate-slide-in-from-top",
+  bottom: "open:motion-safe:animate-slide-in-from-bottom",
+} as const;
+
 export interface SheetProps extends DialogHTMLAttributes<HTMLDialogElement> {
   side?: keyof typeof sides;
 }
@@ -1614,8 +1621,9 @@ export function Sheet({ className = "", side = "right", ...props }: SheetProps) 
   return (
     <dialog
       className={[
-        "border-hairline border-border bg-surface p-0 text-foreground shadow-md backdrop:bg-foreground/30 open:motion-safe:animate-enter open:motion-reduce:animate-none",
+        "border-hairline border-border bg-surface p-0 text-foreground shadow-md backdrop:bg-foreground/30 open:motion-reduce:animate-none",
         sides[side],
+        sideMotion[side],
         className,
       ].join(" ")}
       data-side={side}
