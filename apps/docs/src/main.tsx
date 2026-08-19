@@ -3,63 +3,106 @@ import { type ReactNode, StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
-const navItems = [
-  ["Getting Started", "#getting-started"],
-  ["Why Brilliant", "#why-brilliant"],
-  ["shadcn", "#shadcn"],
-  ["Components", "#components"],
-  ["Button", "#button"],
-  ["Button Group", "#button-group"],
-  ["Badge", "#badge"],
-  ["Aspect Ratio", "#aspect-ratio"],
-  ["Avatar", "#avatar"],
-  ["Card", "#card"],
-  ["Text", "#text"],
-  ["Input", "#input"],
-  ["Label", "#label"],
-  ["Textarea", "#textarea"],
-  ["Field", "#field"],
-  ["Checkbox", "#checkbox"],
-  ["Switch", "#switch"],
-  ["Radio Group", "#radio-group"],
-  ["Slider", "#slider"],
-  ["Select", "#select"],
-  ["Combobox", "#combobox"],
-  ["Alert", "#alert"],
-  ["Dialog", "#dialog"],
-  ["Alert Dialog", "#alert-dialog"],
-  ["Drawer", "#drawer"],
-  ["Sheet", "#sheet"],
-  ["Dropdown Menu", "#dropdown-menu"],
-  ["Tooltip", "#tooltip"],
-  ["Popover", "#popover"],
-  ["Hover Card", "#hover-card"],
-  ["Context Menu", "#context-menu"],
-  ["Separator", "#separator"],
-  ["Skeleton", "#skeleton"],
-  ["Progress", "#progress"],
-  ["Spinner", "#spinner"],
-  ["Empty State", "#empty-state"],
-  ["Tabs", "#tabs"],
-  ["Accordion", "#accordion"],
-  ["Collapsible", "#collapsible"],
-  ["Carousel", "#carousel"],
-  ["Table", "#table"],
-  ["Form", "#form"],
-  ["Scroll Area", "#scroll-area"],
-  ["Breadcrumb", "#breadcrumb"],
-  ["Navigation Menu", "#navigation-menu"],
-  ["Menubar", "#menubar"],
-  ["Pagination", "#pagination"],
-  ["Toast", "#toast"],
-  ["Calendar", "#calendar"],
-  ["Date Input", "#date-input"],
-  ["Command", "#command"],
-  ["Foundations", "#foundations"],
-  ["Blocks", "#blocks"],
-  ["Theming", "#theming"],
-  ["CLI", "#cli"],
-] as const;
+type NavItem = readonly [label: string, href: `#${string}`];
+type NavGroup = {
+  label: string;
+  items: readonly NavItem[];
+};
+
+const navGroups = [
+  {
+    items: [
+      ["Getting Started", "#getting-started"],
+      ["Why Brilliant", "#why-brilliant"],
+      ["shadcn", "#shadcn"],
+      ["Components", "#components"],
+    ],
+    label: "Start",
+  },
+  {
+    items: [
+      ["Button", "#button"],
+      ["Button Group", "#button-group"],
+      ["Badge", "#badge"],
+      ["Card", "#card"],
+      ["Text", "#text"],
+      ["Avatar", "#avatar"],
+      ["Aspect Ratio", "#aspect-ratio"],
+      ["Separator", "#separator"],
+    ],
+    label: "Display",
+  },
+  {
+    items: [
+      ["Input", "#input"],
+      ["Label", "#label"],
+      ["Textarea", "#textarea"],
+      ["Field", "#field"],
+      ["Checkbox", "#checkbox"],
+      ["Switch", "#switch"],
+      ["Radio Group", "#radio-group"],
+      ["Slider", "#slider"],
+      ["Select", "#select"],
+      ["Combobox", "#combobox"],
+      ["Calendar", "#calendar"],
+      ["Date Input", "#date-input"],
+      ["Form", "#form"],
+    ],
+    label: "Forms",
+  },
+  {
+    items: [
+      ["Dialog", "#dialog"],
+      ["Alert Dialog", "#alert-dialog"],
+      ["Drawer", "#drawer"],
+      ["Sheet", "#sheet"],
+      ["Dropdown Menu", "#dropdown-menu"],
+      ["Tooltip", "#tooltip"],
+      ["Popover", "#popover"],
+      ["Hover Card", "#hover-card"],
+      ["Context Menu", "#context-menu"],
+      ["Command", "#command"],
+    ],
+    label: "Overlays",
+  },
+  {
+    items: [
+      ["Alert", "#alert"],
+      ["Skeleton", "#skeleton"],
+      ["Progress", "#progress"],
+      ["Spinner", "#spinner"],
+      ["Empty State", "#empty-state"],
+      ["Toast", "#toast"],
+    ],
+    label: "Feedback",
+  },
+  {
+    items: [
+      ["Tabs", "#tabs"],
+      ["Accordion", "#accordion"],
+      ["Collapsible", "#collapsible"],
+      ["Carousel", "#carousel"],
+      ["Table", "#table"],
+      ["Scroll Area", "#scroll-area"],
+      ["Breadcrumb", "#breadcrumb"],
+      ["Navigation Menu", "#navigation-menu"],
+      ["Menubar", "#menubar"],
+      ["Pagination", "#pagination"],
+    ],
+    label: "Navigation & data",
+  },
+  {
+    items: [
+      ["Foundations", "#foundations"],
+      ["Blocks", "#blocks"],
+      ["Theming", "#theming"],
+      ["CLI", "#cli"],
+    ],
+    label: "System",
+  },
+] as const satisfies readonly NavGroup[];
+
+const navItems: NavItem[] = (navGroups as readonly NavGroup[]).flatMap((group) => group.items);
 
 const topNavItems = [
   ["Docs", "#getting-started"],
@@ -68,7 +111,7 @@ const topNavItems = [
   ["Blocks", "#blocks"],
   ["Theming", "#theming"],
   ["CLI", "#cli"],
-] as const;
+] as const satisfies readonly NavItem[];
 
 type NavHref = (typeof navItems)[number][1];
 
@@ -2350,25 +2393,34 @@ function ComponentMiniPreview({ name }: { name: string }) {
 
 function DocsNav({ activeHref, onNavigate }: { activeHref: NavHref; onNavigate?: () => void }) {
   return (
-    <nav aria-label="Documentation" className="space-y-1 text-sm">
-      <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+    <nav aria-label="Documentation" className="text-sm">
+      <p className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
         Docs
       </p>
-      {navItems.map(([label, href]) => (
-        <a
-          aria-current={activeHref === href ? "location" : undefined}
-          className={[
-            "block rounded-[0.25rem] border-l px-3 py-2 transition-colors",
-            activeHref === href
-              ? "border-primary bg-primary/10 text-foreground"
-              : "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground",
-          ].join(" ")}
-          href={href}
-          key={href}
-          onClick={onNavigate}
-        >
-          {label}
-        </a>
+      {navGroups.map((group) => (
+        <section className="mb-5 last:mb-0" key={group.label}>
+          <h2 className="mb-1.5 px-2 text-[0.68rem] font-medium uppercase tracking-[0.16em] text-muted-foreground/80">
+            {group.label}
+          </h2>
+          <div className="space-y-0.5">
+            {group.items.map(([label, href]) => (
+              <a
+                aria-current={activeHref === href ? "location" : undefined}
+                className={[
+                  "block rounded-[0.25rem] px-2.5 py-1.5 transition-colors",
+                  activeHref === href
+                    ? "bg-primary/10 text-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                ].join(" ")}
+                href={href}
+                key={href}
+                onClick={onNavigate}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </section>
       ))}
     </nav>
   );
