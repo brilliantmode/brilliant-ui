@@ -157,10 +157,8 @@ const navGroups = [
 const topNavItems = [
   ["Docs", "/"],
   ["Components", "/components"],
-  ["Foundations", "/foundations"],
   ["Blocks", "/blocks"],
-  ["Theming", "/theming"],
-  ["CLI", "/cli"],
+  ["Foundations", "/foundations"],
 ] as const satisfies readonly NavItem[];
 
 type NavHref = string;
@@ -5100,10 +5098,16 @@ function AppHeader({
   activeRoute,
   onMenuClick,
   onNavigate,
+  onSearchOpen,
+  onThemeToggle,
+  theme,
 }: {
   activeRoute: NavHref;
   onMenuClick: () => void;
   onNavigate: NavigateHandler;
+  onSearchOpen: () => void;
+  onThemeToggle: () => void;
+  theme: "dark" | "light";
 }) {
   return (
     <Header behavior="elevate" position="sticky" scrollThreshold={24}>
@@ -5136,8 +5140,68 @@ function AppHeader({
             </HeaderLink>
           ))}
         </HeaderNav>
-        <HeaderActions className="shrink-0">
-          <Badge tone="ready">v0.1 foundation</Badge>
+        <HeaderActions className="shrink-0 gap-2">
+          <span className="hidden xl:inline-flex">
+            <Badge tone="ready">v0.1</Badge>
+          </span>
+          <button
+            aria-haspopup="dialog"
+            aria-label="Search documentation"
+            className="inline-flex size-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface px-2.5 text-sm text-muted-foreground shadow-sm outline-none hover:bg-muted hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.99] motion-safe:transition-[background-color,color,transform,width] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none lg:w-56"
+            onClick={onSearchOpen}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="size-4 shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeWidth="1.8"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="6.5" />
+              <path d="m16 16 4 4" />
+            </svg>
+            <span className="hidden min-w-0 flex-1 truncate text-left lg:inline">Search docs</span>
+            <kbd className="hidden rounded-[0.25rem] border border-border bg-background px-1.5 py-0.5 font-mono text-[0.65rem] text-muted-foreground lg:inline">
+              ⌘K
+            </kbd>
+          </button>
+          <button
+            aria-label={`Use ${theme === "dark" ? "light" : "dark"} theme`}
+            className="inline-grid size-9 place-items-center rounded-[0.375rem] border border-border bg-surface text-muted-foreground shadow-sm outline-none hover:bg-muted hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97] motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none"
+            onClick={onThemeToggle}
+            type="button"
+          >
+            {theme === "dark" ? (
+              <svg
+                aria-hidden="true"
+                className="size-4"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth="1.8"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="12" r="3.5" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" />
+              </svg>
+            ) : (
+              <svg
+                aria-hidden="true"
+                className="size-4"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.8"
+                viewBox="0 0 24 24"
+              >
+                <path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z" />
+              </svg>
+            )}
+          </button>
         </HeaderActions>
       </HeaderContainer>
     </Header>
@@ -5293,6 +5357,14 @@ function App() {
   const [activeRoute, setActiveRoute] = useState<NavHref>(() => getRoute());
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    const storedTheme = window.localStorage.getItem("brilliant-theme");
+    if (storedTheme === "dark" || storedTheme === "light") {
+      return storedTheme;
+    }
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
   const pathname = routePathname(activeRoute);
   const componentName = pathname.startsWith("/components/")
     ? pathname.replace("/components/", "")
@@ -5361,6 +5433,16 @@ function App() {
     setSearchOpen(true);
   };
 
+  const toggleTheme = () => {
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
+  };
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    window.localStorage.setItem("brilliant-theme", theme);
+  }, [theme]);
+
   useEffect(() => {
     const handleSearchShortcut = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
@@ -5370,7 +5452,10 @@ function App() {
         target?.tagName === "TEXTAREA" ||
         target?.tagName === "SELECT";
 
-      if (event.key === "/" && !targetIsEditable) {
+      if (
+        (event.key === "/" || ((event.metaKey || event.ctrlKey) && event.key === "k")) &&
+        !targetIsEditable
+      ) {
         event.preventDefault();
         openSearch();
       }
@@ -5415,6 +5500,9 @@ function App() {
         activeRoute={activeRoute}
         onMenuClick={() => setMobileNavOpen(true)}
         onNavigate={navigate}
+        onSearchOpen={openSearch}
+        onThemeToggle={toggleTheme}
+        theme={theme}
       />
       <MobileDocsNav
         activeRoute={activeRoute}
