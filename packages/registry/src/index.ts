@@ -108,7 +108,7 @@ const buttonSource = `import type { ButtonHTMLAttributes } from "react";
 
 const variants = {
   primary:
-    "border border-transparent bg-primary text-primary-foreground hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.99] active:bg-primary/88",
+    "bg-primary text-primary-foreground hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.99] active:bg-primary/88",
   secondary:
     "border border-border bg-surface text-foreground shadow-sm hover:-translate-y-px hover:border-foreground/40 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-secondary active:shadow-sm",
   outline:
@@ -141,7 +141,7 @@ export function Button({
   return (
     <button
       className={[
-        "relative isolate inline-flex shrink-0 items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em]",
+        "relative isolate inline-flex shrink-0 appearance-none items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em]",
         "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         "focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",

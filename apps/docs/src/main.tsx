@@ -19,7 +19,7 @@ const buttonVariants = [
   [
     "Default",
     "Save changes",
-    "border border-transparent bg-primary text-primary-foreground hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.99] active:bg-primary/88",
+    "bg-primary text-primary-foreground hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.99] active:bg-primary/88",
   ],
   [
     "Secondary",
@@ -141,7 +141,7 @@ function PreviewButton({ children, className }: { children: ReactNode; className
   return (
     <button
       className={[
-        "relative isolate inline-flex shrink-0 items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em]",
+        "relative isolate inline-flex shrink-0 appearance-none items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em]",
         "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         "disabled:pointer-events-none disabled:opacity-50",
