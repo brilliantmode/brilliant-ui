@@ -619,7 +619,11 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
               <CodeBlock>{`import { Button } from "@/components/ui/button";
 
 export function Example() {
-  return <Button>Save changes</Button>;
+  return (
+    <Button size="md" variant="primary">
+      Save changes
+    </Button>
+  );
 }`}</CodeBlock>
             </div>
 
