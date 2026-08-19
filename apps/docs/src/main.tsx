@@ -5797,19 +5797,25 @@ function DocsSearchDialog({
 }
 
 function DocsSidebarHeader({
+  collapsed,
   onNavigate,
   onSearchOpen,
 }: {
+  collapsed: boolean;
   onNavigate: NavigateHandler | undefined;
   onSearchOpen: () => void;
 }) {
   return (
     <div className="mb-5 space-y-3">
-      <a className="flex items-center gap-3" href="/" onClick={(event) => onNavigate?.(event, "/")}>
+      <a
+        className={`flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}
+        href="/"
+        onClick={(event) => onNavigate?.(event, "/")}
+      >
         <span className="grid size-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-sm font-semibold tracking-tight text-foreground shadow-sm">
           B
         </span>
-        <span className="min-w-0">
+        <span className={collapsed ? "hidden" : "min-w-0"}>
           <span className="block truncate text-sm font-semibold tracking-tight text-foreground">
             Brilliant UI
           </span>
@@ -5820,15 +5826,17 @@ function DocsSidebarHeader({
       </a>
       <button
         aria-haspopup="dialog"
-        className="flex h-9 w-full items-center gap-2 rounded-[0.5rem] border border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
+        className={`flex h-9 w-full items-center gap-2 rounded-[0.5rem] border border-border bg-surface text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground ${collapsed ? "justify-center px-0" : "px-3"}`}
         onClick={onSearchOpen}
         type="button"
       >
         <span aria-hidden="true" className="text-base leading-none">
           ⌕
         </span>
-        <span className="min-w-0 flex-1 truncate">Search docs</span>
-        <kbd className="rounded-[0.25rem] border border-border bg-background px-1.5 py-0.5 font-mono text-[0.65rem] text-muted-foreground">
+        <span className={collapsed ? "sr-only" : "min-w-0 flex-1 truncate"}>Search docs</span>
+        <kbd
+          className={`rounded-[0.25rem] border border-border bg-background px-1.5 py-0.5 font-mono text-[0.65rem] text-muted-foreground ${collapsed ? "hidden" : ""}`}
+        >
           /
         </kbd>
       </button>
@@ -5858,16 +5866,20 @@ function NavIcon({ active, label }: { active: boolean; label: string }) {
 
 function DocsNavGroup({
   activeRoute,
+  collapsed,
   group,
   onNavigate,
 }: {
   activeRoute: NavHref;
+  collapsed: boolean;
   group: NavGroup;
   onNavigate: NavigateHandler | undefined;
 }) {
   return (
     <section className="pb-4 last:pb-0">
-      <h2 className="mb-2 px-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+      <h2
+        className={`mb-2 px-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground ${collapsed ? "sr-only" : ""}`}
+      >
         {group.label}
       </h2>
       <ul className="space-y-0.5">
@@ -5877,15 +5889,17 @@ function DocsNavGroup({
               aria-current={isRouteActive(activeRoute, href) ? "page" : undefined}
               className={[
                 "group flex h-8 items-center gap-3 rounded-[0.5rem] px-2.5 text-sm leading-5 transition-colors",
+                collapsed ? "justify-center" : "",
                 isRouteActive(activeRoute, href)
                   ? "bg-primary/8 font-medium text-foreground shadow-[inset_0_0_0_0.5px_oklch(0.707_0.165_254.624/0.12)]"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               ].join(" ")}
               href={href}
               onClick={(event) => onNavigate?.(event, href)}
+              title={collapsed ? label : undefined}
             >
               <NavIcon active={isRouteActive(activeRoute, href)} label={label} />
-              <span className="min-w-0 truncate">{label}</span>
+              <span className={collapsed ? "sr-only" : "min-w-0 truncate"}>{label}</span>
             </a>
           </li>
         ))}
@@ -5896,20 +5910,27 @@ function DocsNavGroup({
 
 function DocsNav({
   activeRoute,
+  collapsed = false,
   onNavigate,
   onSearchOpen,
 }: {
   activeRoute: NavHref;
+  collapsed?: boolean;
   onNavigate?: NavigateHandler;
   onSearchOpen: () => void;
 }) {
   return (
     <nav aria-label="Documentation" className="text-sm">
-      <DocsSidebarHeader onNavigate={onNavigate} onSearchOpen={onSearchOpen} />
+      <DocsSidebarHeader
+        collapsed={collapsed}
+        onNavigate={onNavigate}
+        onSearchOpen={onSearchOpen}
+      />
       <div>
         {navGroups.map((group) => (
           <DocsNavGroup
             activeRoute={activeRoute}
+            collapsed={collapsed}
             group={group}
             key={group.label}
             onNavigate={onNavigate}
@@ -5939,14 +5960,18 @@ function AppHeader({
   onMenuClick,
   onNavigate,
   onSearchOpen,
+  onSidebarToggle,
   onThemeToggle,
+  sidebarCollapsed,
   theme,
 }: {
   activeRoute: NavHref;
   onMenuClick: () => void;
   onNavigate: NavigateHandler;
   onSearchOpen: () => void;
+  onSidebarToggle: () => void;
   onThemeToggle: () => void;
+  sidebarCollapsed: boolean;
   theme: "dark" | "light";
 }) {
   return (
@@ -5962,6 +5987,30 @@ function AppHeader({
           <span aria-hidden="true" className="text-lg leading-none">
             ☰
           </span>
+        </button>
+        <button
+          aria-expanded={!sidebarCollapsed}
+          aria-label={
+            sidebarCollapsed ? "Expand documentation sidebar" : "Collapse documentation sidebar"
+          }
+          className="hidden size-9 shrink-0 items-center justify-center rounded-[0.25rem] text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97] motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none md:inline-flex"
+          onClick={onSidebarToggle}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="size-4"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.8"
+            viewBox="0 0 24 24"
+          >
+            <rect height="16" rx="2" width="18" x="3" y="4" />
+            <path d="M9 4v16" />
+            <path d={sidebarCollapsed ? "m13 9 3 3-3 3" : "m16 9-3 3 3 3"} />
+          </svg>
         </button>
         <HeaderBrand href="/" onClick={(event) => onNavigate(event, "/")}>
           <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
@@ -6196,6 +6245,9 @@ function App() {
   const firstItem = registry[0];
   const [activeRoute, setActiveRoute] = useState<NavHref>(() => getRoute());
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(
+    () => window.localStorage.getItem("brilliant-docs-sidebar-collapsed") === "true",
+  );
   const [searchOpen, setSearchOpen] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">(() => {
     const storedTheme = window.localStorage.getItem("brilliant-theme");
@@ -6284,6 +6336,10 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
+    window.localStorage.setItem("brilliant-docs-sidebar-collapsed", String(sidebarCollapsed));
+  }, [sidebarCollapsed]);
+
+  useEffect(() => {
     const handleSearchShortcut = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       const targetIsEditable =
@@ -6341,7 +6397,9 @@ function App() {
         onMenuClick={() => setMobileNavOpen(true)}
         onNavigate={navigate}
         onSearchOpen={openSearch}
+        onSidebarToggle={() => setSidebarCollapsed((collapsed) => !collapsed)}
         onThemeToggle={toggleTheme}
+        sidebarCollapsed={sidebarCollapsed}
         theme={theme}
       />
       <MobileDocsNav
@@ -6357,9 +6415,18 @@ function App() {
         open={searchOpen}
       />
 
-      <main className="mx-auto grid max-w-screen-2xl md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]">
-        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-y-auto border-r border-border px-6 py-6 [scrollbar-width:none] md:block [&::-webkit-scrollbar]:hidden">
-          <DocsNav activeRoute={activeRoute} onNavigate={navigate} onSearchOpen={openSearch} />
+      <main
+        className={`mx-auto grid max-w-screen-2xl motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${sidebarCollapsed ? "md:grid-cols-[72px_minmax(0,1fr)] xl:grid-cols-[72px_minmax(0,1fr)_280px]" : "md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]"}`}
+      >
+        <aside
+          className={`sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-y-auto border-r border-border py-6 [scrollbar-width:none] transition-[padding] duration-[var(--brilliant-duration-normal)] md:block [&::-webkit-scrollbar]:hidden ${sidebarCollapsed ? "px-3" : "px-6"}`}
+        >
+          <DocsNav
+            activeRoute={activeRoute}
+            collapsed={sidebarCollapsed}
+            onNavigate={navigate}
+            onSearchOpen={openSearch}
+          />
         </aside>
 
         <div
