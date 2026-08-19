@@ -504,11 +504,8 @@ export function Example() {
   return (
     <Photo ratio={16 / 10} radius="md" variant="surface">
       <PhotoFallback>Workspace preview unavailable</PhotoFallback>
-      <PhotoImage
-        alt="Workspace analytics dashboard"
-        src="/workspace-preview.jpg"
-      />
-      <PhotoCaption>Workspace analytics dashboard</PhotoCaption>
+      <PhotoImage alt="Sunlit concrete atrium" src="/images/photo-architecture.jpg" />
+      <PhotoCaption>Sunlit concrete atrium</PhotoCaption>
     </Photo>
   );
 }`,
@@ -1522,10 +1519,10 @@ export function FitAndFallbackExample() {
   return (
     <div className="grid gap-4 sm:grid-cols-3">
       <Photo ratio={16 / 10}>
-        <PhotoImage alt="Team member" fit="cover" src="/portrait.jpg" />
+        <PhotoImage alt="Concrete atrium detail" fit="cover" src="/images/photo-architecture.jpg" />
       </Photo>
       <Photo ratio={16 / 10}>
-        <PhotoImage alt="Brilliant logo" fit="contain" src="/brand-mark.svg" />
+        <PhotoImage alt="Full concrete atrium" fit="contain" src="/images/photo-architecture.jpg" />
       </Photo>
       <Photo ratio={16 / 10}>
         <PhotoFallback>Image unavailable</PhotoFallback>
@@ -1540,16 +1537,16 @@ export function RatioExample() {
   return (
     <div className="grid items-end gap-4 sm:grid-cols-3">
       <Photo ratio={1}>
-        <PhotoImage alt="Square workspace preview" src="/workspace.jpg" />
-        <PhotoCaption>1:1 square</PhotoCaption>
+        <PhotoImage alt="Square atrium crop" src="/images/photo-architecture.jpg" />
+        <PhotoCaption>1:1 architectural crop</PhotoCaption>
       </Photo>
       <Photo ratio={3 / 4}>
-        <PhotoImage alt="Team portrait" src="/portrait.jpg" />
-        <PhotoCaption>3:4 portrait</PhotoCaption>
+        <PhotoImage alt="Portrait atrium crop" src="/images/photo-architecture.jpg" />
+        <PhotoCaption>3:4 architectural crop</PhotoCaption>
       </Photo>
       <Photo ratio={16 / 9}>
-        <PhotoImage alt="Wide workspace preview" src="/workspace.jpg" />
-        <PhotoCaption>16:9 landscape</PhotoCaption>
+        <PhotoImage alt="Wide atrium view" src="/images/photo-architecture.jpg" />
+        <PhotoCaption>16:9 architectural view</PhotoCaption>
       </Photo>
     </div>
   );
@@ -1561,7 +1558,7 @@ export function VariantExample() {
     <div className="grid gap-4 sm:grid-cols-3">
       {(["surface", "elevated", "ghost"] as const).map((variant) => (
         <Photo key={variant} ratio={16 / 10} variant={variant}>
-          <PhotoImage alt="Workspace analytics" src="/workspace.jpg" />
+          <PhotoImage alt="Sunlit concrete atrium" src="/images/photo-architecture.jpg" />
           <PhotoCaption>{variant}</PhotoCaption>
         </Photo>
       ))}
@@ -2797,49 +2794,7 @@ function ToastPreview() {
   );
 }
 
-const photoLandscapeImage = `data:image/svg+xml,${encodeURIComponent(`
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
-    <defs>
-      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#eef2ff"/>
-        <stop offset="1" stop-color="#c7d2fe"/>
-      </linearGradient>
-    </defs>
-    <rect width="800" height="500" fill="url(#bg)"/>
-    <rect x="92" y="72" width="616" height="356" rx="24" fill="#fff" stroke="#dbe3ef"/>
-    <rect x="132" y="120" width="190" height="18" rx="9" fill="#111827"/>
-    <rect x="132" y="158" width="536" height="10" rx="5" fill="#dbe3ef"/>
-    <rect x="132" y="202" width="150" height="92" rx="14" fill="#4f46e5"/>
-    <rect x="310" y="202" width="150" height="92" rx="14" fill="#eef2ff" stroke="#dbe3ef"/>
-    <rect x="488" y="202" width="150" height="92" rx="14" fill="#f8fafc" stroke="#dbe3ef"/>
-    <path d="M144 354 C224 312 284 382 360 338 C432 296 492 360 656 304" fill="none" stroke="#4f46e5" stroke-width="12" stroke-linecap="round"/>
-    <circle cx="656" cy="304" r="12" fill="#4f46e5"/>
-  </svg>
-`)}`;
-
-const photoPortraitImage = `data:image/svg+xml,${encodeURIComponent(`
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800">
-    <defs>
-      <linearGradient id="portrait-bg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#312e81"/>
-        <stop offset="0.52" stop-color="#6366f1"/>
-        <stop offset="1" stop-color="#e0e7ff"/>
-      </linearGradient>
-    </defs>
-    <rect width="600" height="800" fill="url(#portrait-bg)"/>
-    <circle cx="300" cy="292" r="108" fill="#f8fafc" fill-opacity="0.92"/>
-    <path d="M118 720c24-184 116-276 182-276s158 92 182 276" fill="#111827" fill-opacity="0.88"/>
-    <circle cx="456" cy="156" r="52" fill="#ffffff" fill-opacity="0.16"/>
-  </svg>
-`)}`;
-
-const photoMarkImage = `data:image/svg+xml,${encodeURIComponent(`
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
-    <rect width="800" height="500" fill="#f8fafc"/>
-    <rect x="280" y="130" width="240" height="240" rx="56" fill="#4f46e5"/>
-    <text x="400" y="302" fill="#fff" font-family="system-ui,sans-serif" font-size="152" font-weight="700" text-anchor="middle">B</text>
-  </svg>
-`)}`;
+const photoArchitectureImage = "/images/photo-architecture.jpg";
 
 function PhotoPreviewFigure({
   alt,
@@ -2900,10 +2855,10 @@ function PhotoExamplePreview({ example }: { example: keyof typeof photoExampleCo
         {(["surface", "elevated", "ghost"] as const).map((variant) => (
           <div className="grid gap-2" key={variant}>
             <PhotoPreviewFigure
-              alt="Workspace analytics"
+              alt="Sunlit concrete atrium"
               caption={variant}
               ratio="16/10"
-              src={photoLandscapeImage}
+              src={photoArchitectureImage}
               variant={variant}
             />
             <code className="text-center text-xs text-muted-foreground">{`variant="${variant}"`}</code>
@@ -2917,22 +2872,22 @@ function PhotoExamplePreview({ example }: { example: keyof typeof photoExampleCo
     return (
       <div className="grid items-end gap-4 sm:grid-cols-3">
         <PhotoPreviewFigure
-          alt="Square workspace preview"
-          caption="1:1 square"
+          alt="Square atrium crop"
+          caption="1:1 architectural crop"
           ratio="1"
-          src={photoLandscapeImage}
+          src={photoArchitectureImage}
         />
         <PhotoPreviewFigure
-          alt="Team portrait"
-          caption="3:4 portrait"
+          alt="Portrait atrium crop"
+          caption="3:4 architectural crop"
           ratio="3/4"
-          src={photoPortraitImage}
+          src={photoArchitectureImage}
         />
         <PhotoPreviewFigure
-          alt="Wide workspace preview"
-          caption="16:9 landscape"
+          alt="Wide atrium view"
+          caption="16:9 architectural view"
           ratio="16/9"
-          src={photoLandscapeImage}
+          src={photoArchitectureImage}
         />
       </div>
     );
@@ -2941,11 +2896,20 @@ function PhotoExamplePreview({ example }: { example: keyof typeof photoExampleCo
   return (
     <div className="grid gap-4 sm:grid-cols-3">
       <div className="grid gap-2">
-        <PhotoPreviewFigure alt="Team member" ratio="16/10" src={photoPortraitImage} />
+        <PhotoPreviewFigure
+          alt="Concrete atrium detail"
+          ratio="16/10"
+          src={photoArchitectureImage}
+        />
         <p className="text-center text-xs text-muted-foreground">fit=&quot;cover&quot;</p>
       </div>
       <div className="grid gap-2">
-        <PhotoPreviewFigure alt="Brilliant logo" fit="contain" ratio="16/10" src={photoMarkImage} />
+        <PhotoPreviewFigure
+          alt="Full concrete atrium"
+          fit="contain"
+          ratio="16/10"
+          src={photoArchitectureImage}
+        />
         <p className="text-center text-xs text-muted-foreground">fit=&quot;contain&quot;</p>
       </div>
       <div className="grid gap-2">
@@ -3018,12 +2982,12 @@ function ComponentMiniPreview({ name }: { name: string }) {
             Preview loading
           </div>
           <img
-            alt="Workspace analytics dashboard"
+            alt="Sunlit concrete atrium"
             className="absolute inset-0 size-full object-cover transition-transform duration-[var(--brilliant-duration-normal)] group-hover:scale-[1.015] motion-reduce:transition-none"
-            src={photoLandscapeImage}
+            src={photoArchitectureImage}
           />
           <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent px-3 pt-8 pb-3 text-xs font-medium text-background">
-            Workspace analytics dashboard
+            Sunlit concrete atrium
           </figcaption>
         </figure>
         <div className="grid gap-3">
