@@ -131,7 +131,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <Card>
+    <Card interactive variant="elevated">
       <CardHeader>
         <CardTitle>Usage</CardTitle>
         <CardDescription>Current billing period</CardDescription>
@@ -272,9 +272,23 @@ function ComponentMiniPreview({ name }: { name: string }) {
 
   if (name === "card") {
     return (
-      <div className="rounded-[0.375rem] border border-border bg-surface p-3 shadow-sm">
-        <p className="text-sm font-semibold">Usage</p>
-        <p className="mt-1 text-xs text-muted-foreground">2.4M events</p>
+      <div className="grid gap-3 md:grid-cols-3">
+        {[
+          ["Surface", "Neutral group", "border-border bg-surface shadow-sm"],
+          ["Elevated", "Dashboard metric", "border-border bg-surface-raised shadow-md"],
+          ["Accent", "Selected state", "border-primary/25 bg-primary/5 shadow-sm"],
+        ].map(([title, description, className]) => (
+          <div
+            className={[
+              "rounded-[0.375rem] border p-3 transition-[border-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] hover:-translate-y-px hover:border-primary/30 hover:shadow-md active:translate-y-0 active:scale-[0.995]",
+              className,
+            ].join(" ")}
+            key={title}
+          >
+            <p className="text-sm font-semibold">{title}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+          </div>
+        ))}
       </div>
     );
   }
@@ -745,6 +759,42 @@ export function Example() {
                     </div>
                   </div>
 
+                  {item.name === "card" ? (
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-semibold">Variants</h3>
+                      <div className="overflow-auto rounded-lg border border-border">
+                        <table className="w-full border-collapse text-sm">
+                          <thead className="bg-muted text-left">
+                            <tr>
+                              <th className="border-b border-border px-4 py-3 font-medium">
+                                Variant
+                              </th>
+                              <th className="border-b border-border px-4 py-3 font-medium">Use</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              ["surface", "Default content grouping."],
+                              ["elevated", "Raised dashboard or summary surfaces."],
+                              ["accent", "Selected, highlighted, or recommended content."],
+                              ["muted", "Low-emphasis grouping inside denser layouts."],
+                              ["ghost", "Structure without a visible panel."],
+                            ].map(([variant, use]) => (
+                              <tr className="border-b border-border last:border-b-0" key={variant}>
+                                <td className="px-4 py-3 font-mono text-xs">{variant}</td>
+                                <td className="px-4 py-3 text-muted-foreground">{use}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <p className="text-sm leading-6 text-muted-foreground">
+                        Set <code>interactive</code> to add hover lift, elevation, and press
+                        feedback for clickable card targets.
+                      </p>
+                    </div>
+                  ) : null}
+
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Anatomy</h3>
@@ -758,8 +808,9 @@ export function Example() {
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Micro UX</h3>
                       <div className="rounded-lg border border-border bg-surface p-4 text-sm leading-6 text-muted-foreground">
-                        Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing
-                        states are guarded with reduced-motion behavior in the generated source.
+                        {item.name === "card"
+                          ? "Interactive cards lift by 1px, increase elevation, soften the border toward primary, and compress to 99.5% on press. Motion is disabled for reduced-motion users."
+                          : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
                       </div>
                     </div>
                   </div>

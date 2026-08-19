@@ -186,13 +186,37 @@ export function Badge({ className = "", variant = "neutral", ...props }: BadgePr
 
 const cardSource = `import type { HTMLAttributes } from "react";
 
-export function Card({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+const variants = {
+  surface: "border-hairline border-border bg-surface shadow-sm",
+  elevated: "border-hairline border-border bg-surface-raised shadow-md",
+  accent: "border-hairline border-primary/25 bg-primary/5 shadow-sm",
+  muted: "border-hairline border-border bg-muted/45 shadow-none",
+  ghost: "border-hairline border-transparent bg-transparent shadow-none",
+} as const;
+
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  interactive?: boolean;
+  variant?: keyof typeof variants;
+}
+
+export function Card({
+  className = "",
+  interactive = false,
+  variant = "surface",
+  ...props
+}: CardProps) {
   return (
     <div
       className={[
-        "rounded-[0.375rem] border-hairline border-border bg-surface text-foreground shadow-sm",
+        "rounded-[0.375rem] text-foreground",
+        "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+        variants[variant],
+        interactive
+          ? "hover:-translate-y-px hover:border-primary/30 hover:shadow-md active:translate-y-0 active:scale-[0.995]"
+          : "",
         className,
       ].join(" ")}
+      data-interactive={interactive ? "true" : undefined}
       {...props}
     />
   );
@@ -461,7 +485,7 @@ export const registry = [
   {
     name: "card",
     title: "Card",
-    description: "A calm content container with header, body, and footer slots.",
+    description: "A calm content container with variants and optional hover/press micro UX.",
     kind: "component",
     dependencies: [],
     registryDependencies: [],
@@ -469,8 +493,17 @@ export const registry = [
     metadata: {
       purpose: "Groups related UI into a scannable surface.",
       slots: ["root", "header", "title", "description", "content", "footer"],
-      accessibility: ["Preserves semantic children.", "Headings remain author-controlled."],
-      usage: ["Use for dashboards, settings panels, and summaries."],
+      accessibility: [
+        "Preserves semantic children.",
+        "Headings remain author-controlled.",
+        "Interactive cards still need a real link or button for navigation/actions.",
+      ],
+      usage: [
+        "Use surface for ordinary groups.",
+        "Use elevated for raised dashboard summaries.",
+        "Use accent for selected or highlighted information.",
+        "Set interactive when the card represents a clickable target.",
+      ],
       avoid: ["Do not nest too many cards.", "Do not use cards as random decoration."],
     },
   },
