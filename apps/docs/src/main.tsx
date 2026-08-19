@@ -1511,6 +1511,65 @@ export function Example() {
 }`,
 } as const;
 
+const photoExampleCode = {
+  "fit-and-fallback": `import {
+  Photo,
+  PhotoFallback,
+  PhotoImage,
+} from "@/components/ui/photo";
+
+export function FitAndFallbackExample() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      <Photo ratio={16 / 10}>
+        <PhotoImage alt="Team member" fit="cover" src="/portrait.jpg" />
+      </Photo>
+      <Photo ratio={16 / 10}>
+        <PhotoImage alt="Brilliant logo" fit="contain" src="/brand-mark.svg" />
+      </Photo>
+      <Photo ratio={16 / 10}>
+        <PhotoFallback>Image unavailable</PhotoFallback>
+        <PhotoImage alt="Unavailable report" src="/missing-report.jpg" />
+      </Photo>
+    </div>
+  );
+}`,
+  ratios: `import { Photo, PhotoCaption, PhotoImage } from "@/components/ui/photo";
+
+export function RatioExample() {
+  return (
+    <div className="grid items-end gap-4 sm:grid-cols-3">
+      <Photo ratio={1}>
+        <PhotoImage alt="Square workspace preview" src="/workspace.jpg" />
+        <PhotoCaption>1:1 square</PhotoCaption>
+      </Photo>
+      <Photo ratio={3 / 4}>
+        <PhotoImage alt="Team portrait" src="/portrait.jpg" />
+        <PhotoCaption>3:4 portrait</PhotoCaption>
+      </Photo>
+      <Photo ratio={16 / 9}>
+        <PhotoImage alt="Wide workspace preview" src="/workspace.jpg" />
+        <PhotoCaption>16:9 landscape</PhotoCaption>
+      </Photo>
+    </div>
+  );
+}`,
+  variants: `import { Photo, PhotoCaption, PhotoImage } from "@/components/ui/photo";
+
+export function VariantExample() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      {(["surface", "elevated", "ghost"] as const).map((variant) => (
+        <Photo key={variant} ratio={16 / 10} variant={variant}>
+          <PhotoImage alt="Workspace analytics" src="/workspace.jpg" />
+          <PhotoCaption>{variant}</PhotoCaption>
+        </Photo>
+      ))}
+    </div>
+  );
+}`,
+} as const;
+
 function componentExportName(name: string) {
   return name
     .split("-")
@@ -2738,6 +2797,165 @@ function ToastPreview() {
   );
 }
 
+const photoLandscapeImage = `data:image/svg+xml,${encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#eef2ff"/>
+        <stop offset="1" stop-color="#c7d2fe"/>
+      </linearGradient>
+    </defs>
+    <rect width="800" height="500" fill="url(#bg)"/>
+    <rect x="92" y="72" width="616" height="356" rx="24" fill="#fff" stroke="#dbe3ef"/>
+    <rect x="132" y="120" width="190" height="18" rx="9" fill="#111827"/>
+    <rect x="132" y="158" width="536" height="10" rx="5" fill="#dbe3ef"/>
+    <rect x="132" y="202" width="150" height="92" rx="14" fill="#4f46e5"/>
+    <rect x="310" y="202" width="150" height="92" rx="14" fill="#eef2ff" stroke="#dbe3ef"/>
+    <rect x="488" y="202" width="150" height="92" rx="14" fill="#f8fafc" stroke="#dbe3ef"/>
+    <path d="M144 354 C224 312 284 382 360 338 C432 296 492 360 656 304" fill="none" stroke="#4f46e5" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="656" cy="304" r="12" fill="#4f46e5"/>
+  </svg>
+`)}`;
+
+const photoPortraitImage = `data:image/svg+xml,${encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800">
+    <defs>
+      <linearGradient id="portrait-bg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#312e81"/>
+        <stop offset="0.52" stop-color="#6366f1"/>
+        <stop offset="1" stop-color="#e0e7ff"/>
+      </linearGradient>
+    </defs>
+    <rect width="600" height="800" fill="url(#portrait-bg)"/>
+    <circle cx="300" cy="292" r="108" fill="#f8fafc" fill-opacity="0.92"/>
+    <path d="M118 720c24-184 116-276 182-276s158 92 182 276" fill="#111827" fill-opacity="0.88"/>
+    <circle cx="456" cy="156" r="52" fill="#ffffff" fill-opacity="0.16"/>
+  </svg>
+`)}`;
+
+const photoMarkImage = `data:image/svg+xml,${encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+    <rect width="800" height="500" fill="#f8fafc"/>
+    <rect x="280" y="130" width="240" height="240" rx="56" fill="#4f46e5"/>
+    <text x="400" y="302" fill="#fff" font-family="system-ui,sans-serif" font-size="152" font-weight="700" text-anchor="middle">B</text>
+  </svg>
+`)}`;
+
+function PhotoPreviewFigure({
+  alt,
+  caption,
+  fallback = false,
+  fit = "cover",
+  ratio,
+  src,
+  variant = "surface",
+}: {
+  alt: string;
+  caption?: string;
+  fallback?: boolean;
+  fit?: "contain" | "cover";
+  ratio: string;
+  src?: string;
+  variant?: "elevated" | "ghost" | "surface";
+}) {
+  const variantClass = {
+    elevated: "border-border bg-surface-raised shadow-md",
+    ghost: "border-transparent bg-transparent shadow-none",
+    surface: "border-border bg-surface shadow-sm",
+  }[variant];
+
+  return (
+    <figure
+      className={`group relative isolate overflow-hidden rounded-[0.5rem] border ${variantClass}`}
+      style={{ aspectRatio: ratio }}
+    >
+      <div className="absolute inset-0 grid place-items-center bg-muted px-4 text-center text-sm text-muted-foreground">
+        <span className="grid gap-2">
+          <span aria-hidden="true" className="text-lg leading-none text-muted-foreground/70">
+            ◌
+          </span>
+          {fallback ? "Image unavailable" : "Loading preview"}
+        </span>
+      </div>
+      {!fallback && src ? (
+        <img
+          alt={alt}
+          className={`absolute inset-0 size-full ${fit === "contain" ? "object-contain" : "object-cover"} transition-transform duration-[var(--brilliant-duration-normal)] group-hover:scale-[1.015] motion-reduce:transition-none`}
+          src={src}
+        />
+      ) : null}
+      {caption ? (
+        <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/75 to-transparent px-3 pt-8 pb-3 text-xs font-medium text-background">
+          {caption}
+        </figcaption>
+      ) : null}
+    </figure>
+  );
+}
+
+function PhotoExamplePreview({ example }: { example: keyof typeof photoExampleCode }) {
+  if (example === "variants") {
+    return (
+      <div className="grid gap-4 sm:grid-cols-3">
+        {(["surface", "elevated", "ghost"] as const).map((variant) => (
+          <div className="grid gap-2" key={variant}>
+            <PhotoPreviewFigure
+              alt="Workspace analytics"
+              caption={variant}
+              ratio="16/10"
+              src={photoLandscapeImage}
+              variant={variant}
+            />
+            <code className="text-center text-xs text-muted-foreground">{`variant="${variant}"`}</code>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (example === "ratios") {
+    return (
+      <div className="grid items-end gap-4 sm:grid-cols-3">
+        <PhotoPreviewFigure
+          alt="Square workspace preview"
+          caption="1:1 square"
+          ratio="1"
+          src={photoLandscapeImage}
+        />
+        <PhotoPreviewFigure
+          alt="Team portrait"
+          caption="3:4 portrait"
+          ratio="3/4"
+          src={photoPortraitImage}
+        />
+        <PhotoPreviewFigure
+          alt="Wide workspace preview"
+          caption="16:9 landscape"
+          ratio="16/9"
+          src={photoLandscapeImage}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-2">
+        <PhotoPreviewFigure alt="Team member" ratio="16/10" src={photoPortraitImage} />
+        <p className="text-center text-xs text-muted-foreground">fit=&quot;cover&quot;</p>
+      </div>
+      <div className="grid gap-2">
+        <PhotoPreviewFigure alt="Brilliant logo" fit="contain" ratio="16/10" src={photoMarkImage} />
+        <p className="text-center text-xs text-muted-foreground">fit=&quot;contain&quot;</p>
+      </div>
+      <div className="grid gap-2">
+        <PhotoPreviewFigure alt="Unavailable report" fallback ratio="16/10" />
+        <p className="text-center text-xs text-muted-foreground">failed image fallback</p>
+      </div>
+    </div>
+  );
+}
+
 function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "button-group") {
     return (
@@ -2793,30 +3011,6 @@ function ComponentMiniPreview({ name }: { name: string }) {
   }
 
   if (name === "photo") {
-    const previewImage = encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
-        <defs>
-          <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#eef2ff"/>
-            <stop offset="1" stop-color="#c7d2fe"/>
-          </linearGradient>
-          <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#ffffff"/>
-            <stop offset="1" stop-color="#f8fafc"/>
-          </linearGradient>
-        </defs>
-        <rect width="800" height="500" fill="url(#bg)"/>
-        <rect x="92" y="72" width="616" height="356" rx="24" fill="url(#card)" stroke="#dbe3ef"/>
-        <rect x="132" y="120" width="190" height="18" rx="9" fill="#111827"/>
-        <rect x="132" y="158" width="536" height="10" rx="5" fill="#dbe3ef"/>
-        <rect x="132" y="202" width="150" height="92" rx="14" fill="#4f46e5"/>
-        <rect x="310" y="202" width="150" height="92" rx="14" fill="#eef2ff" stroke="#dbe3ef"/>
-        <rect x="488" y="202" width="150" height="92" rx="14" fill="#f8fafc" stroke="#dbe3ef"/>
-        <path d="M144 354 C224 312 284 382 360 338 C432 296 492 360 656 304" fill="none" stroke="#4f46e5" stroke-width="12" stroke-linecap="round"/>
-        <circle cx="656" cy="304" r="12" fill="#4f46e5"/>
-      </svg>
-    `);
-
     return (
       <div className="grid gap-4 md:grid-cols-[1.4fr_0.8fr]">
         <figure className="group relative isolate aspect-[16/10] overflow-hidden rounded-[0.5rem] border border-border bg-surface shadow-sm transition-[border-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] hover:-translate-y-px hover:border-primary/30 hover:shadow-md motion-reduce:transition-none">
@@ -2826,7 +3020,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
           <img
             alt="Workspace analytics dashboard"
             className="absolute inset-0 size-full object-cover transition-transform duration-[var(--brilliant-duration-normal)] group-hover:scale-[1.015] motion-reduce:transition-none"
-            src={`data:image/svg+xml,${previewImage}`}
+            src={photoLandscapeImage}
           />
           <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent px-3 pt-8 pb-3 text-xs font-medium text-background">
             Workspace analytics dashboard
@@ -4702,6 +4896,42 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                     <ExamplePanel code={usage}>
                       <ComponentMiniPreview name={item.name} />
                     </ExamplePanel>
+
+                    {item.name === "photo" ? (
+                      <div className="grid gap-8">
+                        {(
+                          [
+                            [
+                              "variants",
+                              "Visual variants",
+                              "Use the surface treatment that matches the surrounding hierarchy.",
+                            ],
+                            [
+                              "ratios",
+                              "Aspect ratios and captions",
+                              "Reserve the final media geometry before the image loads.",
+                            ],
+                            [
+                              "fit-and-fallback",
+                              "Fit modes and fallback",
+                              "Control cropping and provide a useful state when media cannot load.",
+                            ],
+                          ] as const
+                        ).map(([example, title, description]) => (
+                          <div className="space-y-3" key={example}>
+                            <div>
+                              <h3 className="text-lg font-semibold">{title}</h3>
+                              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                                {description}
+                              </p>
+                            </div>
+                            <ExamplePanel code={photoExampleCode[example]}>
+                              <PhotoExamplePreview example={example} />
+                            </ExamplePanel>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
 
                     {item.name === "card" ||
                     item.name === "text" ||
