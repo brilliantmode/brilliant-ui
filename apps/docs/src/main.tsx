@@ -1,3 +1,73 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@brilliant/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartState,
+  ChartTooltip,
+  ChartTooltipContent,
+  Sparkline,
+} from "@brilliant/ui/chart";
+import {
+  DashboardActions,
+  DashboardDescription,
+  DashboardGrid,
+  DashboardHeader,
+  DashboardLayout,
+  DashboardSection,
+  DashboardSectionHeader,
+  DashboardSectionTitle,
+  DashboardTitle,
+} from "@brilliant/ui/dashboard-layout";
+import {
+  FileUpload,
+  FileUploadDescription,
+  FileUploadDropzone,
+  FileUploadError,
+  FileUploadIcon,
+  FileUploadList,
+  FileUploadTitle,
+} from "@brilliant/ui/file-upload";
+import {
+  Footer,
+  FooterBottom,
+  FooterBrand,
+  FooterContainer,
+  FooterDescription,
+  FooterGroup,
+  FooterLink,
+  FooterMain,
+  FooterNav,
+} from "@brilliant/ui/footer";
+import {
+  Header,
+  HeaderActions,
+  HeaderBrand,
+  HeaderContainer,
+  HeaderLink,
+  HeaderMobileTrigger,
+  HeaderNav,
+} from "@brilliant/ui/header";
+import { Meter } from "@brilliant/ui/meter";
+import { PhotoUpload } from "@brilliant/ui/photo-upload";
+import {
+  Metric,
+  Stat,
+  StatDescription,
+  StatHeader,
+  StatLabel,
+  StatValue,
+  TrendIndicator,
+} from "@brilliant/ui/stat";
+import { Status, StatusBar } from "@brilliant/ui/status";
 import { registry } from "@brilliant-ui/registry";
 import {
   type CSSProperties,
@@ -24,76 +94,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./components/ui/card";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartState,
-  ChartTooltip,
-  ChartTooltipContent,
-  Sparkline,
-} from "./components/ui/chart";
-import {
-  DashboardActions,
-  DashboardDescription,
-  DashboardGrid,
-  DashboardHeader,
-  DashboardLayout,
-  DashboardSection,
-  DashboardSectionHeader,
-  DashboardSectionTitle,
-  DashboardTitle,
-} from "./components/ui/dashboard-layout";
-import {
-  FileUpload,
-  FileUploadDescription,
-  FileUploadDropzone,
-  FileUploadError,
-  FileUploadIcon,
-  FileUploadList,
-  FileUploadTitle,
-} from "./components/ui/file-upload";
-import {
-  Footer,
-  FooterBottom,
-  FooterBrand,
-  FooterContainer,
-  FooterDescription,
-  FooterGroup,
-  FooterLink,
-  FooterMain,
-  FooterNav,
-} from "./components/ui/footer";
-import {
-  Header,
-  HeaderActions,
-  HeaderBrand,
-  HeaderContainer,
-  HeaderLink,
-  HeaderMobileTrigger,
-  HeaderNav,
-} from "./components/ui/header";
-import { Meter } from "./components/ui/meter";
-import { PhotoUpload } from "./components/ui/photo-upload";
-import {
-  Metric,
-  Stat,
-  StatDescription,
-  StatHeader,
-  StatLabel,
-  StatValue,
-  TrendIndicator,
-} from "./components/ui/stat";
-import { Status, StatusBar } from "./components/ui/status";
 import "./styles.css";
 
 type NavItem = readonly [label: string, href: string];
@@ -165,6 +165,7 @@ const navGroups = [
   {
     items: [
       ["Getting Started", "/"],
+      ["Installation", "/installation"],
       ["Why Brilliant", "/#why-brilliant"],
       ["shadcn", "/#shadcn"],
       ["Components", "/components"],
@@ -265,7 +266,6 @@ const navGroups = [
       ["Foundations", "/foundations"],
       ["Blocks", "/blocks"],
       ["Theme Builder", "/theming"],
-      ["CLI", "/cli"],
     ],
     label: "System",
   },
@@ -361,13 +361,13 @@ const foundations = [
   ["Themes", "Light, dark, system preference, high-contrast, and brand override contracts."],
   ["Micro UX", "Reusable press, lift, reveal, focus, loading, and reduced-motion primitives."],
   ["Registry", "Versioned shadcn-compatible items with metadata, checksums, and safe paths."],
-  ["CLI", "Project init, shadcn alias mapping, dry runs, forced updates, and manifests."],
+  ["One package", "Components, tokens, styles, and animation utilities ship from @brilliant/ui."],
 ] as const;
 
 const differentiators = [
   [
-    "shadcn-compatible source",
-    "Install editable source into your app, keep the familiar aliases, and own the generated files.",
+    "Protected package by default",
+    "Install versioned components from node_modules so application code and coding agents do not silently rewrite framework internals.",
   ],
   [
     "Micro UX built in",
@@ -384,9 +384,9 @@ const differentiators = [
 ] as const;
 
 const shadcnFlow = [
-  ["Initialize", "npx brilliant-ui init"],
-  ["Add components", "npx brilliant-ui add button dialog dropdown-menu"],
-  ["Own the source", "Edit components/ui/* exactly like a shadcn project"],
+  ["Install", "pnpm add @brilliant/ui tailwindcss"],
+  ["Add styles", '@import "@brilliant/ui/styles.css"'],
+  ["Import", 'import { Button } from "@brilliant/ui/button"'],
 ] as const;
 
 const blockGroups = [
@@ -411,8 +411,8 @@ import {
   OnboardingWizardProgress,
   OnboardingWizardStep,
   OnboardingWizardStepList,
-} from "@/components/ui/onboarding-wizard";
-import { Button } from "@/components/ui/button";
+} from "@brilliant/ui/onboarding-wizard";
+import { Button } from "@brilliant/ui/button";
 
 const steps = [
   {
@@ -517,9 +517,9 @@ export function WorkspaceImportBlock() {
   },
   {
     category: "SaaS",
-    code: `import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+    code: `import { Badge } from "@brilliant/ui/badge";
+import { Button } from "@brilliant/ui/button";
+import { Card } from "@brilliant/ui/card";
 
 const keys = [
   ["Production", "Last used 2 minutes ago", "Live"],
@@ -559,9 +559,9 @@ export function ApiKeysBlock() {
   },
   {
     category: "Billing",
-    code: `import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+    code: `import { Button } from "@brilliant/ui/button";
+import { Card } from "@brilliant/ui/card";
+import { Progress } from "@brilliant/ui/progress";
 
 export function BillingUsageBlock() {
   return (
@@ -605,9 +605,9 @@ export function BillingUsageBlock() {
   {
     category: "Dashboard",
     code: `import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
-import { DashboardGrid, DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@/components/ui/dashboard-layout";
-import { Stat, StatDescription, StatHeader, StatLabel, StatValue, TrendIndicator } from "@/components/ui/stat";
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@brilliant/ui/chart";
+import { DashboardGrid, DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@brilliant/ui/dashboard-layout";
+import { Stat, StatDescription, StatHeader, StatLabel, StatValue, TrendIndicator } from "@brilliant/ui/stat";
 
 const data = [
   { day: "Mon", revenue: 18 }, { day: "Tue", revenue: 24 },
@@ -643,10 +643,10 @@ export function AnalyticsOverviewDashboard() {
   },
   {
     category: "Operations",
-    code: `import { DashboardGrid, DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@/components/ui/dashboard-layout";
-import { Meter } from "@/components/ui/meter";
-import { Stat, StatLabel, StatValue } from "@/components/ui/stat";
-import { Status, StatusBar } from "@/components/ui/status";
+    code: `import { DashboardGrid, DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@brilliant/ui/dashboard-layout";
+import { Meter } from "@brilliant/ui/meter";
+import { Stat, StatLabel, StatValue } from "@brilliant/ui/stat";
+import { Status, StatusBar } from "@brilliant/ui/status";
 
 const services = [
   ["API gateway", "99.99%", "positive"],
@@ -682,9 +682,9 @@ export function SystemHealthDashboard() {
   {
     category: "Dashboard",
     code: `import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
-import { DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@/components/ui/dashboard-layout";
-import { Meter } from "@/components/ui/meter";
+import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@brilliant/ui/chart";
+import { DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@brilliant/ui/dashboard-layout";
+import { Meter } from "@brilliant/ui/meter";
 
 const data = [
   { team: "Core", used: 82, available: 18 },
@@ -718,7 +718,7 @@ export function CapacityDashboard() {
 ] as const;
 
 const cardExampleCode = {
-  analytics: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+  analytics: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@brilliant/ui/card";
 import { useState } from "react";
 
 export function Example() {
@@ -741,7 +741,7 @@ export function Example() {
     </Card>
   );
 }`,
-  project: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+  project: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@brilliant/ui/card";
 
 export function Example() {
   return (
@@ -762,7 +762,7 @@ export function Example() {
     </Card>
   );
 }`,
-  billing: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+  billing: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@brilliant/ui/card";
 
 export function Example() {
   return (
@@ -776,7 +776,7 @@ export function Example() {
     </Card>
   );
 }`,
-  integration: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+  integration: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@brilliant/ui/card";
 import { useState } from "react";
 
 export function Example() {
@@ -792,7 +792,7 @@ export function Example() {
     </Card>
   );
 }`,
-  media: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+  media: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@brilliant/ui/card";
 
 export function Example() {
   return (
@@ -804,7 +804,7 @@ export function Example() {
     </Card>
   );
 }`,
-  activity: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+  activity: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@brilliant/ui/card";
 import { useState } from "react";
 
 export function Example() {
@@ -823,7 +823,7 @@ export function Example() {
 } as const;
 
 const usageByComponent = {
-  button: `import { Button } from "@/components/ui/button";
+  button: `import { Button } from "@brilliant/ui/button";
 
 export function Example() {
   return (
@@ -832,8 +832,8 @@ export function Example() {
     </Button>
   );
 }`,
-  "button-group": `import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
+  "button-group": `import { Button } from "@brilliant/ui/button";
+import { ButtonGroup } from "@brilliant/ui/button-group";
 
 export function Example() {
   return (
@@ -844,7 +844,7 @@ export function Example() {
     </ButtonGroup>
   );
 }`,
-  badge: `import { Badge } from "@/components/ui/badge";
+  badge: `import { Badge } from "@brilliant/ui/badge";
 
 export function Example() {
   return (
@@ -854,7 +854,7 @@ export function Example() {
     </div>
   );
 }`,
-  "aspect-ratio": `import { AspectRatio } from "@/components/ui/aspect-ratio";
+  "aspect-ratio": `import { AspectRatio } from "@brilliant/ui/aspect-ratio";
 
 export function Example() {
   return (
@@ -873,7 +873,7 @@ export function Example() {
   PhotoFallback,
   PhotoImage,
   PhotoTint,
-} from "@/components/ui/photo";
+} from "@brilliant/ui/photo";
 
 export function Example() {
   return (
@@ -894,7 +894,7 @@ export function Example() {
   AvatarFallback,
   AvatarImage,
   AvatarStatus,
-} from "@/components/ui/avatar";
+} from "@brilliant/ui/avatar";
 
 export function Example() {
   return (
@@ -918,7 +918,7 @@ export function Example() {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@brilliant/ui/card";
 import { useState } from "react";
 
 export function Example() {
@@ -953,7 +953,7 @@ export function Example() {
     </div>
   );
 }`,
-  text: `import { Text } from "@/components/ui/text";
+  text: `import { Text } from "@brilliant/ui/text";
 
 export function Example() {
   return (
@@ -967,7 +967,7 @@ export function Example() {
     </div>
   );
 }`,
-  input: `import { Input } from "@/components/ui/input";
+  input: `import { Input } from "@brilliant/ui/input";
 
 export function Example() {
   return <Input name="brilliant-input-preview" placeholder="Acme workspace" />;
@@ -980,7 +980,7 @@ export function Example() {
   FileUploadIcon,
   FileUploadList,
   FileUploadTitle,
-} from "@/components/ui/file-upload";
+} from "@brilliant/ui/file-upload";
 
 export function Example() {
   return (
@@ -1002,7 +1002,7 @@ export function Example() {
     </FileUpload>
   );
 }`,
-  "photo-upload": `import { PhotoUpload } from "@/components/ui/photo-upload";
+  "photo-upload": `import { PhotoUpload } from "@brilliant/ui/photo-upload";
 import { useState } from "react";
 
 export function Example() {
@@ -1019,8 +1019,8 @@ export function Example() {
     />
   );
 }`,
-  label: `import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+  label: `import { Input } from "@brilliant/ui/input";
+import { Label } from "@brilliant/ui/label";
 
 export function Example() {
   return (
@@ -1030,7 +1030,7 @@ export function Example() {
     </div>
   );
 }`,
-  textarea: `import { Textarea } from "@/components/ui/textarea";
+  textarea: `import { Textarea } from "@brilliant/ui/textarea";
 
 export function Example() {
   return <Textarea placeholder="Add a launch note..." />;
@@ -1039,8 +1039,8 @@ export function Example() {
   Field,
   FieldDescription,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+} from "@brilliant/ui/field";
+import { Input } from "@brilliant/ui/input";
 
 export function Example() {
   return (
@@ -1051,7 +1051,7 @@ export function Example() {
     </Field>
   );
 }`,
-  checkbox: `import { Checkbox } from "@/components/ui/checkbox";
+  checkbox: `import { Checkbox } from "@brilliant/ui/checkbox";
 
 export function Example() {
   return (
@@ -1080,7 +1080,7 @@ export function Example() {
     </div>
   );
 }`,
-  switch: `import { Switch } from "@/components/ui/switch";
+  switch: `import { Switch } from "@brilliant/ui/switch";
 
 export function Example() {
   return (
@@ -1090,7 +1090,7 @@ export function Example() {
     </label>
   );
 }`,
-  slider: `import { Slider } from "@/components/ui/slider";
+  slider: `import { Slider } from "@brilliant/ui/slider";
 
 export function Example() {
   return (
@@ -1108,7 +1108,7 @@ export function Example() {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@brilliant/ui/select";
 
 export function Example() {
   return (
@@ -1124,7 +1124,7 @@ export function Example() {
     </Select>
   );
 }`,
-  combobox: `import { Combobox } from "@/components/ui/combobox";
+  combobox: `import { Combobox } from "@brilliant/ui/combobox";
 
 export function Example() {
   return (
@@ -1139,7 +1139,7 @@ export function Example() {
     />
   );
 }`,
-  "radio-group": `import { RadioGroup, RadioItem } from "@/components/ui/radio-group";
+  "radio-group": `import { RadioGroup, RadioItem } from "@brilliant/ui/radio-group";
 
 export function Example() {
   return (
@@ -1161,7 +1161,7 @@ export function Example() {
   Alert,
   AlertDescription,
   AlertTitle,
-} from "@/components/ui/alert";
+} from "@brilliant/ui/alert";
 
 export function Example() {
   return (
@@ -1177,7 +1177,7 @@ export function Example() {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@brilliant/ui/dialog";
 
 export function Example() {
   return (
@@ -1198,8 +1198,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from "@brilliant/ui/alert-dialog";
+import { Button } from "@brilliant/ui/button";
 
 export function Example() {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -1234,7 +1234,7 @@ import {
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-} from "@/components/ui/drawer";
+} from "@brilliant/ui/drawer";
 
 export function Example() {
   const drawerRef = useRef<HTMLDialogElement>(null);
@@ -1261,7 +1261,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from "@brilliant/ui/sheet";
 
 export function Example() {
   const sheetRef = useRef<HTMLDialogElement>(null);
@@ -1287,7 +1287,7 @@ export function Example() {
     </>
   );
 }`,
-  tooltip: `import { Tooltip } from "@/components/ui/tooltip";
+  tooltip: `import { Tooltip } from "@brilliant/ui/tooltip";
 
 export function Example() {
   return (
@@ -1300,7 +1300,7 @@ export function Example() {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@brilliant/ui/popover";
 
 export function Example() {
   return (
@@ -1314,7 +1314,7 @@ export function Example() {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card";
+} from "@brilliant/ui/hover-card";
 
 export function Example() {
   return (
@@ -1324,7 +1324,7 @@ export function Example() {
     </HoverCard>
   );
 }`,
-  "context-menu": `import { ContextMenu } from "@/components/ui/context-menu";
+  "context-menu": `import { ContextMenu } from "@brilliant/ui/context-menu";
 
 export function Example() {
   return (
@@ -1344,7 +1344,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@brilliant/ui/dropdown-menu";
 
 export function Example() {
   const [compact, setCompact] = useState(true);
@@ -1369,7 +1369,7 @@ export function Example() {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs";
+} from "@brilliant/ui/tabs";
 
 export function Example() {
   return (
@@ -1390,7 +1390,7 @@ export function Example() {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@brilliant/ui/accordion";
 
 export function Example() {
   return (
@@ -1407,7 +1407,7 @@ export function Example() {
   CollapsibleContent,
   CollapsibleItem,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+} from "@brilliant/ui/collapsible";
 
 export function Example() {
   return (
@@ -1427,7 +1427,7 @@ export function Example() {
   CarouselPrevious,
   CarouselTrack,
   CarouselViewport,
-} from "@/components/ui/carousel";
+} from "@brilliant/ui/carousel";
 
 const slides = ["Usage", "Billing", "Members"];
 
@@ -1456,7 +1456,7 @@ export function Example() {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@brilliant/ui/table";
 
 export function Example() {
   return (
@@ -1485,10 +1485,10 @@ export function Example() {
   FormHeader,
   FormSection,
   FormTitle,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+} from "@brilliant/ui/form";
+import { Button } from "@brilliant/ui/button";
+import { Field, FieldDescription, FieldLabel } from "@brilliant/ui/field";
+import { Input } from "@brilliant/ui/input";
 
 export function Example() {
   return (
@@ -1511,7 +1511,7 @@ export function Example() {
     </Form>
   );
 }`,
-  "scroll-area": `import { ScrollArea } from "@/components/ui/scroll-area";
+  "scroll-area": `import { ScrollArea } from "@brilliant/ui/scroll-area";
 
 export function Example() {
   return (
@@ -1529,7 +1529,7 @@ export function Example() {
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@brilliant/ui/breadcrumb";
 
 export function Example() {
   return (
@@ -1547,7 +1547,7 @@ export function Example() {
   "navigation-menu": `import {
   NavigationMenu,
   NavigationMenuLink,
-} from "@/components/ui/navigation-menu";
+} from "@brilliant/ui/navigation-menu";
 
 export function Example() {
   return (
@@ -1558,7 +1558,7 @@ export function Example() {
     </NavigationMenu>
   );
 }`,
-  menubar: `import { Menubar, MenubarItem } from "@/components/ui/menubar";
+  menubar: `import { Menubar, MenubarItem } from "@brilliant/ui/menubar";
 
 export function Example() {
   return (
@@ -1574,7 +1574,7 @@ export function Example() {
   PaginationItem,
   PaginationLink,
   PaginationList,
-} from "@/components/ui/pagination";
+} from "@brilliant/ui/pagination";
 
 export function Example() {
   return (
@@ -1587,27 +1587,27 @@ export function Example() {
     </Pagination>
   );
 }`,
-  separator: `import { Separator } from "@/components/ui/separator";
+  separator: `import { Separator } from "@brilliant/ui/separator";
 
 export function Example() {
   return <Separator variant="primary" />;
 }`,
-  skeleton: `import { Skeleton } from "@/components/ui/skeleton";
+  skeleton: `import { Skeleton } from "@brilliant/ui/skeleton";
 
 export function Example() {
   return <Skeleton size="title" variant="raised" />;
 }`,
-  progress: `import { Progress } from "@/components/ui/progress";
+  progress: `import { Progress } from "@brilliant/ui/progress";
 
 export function Example() {
   return <Progress aria-label="Sync progress" value={64} />;
 }`,
-  spinner: `import { Spinner } from "@/components/ui/spinner";
+  spinner: `import { Spinner } from "@brilliant/ui/spinner";
 
 export function Example() {
   return <Spinner label="Saving settings" size="md" variant="default" />;
 }`,
-  toast: `import { ToastProvider, useToast } from "@/components/ui/toast";
+  toast: `import { ToastProvider, useToast } from "@brilliant/ui/toast";
 
 function SaveButton() {
   const { toast } = useToast();
@@ -1635,12 +1635,12 @@ export function Example() {
     </ToastProvider>
   );
 }`,
-  "date-input": `import { DateInput } from "@/components/ui/date-input";
+  "date-input": `import { DateInput } from "@brilliant/ui/date-input";
 
 export function Example() {
   return <DateInput aria-label="Renewal date" defaultValue="2026-08-19" />;
 }`,
-  calendar: `import { Calendar } from "@/components/ui/calendar";
+  calendar: `import { Calendar } from "@brilliant/ui/calendar";
 
 export function Example() {
   return (
@@ -1654,7 +1654,7 @@ export function Example() {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "@brilliant/ui/command";
 
 export function Example() {
   return (
@@ -1674,8 +1674,8 @@ export function Example() {
   HeaderLink,
   HeaderMobileTrigger,
   HeaderNav,
-} from "@/components/ui/header";
-import { Button } from "@/components/ui/button";
+} from "@brilliant/ui/header";
+import { Button } from "@brilliant/ui/button";
 
 export function Example() {
   return (
@@ -1713,7 +1713,7 @@ export function Example() {
   FooterLink,
   FooterMain,
   FooterNav,
-} from "@/components/ui/footer";
+} from "@brilliant/ui/footer";
 
 export function Example() {
   return (
@@ -1782,7 +1782,7 @@ export function Example() {
   ApplicationShellProfile,
   ApplicationShellProfileMenu,
   ApplicationShellProfileTrigger,
-} from "@/components/ui/application-shell";
+} from "@brilliant/ui/application-shell";
 
 export function Example() {
   return (
@@ -1928,7 +1928,7 @@ import {
   OnboardingWizardStep,
   OnboardingWizardStepList,
   OnboardingWizardTitle,
-} from "@/components/ui/onboarding-wizard";
+} from "@brilliant/ui/onboarding-wizard";
 
 const steps = [
   {
@@ -2036,7 +2036,7 @@ export function Example() {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "@/components/ui/chart";
+} from "@brilliant/ui/chart";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 const data = [
@@ -2080,8 +2080,8 @@ export function Example() {
   StatLabel,
   StatValue,
   TrendIndicator,
-} from "@/components/ui/stat";
-import { Sparkline } from "@/components/ui/chart";
+} from "@brilliant/ui/stat";
+import { Sparkline } from "@brilliant/ui/chart";
 
 export function Example() {
   return (
@@ -2098,7 +2098,7 @@ export function Example() {
     </Stat>
   );
 }`,
-  status: `import { Status, StatusBar } from "@/components/ui/status";
+  status: `import { Status, StatusBar } from "@brilliant/ui/status";
 
 export function Example() {
   return (
@@ -2118,7 +2118,7 @@ export function Example() {
     </div>
   );
 }`,
-  meter: `import { Meter } from "@/components/ui/meter";
+  meter: `import { Meter } from "@brilliant/ui/meter";
 import { useState } from "react";
 
 export function Example() {
@@ -2146,10 +2146,10 @@ export function Example() {
   DashboardSectionHeader,
   DashboardSectionTitle,
   DashboardTitle,
-} from "@/components/ui/dashboard-layout";
-import { Meter } from "@/components/ui/meter";
-import { Stat, StatLabel, StatValue } from "@/components/ui/stat";
-import { Status } from "@/components/ui/status";
+} from "@brilliant/ui/dashboard-layout";
+import { Meter } from "@brilliant/ui/meter";
+import { Stat, StatLabel, StatValue } from "@brilliant/ui/stat";
+import { Status } from "@brilliant/ui/status";
 
 export function Example() {
   return (
@@ -2182,7 +2182,7 @@ export function Example() {
   EmptyStateDescription,
   EmptyStateIcon,
   EmptyStateTitle,
-} from "@/components/ui/empty-state";
+} from "@brilliant/ui/empty-state";
 
 export function Example() {
   return (
@@ -2199,7 +2199,7 @@ export function Example() {
 } as const;
 
 const photoExampleCode = {
-  crops: `import { Photo, PhotoImage } from "@/components/ui/photo";
+  crops: `import { Photo, PhotoImage } from "@brilliant/ui/photo";
 
 export function CropExample() {
   return (
@@ -2216,7 +2216,7 @@ export function CropExample() {
     </div>
   );
 }`,
-  filters: `import { Photo, PhotoImage, PhotoTint } from "@/components/ui/photo";
+  filters: `import { Photo, PhotoImage, PhotoTint } from "@brilliant/ui/photo";
 
 export function FilterExample() {
   return (
@@ -2241,7 +2241,7 @@ export function FilterExample() {
   Photo,
   PhotoFallback,
   PhotoImage,
-} from "@/components/ui/photo";
+} from "@brilliant/ui/photo";
 
 export function FitAndFallbackExample() {
   return (
@@ -2259,7 +2259,7 @@ export function FitAndFallbackExample() {
     </div>
   );
 }`,
-  ratios: `import { Photo, PhotoCaption, PhotoImage } from "@/components/ui/photo";
+  ratios: `import { Photo, PhotoCaption, PhotoImage } from "@brilliant/ui/photo";
 
 export function RatioExample() {
   return (
@@ -2279,7 +2279,7 @@ export function RatioExample() {
     </div>
   );
 }`,
-  variants: `import { Photo, PhotoCaption, PhotoImage } from "@/components/ui/photo";
+  variants: `import { Photo, PhotoCaption, PhotoImage } from "@brilliant/ui/photo";
 
 export function VariantExample() {
   return (
@@ -2307,7 +2307,7 @@ function usageForComponent(name: string) {
   if (explicit) return explicit;
 
   const exportName = componentExportName(name);
-  return `import { ${exportName} } from "@/components/ui/${name}";
+  return `import { ${exportName} } from "@brilliant/ui/${name}";
 
 export function Example() {
   return <${exportName}>Example</${exportName}>;
@@ -5735,7 +5735,7 @@ const navIcons: Record<string, ReactNode> = {
   Breadcrumb: <path d="m6 8 4 4-4 4m8-8 4 4-4 4" />,
   Button: <path d="M7 8h10a4 4 0 0 1 0 8H7a4 4 0 0 1 0-8Z" />,
   "Button Group": <path d="M4 8h6v8H4V8Zm6 0h10v8H10V8Z" />,
-  CLI: <path d="m5 8 4 4-4 4m7 0h7" />,
+  Installation: <path d="m5 8 4 4-4 4m7 0h7" />,
   Calendar: <path d="M7 3v4m10-4v4M4 9h16M5 5h14v15H5V5Z" />,
   Card: <path d="M4 6h16v12H4V6Zm3 4h5m-5 4h8" />,
   Carousel: <path d="M8 6h12v12H8V6ZM4 9v6" />,
@@ -6177,10 +6177,10 @@ function DocsSidebarFooter({
           </a>
           <a
             className="flex h-9 items-center px-3 text-sm text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
-            href="/cli"
-            onClick={(event) => onNavigate?.(event, "/cli")}
+            href="/installation"
+            onClick={(event) => onNavigate?.(event, "/installation")}
           >
-            CLI and installation
+            Installation
           </a>
           <button
             className="flex h-9 w-full items-center px-3 text-left text-sm text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
@@ -6919,7 +6919,7 @@ function StatusRail({ firstItemTitle }: { firstItemTitle: string }) {
         <div className="rounded-lg border border-border bg-surface p-4">
           <p className="font-medium">Current component</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            {firstItemTitle} is available from the local registry.
+            {firstItemTitle} is available from the @brilliant/ui package.
           </p>
         </div>
       </div>
@@ -6946,7 +6946,8 @@ function AppFooter({
               Brilliant UI
             </FooterBrand>
             <FooterDescription>
-              Copy-owned shadcn-compatible source, enterprise-grade tokens, and built-in micro UX.
+              Versioned shadcn-compatible components, enterprise-grade tokens, and built-in micro
+              UX.
             </FooterDescription>
           </div>
           <FooterNav>
@@ -6973,15 +6974,18 @@ function AppFooter({
               <FooterLink href="/" onClick={(event) => onNavigate(event, "/")}>
                 Documentation
               </FooterLink>
-              <FooterLink href="/cli" onClick={(event) => onNavigate(event, "/cli")}>
-                CLI
+              <FooterLink
+                href="/installation"
+                onClick={(event) => onNavigate(event, "/installation")}
+              >
+                Installation
               </FooterLink>
             </FooterGroup>
           </FooterNav>
         </FooterMain>
         <FooterBottom className="mt-8">
           <span>© 2026 Brilliant Mode</span>
-          <span>App-owned components. Brandable by design.</span>
+          <span>One package. Brandable by design.</span>
         </FooterBottom>
       </FooterContainer>
     </Footer>
@@ -7028,7 +7032,7 @@ function App() {
   const showFoundations = pathname === "/foundations";
   const showBlocks = pathname === "/blocks";
   const showTheming = pathname === "/theming";
-  const showCli = pathname === "/cli";
+  const showInstallation = pathname === "/installation";
   const routeFound =
     showHome ||
     showComponentsIndex ||
@@ -7037,7 +7041,7 @@ function App() {
     showFoundations ||
     showBlocks ||
     showTheming ||
-    showCli;
+    showInstallation;
 
   useEffect(() => {
     const syncRoute = () => {
@@ -7225,15 +7229,15 @@ function App() {
                   shadcn-compatible components with premium micro UX built in.
                 </h1>
                 <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
-                  Brilliant UI keeps the copy-owned shadcn workflow, then adds brandable tokens,
-                  enterprise-grade defaults, restrained animation primitives, and product-ready
-                  blocks for SaaS, internal tools, and AI apps.
+                  Brilliant UI packages shadcn-compatible components behind stable imports, then
+                  adds brandable tokens, enterprise-grade defaults, restrained animation primitives,
+                  and product-ready blocks for SaaS, internal tools, and AI apps.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <a
                     className="inline-flex h-9 items-center rounded-[0.25rem] bg-primary px-4 text-sm font-medium text-primary-foreground"
-                    href="/cli"
-                    onClick={(event) => navigate(event, "/cli")}
+                    href="/installation"
+                    onClick={(event) => navigate(event, "/installation")}
                   >
                     Get started
                   </a>
@@ -7246,8 +7250,8 @@ function App() {
                   </a>
                 </div>
                 <div className="mt-8">
-                  <MiniTerminal>{`npx brilliant-ui init
-npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
+                  <MiniTerminal>{`pnpm add @brilliant/ui tailwindcss
+import "@brilliant/ui/styles.css"`}</MiniTerminal>
                 </div>
               </section>
 
@@ -7270,7 +7274,7 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
 
               <section className="mx-auto max-w-4xl space-y-6 pb-14">
                 <SectionHeading
-                  description="Brilliant UI is the front door for shadcn-compatible source components."
+                  description="Brilliant UI keeps shadcn conventions behind a stable, upgradeable package API."
                   id="shadcn"
                 >
                   Built on the shadcn model
@@ -7286,10 +7290,10 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                   </div>
                   <div className="border-t border-border p-5">
                     <p className="text-sm leading-6 text-muted-foreground">
-                      The generated files follow shadcn conventions: Radix where appropriate,
-                      Tailwind semantic classes, editable source, components aliases, and app-owned
-                      code. The Brilliant layer adds tokens, micro UX, enterprise styling, metadata,
-                      and product composition rules.
+                      Components follow shadcn conventions internally: Radix where appropriate and
+                      Tailwind semantic classes. The supported default is the protected package. The
+                      Components, tokens, animation utilities, and the Tailwind stylesheet ship
+                      together as one versioned package.
                     </p>
                   </div>
                 </div>
@@ -7300,13 +7304,13 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
           {showComponentsIndex ? (
             <section className="mx-auto max-w-4xl space-y-6 pb-14">
               <SectionHeading
-                description="Implemented registry items that can be installed into an app today."
+                description="Versioned package exports available to application code today."
                 id="components"
               >
                 Components
               </SectionHeading>
 
-              <CodeBlock language="bash">{`npx brilliant-ui add ${registry.map((item) => item.name).join(" ")}`}</CodeBlock>
+              <CodeBlock language="bash">pnpm add @brilliant/ui</CodeBlock>
 
               <div className="overflow-auto rounded-lg border border-border">
                 <table className="w-full border-collapse text-sm">
@@ -7353,13 +7357,13 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
                   Displays a button or a component that looks like a button. Use it for actions
                   inside forms, dialogs, toolbars, and application screens. Motion, focus, disabled,
-                  and reduced-motion behavior are part of the generated source.
+                  and reduced-motion behavior are part of the package implementation.
                 </p>
               </div>
 
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold">Installation</h3>
-                <CodeBlock language="bash">{`npx brilliant-ui add button`}</CodeBlock>
+                <CodeBlock language="bash">pnpm add @brilliant/ui</CodeBlock>
               </div>
 
               <ExamplePanel code={usageForComponent("button")}>
@@ -7462,8 +7466,9 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                     ))}
                   </div>
                   <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                    Registry metadata is used by the CLI and AI composition tooling. It is shown
-                    here as supporting information, not as the component documentation itself.
+                    Registry metadata is used by package generation and AI composition tooling. It
+                    is shown here as supporting information, not as the component documentation
+                    itself.
                   </p>
                 </div>
               </details>
@@ -7489,12 +7494,11 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
 
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Installation</h3>
-                      <CodeBlock language="bash">{`npx brilliant-ui add ${item.name}`}</CodeBlock>
+                      <CodeBlock language="bash">pnpm add @brilliant/ui</CodeBlock>
                       {item.dependencies.length > 0 ? (
                         <p className="text-sm leading-6 text-muted-foreground">
-                          Package dependencies: <code>{item.dependencies.join(", ")}</code>. The CLI
-                          installs missing dependencies with the package manager detected in your
-                          project.
+                          Runtime dependencies are managed by the Brilliant UI package:
+                          <code> {item.dependencies.join(", ")}</code>.
                         </p>
                       ) : null}
                     </div>
@@ -8261,7 +8265,7 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                         block.id === "system-health" ||
                         block.id === "capacity-dashboard" ? (
                           <code className="mt-2 block text-xs text-muted-foreground">
-                            npx brilliant-ui add{" "}
+                            import from @brilliant/ui/
                             {block.id === "analytics-overview"
                               ? "analytics-overview-dashboard"
                               : block.id === "system-health"
@@ -8318,22 +8322,90 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
             </section>
           ) : null}
 
-          {showCli ? (
+          {showInstallation ? (
             <section className="mx-auto max-w-4xl space-y-6 pb-20">
               <SectionHeading
-                description="Initialize existing projects, map shadcn aliases, preview changes, and install copy-owned source."
-                id="cli"
+                description="Install the single Brilliant UI package, load its Tailwind theme, and import only the components you use."
+                id="installation"
               >
-                CLI
+                Installation
               </SectionHeading>
-              <div className="rounded-lg border border-border bg-surface">
-                <div className="border-b border-border px-4 py-3 text-sm font-medium">Demo</div>
-                <div className="p-4">
-                  <CodeBlock language="bash">{`TMP_DEMO=$(mktemp -d)
-pnpm --dir /Users/nirvana/brilliant-ui --filter @brilliant-ui/cli dev -- init --cwd "$TMP_DEMO"
-pnpm --dir /Users/nirvana/brilliant-ui --filter @brilliant-ui/cli dev -- add button --cwd "$TMP_DEMO"
-find "$TMP_DEMO" -maxdepth 4 -type f | sort`}</CodeBlock>
-                </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Requirements</h3>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Brilliant UI requires React 19.1 or newer and Tailwind CSS v4. It works with
+                  frameworks that support standard ESM packages and a global Tailwind stylesheet.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">1. Install</h3>
+                <CodeBlock language="bash">pnpm add @brilliant/ui tailwindcss</CodeBlock>
+                <details className="rounded-lg border border-border bg-surface">
+                  <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
+                    npm, Yarn, and Bun
+                  </summary>
+                  <div className="space-y-3 border-t border-border p-4">
+                    <CodeBlock language="bash">npm install @brilliant/ui tailwindcss</CodeBlock>
+                    <CodeBlock language="bash">yarn add @brilliant/ui tailwindcss</CodeBlock>
+                    <CodeBlock language="bash">bun add @brilliant/ui tailwindcss</CodeBlock>
+                  </div>
+                </details>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">2. Load the stylesheet</h3>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Add both imports to your application&apos;s global CSS file. Brilliant&apos;s
+                  stylesheet provides semantic tokens, light and dark themes, keyframes, and
+                  Tailwind source scanning.
+                </p>
+                <CodeBlock language="css">{`@import "tailwindcss";
+@import "@brilliant/ui/styles.css";`}</CodeBlock>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">3. Import a component</h3>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Use component subpaths so bundlers can include only what your application imports.
+                </p>
+                <CodeBlock language="tsx">{`import { Button } from "@brilliant/ui/button";
+
+export function SaveButton() {
+  return <Button>Save changes</Button>;
+}`}</CodeBlock>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Tokens and animations</h3>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  These utilities are included in the same package; there are no additional
+                  Brilliant packages to install.
+                </p>
+                <CodeBlock language="ts">{`import { tokens } from "@brilliant/ui/tokens";
+import { animationPresets, microUx } from "@brilliant/ui/animations";`}</CodeBlock>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Brand customization</h3>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Override Brilliant CSS variables after the package import. Components continue to
+                  use semantic Tailwind classes while adopting your brand.
+                </p>
+                <CodeBlock language="css">{`:root {
+  --brilliant-primary: oklch(0.54 0.23 276);
+  --brilliant-ring: oklch(0.61 0.22 276);
+  --brilliant-radius: 0.625rem;
+}`}</CodeBlock>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Upgrade</h3>
+                <CodeBlock language="bash">pnpm up @brilliant/ui</CodeBlock>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Review release notes before upgrading across minor or major versions.
+                </p>
               </div>
             </section>
           ) : null}

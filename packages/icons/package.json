@@ -1,6 +1,7 @@
 {
   "name": "@brilliant-ui/icons",
   "version": "0.1.0",
+  "private": true,
   "description": "Icon sizing and Lucide adapter contracts for Brilliant UI",
   "type": "module",
   "sideEffects": false,

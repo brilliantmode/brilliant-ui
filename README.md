@@ -1,8 +1,8 @@
 # Brilliant UI
 
-Brilliant UI is an opinionated, open-source UI operating system for React. It keeps the
-copy-paste ownership model and conventions of shadcn/ui while standardizing tokens, themes,
-accessible primitives, application blocks, and tooling for production software.
+Brilliant UI is an opinionated, open-source UI operating system for React. It packages
+shadcn-compatible conventions behind stable, upgradeable imports while standardizing tokens,
+themes, accessible primitives, application blocks, and tooling for production software.
 
 ## Status
 
@@ -15,33 +15,46 @@ theme contracts, registry contract, and CLI. APIs may change before the first st
 ```sh
 pnpm install
 pnpm build
-pnpm --filter @brilliant-ui/cli dev -- init
 ```
 
-CLI commands accept `--cwd`, `--force`, `--dry-run`, `--yes`, and `--silent` for scripted installs.
-When `components.json` is present, `brilliant-ui init` maps existing shadcn/ui aliases and CSS
-placement into `brilliant-ui.json`.
+Consumer applications install the protected package and import only what they use:
 
-## Workspace
+```sh
+pnpm add @brilliant/ui tailwindcss
+```
+
+Add the package stylesheet to your global CSS after Tailwind:
+
+```css
+@import "tailwindcss";
+@import "@brilliant/ui/styles.css";
+```
+
+```tsx
+import { Button } from "@brilliant/ui/button";
+```
+
+Tokens and animation utilities are included in the same installation:
+
+```ts
+import { animationPresets } from "@brilliant/ui/animations";
+import { tokens } from "@brilliant/ui/tokens";
+```
+
+## Public package
 
 | Package | Purpose |
 | --- | --- |
-| `@brilliant-ui/tokens` | Typed tokens and Tailwind v4-compatible CSS variables |
-| `@brilliant-ui/themes` | Typed theme contracts, brand overrides, and SSR-safe theme helpers |
-| `@brilliant-ui/core` | Shared type-safe utilities and configuration contracts |
-| `@brilliant-ui/components` | Shared component conventions, `cn`, CVA, state classes, and Radix Slot |
-| `@brilliant-ui/animations` | Motion presets and reduced-motion helpers |
-| `@brilliant-ui/icons` | Lucide icon adapter contracts, sizing, and accessibility props |
-| `@brilliant-ui/registry` | Machine-readable component registry and AI metadata |
-| `@brilliant-ui/cli` | `brilliant-ui init`, `add`, and `update` commands |
-| `@brilliant-ui/docs` | Documentation application shell |
-| `@brilliant-ui/playground` | Component development application shell |
+| `@brilliant/ui` | Protected, tree-shakeable components, layouts, blocks, styles, and shared conventions |
+
+All `@brilliant-ui/*` workspaces are private implementation modules used to build and document the
+single public package. Consumers never need to install them.
 
 ## Typography
 
 Brilliant UI uses Instrument Sans for interface typography and IBM Plex Mono for code, identifiers,
-and technical data. The token package declares these families but does not bundle font files into
-consumer applications. Self-host them, load them through your application framework, or install
+and technical data. The package declares these families but does not bundle font files into consumer
+applications. Self-host them, load them through your application framework, or install
 `@fontsource-variable/instrument-sans` and `@fontsource/ibm-plex-mono`.
 
 Read [ARCHITECTURE.md](./ARCHITECTURE.md) for package boundaries and design decisions. The
@@ -56,7 +69,7 @@ them.
 
 ## Principles
 
-- Compatible with shadcn/ui conventions and copyable source ownership.
+- Compatible with shadcn/ui conventions through a protected, versioned package API.
 - Tailwind CSS v4, CSS variables, OKLCH color, and tokens at every layer.
 - Radix UI and ARIA patterns for accessible primitives.
 - React Hook Form + Zod and TanStack defaults for higher-level packages.

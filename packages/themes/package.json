@@ -1,6 +1,7 @@
 {
   "name": "@brilliant-ui/themes",
   "version": "0.1.0",
+  "private": true,
   "description": "Theme contracts and SSR-safe runtime helpers for Brilliant UI",
   "type": "module",
   "sideEffects": false,

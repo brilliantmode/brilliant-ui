@@ -1,6 +1,7 @@
 {
   "name": "@brilliant-ui/core",
   "version": "0.1.0",
+  "private": true,
   "description": "Framework contracts and dependency-free utilities for Brilliant UI",
   "type": "module",
   "sideEffects": false,

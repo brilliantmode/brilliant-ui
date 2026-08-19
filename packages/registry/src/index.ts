@@ -779,7 +779,7 @@ const sizes = {
   },
 } as const;
 
-export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
+export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "type"> {
   indeterminate?: boolean;
   size?: keyof typeof sizes;
   variant?: keyof typeof variants;
@@ -1921,12 +1921,12 @@ export function DropdownMenuCheckboxItem({
 }: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>) {
   return (
     <DropdownMenuPrimitive.CheckboxItem
-      checked={checked}
       className={cx(
         "relative flex cursor-default select-none items-center rounded-[0.25rem] py-1.5 pr-2 pl-8 outline-none",
         "data-[highlighted]:bg-muted data-[highlighted]:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}
+      {...(checked === undefined ? {} : { checked })}
       {...props}
     >
       <span className="absolute left-2 grid size-4 place-items-center text-primary">
@@ -1988,7 +1988,7 @@ export function DropdownMenuSeparator({
 
 const tooltipSource = `import type { HTMLAttributes, ReactNode } from "react";
 
-export interface TooltipProps extends HTMLAttributes<HTMLSpanElement> {
+export interface TooltipProps extends Omit<HTMLAttributes<HTMLSpanElement>, "content"> {
   content: ReactNode;
 }
 
@@ -3047,6 +3047,7 @@ import {
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
+  DetailsHTMLAttributes,
   HTMLAttributes,
   ReactNode,
 } from "react";

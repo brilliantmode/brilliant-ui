@@ -4,8 +4,11 @@ node_modules
 dist
 coverage
 *.tsbuildinfo
+packages/components/src/generated
+packages/components/src/animations.ts
+packages/components/src/styles.css
+packages/components/src/tokens.ts
 .DS_Store
 .env
 .env.*
 !.env.example
-

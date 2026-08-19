@@ -1,6 +1,7 @@
 {
   "name": "@brilliant-ui/animations",
   "version": "0.1.0",
+  "private": true,
   "description": "Motion presets and reduced-motion contracts for Brilliant UI",
   "type": "module",
   "sideEffects": false,

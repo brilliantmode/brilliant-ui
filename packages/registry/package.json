@@ -1,6 +1,7 @@
 {
   "name": "@brilliant-ui/registry",
   "version": "0.1.0",
+  "private": true,
   "description": "Registry contracts and built-in source items for Brilliant UI",
   "type": "module",
   "sideEffects": false,
