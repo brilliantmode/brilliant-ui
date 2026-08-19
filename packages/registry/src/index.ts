@@ -247,8 +247,9 @@ function cx(...classes: Array<string | false | null | undefined>) {
 }
 
 const variants = {
-  surface: "border-border bg-surface shadow-sm",
-  elevated: "border-border bg-surface-raised shadow-md",
+  surface: "border-transparent bg-surface shadow-none ring-1 ring-inset ring-border",
+  elevated:
+    "border-transparent bg-surface-raised shadow-[0_20px_42px_-18px_oklch(0_0_0/0.48),0_8px_18px_-12px_oklch(0_0_0/0.3)] motion-safe:-translate-y-1",
   ghost: "border-transparent bg-transparent shadow-none",
 } as const;
 

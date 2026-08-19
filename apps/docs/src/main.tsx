@@ -2814,9 +2814,10 @@ function PhotoPreviewFigure({
   variant?: "elevated" | "ghost" | "surface";
 }) {
   const variantClass = {
-    elevated: "border-border bg-surface-raised shadow-md",
+    elevated:
+      "-translate-y-1 border-transparent bg-surface-raised shadow-[0_20px_42px_-18px_oklch(0_0_0/0.48),0_8px_18px_-12px_oklch(0_0_0/0.3)]",
     ghost: "border-transparent bg-transparent shadow-none",
-    surface: "border-border bg-surface shadow-sm",
+    surface: "border-transparent bg-surface shadow-none ring-1 ring-inset ring-border",
   }[variant];
 
   return (
