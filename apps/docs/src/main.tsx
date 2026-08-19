@@ -6,9 +6,32 @@ import "./styles.css";
 const navItems = [
   ["Getting Started", "#getting-started"],
   ["Components", "#components"],
+  ["Button", "#button"],
   ["Foundations", "#foundations"],
   ["Blocks", "#blocks"],
   ["CLI", "#cli"],
+] as const;
+
+const buttonVariants = [
+  ["Default", "Save changes", "bg-primary text-primary-foreground"],
+  ["Secondary", "Secondary", "bg-secondary text-secondary-foreground"],
+  ["Outline", "Outline", "border border-border bg-background"],
+  ["Ghost", "Ghost", "hover:bg-muted"],
+  ["Critical", "Delete", "bg-critical text-critical-foreground"],
+] as const;
+
+const buttonSizes = [
+  ["Small", "h-8 px-3 text-xs"],
+  ["Default", "h-9 px-4 text-sm"],
+  ["Large", "h-10 px-5 text-sm"],
+  ["Icon", "size-9 px-0 text-sm"],
+] as const;
+
+const buttonProps = [
+  ["variant", '"primary" | "secondary" | "outline" | "ghost" | "critical"', '"primary"'],
+  ["size", '"sm" | "md" | "lg" | "icon"', '"md"'],
+  ["type", 'ButtonHTMLAttributes<HTMLButtonElement>["type"]', '"button"'],
+  ["className", "string", "undefined"],
 ] as const;
 
 const foundations = [
@@ -56,6 +79,31 @@ function SectionHeading({
       <h2 className="text-2xl font-semibold tracking-tight">{children}</h2>
       <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">{description}</p>
     </div>
+  );
+}
+
+function PreviewButton({ children, className }: { children: ReactNode; className: string }) {
+  return (
+    <button
+      className={[
+        "inline-flex shrink-0 items-center justify-center gap-2 rounded-md font-medium",
+        "transition-[color,background-color,border-color,opacity] duration-150",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "disabled:pointer-events-none disabled:opacity-50",
+        className,
+      ].join(" ")}
+      type="button"
+    >
+      {children}
+    </button>
+  );
+}
+
+function CodeBlock({ children }: { children: string }) {
+  return (
+    <pre className="overflow-auto rounded-lg border border-border bg-surface p-4 text-sm leading-6">
+      <code>{children}</code>
+    </pre>
   );
 }
 
@@ -123,10 +171,10 @@ function App() {
                 Browse components
               </a>
             </div>
-            <pre className="mt-8 overflow-auto rounded-lg border border-border bg-surface p-4 text-sm">
-              <code>{`pnpm --filter @brilliant-ui/cli dev -- init
-pnpm --filter @brilliant-ui/cli dev -- add button`}</code>
-            </pre>
+            <div className="mt-8">
+              <CodeBlock>{`pnpm --filter @brilliant-ui/cli dev -- init
+pnpm --filter @brilliant-ui/cli dev -- add button`}</CodeBlock>
+            </div>
           </section>
 
           <section className="mx-auto max-w-4xl space-y-6 pb-14">
@@ -137,55 +185,143 @@ pnpm --filter @brilliant-ui/cli dev -- add button`}</code>
               Components
             </SectionHeading>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {registry.map((item) => (
-                <article className="rounded-lg border border-border bg-surface p-5" key={item.name}>
+                <a
+                  className="rounded-lg border border-border bg-surface p-5 hover:border-primary/30"
+                  href={`#${item.name}`}
+                  key={item.name}
+                >
                   <div className="flex items-center justify-between gap-3">
                     <h3 className="font-semibold">{item.title}</h3>
-                    <Badge tone="ready">{item.kind}</Badge>
+                    <Badge tone="ready">available</Badge>
                   </div>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.description}</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {item.metadata.slots.map((slot) => (
-                      <Badge key={slot}>{slot}</Badge>
-                    ))}
-                  </div>
-                </article>
+                </a>
               ))}
             </div>
+          </section>
 
-            <div className="rounded-lg border border-border bg-background p-5">
-              <div className="flex items-center justify-between gap-3">
-                <h3 className="font-semibold">Button</h3>
-                <Badge tone="ready">preview</Badge>
+          <section className="mx-auto max-w-4xl space-y-8 pb-14">
+            <div className="scroll-mt-24" id="button">
+              <div className="flex flex-wrap items-center gap-3">
+                <h2 className="text-3xl font-semibold tracking-tight">Button</h2>
+                <Badge tone="ready">available</Badge>
               </div>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <button
-                  className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground"
-                  type="button"
-                >
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+                Displays a button or a component that looks like a button. Use it for actions inside
+                forms, dialogs, toolbars, and application screens.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Installation</h3>
+              <CodeBlock>{`pnpm --filter @brilliant-ui/cli dev -- add button`}</CodeBlock>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Usage</h3>
+              <CodeBlock>{`import { Button } from "@/components/ui/button";
+
+export function Example() {
+  return <Button>Save changes</Button>;
+}`}</CodeBlock>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Preview</h3>
+              <div className="rounded-lg border border-border bg-background p-6">
+                <PreviewButton className="h-9 bg-primary px-4 text-sm text-primary-foreground">
                   Save changes
-                </button>
-                <button
-                  className="inline-flex h-9 items-center justify-center rounded-md bg-secondary px-4 text-sm font-medium text-secondary-foreground"
-                  type="button"
-                >
-                  Secondary
-                </button>
-                <button
-                  className="inline-flex h-9 items-center justify-center rounded-md border border-border px-4 text-sm font-medium"
-                  type="button"
-                >
-                  Outline
-                </button>
-                <button
-                  className="inline-flex h-9 items-center justify-center rounded-md bg-critical px-4 text-sm font-medium text-critical-foreground"
-                  type="button"
-                >
-                  Critical
-                </button>
+                </PreviewButton>
               </div>
             </div>
+
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Variants</h3>
+              <div className="rounded-lg border border-border bg-background p-6">
+                <div className="flex flex-wrap gap-3">
+                  {buttonVariants.map(([label, text, className]) => (
+                    <PreviewButton className={`h-9 px-4 text-sm ${className}`} key={label}>
+                      {text}
+                    </PreviewButton>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Sizes</h3>
+              <div className="rounded-lg border border-border bg-background p-6">
+                <div className="flex flex-wrap items-center gap-3">
+                  {buttonSizes.map(([label, className]) => (
+                    <PreviewButton
+                      className={`bg-primary text-primary-foreground ${className}`}
+                      key={label}
+                    >
+                      {label === "Icon" ? "I" : label}
+                    </PreviewButton>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Props</h3>
+              <div className="overflow-auto rounded-lg border border-border">
+                <table className="w-full border-collapse text-sm">
+                  <thead className="bg-muted text-left">
+                    <tr>
+                      <th className="border-b border-border px-4 py-3 font-medium">Prop</th>
+                      <th className="border-b border-border px-4 py-3 font-medium">Type</th>
+                      <th className="border-b border-border px-4 py-3 font-medium">Default</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {buttonProps.map(([name, type, defaultValue]) => (
+                      <tr className="border-b border-border last:border-b-0" key={name}>
+                        <td className="px-4 py-3 font-mono text-xs">{name}</td>
+                        <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                          {type}
+                        </td>
+                        <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                          {defaultValue}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Accessibility</h3>
+              <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
+                <li>Uses the native button element by default.</li>
+                <li>
+                  Defaults to <code>type="button"</code> to avoid accidental form submission.
+                </li>
+                <li>Icon-only buttons must include an accessible label.</li>
+                <li>Keyboard focus is visible through the shared Brilliant focus ring.</li>
+              </ul>
+            </div>
+
+            <details className="rounded-lg border border-border bg-surface">
+              <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
+                Registry metadata
+              </summary>
+              <div className="border-t border-border p-4">
+                <div className="flex flex-wrap gap-2">
+                  {firstItem?.metadata.slots.map((slot) => (
+                    <Badge key={slot}>{slot}</Badge>
+                  ))}
+                </div>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  Registry metadata is used by the CLI and AI composition tooling. It is shown here
+                  as supporting information, not as the component documentation itself.
+                </p>
+              </div>
+            </details>
           </section>
 
           <section className="mx-auto max-w-4xl space-y-6 pb-14">
@@ -234,12 +370,12 @@ pnpm --filter @brilliant-ui/cli dev -- add button`}</code>
             </SectionHeading>
             <div className="rounded-lg border border-border bg-surface">
               <div className="border-b border-border px-4 py-3 text-sm font-medium">Demo</div>
-              <pre className="overflow-auto p-4 text-sm leading-6">
-                <code>{`TMP_DEMO=$(mktemp -d)
+              <div className="p-4">
+                <CodeBlock>{`TMP_DEMO=$(mktemp -d)
 pnpm --dir /Users/nirvana/brilliant-ui --filter @brilliant-ui/cli dev -- init --cwd "$TMP_DEMO"
 pnpm --dir /Users/nirvana/brilliant-ui --filter @brilliant-ui/cli dev -- add button --cwd "$TMP_DEMO"
-find "$TMP_DEMO" -maxdepth 4 -type f | sort`}</code>
-              </pre>
+find "$TMP_DEMO" -maxdepth 4 -type f | sort`}</CodeBlock>
+              </div>
             </div>
           </section>
         </div>
