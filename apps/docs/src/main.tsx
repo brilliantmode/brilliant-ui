@@ -1,9 +1,9 @@
 import { registry } from "@brilliant-ui/registry";
-import { type ReactNode, StrictMode, useEffect, useState } from "react";
+import { type MouseEvent, type ReactNode, StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
-type NavItem = readonly [label: string, href: `#${string}`];
+type NavItem = readonly [label: string, href: string];
 type NavGroup = {
   label: string;
   items: readonly NavItem[];
@@ -12,110 +12,137 @@ type NavGroup = {
 const navGroups = [
   {
     items: [
-      ["Getting Started", "#getting-started"],
-      ["Why Brilliant", "#why-brilliant"],
-      ["shadcn", "#shadcn"],
-      ["Components", "#components"],
+      ["Getting Started", "/"],
+      ["Why Brilliant", "/#why-brilliant"],
+      ["shadcn", "/#shadcn"],
+      ["Components", "/components"],
     ],
     label: "Start",
   },
   {
     items: [
-      ["Button", "#button"],
-      ["Button Group", "#button-group"],
-      ["Badge", "#badge"],
-      ["Card", "#card"],
-      ["Text", "#text"],
-      ["Avatar", "#avatar"],
-      ["Aspect Ratio", "#aspect-ratio"],
-      ["Separator", "#separator"],
+      ["Button", "/components/button"],
+      ["Button Group", "/components/button-group"],
+      ["Badge", "/components/badge"],
+      ["Card", "/components/card"],
+      ["Text", "/components/text"],
+      ["Avatar", "/components/avatar"],
+      ["Aspect Ratio", "/components/aspect-ratio"],
+      ["Separator", "/components/separator"],
     ],
     label: "Display",
   },
   {
     items: [
-      ["Input", "#input"],
-      ["Label", "#label"],
-      ["Textarea", "#textarea"],
-      ["Field", "#field"],
-      ["Checkbox", "#checkbox"],
-      ["Switch", "#switch"],
-      ["Radio Group", "#radio-group"],
-      ["Slider", "#slider"],
-      ["Select", "#select"],
-      ["Combobox", "#combobox"],
-      ["Calendar", "#calendar"],
-      ["Date Input", "#date-input"],
-      ["Form", "#form"],
+      ["Input", "/components/input"],
+      ["Label", "/components/label"],
+      ["Textarea", "/components/textarea"],
+      ["Field", "/components/field"],
+      ["Checkbox", "/components/checkbox"],
+      ["Switch", "/components/switch"],
+      ["Radio Group", "/components/radio-group"],
+      ["Slider", "/components/slider"],
+      ["Select", "/components/select"],
+      ["Combobox", "/components/combobox"],
+      ["Calendar", "/components/calendar"],
+      ["Date Input", "/components/date-input"],
+      ["Form", "/components/form"],
     ],
     label: "Forms",
   },
   {
     items: [
-      ["Dialog", "#dialog"],
-      ["Alert Dialog", "#alert-dialog"],
-      ["Drawer", "#drawer"],
-      ["Sheet", "#sheet"],
-      ["Dropdown Menu", "#dropdown-menu"],
-      ["Tooltip", "#tooltip"],
-      ["Popover", "#popover"],
-      ["Hover Card", "#hover-card"],
-      ["Context Menu", "#context-menu"],
-      ["Command", "#command"],
+      ["Dialog", "/components/dialog"],
+      ["Alert Dialog", "/components/alert-dialog"],
+      ["Drawer", "/components/drawer"],
+      ["Sheet", "/components/sheet"],
+      ["Dropdown Menu", "/components/dropdown-menu"],
+      ["Tooltip", "/components/tooltip"],
+      ["Popover", "/components/popover"],
+      ["Hover Card", "/components/hover-card"],
+      ["Context Menu", "/components/context-menu"],
+      ["Command", "/components/command"],
     ],
     label: "Overlays",
   },
   {
     items: [
-      ["Alert", "#alert"],
-      ["Skeleton", "#skeleton"],
-      ["Progress", "#progress"],
-      ["Spinner", "#spinner"],
-      ["Empty State", "#empty-state"],
-      ["Toast", "#toast"],
+      ["Alert", "/components/alert"],
+      ["Skeleton", "/components/skeleton"],
+      ["Progress", "/components/progress"],
+      ["Spinner", "/components/spinner"],
+      ["Empty State", "/components/empty-state"],
+      ["Toast", "/components/toast"],
     ],
     label: "Feedback",
   },
   {
     items: [
-      ["Tabs", "#tabs"],
-      ["Accordion", "#accordion"],
-      ["Collapsible", "#collapsible"],
-      ["Carousel", "#carousel"],
-      ["Table", "#table"],
-      ["Scroll Area", "#scroll-area"],
-      ["Breadcrumb", "#breadcrumb"],
-      ["Navigation Menu", "#navigation-menu"],
-      ["Menubar", "#menubar"],
-      ["Pagination", "#pagination"],
+      ["Tabs", "/components/tabs"],
+      ["Accordion", "/components/accordion"],
+      ["Collapsible", "/components/collapsible"],
+      ["Carousel", "/components/carousel"],
+      ["Table", "/components/table"],
+      ["Scroll Area", "/components/scroll-area"],
+      ["Breadcrumb", "/components/breadcrumb"],
+      ["Navigation Menu", "/components/navigation-menu"],
+      ["Menubar", "/components/menubar"],
+      ["Pagination", "/components/pagination"],
     ],
     label: "Navigation & data",
   },
   {
     items: [
-      ["Application Shell", "#application-shell"],
-      ["Onboarding Wizard", "#onboarding-wizard"],
-      ["Foundations", "#foundations"],
-      ["Blocks", "#blocks"],
-      ["Theming", "#theming"],
-      ["CLI", "#cli"],
+      ["Application Shell", "/components/application-shell"],
+      ["Onboarding Wizard", "/components/onboarding-wizard"],
+      ["Foundations", "/foundations"],
+      ["Blocks", "/blocks"],
+      ["Theming", "/theming"],
+      ["CLI", "/cli"],
     ],
     label: "System",
   },
 ] as const satisfies readonly NavGroup[];
 
-const navItems: NavItem[] = (navGroups as readonly NavGroup[]).flatMap((group) => group.items);
-
 const topNavItems = [
-  ["Docs", "#getting-started"],
-  ["Components", "#components"],
-  ["Foundations", "#foundations"],
-  ["Blocks", "#blocks"],
-  ["Theming", "#theming"],
-  ["CLI", "#cli"],
+  ["Docs", "/"],
+  ["Components", "/components"],
+  ["Foundations", "/foundations"],
+  ["Blocks", "/blocks"],
+  ["Theming", "/theming"],
+  ["CLI", "/cli"],
 ] as const satisfies readonly NavItem[];
 
-type NavHref = (typeof navItems)[number][1];
+type NavHref = string;
+type NavigateHandler = (event: MouseEvent<HTMLAnchorElement>, href: string) => void;
+
+function normalizePathname(pathname: string) {
+  const withoutTrailingSlash = pathname.replace(/\/+$/, "");
+  return withoutTrailingSlash === "" ? "/" : withoutTrailingSlash;
+}
+
+function getRoute() {
+  return `${normalizePathname(window.location.pathname)}${window.location.hash}`;
+}
+
+function routePathname(route: string) {
+  return normalizePathname(route.split("#")[0] || "/");
+}
+
+function routeHash(route: string) {
+  return route.includes("#") ? `#${route.split("#").slice(1).join("#")}` : "";
+}
+
+function isRouteActive(route: string, href: string) {
+  const pathname = routePathname(route);
+  const targetPathname = routePathname(href);
+
+  if (targetPathname === "/") {
+    return pathname === "/" && (href === "/" || routeHash(route) === routeHash(href));
+  }
+
+  return pathname === targetPathname;
+}
 
 const buttonVariants = [
   [
@@ -3638,10 +3665,10 @@ const navIcons: Record<string, ReactNode> = {
   "Why Brilliant": <path d="M12 3 4 7v6c0 4 3.4 6.7 8 8 4.6-1.3 8-4 8-8V7l-8-4Z" />,
 };
 
-function DocsSidebarHeader() {
+function DocsSidebarHeader({ onNavigate }: { onNavigate: NavigateHandler | undefined }) {
   return (
     <div className="mb-5 space-y-3">
-      <a className="flex items-center gap-3" href="#getting-started">
+      <a className="flex items-center gap-3" href="/" onClick={(event) => onNavigate?.(event, "/")}>
         <span className="grid size-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-sm font-semibold tracking-tight text-foreground shadow-sm">
           B
         </span>
@@ -3656,7 +3683,8 @@ function DocsSidebarHeader() {
       </a>
       <a
         className="flex h-9 items-center gap-2 rounded-[0.5rem] border border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
-        href="#components"
+        href="/components"
+        onClick={(event) => onNavigate?.(event, "/components")}
       >
         <span aria-hidden="true" className="text-base leading-none">
           ⌕
@@ -3691,13 +3719,13 @@ function NavIcon({ active, label }: { active: boolean; label: string }) {
 }
 
 function DocsNavGroup({
-  activeHref,
+  activeRoute,
   group,
   onNavigate,
 }: {
-  activeHref: NavHref;
+  activeRoute: NavHref;
   group: NavGroup;
-  onNavigate: (() => void) | undefined;
+  onNavigate: NavigateHandler | undefined;
 }) {
   return (
     <section className="pb-4 last:pb-0">
@@ -3708,17 +3736,17 @@ function DocsNavGroup({
         {group.items.map(([label, href]) => (
           <li key={href}>
             <a
-              aria-current={activeHref === href ? "location" : undefined}
+              aria-current={isRouteActive(activeRoute, href) ? "page" : undefined}
               className={[
                 "group flex h-8 items-center gap-3 rounded-[0.5rem] px-2.5 text-sm leading-5 transition-colors",
-                activeHref === href
+                isRouteActive(activeRoute, href)
                   ? "bg-primary/8 font-medium text-foreground shadow-[inset_0_0_0_0.5px_oklch(0.707_0.165_254.624/0.12)]"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               ].join(" ")}
               href={href}
-              onClick={onNavigate}
+              onClick={(event) => onNavigate?.(event, href)}
             >
-              <NavIcon active={activeHref === href} label={label} />
+              <NavIcon active={isRouteActive(activeRoute, href)} label={label} />
               <span className="min-w-0 truncate">{label}</span>
             </a>
           </li>
@@ -3728,14 +3756,20 @@ function DocsNavGroup({
   );
 }
 
-function DocsNav({ activeHref, onNavigate }: { activeHref: NavHref; onNavigate?: () => void }) {
+function DocsNav({
+  activeRoute,
+  onNavigate,
+}: {
+  activeRoute: NavHref;
+  onNavigate?: NavigateHandler;
+}) {
   return (
     <nav aria-label="Documentation" className="text-sm">
-      <DocsSidebarHeader />
+      <DocsSidebarHeader onNavigate={onNavigate} />
       <div>
         {navGroups.map((group) => (
           <DocsNavGroup
-            activeHref={activeHref}
+            activeRoute={activeRoute}
             group={group}
             key={group.label}
             onNavigate={onNavigate}
@@ -3746,26 +3780,29 @@ function DocsNav({ activeHref, onNavigate }: { activeHref: NavHref; onNavigate?:
   );
 }
 
-function isTopNavActive(activeHref: NavHref, topHref: (typeof topNavItems)[number][1]) {
-  if (topHref === "#getting-started") {
-    return (
-      activeHref === "#getting-started" ||
-      activeHref === "#why-brilliant" ||
-      activeHref === "#shadcn"
-    );
+function isTopNavActive(activeRoute: NavHref, topHref: (typeof topNavItems)[number][1]) {
+  const pathname = routePathname(activeRoute);
+
+  if (topHref === "/") {
+    return pathname === "/";
   }
 
-  if (topHref === "#components") {
-    return (
-      activeHref === "#components" ||
-      registry.some((item) => activeHref === (`#${item.name}` as NavHref))
-    );
+  if (topHref === "/components") {
+    return pathname === "/components" || pathname.startsWith("/components/");
   }
 
-  return activeHref === topHref;
+  return pathname === topHref;
 }
 
-function AppHeader({ activeHref, onMenuClick }: { activeHref: NavHref; onMenuClick: () => void }) {
+function AppHeader({
+  activeRoute,
+  onMenuClick,
+  onNavigate,
+}: {
+  activeRoute: NavHref;
+  onMenuClick: () => void;
+  onNavigate: NavigateHandler;
+}) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/82">
       <div className="mx-auto flex h-14 max-w-screen-2xl items-center gap-3 px-4 md:px-6">
@@ -3780,7 +3817,11 @@ function AppHeader({ activeHref, onMenuClick }: { activeHref: NavHref; onMenuCli
             ☰
           </span>
         </button>
-        <a className="shrink-0 whitespace-nowrap text-sm font-semibold tracking-tight" href="/">
+        <a
+          className="shrink-0 whitespace-nowrap text-sm font-semibold tracking-tight"
+          href="/"
+          onClick={(event) => onNavigate(event, "/")}
+        >
           Brilliant UI
         </a>
         <nav
@@ -3789,13 +3830,14 @@ function AppHeader({ activeHref, onMenuClick }: { activeHref: NavHref; onMenuCli
         >
           {topNavItems.map(([label, href]) => (
             <a
-              aria-current={isTopNavActive(activeHref, href) ? "page" : undefined}
+              aria-current={isTopNavActive(activeRoute, href) ? "page" : undefined}
               className={[
                 "shrink-0 whitespace-nowrap rounded-[0.25rem] px-3 py-1.5 transition-colors hover:bg-muted hover:text-foreground",
-                isTopNavActive(activeHref, href) ? "bg-primary/10 text-foreground" : "",
+                isTopNavActive(activeRoute, href) ? "bg-primary/10 text-foreground" : "",
               ].join(" ")}
               href={href}
               key={href}
+              onClick={(event) => onNavigate(event, href)}
             >
               {label}
             </a>
@@ -3810,12 +3852,14 @@ function AppHeader({ activeHref, onMenuClick }: { activeHref: NavHref; onMenuCli
 }
 
 function MobileDocsNav({
-  activeHref,
+  activeRoute,
   onClose,
+  onNavigate,
   open,
 }: {
-  activeHref: NavHref;
+  activeRoute: NavHref;
   onClose: () => void;
+  onNavigate: NavigateHandler;
   open: boolean;
 }) {
   if (!open) {
@@ -3837,7 +3881,11 @@ function MobileDocsNav({
         role="dialog"
       >
         <div className="mb-5 flex items-center justify-between gap-3">
-          <a className="text-sm font-semibold tracking-tight" href="/" onClick={onClose}>
+          <a
+            className="text-sm font-semibold tracking-tight"
+            href="/"
+            onClick={(event) => onNavigate(event, "/")}
+          >
             Brilliant UI
           </a>
           <button
@@ -3849,7 +3897,7 @@ function MobileDocsNav({
             ×
           </button>
         </div>
-        <DocsNav activeHref={activeHref} onNavigate={onClose} />
+        <DocsNav activeRoute={activeRoute} onNavigate={onNavigate} />
       </aside>
     </div>
   );
@@ -3893,7 +3941,7 @@ function StatusRail({ firstItemTitle }: { firstItemTitle: string }) {
   );
 }
 
-function AppFooter() {
+function AppFooter({ onNavigate }: { onNavigate: NavigateHandler }) {
   return (
     <footer className="border-t border-border bg-background">
       <div className="mx-auto grid max-w-screen-2xl gap-4 px-4 py-6 text-sm text-muted-foreground md:grid-cols-[280px_minmax(0,1fr)_280px] md:px-6">
@@ -3903,7 +3951,12 @@ function AppFooter() {
         </p>
         <div className="flex flex-wrap gap-3 md:justify-end">
           {topNavItems.map(([label, href]) => (
-            <a className="hover:text-foreground" href={href} key={href}>
+            <a
+              className="hover:text-foreground"
+              href={href}
+              key={href}
+              onClick={(event) => onNavigate(event, href)}
+            >
               {label}
             </a>
           ))}
@@ -3915,44 +3968,65 @@ function AppFooter() {
 
 function App() {
   const firstItem = registry[0];
-  const [activeHref, setActiveHref] = useState<NavHref>("#getting-started");
+  const [activeRoute, setActiveRoute] = useState<NavHref>(() => getRoute());
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const pathname = routePathname(activeRoute);
+  const componentName = pathname.startsWith("/components/")
+    ? pathname.replace("/components/", "")
+    : null;
+  const selectedItem = componentName ? registry.find((item) => item.name === componentName) : null;
+  const showHome = pathname === "/";
+  const showComponentsIndex = pathname === "/components";
+  const showButton = pathname === "/components/button";
+  const showComponentPage = Boolean(selectedItem && selectedItem.name !== "button");
+  const showFoundations = pathname === "/foundations";
+  const showBlocks = pathname === "/blocks";
+  const showTheming = pathname === "/theming";
+  const showCli = pathname === "/cli";
+  const routeFound =
+    showHome ||
+    showComponentsIndex ||
+    showButton ||
+    showComponentPage ||
+    showFoundations ||
+    showBlocks ||
+    showTheming ||
+    showCli;
 
   useEffect(() => {
-    const sectionIds = navItems.map(([, href]) => href.slice(1));
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((section): section is HTMLElement => Boolean(section));
+    const syncRoute = () => {
+      setActiveRoute(getRoute());
+    };
 
-    if (sections.length === 0) {
+    window.addEventListener("popstate", syncRoute);
+
+    return () => {
+      window.removeEventListener("popstate", syncRoute);
+    };
+  }, []);
+
+  const navigate: NavigateHandler = (event, href) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
       return;
     }
 
-    const setActiveFromScroll = () => {
-      const currentSection = sections
-        .filter((section) => section.getBoundingClientRect().top <= 120)
-        .at(-1);
+    event.preventDefault();
+    window.history.pushState(null, "", href);
+    setActiveRoute(getRoute());
+    setMobileNavOpen(false);
 
-      if (currentSection) {
-        setActiveHref(`#${currentSection.id}` as (typeof navItems)[number][1]);
+    window.requestAnimationFrame(() => {
+      const hash = routeHash(href);
+      const target = hash ? document.getElementById(hash.slice(1)) : null;
+
+      if (target) {
+        target.scrollIntoView({ block: "start" });
         return;
       }
 
-      const firstSection = sections[0];
-      if (firstSection) {
-        setActiveHref(`#${firstSection.id}` as (typeof navItems)[number][1]);
-      }
-    };
-
-    setActiveFromScroll();
-    window.addEventListener("scroll", setActiveFromScroll, { passive: true });
-    window.addEventListener("hashchange", setActiveFromScroll);
-
-    return () => {
-      window.removeEventListener("scroll", setActiveFromScroll);
-      window.removeEventListener("hashchange", setActiveFromScroll);
-    };
-  }, []);
+      window.scrollTo({ top: 0 });
+    });
+  };
 
   useEffect(() => {
     if (!mobileNavOpen) {
@@ -3976,720 +4050,769 @@ function App() {
     <div className="min-h-screen bg-background text-foreground">
       <a
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-[0.25rem] focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground"
-        href="#getting-started"
+        href="#content"
       >
         Skip to content
       </a>
-      <AppHeader activeHref={activeHref} onMenuClick={() => setMobileNavOpen(true)} />
+      <AppHeader
+        activeRoute={activeRoute}
+        onMenuClick={() => setMobileNavOpen(true)}
+        onNavigate={navigate}
+      />
       <MobileDocsNav
-        activeHref={activeHref}
+        activeRoute={activeRoute}
         onClose={() => setMobileNavOpen(false)}
+        onNavigate={navigate}
         open={mobileNavOpen}
       />
 
       <main className="mx-auto grid max-w-screen-2xl md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]">
         <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-y-auto border-r border-border px-6 py-6 md:block">
-          <DocsNav activeHref={activeHref} />
+          <DocsNav activeRoute={activeRoute} onNavigate={navigate} />
         </aside>
 
-        <div className="min-w-0 px-4 py-10 md:px-8 lg:px-10">
-          <section className="mx-auto max-w-4xl pb-14" id="getting-started">
-            <Badge tone="ready">shadcn-compatible enterprise UI</Badge>
-            <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-5xl">
-              shadcn-compatible components with premium micro UX built in.
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
-              Brilliant UI keeps the copy-owned shadcn workflow, then adds brandable tokens,
-              enterprise-grade defaults, restrained animation primitives, and product-ready blocks
-              for SaaS, internal tools, and AI apps.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                className="inline-flex h-9 items-center rounded-[0.25rem] bg-primary px-4 text-sm font-medium text-primary-foreground"
-                href="#cli"
-              >
-                Get started
-              </a>
-              <a
-                className="inline-flex h-9 items-center rounded-[0.25rem] border border-border px-4 text-sm font-medium"
-                href="#components"
-              >
-                Browse components
-              </a>
-            </div>
-            <div className="mt-8">
-              <MiniTerminal>{`npx brilliant-ui init
-npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
-            </div>
-          </section>
-
-          <section className="mx-auto max-w-4xl space-y-6 pb-14">
-            <SectionHeading
-              description="The reason to use Brilliant instead of plain generated components."
-              id="why-brilliant"
-            >
-              Why Brilliant
-            </SectionHeading>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {differentiators.map(([title, description]) => (
-                <article className="rounded-lg border border-border bg-surface p-5" key={title}>
-                  <h3 className="font-semibold">{title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section className="mx-auto max-w-4xl space-y-6 pb-14">
-            <SectionHeading
-              description="Brilliant UI is the front door for shadcn-compatible source components."
-              id="shadcn"
-            >
-              Built on the shadcn model
-            </SectionHeading>
-            <div className="rounded-lg border border-border bg-surface">
-              <div className="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
-                {shadcnFlow.map(([title, command]) => (
-                  <div className="p-5" key={title}>
-                    <p className="font-semibold">{title}</p>
-                    <p className="mt-2 font-mono text-xs text-muted-foreground">{command}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="border-t border-border p-5">
-                <p className="text-sm leading-6 text-muted-foreground">
-                  The generated files follow shadcn conventions: Radix where appropriate, Tailwind
-                  semantic classes, editable source, components aliases, and app-owned code. The
-                  Brilliant layer adds tokens, micro UX, enterprise styling, metadata, and product
-                  composition rules.
+        <div className="min-w-0 px-4 py-10 md:px-8 lg:px-10" id="content">
+          {showHome ? (
+            <>
+              <section className="mx-auto max-w-4xl pb-14" id="getting-started">
+                <Badge tone="ready">shadcn-compatible enterprise UI</Badge>
+                <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-5xl">
+                  shadcn-compatible components with premium micro UX built in.
+                </h1>
+                <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
+                  Brilliant UI keeps the copy-owned shadcn workflow, then adds brandable tokens,
+                  enterprise-grade defaults, restrained animation primitives, and product-ready
+                  blocks for SaaS, internal tools, and AI apps.
                 </p>
-              </div>
-            </div>
-          </section>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a
+                    className="inline-flex h-9 items-center rounded-[0.25rem] bg-primary px-4 text-sm font-medium text-primary-foreground"
+                    href="/cli"
+                    onClick={(event) => navigate(event, "/cli")}
+                  >
+                    Get started
+                  </a>
+                  <a
+                    className="inline-flex h-9 items-center rounded-[0.25rem] border border-border px-4 text-sm font-medium"
+                    href="/components"
+                    onClick={(event) => navigate(event, "/components")}
+                  >
+                    Browse components
+                  </a>
+                </div>
+                <div className="mt-8">
+                  <MiniTerminal>{`npx brilliant-ui init
+npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
+                </div>
+              </section>
 
-          <section className="mx-auto max-w-4xl space-y-6 pb-14">
-            <SectionHeading
-              description="Implemented registry items that can be installed into an app today."
-              id="components"
-            >
-              Components
-            </SectionHeading>
-
-            <CodeBlock language="bash">{`npx brilliant-ui add ${registry.map((item) => item.name).join(" ")}`}</CodeBlock>
-
-            <div className="overflow-auto rounded-lg border border-border">
-              <table className="w-full border-collapse text-sm">
-                <thead className="bg-muted text-left">
-                  <tr>
-                    <th className="border-b border-border px-4 py-3 font-medium">Component</th>
-                    <th className="border-b border-border px-4 py-3 font-medium">Purpose</th>
-                    <th className="border-b border-border px-4 py-3 font-medium">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {registry.map((item) => (
-                    <tr className="border-b border-border last:border-b-0" key={item.name}>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <a
-                          className="font-medium text-primary hover:underline"
-                          href={`#${item.name}`}
-                        >
-                          {item.title}
-                        </a>
-                      </td>
-                      <td className="min-w-80 px-4 py-3 text-muted-foreground">
-                        {item.metadata.purpose}
-                      </td>
-                      <td className="px-4 py-3">
-                        <Badge tone="ready">available</Badge>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section className="mx-auto max-w-4xl space-y-8 pb-14">
-            <div className="scroll-mt-24" id="button">
-              <div className="flex flex-wrap items-center gap-3">
-                <h2 className="text-3xl font-semibold tracking-tight">Button</h2>
-                <Badge tone="ready">available</Badge>
-              </div>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-                Displays a button or a component that looks like a button. Use it for actions inside
-                forms, dialogs, toolbars, and application screens. Motion, focus, disabled, and
-                reduced-motion behavior are part of the generated source.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold">Installation</h3>
-              <CodeBlock language="bash">{`npx brilliant-ui add button`}</CodeBlock>
-            </div>
-
-            <ExamplePanel code={usageForComponent("button")}>
-              <PreviewButton className={`${buttonVariants[0][2]} h-9 px-3.5 text-sm`}>
-                Save changes
-              </PreviewButton>
-            </ExamplePanel>
-
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold">Variants</h3>
-              <div className="rounded-lg border border-border bg-background p-6">
-                <div className="flex flex-wrap gap-3">
-                  {buttonVariants.map(([label, text, className]) => (
-                    <PreviewButton className={`h-9 px-3.5 text-sm ${className}`} key={label}>
-                      {text}
-                    </PreviewButton>
+              <section className="mx-auto max-w-4xl space-y-6 pb-14">
+                <SectionHeading
+                  description="The reason to use Brilliant instead of plain generated components."
+                  id="why-brilliant"
+                >
+                  Why Brilliant
+                </SectionHeading>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {differentiators.map(([title, description]) => (
+                    <article className="rounded-lg border border-border bg-surface p-5" key={title}>
+                      <h3 className="font-semibold">{title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+                    </article>
                   ))}
                 </div>
-              </div>
-            </div>
+              </section>
 
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold">Sizes</h3>
-              <div className="rounded-lg border border-border bg-background p-6">
-                <div className="flex flex-wrap items-center gap-3">
-                  {buttonSizes.map(([label, className]) => (
-                    <PreviewButton className={`${buttonVariants[0][2]} ${className}`} key={label}>
-                      {label === "Icon" ? "I" : label}
-                    </PreviewButton>
-                  ))}
+              <section className="mx-auto max-w-4xl space-y-6 pb-14">
+                <SectionHeading
+                  description="Brilliant UI is the front door for shadcn-compatible source components."
+                  id="shadcn"
+                >
+                  Built on the shadcn model
+                </SectionHeading>
+                <div className="rounded-lg border border-border bg-surface">
+                  <div className="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
+                    {shadcnFlow.map(([title, command]) => (
+                      <div className="p-5" key={title}>
+                        <p className="font-semibold">{title}</p>
+                        <p className="mt-2 font-mono text-xs text-muted-foreground">{command}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="border-t border-border p-5">
+                    <p className="text-sm leading-6 text-muted-foreground">
+                      The generated files follow shadcn conventions: Radix where appropriate,
+                      Tailwind semantic classes, editable source, components aliases, and app-owned
+                      code. The Brilliant layer adds tokens, micro UX, enterprise styling, metadata,
+                      and product composition rules.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </section>
+            </>
+          ) : null}
 
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold">Props</h3>
+          {showComponentsIndex ? (
+            <section className="mx-auto max-w-4xl space-y-6 pb-14">
+              <SectionHeading
+                description="Implemented registry items that can be installed into an app today."
+                id="components"
+              >
+                Components
+              </SectionHeading>
+
+              <CodeBlock language="bash">{`npx brilliant-ui add ${registry.map((item) => item.name).join(" ")}`}</CodeBlock>
+
               <div className="overflow-auto rounded-lg border border-border">
                 <table className="w-full border-collapse text-sm">
                   <thead className="bg-muted text-left">
                     <tr>
-                      <th className="border-b border-border px-4 py-3 font-medium">Prop</th>
-                      <th className="border-b border-border px-4 py-3 font-medium">Type</th>
-                      <th className="border-b border-border px-4 py-3 font-medium">Default</th>
+                      <th className="border-b border-border px-4 py-3 font-medium">Component</th>
+                      <th className="border-b border-border px-4 py-3 font-medium">Purpose</th>
+                      <th className="border-b border-border px-4 py-3 font-medium">Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {buttonProps.map(([name, type, defaultValue]) => (
-                      <tr className="border-b border-border last:border-b-0" key={name}>
-                        <td className="px-4 py-3 font-mono text-xs">{name}</td>
-                        <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                          {type}
+                    {registry.map((item) => (
+                      <tr className="border-b border-border last:border-b-0" key={item.name}>
+                        <td className="whitespace-nowrap px-4 py-3">
+                          <a
+                            className="font-medium text-primary hover:underline"
+                            href={`/components/${item.name}`}
+                            onClick={(event) => navigate(event, `/components/${item.name}`)}
+                          >
+                            {item.title}
+                          </a>
                         </td>
-                        <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                          {defaultValue}
+                        <td className="min-w-80 px-4 py-3 text-muted-foreground">
+                          {item.metadata.purpose}
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge tone="ready">available</Badge>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-            </div>
+            </section>
+          ) : null}
 
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold">Accessibility</h3>
-              <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
-                <li>Uses the native button element by default.</li>
-                <li>
-                  Defaults to <code>type="button"</code> to avoid accidental form submission.
-                </li>
-                <li>Icon-only buttons must include an accessible label.</li>
-                <li>Keyboard focus is visible through the shared Brilliant focus ring.</li>
-                <li>Micro animations are disabled through reduced-motion media preferences.</li>
-              </ul>
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold">Micro UX contract</h3>
-              <div className="grid gap-3 sm:grid-cols-3">
-                {[
-                  ["Hover", "Raised buttons lift by 1px and increase elevation."],
-                  ["Press", "Actions compress to 99% scale for tactile feedback."],
-                  ["Reduce", "Motion is wrapped in motion-safe / motion-reduce classes."],
-                ].map(([title, description]) => (
-                  <article className="rounded-lg border border-border bg-surface p-4" key={title}>
-                    <p className="font-medium">{title}</p>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-
-            <details className="rounded-lg border border-border bg-surface">
-              <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
-                Registry metadata
-              </summary>
-              <div className="border-t border-border p-4">
-                <div className="flex flex-wrap gap-2">
-                  {firstItem?.metadata.slots.map((slot) => (
-                    <Badge key={slot}>{slot}</Badge>
-                  ))}
+          {showButton ? (
+            <section className="mx-auto max-w-4xl space-y-8 pb-14">
+              <div className="scroll-mt-24" id="button">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h2 className="text-3xl font-semibold tracking-tight">Button</h2>
+                  <Badge tone="ready">available</Badge>
                 </div>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  Registry metadata is used by the CLI and AI composition tooling. It is shown here
-                  as supporting information, not as the component documentation itself.
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+                  Displays a button or a component that looks like a button. Use it for actions
+                  inside forms, dialogs, toolbars, and application screens. Motion, focus, disabled,
+                  and reduced-motion behavior are part of the generated source.
                 </p>
               </div>
-            </details>
-          </section>
 
-          {registry
-            .filter((item) => item.name !== "button")
-            .map((item) => {
-              const usage = usageForComponent(item.name);
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Installation</h3>
+                <CodeBlock language="bash">{`npx brilliant-ui add button`}</CodeBlock>
+              </div>
 
-              return (
-                <section className="mx-auto max-w-4xl space-y-6 pb-14" key={item.name}>
-                  <div className="scroll-mt-24 border-b border-border pb-4" id={item.name}>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <h2 className="text-3xl font-semibold tracking-tight">{item.title}</h2>
-                      <Badge tone="ready">available</Badge>
+              <ExamplePanel code={usageForComponent("button")}>
+                <PreviewButton className={`${buttonVariants[0][2]} h-9 px-3.5 text-sm`}>
+                  Save changes
+                </PreviewButton>
+              </ExamplePanel>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Variants</h3>
+                <div className="rounded-lg border border-border bg-background p-6">
+                  <div className="flex flex-wrap gap-3">
+                    {buttonVariants.map(([label, text, className]) => (
+                      <PreviewButton className={`h-9 px-3.5 text-sm ${className}`} key={label}>
+                        {text}
+                      </PreviewButton>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Sizes</h3>
+                <div className="rounded-lg border border-border bg-background p-6">
+                  <div className="flex flex-wrap items-center gap-3">
+                    {buttonSizes.map(([label, className]) => (
+                      <PreviewButton className={`${buttonVariants[0][2]} ${className}`} key={label}>
+                        {label === "Icon" ? "I" : label}
+                      </PreviewButton>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Props</h3>
+                <div className="overflow-auto rounded-lg border border-border">
+                  <table className="w-full border-collapse text-sm">
+                    <thead className="bg-muted text-left">
+                      <tr>
+                        <th className="border-b border-border px-4 py-3 font-medium">Prop</th>
+                        <th className="border-b border-border px-4 py-3 font-medium">Type</th>
+                        <th className="border-b border-border px-4 py-3 font-medium">Default</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {buttonProps.map(([name, type, defaultValue]) => (
+                        <tr className="border-b border-border last:border-b-0" key={name}>
+                          <td className="px-4 py-3 font-mono text-xs">{name}</td>
+                          <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                            {type}
+                          </td>
+                          <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                            {defaultValue}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Accessibility</h3>
+                <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
+                  <li>Uses the native button element by default.</li>
+                  <li>
+                    Defaults to <code>type="button"</code> to avoid accidental form submission.
+                  </li>
+                  <li>Icon-only buttons must include an accessible label.</li>
+                  <li>Keyboard focus is visible through the shared Brilliant focus ring.</li>
+                  <li>Micro animations are disabled through reduced-motion media preferences.</li>
+                </ul>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Micro UX contract</h3>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {[
+                    ["Hover", "Raised buttons lift by 1px and increase elevation."],
+                    ["Press", "Actions compress to 99% scale for tactile feedback."],
+                    ["Reduce", "Motion is wrapped in motion-safe / motion-reduce classes."],
+                  ].map(([title, description]) => (
+                    <article className="rounded-lg border border-border bg-surface p-4" key={title}>
+                      <p className="font-medium">{title}</p>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+
+              <details className="rounded-lg border border-border bg-surface">
+                <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
+                  Registry metadata
+                </summary>
+                <div className="border-t border-border p-4">
+                  <div className="flex flex-wrap gap-2">
+                    {firstItem?.metadata.slots.map((slot) => (
+                      <Badge key={slot}>{slot}</Badge>
+                    ))}
+                  </div>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                    Registry metadata is used by the CLI and AI composition tooling. It is shown
+                    here as supporting information, not as the component documentation itself.
+                  </p>
+                </div>
+              </details>
+            </section>
+          ) : null}
+
+          {showComponentPage && selectedItem
+            ? (() => {
+                const item = selectedItem;
+                const usage = usageForComponent(item.name);
+
+                return (
+                  <section className="mx-auto max-w-4xl space-y-6 pb-14" key={item.name}>
+                    <div className="scroll-mt-24 border-b border-border pb-4" id={item.name}>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <h2 className="text-3xl font-semibold tracking-tight">{item.title}</h2>
+                        <Badge tone="ready">available</Badge>
+                      </div>
+                      <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+                        {item.description}
+                      </p>
                     </div>
-                    <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-                      {item.description}
-                    </p>
-                  </div>
 
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-semibold">Installation</h3>
-                    <CodeBlock language="bash">{`npx brilliant-ui add ${item.name}`}</CodeBlock>
-                  </div>
-
-                  <ExamplePanel code={usage}>
-                    <ComponentMiniPreview name={item.name} />
-                  </ExamplePanel>
-
-                  {item.name === "card" ||
-                  item.name === "text" ||
-                  item.name === "checkbox" ||
-                  item.name === "radio-group" ||
-                  item.name === "separator" ||
-                  item.name === "skeleton" ||
-                  item.name === "progress" ||
-                  item.name === "spinner" ||
-                  item.name === "empty-state" ? (
                     <div className="space-y-3">
-                      <h3 className="text-lg font-semibold">Variants</h3>
-                      <div className="overflow-auto rounded-lg border border-border">
-                        <table className="w-full border-collapse text-sm">
-                          <thead className="bg-muted text-left">
-                            <tr>
-                              <th className="border-b border-border px-4 py-3 font-medium">
-                                Variant
-                              </th>
-                              <th className="border-b border-border px-4 py-3 font-medium">Use</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {(item.name === "card"
-                              ? [
-                                  ["surface", "Default content grouping."],
-                                  ["elevated", "Raised dashboard or summary surfaces."],
-                                  ["accent", "Selected, highlighted, or recommended content."],
-                                  ["beam", "Premium live, AI, processing, or highlighted states."],
-                                  ["muted", "Low-emphasis grouping inside denser layouts."],
-                                  ["ghost", "Structure without a visible panel."],
-                                ]
-                              : item.name === "checkbox"
+                      <h3 className="text-lg font-semibold">Installation</h3>
+                      <CodeBlock language="bash">{`npx brilliant-ui add ${item.name}`}</CodeBlock>
+                    </div>
+
+                    <ExamplePanel code={usage}>
+                      <ComponentMiniPreview name={item.name} />
+                    </ExamplePanel>
+
+                    {item.name === "card" ||
+                    item.name === "text" ||
+                    item.name === "checkbox" ||
+                    item.name === "radio-group" ||
+                    item.name === "separator" ||
+                    item.name === "skeleton" ||
+                    item.name === "progress" ||
+                    item.name === "spinner" ||
+                    item.name === "empty-state" ? (
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-semibold">Variants</h3>
+                        <div className="overflow-auto rounded-lg border border-border">
+                          <table className="w-full border-collapse text-sm">
+                            <thead className="bg-muted text-left">
+                              <tr>
+                                <th className="border-b border-border px-4 py-3 font-medium">
+                                  Variant
+                                </th>
+                                <th className="border-b border-border px-4 py-3 font-medium">
+                                  Use
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {(item.name === "card"
                                 ? [
-                                    ["default", "Normal selection state."],
-                                    ["critical", "Destructive or high-risk selection context."],
+                                    ["surface", "Default content grouping."],
+                                    ["elevated", "Raised dashboard or summary surfaces."],
+                                    ["accent", "Selected, highlighted, or recommended content."],
+                                    [
+                                      "beam",
+                                      "Premium live, AI, processing, or highlighted states.",
+                                    ],
+                                    ["muted", "Low-emphasis grouping inside denser layouts."],
+                                    ["ghost", "Structure without a visible panel."],
+                                  ]
+                                : item.name === "checkbox"
+                                  ? [
+                                      ["default", "Normal selection state."],
+                                      ["critical", "Destructive or high-risk selection context."],
+                                    ]
+                                  : item.name === "radio-group"
+                                    ? [
+                                        ["default", "Normal single-choice selection."],
+                                        ["critical", "High-risk or destructive choice context."],
+                                      ]
+                                    : item.name === "separator"
+                                      ? [
+                                          ["default", "Standard divider using the border token."],
+                                          ["muted", "Subtle divider for dense grouped content."],
+                                          ["primary", "Branded or active section divider."],
+                                        ]
+                                      : item.name === "progress"
+                                        ? [
+                                            ["default", "Normal progress indication."],
+                                            ["critical", "Risky, blocking, or destructive flows."],
+                                          ]
+                                        : item.name === "spinner"
+                                          ? [
+                                              ["default", "Primary local loading indicator."],
+                                              ["muted", "Secondary loading next to text."],
+                                              ["critical", "Loading tied to risky/error recovery."],
+                                            ]
+                                          : item.name === "empty-state"
+                                            ? [
+                                                ["surface", "Default empty region panel."],
+                                                ["muted", "Lower-emphasis empty region."],
+                                                [
+                                                  "ghost",
+                                                  "Use inside an already bordered surface.",
+                                                ],
+                                              ]
+                                            : item.name === "skeleton"
+                                              ? [
+                                                  ["surface", "Default loading placeholder."],
+                                                  [
+                                                    "raised",
+                                                    "Slightly stronger placeholder hierarchy.",
+                                                  ],
+                                                  [
+                                                    "primary",
+                                                    "Branded loading placeholder, used sparingly.",
+                                                  ],
+                                                ]
+                                              : [
+                                                  ["default", "Normal UI copy."],
+                                                  ["muted", "Secondary or supporting copy."],
+                                                  [
+                                                    "glow",
+                                                    "Premium, active, or AI-ready emphasis.",
+                                                  ],
+                                                  [
+                                                    "shimmer",
+                                                    "Generating, syncing, or live processing text.",
+                                                  ],
+                                                ]
+                              ).map(([variant, use]) => (
+                                <tr
+                                  className="border-b border-border last:border-b-0"
+                                  key={variant}
+                                >
+                                  <td className="px-4 py-3 font-mono text-xs">{variant}</td>
+                                  <td className="px-4 py-3 text-muted-foreground">{use}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        {item.name === "card" ? (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            Set <code>interactive</code> to add hover lift, elevation, and press
+                            feedback for clickable card targets. Set{" "}
+                            <code>beam=&#123;state&#125;</code> when a card should enter the premium
+                            live/processing state from app state.
+                          </p>
+                        ) : item.name === "checkbox" ? (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            Use <code>variant=&quot;critical&quot;</code> only when selecting the
+                            option has destructive or high-risk meaning.
+                          </p>
+                        ) : item.name === "radio-group" ? (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            Use <code>variant=&quot;critical&quot;</code> on an individual{" "}
+                            <code>RadioItem</code> only when the choice itself carries risk. Items
+                            in the same group should share the same <code>name</code>.
+                          </p>
+                        ) : item.name === "separator" ? (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            Use <code>variant=&quot;default&quot;</code>,{" "}
+                            <code>variant=&quot;muted&quot;</code>, or{" "}
+                            <code>variant=&quot;primary&quot;</code>. The separator is decorative by
+                            default; set <code>decorative=&#123;false&#125;</code> when it carries
+                            semantic structure.
+                          </p>
+                        ) : item.name === "skeleton" ? (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            Use <code>variant=&quot;surface&quot;</code> for most placeholders. Keep
+                            skeletons close to the shape of the incoming content.
+                          </p>
+                        ) : item.name === "progress" ? (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            Use <code>indeterminate</code> when real progress is unknown. Use{" "}
+                            <code>value</code> and <code>max</code> only for measured progress.
+                          </p>
+                        ) : item.name === "spinner" ? (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            Use <code>label</code> to describe the loading operation for screen
+                            reader users. Prefer <code>variant=&quot;muted&quot;</code> beside
+                            visible copy.
+                          </p>
+                        ) : item.name === "empty-state" ? (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            Use <code>variant=&quot;ghost&quot;</code> when the parent already has a
+                            visible panel. Keep actions concrete and limited.
+                          </p>
+                        ) : (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            Use <code>variant=&quot;shimmer&quot;</code> for short live/processing
+                            text. Override the highlight with{" "}
+                            <code>shimmerColor=&quot;white&quot;</code> or set{" "}
+                            <code>--brilliant-text-shimmer-highlight</code> globally. The animation
+                            is disabled for reduced-motion users.
+                          </p>
+                        )}
+                      </div>
+                    ) : null}
+
+                    {item.name === "skeleton" ? (
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-semibold">Sizes</h3>
+                        <div className="overflow-auto rounded-lg border border-border">
+                          <table className="w-full border-collapse text-sm">
+                            <thead className="bg-muted text-left">
+                              <tr>
+                                <th className="border-b border-border px-4 py-3 font-medium">
+                                  Prop
+                                </th>
+                                <th className="border-b border-border px-4 py-3 font-medium">
+                                  Use
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {[
+                                ["text", "Single body text line."],
+                                ["title", "Heading or title line."],
+                                ["avatar", "User or object avatar."],
+                                ["thumbnail", "Media or preview panel."],
+                                ["card", "Large surface placeholder."],
+                              ].map(([size, use]) => (
+                                <tr className="border-b border-border last:border-b-0" key={size}>
+                                  <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>
+                                  <td className="px-4 py-3 text-muted-foreground">{use}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Set <code>shimmer=&#123;false&#125;</code> to use a calmer pulse animation
+                          instead of the default shimmer.
+                        </p>
+                      </div>
+                    ) : null}
+
+                    {item.name === "checkbox" ||
+                    item.name === "avatar" ||
+                    item.name === "radio-group" ||
+                    item.name === "progress" ||
+                    item.name === "spinner" ||
+                    item.name === "empty-state" ? (
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-semibold">Sizes</h3>
+                        <div className="overflow-auto rounded-lg border border-border">
+                          <table className="w-full border-collapse text-sm">
+                            <thead className="bg-muted text-left">
+                              <tr>
+                                <th className="border-b border-border px-4 py-3 font-medium">
+                                  Prop
+                                </th>
+                                <th className="border-b border-border px-4 py-3 font-medium">
+                                  Use
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {(item.name === "avatar"
+                                ? [
+                                    ["sm", "Dense tables, comments, and compact member lists."],
+                                    ["md", "Default identity display."],
+                                    ["lg", "Profile rows and detail panels."],
+                                    ["xl", "Prominent profile headers."],
                                   ]
                                 : item.name === "radio-group"
                                   ? [
-                                      ["default", "Normal single-choice selection."],
-                                      ["critical", "High-risk or destructive choice context."],
+                                      ["sm", "Dense settings panels and compact filters."],
+                                      ["md", "Default form rows and preference groups."],
+                                      ["lg", "Prominent plan, permission, or approval choices."],
                                     ]
-                                  : item.name === "separator"
+                                  : item.name === "progress"
                                     ? [
-                                        ["default", "Standard divider using the border token."],
-                                        ["muted", "Subtle divider for dense grouped content."],
-                                        ["primary", "Branded or active section divider."],
+                                        ["sm", "Subtle inline or table-level progress."],
+                                        ["md", "Default task progress."],
+                                        ["lg", "Prominent page or modal progress."],
                                       ]
-                                    : item.name === "progress"
+                                    : item.name === "spinner"
                                       ? [
-                                          ["default", "Normal progress indication."],
-                                          ["critical", "Risky, blocking, or destructive flows."],
+                                          ["sm", "Inline button and table-cell loading."],
+                                          ["md", "Default compact loading status."],
+                                          ["lg", "Prominent empty-state or page-region loading."],
                                         ]
-                                      : item.name === "spinner"
+                                      : item.name === "empty-state"
                                         ? [
-                                            ["default", "Primary local loading indicator."],
-                                            ["muted", "Secondary loading next to text."],
-                                            ["critical", "Loading tied to risky/error recovery."],
+                                            ["sm", "Compact empty rows and side panels."],
+                                            ["md", "Default empty region."],
+                                            ["lg", "Primary page or modal empty state."],
                                           ]
-                                        : item.name === "empty-state"
-                                          ? [
-                                              ["surface", "Default empty region panel."],
-                                              ["muted", "Lower-emphasis empty region."],
-                                              ["ghost", "Use inside an already bordered surface."],
-                                            ]
-                                          : item.name === "skeleton"
-                                            ? [
-                                                ["surface", "Default loading placeholder."],
-                                                [
-                                                  "raised",
-                                                  "Slightly stronger placeholder hierarchy.",
-                                                ],
-                                                [
-                                                  "primary",
-                                                  "Branded loading placeholder, used sparingly.",
-                                                ],
-                                              ]
-                                            : [
-                                                ["default", "Normal UI copy."],
-                                                ["muted", "Secondary or supporting copy."],
-                                                ["glow", "Premium, active, or AI-ready emphasis."],
-                                                [
-                                                  "shimmer",
-                                                  "Generating, syncing, or live processing text.",
-                                                ],
-                                              ]
-                            ).map(([variant, use]) => (
-                              <tr className="border-b border-border last:border-b-0" key={variant}>
-                                <td className="px-4 py-3 font-mono text-xs">{variant}</td>
-                                <td className="px-4 py-3 text-muted-foreground">{use}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                                        : [
+                                            ["sm", "Dense tables and compact filter menus."],
+                                            ["md", "Default form rows and settings lists."],
+                                            [
+                                              "lg",
+                                              "Prominent settings rows, approvals, and touch-friendly UI.",
+                                            ],
+                                          ]
+                              ).map(([size, use]) => (
+                                <tr className="border-b border-border last:border-b-0" key={size}>
+                                  <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>
+                                  <td className="px-4 py-3 text-muted-foreground">{use}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
-                      {item.name === "card" ? (
-                        <p className="text-sm leading-6 text-muted-foreground">
-                          Set <code>interactive</code> to add hover lift, elevation, and press
-                          feedback for clickable card targets. Set{" "}
-                          <code>beam=&#123;state&#125;</code> when a card should enter the premium
-                          live/processing state from app state.
-                        </p>
-                      ) : item.name === "checkbox" ? (
-                        <p className="text-sm leading-6 text-muted-foreground">
-                          Use <code>variant=&quot;critical&quot;</code> only when selecting the
-                          option has destructive or high-risk meaning.
-                        </p>
-                      ) : item.name === "radio-group" ? (
-                        <p className="text-sm leading-6 text-muted-foreground">
-                          Use <code>variant=&quot;critical&quot;</code> on an individual{" "}
-                          <code>RadioItem</code> only when the choice itself carries risk. Items in
-                          the same group should share the same <code>name</code>.
-                        </p>
-                      ) : item.name === "separator" ? (
-                        <p className="text-sm leading-6 text-muted-foreground">
-                          Use <code>variant=&quot;default&quot;</code>,{" "}
-                          <code>variant=&quot;muted&quot;</code>, or{" "}
-                          <code>variant=&quot;primary&quot;</code>. The separator is decorative by
-                          default; set <code>decorative=&#123;false&#125;</code> when it carries
-                          semantic structure.
-                        </p>
-                      ) : item.name === "skeleton" ? (
-                        <p className="text-sm leading-6 text-muted-foreground">
-                          Use <code>variant=&quot;surface&quot;</code> for most placeholders. Keep
-                          skeletons close to the shape of the incoming content.
-                        </p>
-                      ) : item.name === "progress" ? (
-                        <p className="text-sm leading-6 text-muted-foreground">
-                          Use <code>indeterminate</code> when real progress is unknown. Use{" "}
-                          <code>value</code> and <code>max</code> only for measured progress.
-                        </p>
-                      ) : item.name === "spinner" ? (
-                        <p className="text-sm leading-6 text-muted-foreground">
-                          Use <code>label</code> to describe the loading operation for screen reader
-                          users. Prefer <code>variant=&quot;muted&quot;</code> beside visible copy.
-                        </p>
-                      ) : item.name === "empty-state" ? (
-                        <p className="text-sm leading-6 text-muted-foreground">
-                          Use <code>variant=&quot;ghost&quot;</code> when the parent already has a
-                          visible panel. Keep actions concrete and limited.
-                        </p>
-                      ) : (
-                        <p className="text-sm leading-6 text-muted-foreground">
-                          Use <code>variant=&quot;shimmer&quot;</code> for short live/processing
-                          text. Override the highlight with{" "}
-                          <code>shimmerColor=&quot;white&quot;</code> or set{" "}
-                          <code>--brilliant-text-shimmer-highlight</code> globally. The animation is
-                          disabled for reduced-motion users.
-                        </p>
-                      )}
-                    </div>
-                  ) : null}
+                    ) : null}
 
-                  {item.name === "skeleton" ? (
-                    <div className="space-y-3">
-                      <h3 className="text-lg font-semibold">Sizes</h3>
-                      <div className="overflow-auto rounded-lg border border-border">
-                        <table className="w-full border-collapse text-sm">
-                          <thead className="bg-muted text-left">
-                            <tr>
-                              <th className="border-b border-border px-4 py-3 font-medium">Prop</th>
-                              <th className="border-b border-border px-4 py-3 font-medium">Use</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {[
-                              ["text", "Single body text line."],
-                              ["title", "Heading or title line."],
-                              ["avatar", "User or object avatar."],
-                              ["thumbnail", "Media or preview panel."],
-                              ["card", "Large surface placeholder."],
-                            ].map(([size, use]) => (
-                              <tr className="border-b border-border last:border-b-0" key={size}>
-                                <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>
-                                <td className="px-4 py-3 text-muted-foreground">{use}</td>
+                    {item.name === "text" ? (
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-semibold">Sizes</h3>
+                        <div className="overflow-auto rounded-lg border border-border">
+                          <table className="w-full border-collapse text-sm">
+                            <thead className="bg-muted text-left">
+                              <tr>
+                                <th className="border-b border-border px-4 py-3 font-medium">
+                                  Prop
+                                </th>
+                                <th className="border-b border-border px-4 py-3 font-medium">
+                                  Use
+                                </th>
+                                <th className="border-b border-border px-4 py-3 font-medium">
+                                  Example
+                                </th>
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                            </thead>
+                            <tbody>
+                              {[
+                                [
+                                  "sm",
+                                  "Supporting labels, timestamps, helper copy.",
+                                  "Updated 2 minutes ago",
+                                ],
+                                [
+                                  "md",
+                                  "Default body copy and ordinary interface text.",
+                                  "Workspace usage",
+                                ],
+                                [
+                                  "lg",
+                                  "Emphasis text inside cards, panels, and empty states.",
+                                  "AI ready",
+                                ],
+                                [
+                                  "xl",
+                                  "Short premium callouts and compact headings.",
+                                  "Generating insights",
+                                ],
+                              ].map(([size, use, example]) => (
+                                <tr className="border-b border-border last:border-b-0" key={size}>
+                                  <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>
+                                  <td className="px-4 py-3 text-muted-foreground">{use}</td>
+                                  <td className="px-4 py-3">
+                                    <span
+                                      className={[
+                                        "font-medium tracking-[-0.01em]",
+                                        size === "sm" ? "text-sm leading-5" : "",
+                                        size === "md" ? "text-base leading-6" : "",
+                                        size === "lg" ? "text-lg leading-7" : "",
+                                        size === "xl" ? "text-2xl leading-8 tracking-tight" : "",
+                                      ].join(" ")}
+                                    >
+                                      {example}
+                                    </span>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Use <code>size=&quot;sm&quot;</code>, <code>size=&quot;md&quot;</code>,{" "}
+                          <code>size=&quot;lg&quot;</code>, or <code>size=&quot;xl&quot;</code>{" "}
+                          alongside any text variant.
+                        </p>
                       </div>
-                      <p className="text-sm leading-6 text-muted-foreground">
-                        Set <code>shimmer=&#123;false&#125;</code> to use a calmer pulse animation
-                        instead of the default shimmer.
-                      </p>
-                    </div>
-                  ) : null}
+                    ) : null}
 
-                  {item.name === "checkbox" ||
-                  item.name === "avatar" ||
-                  item.name === "radio-group" ||
-                  item.name === "progress" ||
-                  item.name === "spinner" ||
-                  item.name === "empty-state" ? (
-                    <div className="space-y-3">
-                      <h3 className="text-lg font-semibold">Sizes</h3>
-                      <div className="overflow-auto rounded-lg border border-border">
-                        <table className="w-full border-collapse text-sm">
-                          <thead className="bg-muted text-left">
-                            <tr>
-                              <th className="border-b border-border px-4 py-3 font-medium">Prop</th>
-                              <th className="border-b border-border px-4 py-3 font-medium">Use</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {(item.name === "avatar"
-                              ? [
-                                  ["sm", "Dense tables, comments, and compact member lists."],
-                                  ["md", "Default identity display."],
-                                  ["lg", "Profile rows and detail panels."],
-                                  ["xl", "Prominent profile headers."],
-                                ]
-                              : item.name === "radio-group"
-                                ? [
-                                    ["sm", "Dense settings panels and compact filters."],
-                                    ["md", "Default form rows and preference groups."],
-                                    ["lg", "Prominent plan, permission, or approval choices."],
-                                  ]
-                                : item.name === "progress"
-                                  ? [
-                                      ["sm", "Subtle inline or table-level progress."],
-                                      ["md", "Default task progress."],
-                                      ["lg", "Prominent page or modal progress."],
-                                    ]
-                                  : item.name === "spinner"
-                                    ? [
-                                        ["sm", "Inline button and table-cell loading."],
-                                        ["md", "Default compact loading status."],
-                                        ["lg", "Prominent empty-state or page-region loading."],
-                                      ]
-                                    : item.name === "empty-state"
-                                      ? [
-                                          ["sm", "Compact empty rows and side panels."],
-                                          ["md", "Default empty region."],
-                                          ["lg", "Primary page or modal empty state."],
-                                        ]
-                                      : [
-                                          ["sm", "Dense tables and compact filter menus."],
-                                          ["md", "Default form rows and settings lists."],
-                                          [
-                                            "lg",
-                                            "Prominent settings rows, approvals, and touch-friendly UI.",
-                                          ],
-                                        ]
-                            ).map(([size, use]) => (
-                              <tr className="border-b border-border last:border-b-0" key={size}>
-                                <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>
-                                <td className="px-4 py-3 text-muted-foreground">{use}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-semibold">Anatomy</h3>
+                        <div className="flex flex-wrap gap-2 rounded-lg border border-border bg-surface p-4">
+                          {item.metadata.slots.map((slot) => (
+                            <Badge key={slot}>{slot}</Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-semibold">Micro UX</h3>
+                        <div className="rounded-lg border border-border bg-surface p-4 text-sm leading-6 text-muted-foreground">
+                          {item.name === "card"
+                            ? "Interactive cards lift by 1px, increase elevation, soften the border toward primary, and compress to 99.5% on press. The beam variant adds a rotating conic border animation and disables it for reduced-motion users."
+                            : item.name === "text"
+                              ? "Glow adds a token-colored premium aura. Shimmer animates a tokenized gradient across the glyphs and falls back to static text for reduced-motion users."
+                              : item.name === "switch"
+                                ? "The thumb uses a spring-timed snap, stretches slightly on press, and the active track gains a subtle inset highlight. Motion is disabled for reduced-motion users."
+                                : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
+                        </div>
                       </div>
                     </div>
-                  ) : null}
 
-                  {item.name === "text" ? (
                     <div className="space-y-3">
-                      <h3 className="text-lg font-semibold">Sizes</h3>
-                      <div className="overflow-auto rounded-lg border border-border">
-                        <table className="w-full border-collapse text-sm">
-                          <thead className="bg-muted text-left">
-                            <tr>
-                              <th className="border-b border-border px-4 py-3 font-medium">Prop</th>
-                              <th className="border-b border-border px-4 py-3 font-medium">Use</th>
-                              <th className="border-b border-border px-4 py-3 font-medium">
-                                Example
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {[
-                              [
-                                "sm",
-                                "Supporting labels, timestamps, helper copy.",
-                                "Updated 2 minutes ago",
-                              ],
-                              [
-                                "md",
-                                "Default body copy and ordinary interface text.",
-                                "Workspace usage",
-                              ],
-                              [
-                                "lg",
-                                "Emphasis text inside cards, panels, and empty states.",
-                                "AI ready",
-                              ],
-                              [
-                                "xl",
-                                "Short premium callouts and compact headings.",
-                                "Generating insights",
-                              ],
-                            ].map(([size, use, example]) => (
-                              <tr className="border-b border-border last:border-b-0" key={size}>
-                                <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>
-                                <td className="px-4 py-3 text-muted-foreground">{use}</td>
-                                <td className="px-4 py-3">
-                                  <span
-                                    className={[
-                                      "font-medium tracking-[-0.01em]",
-                                      size === "sm" ? "text-sm leading-5" : "",
-                                      size === "md" ? "text-base leading-6" : "",
-                                      size === "lg" ? "text-lg leading-7" : "",
-                                      size === "xl" ? "text-2xl leading-8 tracking-tight" : "",
-                                    ].join(" ")}
-                                  >
-                                    {example}
-                                  </span>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      <p className="text-sm leading-6 text-muted-foreground">
-                        Use <code>size=&quot;sm&quot;</code>, <code>size=&quot;md&quot;</code>,{" "}
-                        <code>size=&quot;lg&quot;</code>, or <code>size=&quot;xl&quot;</code>{" "}
-                        alongside any text variant.
-                      </p>
-                    </div>
-                  ) : null}
-
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-3">
-                      <h3 className="text-lg font-semibold">Anatomy</h3>
-                      <div className="flex flex-wrap gap-2 rounded-lg border border-border bg-surface p-4">
-                        {item.metadata.slots.map((slot) => (
-                          <Badge key={slot}>{slot}</Badge>
+                      <h3 className="text-lg font-semibold">Accessibility</h3>
+                      <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
+                        {item.metadata.accessibility.map((note) => (
+                          <li key={note}>{note}</li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
+                  </section>
+                );
+              })()
+            : null}
 
-                    <div className="space-y-3">
-                      <h3 className="text-lg font-semibold">Micro UX</h3>
-                      <div className="rounded-lg border border-border bg-surface p-4 text-sm leading-6 text-muted-foreground">
-                        {item.name === "card"
-                          ? "Interactive cards lift by 1px, increase elevation, soften the border toward primary, and compress to 99.5% on press. The beam variant adds a rotating conic border animation and disables it for reduced-motion users."
-                          : item.name === "text"
-                            ? "Glow adds a token-colored premium aura. Shimmer animates a tokenized gradient across the glyphs and falls back to static text for reduced-motion users."
-                            : item.name === "switch"
-                              ? "The thumb uses a spring-timed snap, stretches slightly on press, and the active track gains a subtle inset highlight. Motion is disabled for reduced-motion users."
-                              : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-semibold">Accessibility</h3>
-                    <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
-                      {item.metadata.accessibility.map((note) => (
-                        <li key={note}>{note}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </section>
-              );
-            })}
-
-          <section className="mx-auto max-w-4xl space-y-6 pb-14">
-            <SectionHeading
-              description="The shared system layer underneath components and blocks."
-              id="foundations"
-            >
-              Foundations
-            </SectionHeading>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {foundations.map(([title, description]) => (
-                <article className="rounded-lg border border-border bg-surface p-5" key={title}>
-                  <h3 className="font-semibold">{title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section className="mx-auto max-w-4xl space-y-6 pb-14">
-            <SectionHeading
-              description="Real product sections composed from Brilliant primitives. These are the things teams paste into SaaS apps, admin portals, and onboarding flows."
-              id="blocks"
-            >
-              Blocks
-            </SectionHeading>
-
-            <div className="grid gap-8">
-              {productBlockExamples.map((block) => (
-                <article className="space-y-3" key={block.id}>
-                  <div className="flex flex-wrap items-end justify-between gap-3">
-                    <div>
-                      <div className="mb-2">
-                        <Badge>{block.category}</Badge>
-                      </div>
-                      <h3 className="text-xl font-semibold tracking-tight">{block.title}</h3>
-                      <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
-                        {block.description}
-                      </p>
-                    </div>
-                  </div>
-                  <ExamplePanel code={block.code}>
-                    <ProductBlockPreview id={block.id} />
-                  </ExamplePanel>
-                </article>
-              ))}
-            </div>
-
-            <details className="rounded-lg border border-border bg-surface">
-              <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
-                Planned block families
-              </summary>
-              <div className="grid gap-4 border-t border-border p-4 sm:grid-cols-2">
-                {blockGroups.map(([title, description]) => (
-                  <article
-                    className="rounded-lg border border-border bg-background p-4"
-                    key={title}
-                  >
+          {showFoundations ? (
+            <section className="mx-auto max-w-4xl space-y-6 pb-14">
+              <SectionHeading
+                description="The shared system layer underneath components and blocks."
+                id="foundations"
+              >
+                Foundations
+              </SectionHeading>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {foundations.map(([title, description]) => (
+                  <article className="rounded-lg border border-border bg-surface p-5" key={title}>
                     <h3 className="font-semibold">{title}</h3>
                     <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
                   </article>
                 ))}
               </div>
-            </details>
-          </section>
+            </section>
+          ) : null}
 
-          <section className="mx-auto max-w-4xl space-y-6 pb-14">
-            <SectionHeading
-              description="The default indigo is only a starting point; production apps can own their brand."
-              id="theming"
-            >
-              Brand theming
-            </SectionHeading>
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
-              <CodeBlock language="css">{`:root {
+          {showBlocks ? (
+            <section className="mx-auto max-w-4xl space-y-6 pb-14">
+              <SectionHeading
+                description="Real product sections composed from Brilliant primitives. These are the things teams paste into SaaS apps, admin portals, and onboarding flows."
+                id="blocks"
+              >
+                Blocks
+              </SectionHeading>
+
+              <div className="grid gap-8">
+                {productBlockExamples.map((block) => (
+                  <article className="space-y-3" key={block.id}>
+                    <div className="flex flex-wrap items-end justify-between gap-3">
+                      <div>
+                        <div className="mb-2">
+                          <Badge>{block.category}</Badge>
+                        </div>
+                        <h3 className="text-xl font-semibold tracking-tight">{block.title}</h3>
+                        <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+                          {block.description}
+                        </p>
+                      </div>
+                    </div>
+                    <ExamplePanel code={block.code}>
+                      <ProductBlockPreview id={block.id} />
+                    </ExamplePanel>
+                  </article>
+                ))}
+              </div>
+
+              <details className="rounded-lg border border-border bg-surface">
+                <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
+                  Planned block families
+                </summary>
+                <div className="grid gap-4 border-t border-border p-4 sm:grid-cols-2">
+                  {blockGroups.map(([title, description]) => (
+                    <article
+                      className="rounded-lg border border-border bg-background p-4"
+                      key={title}
+                    >
+                      <h3 className="font-semibold">{title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+                    </article>
+                  ))}
+                </div>
+              </details>
+            </section>
+          ) : null}
+
+          {showTheming ? (
+            <section className="mx-auto max-w-4xl space-y-6 pb-14">
+              <SectionHeading
+                description="The default indigo is only a starting point; production apps can own their brand."
+                id="theming"
+              >
+                Brand theming
+              </SectionHeading>
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
+                <CodeBlock language="css">{`:root {
   --brilliant-primary: oklch(0.54 0.23 276);
   --brilliant-primary-foreground: oklch(1 0 0);
   --brilliant-ring: oklch(0.61 0.22 276);
@@ -4699,38 +4822,59 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
   --brilliant-primary: oklch(0.62 0.18 145);
   --brilliant-ring: oklch(0.62 0.18 145);
 }`}</CodeBlock>
-              <div className="rounded-lg border border-border bg-surface p-5">
-                <p className="font-semibold">What changes?</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Buttons, focus rings, badges, charts, blocks, and future components inherit
-                  semantic tokens instead of hardcoded colors.
-                </p>
+                <div className="rounded-lg border border-border bg-surface p-5">
+                  <p className="font-semibold">What changes?</p>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    Buttons, focus rings, badges, charts, blocks, and future components inherit
+                    semantic tokens instead of hardcoded colors.
+                  </p>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          ) : null}
 
-          <section className="mx-auto max-w-4xl space-y-6 pb-20">
-            <SectionHeading
-              description="Initialize existing projects, map shadcn aliases, preview changes, and install copy-owned source."
-              id="cli"
-            >
-              CLI
-            </SectionHeading>
-            <div className="rounded-lg border border-border bg-surface">
-              <div className="border-b border-border px-4 py-3 text-sm font-medium">Demo</div>
-              <div className="p-4">
-                <CodeBlock language="bash">{`TMP_DEMO=$(mktemp -d)
+          {showCli ? (
+            <section className="mx-auto max-w-4xl space-y-6 pb-20">
+              <SectionHeading
+                description="Initialize existing projects, map shadcn aliases, preview changes, and install copy-owned source."
+                id="cli"
+              >
+                CLI
+              </SectionHeading>
+              <div className="rounded-lg border border-border bg-surface">
+                <div className="border-b border-border px-4 py-3 text-sm font-medium">Demo</div>
+                <div className="p-4">
+                  <CodeBlock language="bash">{`TMP_DEMO=$(mktemp -d)
 pnpm --dir /Users/nirvana/brilliant-ui --filter @brilliant-ui/cli dev -- init --cwd "$TMP_DEMO"
 pnpm --dir /Users/nirvana/brilliant-ui --filter @brilliant-ui/cli dev -- add button --cwd "$TMP_DEMO"
 find "$TMP_DEMO" -maxdepth 4 -type f | sort`}</CodeBlock>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          ) : null}
+
+          {!routeFound ? (
+            <section className="mx-auto max-w-4xl space-y-6 pb-20">
+              <SectionHeading
+                description="That documentation page does not exist yet."
+                id="not-found"
+              >
+                Page not found
+              </SectionHeading>
+              <a
+                className="inline-flex h-9 items-center rounded-[0.25rem] bg-primary px-4 text-sm font-medium text-primary-foreground"
+                href="/components"
+                onClick={(event) => navigate(event, "/components")}
+              >
+                Browse components
+              </a>
+            </section>
+          ) : null}
         </div>
 
-        <StatusRail firstItemTitle={firstItem?.title ?? "None"} />
+        <StatusRail firstItemTitle={selectedItem?.title ?? firstItem?.title ?? "None"} />
       </main>
-      <AppFooter />
+      <AppFooter onNavigate={navigate} />
     </div>
   );
 }
