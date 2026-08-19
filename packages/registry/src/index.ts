@@ -378,24 +378,93 @@ export function Textarea({ className = "", ...props }: TextareaProps) {
 }
 `;
 
-const checkboxSource = `import type { InputHTMLAttributes } from "react";
+const checkboxSource = `import { useEffect, useRef } from "react";
+import type { InputHTMLAttributes } from "react";
 
-export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {}
+const variants = {
+  default: {
+    control:
+      "border-control-border bg-background text-primary-foreground peer-checked:border-primary peer-checked:bg-primary peer-indeterminate:border-primary peer-indeterminate:bg-primary",
+    indicator: "text-primary-foreground",
+  },
+  critical: {
+    control:
+      "border-control-border bg-background text-critical-foreground peer-checked:border-critical peer-checked:bg-critical peer-indeterminate:border-critical peer-indeterminate:bg-critical",
+    indicator: "text-critical-foreground",
+  },
+} as const;
 
-export function Checkbox({ className = "", ...props }: CheckboxProps) {
+export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
+  indeterminate?: boolean;
+  variant?: keyof typeof variants;
+}
+
+export function Checkbox({
+  className = "",
+  indeterminate = false,
+  variant = "default",
+  ...props
+}: CheckboxProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current) inputRef.current.indeterminate = indeterminate;
+  }, [indeterminate]);
+
   return (
-    <input
-      className={[
-        "peer size-4 appearance-none rounded-[0.1875rem] border-hairline border-border bg-background shadow-sm",
-        "checked:border-primary checked:bg-primary",
-        "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
-        "checked:scale-[0.96] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0",
-        "disabled:cursor-not-allowed disabled:opacity-50",
-        className,
-      ].join(" ")}
-      type="checkbox"
-      {...props}
-    />
+    <span className={["relative inline-grid size-4 shrink-0 place-items-center", className].join(" ")}>
+      <input
+        className="peer absolute inset-0 z-10 size-4 cursor-pointer appearance-none rounded-[0.25rem] opacity-0 disabled:cursor-not-allowed"
+        data-variant={variant}
+        ref={inputRef}
+        type="checkbox"
+        {...props}
+      />
+      <span
+        aria-hidden="true"
+        className={[
+          "pointer-events-none grid size-4 place-items-center rounded-[0.25rem] border-hairline shadow-[inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_12%,transparent)]",
+          "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          "peer-hover:shadow-[inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_18%,transparent),0_1px_2px_oklch(0_0_0/0.06)]",
+          "peer-active:scale-[0.92] peer-focus-visible:ring-1 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-0 peer-disabled:opacity-50",
+          "peer-checked:[&_[data-check]]:opacity-100 peer-checked:[&_[data-check]]:motion-safe:scale-100 peer-indeterminate:[&_[data-check]]:hidden",
+          "peer-indeterminate:[&_[data-mixed]]:opacity-100 peer-indeterminate:[&_[data-mixed]]:motion-safe:scale-100",
+          variants[variant].control,
+        ].join(" ")}
+      >
+        <svg
+          aria-hidden="true"
+          className={[
+            "size-3 opacity-0 motion-safe:scale-75 motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+            variants[variant].indicator,
+          ].join(" ")}
+          data-check=""
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2.5"
+          viewBox="0 0 16 16"
+        >
+          <path d="M3.75 8.25 6.5 11l5.75-6" />
+        </svg>
+        <svg
+          aria-hidden="true"
+          className={[
+            "absolute size-3 opacity-0 motion-safe:scale-75 motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+            variants[variant].indicator,
+          ].join(" ")}
+          data-mixed=""
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="2.5"
+          viewBox="0 0 16 16"
+        >
+          <path d="M4 8h8" />
+        </svg>
+      </span>
+    </span>
   );
 }
 `;
@@ -663,9 +732,18 @@ export const registry = [
     files: [{ path: "checkbox.tsx", content: checkboxSource, target: "ui/checkbox.tsx" }],
     metadata: {
       purpose: "Toggles a binary option or selects items in a set.",
-      slots: ["root"],
-      accessibility: ["Uses a native checkbox input.", "Pair with a visible label."],
-      usage: ["Use for independent boolean choices."],
+      slots: ["root", "input", "control", "indicator"],
+      accessibility: [
+        "Uses a native checkbox input.",
+        "Pair with a visible label.",
+        "Supports indeterminate state for mixed selections.",
+        "Focus is always visible for keyboard users.",
+      ],
+      usage: [
+        "Use for independent boolean choices.",
+        "Use indeterminate for partial table or tree selections.",
+        "Use variant critical only for destructive selection contexts.",
+      ],
       avoid: ["Do not use for immediate on/off settings when Switch is clearer."],
     },
   },

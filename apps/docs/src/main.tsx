@@ -171,7 +171,12 @@ export function Example() {
   checkbox: `import { Checkbox } from "@/components/ui/checkbox";
 
 export function Example() {
-  return <Checkbox aria-label="Require approval" defaultChecked />;
+  return (
+    <label className="flex items-center gap-3">
+      <Checkbox defaultChecked />
+      <span>Require approval</span>
+    </label>
+  );
 }`,
   switch: `import { Switch } from "@/components/ui/switch";
 
@@ -374,14 +379,61 @@ function ComponentMiniPreview({ name }: { name: string }) {
 
   if (name === "checkbox") {
     return (
-      <label className="flex items-center gap-2 text-sm">
-        <input
-          className="size-4 accent-[var(--brilliant-primary)]"
-          defaultChecked
-          type="checkbox"
-        />
-        Require approval
-      </label>
+      <div className="grid gap-3 sm:grid-cols-3">
+        {[
+          ["Checked", "Require approval", "checked"],
+          ["Empty", "Optional export", "empty"],
+          ["Mixed", "3 of 8 selected", "mixed"],
+        ].map(([label, copy, state]) => (
+          <label
+            className="flex items-center gap-3 rounded-[0.375rem] border border-border bg-surface p-3 text-sm"
+            key={label}
+          >
+            <span className="relative inline-grid size-4 shrink-0 place-items-center">
+              <input
+                aria-label={label}
+                className="peer absolute inset-0 z-10 size-4 cursor-pointer appearance-none rounded-[0.25rem] opacity-0"
+                defaultChecked={state === "checked"}
+                ref={(node) => {
+                  if (node) node.indeterminate = state === "mixed";
+                }}
+                type="checkbox"
+              />
+              <span className="pointer-events-none grid size-4 place-items-center rounded-[0.25rem] border border-control-border bg-background shadow-[inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_12%,transparent)] transition-[background-color,border-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] peer-active:scale-[0.92] peer-checked:border-primary peer-checked:bg-primary peer-indeterminate:border-primary peer-indeterminate:bg-primary peer-checked:[&_[data-check]]:opacity-100 peer-checked:[&_[data-check]]:scale-100 peer-indeterminate:[&_[data-check]]:hidden peer-indeterminate:[&_[data-mixed]]:opacity-100 peer-indeterminate:[&_[data-mixed]]:scale-100">
+                <svg
+                  aria-hidden="true"
+                  className="size-3 scale-75 text-primary-foreground opacity-0 transition-[opacity,transform] duration-[var(--brilliant-duration-fast)]"
+                  data-check=""
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2.5"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M3.75 8.25 6.5 11l5.75-6" />
+                </svg>
+                <svg
+                  aria-hidden="true"
+                  className="absolute size-3 scale-75 text-primary-foreground opacity-0 transition-[opacity,transform] duration-[var(--brilliant-duration-fast)]"
+                  data-mixed=""
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth="2.5"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M4 8h8" />
+                </svg>
+              </span>
+            </span>
+            <span>
+              <span className="block font-medium">{label}</span>
+              <span className="block text-xs text-muted-foreground">{copy}</span>
+            </span>
+          </label>
+        ))}
+      </div>
     );
   }
 
