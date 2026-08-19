@@ -30,6 +30,7 @@ const navItems = [
   ["Alert Dialog", "#alert-dialog"],
   ["Drawer", "#drawer"],
   ["Sheet", "#sheet"],
+  ["Dropdown Menu", "#dropdown-menu"],
   ["Tooltip", "#tooltip"],
   ["Popover", "#popover"],
   ["Hover Card", "#hover-card"],
@@ -43,6 +44,9 @@ const navItems = [
   ["Accordion", "#accordion"],
   ["Collapsible", "#collapsible"],
   ["Carousel", "#carousel"],
+  ["Table", "#table"],
+  ["Form", "#form"],
+  ["Scroll Area", "#scroll-area"],
   ["Breadcrumb", "#breadcrumb"],
   ["Navigation Menu", "#navigation-menu"],
   ["Menubar", "#menubar"],
@@ -157,6 +161,15 @@ const premiumSystems = [
 ] as const;
 
 const usageByComponent = {
+  button: `import { Button } from "@/components/ui/button";
+
+export function Example() {
+  return (
+    <Button size="md" variant="primary">
+      Save changes
+    </Button>
+  );
+}`,
   "button-group": `import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 
@@ -376,6 +389,70 @@ export function Example() {
     </Dialog>
   );
 }`,
+  "alert-dialog": `import { useRef } from "react";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+
+export function Example() {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  return (
+    <>
+      <Button variant="critical" onClick={() => dialogRef.current?.showModal()}>
+        Delete API key
+      </Button>
+      <AlertDialog ref={dialogRef}>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete API key?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This immediately revokes access for connected services.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogContent>{/* consequences or object summary */}</AlertDialogContent>
+        <AlertDialogFooter>
+          <Button variant="outline" onClick={() => dialogRef.current?.close()}>
+            Cancel
+          </Button>
+          <Button variant="critical">Delete</Button>
+        </AlertDialogFooter>
+      </AlertDialog>
+    </>
+  );
+}`,
+  drawer: `import { useRef } from "react";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+
+export function Example() {
+  const drawerRef = useRef<HTMLDialogElement>(null);
+
+  return (
+    <>
+      <button type="button" onClick={() => drawerRef.current?.showModal()}>
+        Open mobile filters
+      </button>
+      <Drawer ref={drawerRef}>
+        <DrawerHeader>
+          <DrawerTitle>Usage filters</DrawerTitle>
+          <DrawerDescription>Filter events without leaving the report.</DrawerDescription>
+        </DrawerHeader>
+        <DrawerContent>{/* filter controls */}</DrawerContent>
+      </Drawer>
+    </>
+  );
+}`,
   sheet: `import { useRef } from "react";
 import {
   Sheet,
@@ -407,6 +484,83 @@ export function Example() {
         </button>
       </Sheet>
     </>
+  );
+}`,
+  tooltip: `import { Tooltip } from "@/components/ui/tooltip";
+
+export function Example() {
+  return (
+    <Tooltip content="Copied on click">
+      <button type="button">API key</button>
+    </Tooltip>
+  );
+}`,
+  popover: `import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+export function Example() {
+  return (
+    <Popover>
+      <PopoverTrigger>Open filters</PopoverTrigger>
+      <PopoverContent>Status, owner, and date controls.</PopoverContent>
+    </Popover>
+  );
+}`,
+  "hover-card": `import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
+export function Example() {
+  return (
+    <HoverCard>
+      <HoverCardTrigger>Nirvana R</HoverCardTrigger>
+      <HoverCardContent>Workspace owner · active now.</HoverCardContent>
+    </HoverCard>
+  );
+}`,
+  "context-menu": `import { ContextMenu } from "@/components/ui/context-menu";
+
+export function Example() {
+  return (
+    <ContextMenu>
+      <div className="rounded-md border border-border p-4">
+        Right-click this workspace row
+      </div>
+    </ContextMenu>
+  );
+}`,
+  "dropdown-menu": `import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+export function Example() {
+  const [compact, setCompact] = useState(true);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>Workspace actions</DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem>Open audit log</DropdownMenuItem>
+        <DropdownMenuItem>Invite teammate</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuCheckboxItem checked={compact} onCheckedChange={setCompact}>
+          Compact density
+        </DropdownMenuCheckboxItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }`,
   tabs: `import {
@@ -447,6 +601,23 @@ export function Example() {
     </Accordion>
   );
 }`,
+  collapsible: `import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleItem,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+
+export function Example() {
+  return (
+    <Collapsible>
+      <CollapsibleItem open>
+        <CollapsibleTrigger>Advanced settings</CollapsibleTrigger>
+        <CollapsibleContent>Optional controls stay available on demand.</CollapsibleContent>
+      </CollapsibleItem>
+    </Collapsible>
+  );
+}`,
   carousel: `import {
   Carousel,
   CarouselDots,
@@ -477,6 +648,144 @@ export function Example() {
     </Carousel>
   );
 }`,
+  table: `import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+export function Example() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Workspace</TableHead>
+          <TableHead>Plan</TableHead>
+          <TableHead>Seats</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableCell>Acme</TableCell>
+          <TableCell>Enterprise</TableCell>
+          <TableCell>48</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  );
+}`,
+  form: `import {
+  Form,
+  FormActions,
+  FormDescription,
+  FormHeader,
+  FormSection,
+  FormTitle,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+
+export function Example() {
+  return (
+    <Form>
+      <FormSection>
+        <FormHeader>
+          <FormTitle>Workspace settings</FormTitle>
+          <FormDescription>Defaults used for invites and billing.</FormDescription>
+        </FormHeader>
+        <Field>
+          <FieldLabel htmlFor="workspace-name">Workspace name</FieldLabel>
+          <Input id="workspace-name" defaultValue="Acme" />
+          <FieldDescription>Visible to everyone in the organization.</FieldDescription>
+        </Field>
+        <FormActions>
+          <Button variant="outline">Cancel</Button>
+          <Button>Save changes</Button>
+        </FormActions>
+      </FormSection>
+    </Form>
+  );
+}`,
+  "scroll-area": `import { ScrollArea } from "@/components/ui/scroll-area";
+
+export function Example() {
+  return (
+    <ScrollArea className="h-48 rounded-md border border-border">
+      <div className="grid gap-2 p-3">
+        {Array.from({ length: 12 }).map((_, index) => (
+          <div key={index}>Audit event {index + 1}</div>
+        ))}
+      </div>
+    </ScrollArea>
+  );
+}`,
+  breadcrumb: `import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
+export function Example() {
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>Workspace</BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>Settings</BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>API keys</BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+}`,
+  "navigation-menu": `import {
+  NavigationMenu,
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu";
+
+export function Example() {
+  return (
+    <NavigationMenu>
+      <NavigationMenuLink href="/dashboard">Dashboard</NavigationMenuLink>
+      <NavigationMenuLink href="/usage">Usage</NavigationMenuLink>
+      <NavigationMenuLink href="/settings">Settings</NavigationMenuLink>
+    </NavigationMenu>
+  );
+}`,
+  menubar: `import { Menubar, MenubarItem } from "@/components/ui/menubar";
+
+export function Example() {
+  return (
+    <Menubar>
+      <MenubarItem>File</MenubarItem>
+      <MenubarItem>Edit</MenubarItem>
+      <MenubarItem>View</MenubarItem>
+    </Menubar>
+  );
+}`,
+  pagination: `import {
+  Pagination,
+  PaginationItem,
+  PaginationLink,
+  PaginationList,
+} from "@/components/ui/pagination";
+
+export function Example() {
+  return (
+    <Pagination>
+      <PaginationList>
+        <PaginationItem><PaginationLink href="?page=1">1</PaginationLink></PaginationItem>
+        <PaginationItem><PaginationLink aria-current="page" href="?page=2">2</PaginationLink></PaginationItem>
+        <PaginationItem><PaginationLink href="?page=3">3</PaginationLink></PaginationItem>
+      </PaginationList>
+    </Pagination>
+  );
+}`,
   separator: `import { Separator } from "@/components/ui/separator";
 
 export function Example() {
@@ -496,6 +805,39 @@ export function Example() {
 
 export function Example() {
   return <Spinner label="Saving settings" size="md" variant="default" />;
+}`,
+  toast: `import { ToastProvider, useToast } from "@/components/ui/toast";
+
+function SaveButton() {
+  const { toast } = useToast();
+
+  return (
+    <button
+      type="button"
+      onClick={() =>
+        toast({
+          title: "Settings saved",
+          description: "Workspace policy updated.",
+          variant: "primary",
+        })
+      }
+    >
+      Save settings
+    </button>
+  );
+}
+
+export function Example() {
+  return (
+    <ToastProvider>
+      <SaveButton />
+    </ToastProvider>
+  );
+}`,
+  "date-input": `import { DateInput } from "@/components/ui/date-input";
+
+export function Example() {
+  return <DateInput aria-label="Renewal date" defaultValue="2026-08-19" />;
 }`,
   calendar: `import { Calendar } from "@/components/ui/calendar";
 
@@ -1010,6 +1352,206 @@ function SheetPreview() {
   );
 }
 
+function DropdownMenuPreview() {
+  const [open, setOpen] = useState(false);
+  const [compact, setCompact] = useState(true);
+
+  return (
+    <div className="relative flex justify-start pb-32">
+      <button
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className="h-9 rounded-[0.25rem] bg-primary px-3.5 text-sm font-medium text-primary-foreground transition-[background-color,transform] hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.98]"
+        onClick={() => setOpen((current) => !current)}
+        type="button"
+      >
+        Workspace actions
+      </button>
+      {open ? (
+        <div
+          className="absolute top-11 left-0 z-20 min-w-56 rounded-[0.375rem] border-hairline border-border bg-surface p-1 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none"
+          role="menu"
+        >
+          <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">Actions</div>
+          {["Open audit log", "Invite teammate"].map((item) => (
+            <button
+              className="block w-full rounded-[0.25rem] px-2 py-1.5 text-left hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+              key={item}
+              role="menuitem"
+              type="button"
+            >
+              {item}
+            </button>
+          ))}
+          <div className="-mx-1 my-1 h-px bg-border" />
+          <button
+            aria-checked={compact}
+            className="relative block w-full rounded-[0.25rem] py-1.5 pr-2 pl-8 text-left hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+            onClick={() => setCompact((current) => !current)}
+            role="menuitemcheckbox"
+            type="button"
+          >
+            <span className="absolute left-2 grid size-4 place-items-center text-primary">
+              {compact ? "✓" : null}
+            </span>
+            Compact density
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function TablePreview() {
+  const rows = [
+    ["Acme", "Enterprise", "48", "Active"],
+    ["Brilliant", "Team", "12", "Active"],
+    ["Unifabriq", "Enterprise", "86", "Review"],
+  ] as const;
+
+  return (
+    <div className="overflow-hidden rounded-[0.5rem] border border-border bg-surface">
+      <table className="w-full border-collapse text-sm">
+        <thead className="border-b border-border bg-muted/60">
+          <tr>
+            {["Workspace", "Plan", "Seats", "Status"].map((head) => (
+              <th
+                className="h-10 px-3 text-left text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground"
+                key={head}
+              >
+                {head}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr className="border-b border-border last:border-b-0 hover:bg-muted/50" key={row[0]}>
+              {row.map((cell) => (
+                <td className="px-3 py-3" key={cell}>
+                  {cell}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function FormPreview() {
+  const [saved, setSaved] = useState(false);
+
+  return (
+    <form
+      className="grid gap-4 rounded-[0.5rem] border-hairline border-border bg-surface p-4"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSaved(true);
+      }}
+    >
+      <div className="grid gap-1">
+        <h3 className="text-base font-semibold tracking-tight">Workspace settings</h3>
+        <p className="text-sm leading-6 text-muted-foreground">
+          Defaults used for invites and billing.
+        </p>
+      </div>
+      <label className="grid gap-2 text-sm font-medium" htmlFor="form-preview-name">
+        Workspace name
+        <input
+          className="h-9 rounded-[0.25rem] border-0 bg-background px-3 text-sm shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] outline-none focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]"
+          defaultValue="Acme"
+          id="form-preview-name"
+        />
+      </label>
+      <div className="flex items-center justify-between border-t border-border pt-4">
+        <p className="text-xs text-muted-foreground">
+          {saved ? "Saved just now." : "Unsaved changes."}
+        </p>
+        <button
+          className="h-8 rounded-[0.25rem] bg-primary px-3 text-xs font-medium text-primary-foreground"
+          type="submit"
+        >
+          Save changes
+        </button>
+      </div>
+    </form>
+  );
+}
+
+function ScrollAreaPreview() {
+  return (
+    <div className="h-48 overflow-hidden rounded-[0.5rem] border border-border bg-surface">
+      <div className="h-full overflow-auto p-3 pr-2">
+        <div className="grid gap-2">
+          {Array.from({ length: 14 }).map((_, index) => (
+            <div
+              className="rounded-[0.25rem] border border-border bg-background px-3 py-2 text-sm"
+              key={index}
+            >
+              Audit event {index + 1}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ToastPreview() {
+  const [messages, setMessages] = useState([
+    { id: "initial", title: "Settings saved", description: "Workspace policy updated." },
+  ]);
+
+  return (
+    <div className="relative h-48 overflow-hidden rounded-[0.5rem] border border-border bg-background p-4">
+      <button
+        className="h-9 rounded-[0.25rem] bg-primary px-3.5 text-sm font-medium text-primary-foreground"
+        onClick={() =>
+          setMessages((current) =>
+            [
+              {
+                id: String(Date.now()),
+                title: "Invite sent",
+                description: "teammate@company.com can now join Acme.",
+              },
+              ...current,
+            ].slice(0, 3),
+          )
+        }
+        type="button"
+      >
+        Trigger toast
+      </button>
+      <div className="absolute right-4 bottom-4 grid w-80 gap-2">
+        {messages.map((message) => (
+          <div
+            className="flex items-start justify-between gap-3 rounded-[0.5rem] border-hairline border-primary/25 bg-surface p-4 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none"
+            key={message.id}
+            role="status"
+          >
+            <div>
+              <p className="font-semibold tracking-tight">{message.title}</p>
+              <p className="mt-1 text-sm leading-5 text-muted-foreground">{message.description}</p>
+            </div>
+            <button
+              aria-label="Dismiss toast"
+              className="grid size-7 shrink-0 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground"
+              onClick={() =>
+                setMessages((current) => current.filter((item) => item.id !== message.id))
+              }
+              type="button"
+            >
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "button-group") {
     return (
@@ -1409,6 +1951,10 @@ function ComponentMiniPreview({ name }: { name: string }) {
     return <SheetPreview />;
   }
 
+  if (name === "dropdown-menu") {
+    return <DropdownMenuPreview />;
+  }
+
   if (name === "tooltip") {
     return (
       <div className="flex justify-center py-8">
@@ -1500,6 +2046,18 @@ function ComponentMiniPreview({ name }: { name: string }) {
     return <CarouselPreview />;
   }
 
+  if (name === "table") {
+    return <TablePreview />;
+  }
+
+  if (name === "form") {
+    return <FormPreview />;
+  }
+
+  if (name === "scroll-area") {
+    return <ScrollAreaPreview />;
+  }
+
   if (name === "breadcrumb") {
     return (
       <nav aria-label="Breadcrumb">
@@ -1575,12 +2133,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   }
 
   if (name === "toast") {
-    return (
-      <div className="max-w-sm rounded-[0.5rem] border-hairline border-border bg-surface p-4 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none">
-        <p className="font-semibold">Settings saved</p>
-        <p className="mt-1 text-xs text-muted-foreground">Workspace policy updated.</p>
-      </div>
-    );
+    return <ToastPreview />;
   }
 
   if (name === "calendar") {

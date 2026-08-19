@@ -1654,6 +1654,131 @@ const drawerSource = sheetSource
   .replaceAll("sheet", "drawer")
   .replace('side = "right"', 'side = "bottom"');
 
+const dropdownMenuSource = `"use client";
+
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import type { ComponentPropsWithoutRef } from "react";
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export const DropdownMenu = DropdownMenuPrimitive.Root;
+export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+export const DropdownMenuGroup = DropdownMenuPrimitive.Group;
+export const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+
+export function DropdownMenuContent({
+  className = "",
+  sideOffset = 6,
+  ...props
+}: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>) {
+  return (
+    <DropdownMenuPrimitive.Portal>
+      <DropdownMenuPrimitive.Content
+        className={cx(
+          "z-50 min-w-48 overflow-hidden rounded-[0.375rem] border-hairline border-border bg-surface p-1 text-sm text-foreground shadow-md",
+          "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
+          "motion-safe:data-[state=open]:animate-enter motion-reduce:animate-none",
+          className,
+        )}
+        sideOffset={sideOffset}
+        {...props}
+      />
+    </DropdownMenuPrimitive.Portal>
+  );
+}
+
+export function DropdownMenuItem({
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item>) {
+  return (
+    <DropdownMenuPrimitive.Item
+      className={cx(
+        "relative flex cursor-default select-none items-center rounded-[0.25rem] px-2 py-1.5 outline-none",
+        "data-[highlighted]:bg-muted data-[highlighted]:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "motion-safe:transition-colors motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function DropdownMenuCheckboxItem({
+  checked,
+  children,
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>) {
+  return (
+    <DropdownMenuPrimitive.CheckboxItem
+      checked={checked}
+      className={cx(
+        "relative flex cursor-default select-none items-center rounded-[0.25rem] py-1.5 pr-2 pl-8 outline-none",
+        "data-[highlighted]:bg-muted data-[highlighted]:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        className,
+      )}
+      {...props}
+    >
+      <span className="absolute left-2 grid size-4 place-items-center text-primary">
+        <DropdownMenuPrimitive.ItemIndicator>
+          <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.25" viewBox="0 0 16 16">
+            <path d="M3.5 8.25 6.5 11l6-6" />
+          </svg>
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.CheckboxItem>
+  );
+}
+
+export function DropdownMenuRadioGroup({
+  ...props
+}: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioGroup>) {
+  return <DropdownMenuPrimitive.RadioGroup {...props} />;
+}
+
+export function DropdownMenuRadioItem({
+  children,
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>) {
+  return (
+    <DropdownMenuPrimitive.RadioItem
+      className={cx(
+        "relative flex cursor-default select-none items-center rounded-[0.25rem] py-1.5 pr-2 pl-8 outline-none",
+        "data-[highlighted]:bg-muted data-[highlighted]:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        className,
+      )}
+      {...props}
+    >
+      <span className="absolute left-2 grid size-4 place-items-center text-primary">
+        <DropdownMenuPrimitive.ItemIndicator>
+          <span className="size-2 rounded-full bg-primary" />
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.RadioItem>
+  );
+}
+
+export function DropdownMenuLabel({
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label>) {
+  return <DropdownMenuPrimitive.Label className={cx("px-2 py-1.5 text-xs font-medium text-muted-foreground", className)} {...props} />;
+}
+
+export function DropdownMenuSeparator({
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>) {
+  return <DropdownMenuPrimitive.Separator className={cx("-mx-1 my-1 h-px bg-border", className)} {...props} />;
+}
+`;
+
 const tooltipSource = `import type { HTMLAttributes, ReactNode } from "react";
 
 export interface TooltipProps extends HTMLAttributes<HTMLSpanElement> {
@@ -2026,14 +2151,221 @@ export function PaginationLink({ className = "", ...props }: HTMLAttributes<HTML
 }
 `;
 
-const toastSource = `import type { HTMLAttributes } from "react";
+const tableSource = `import type { HTMLAttributes, TableHTMLAttributes, ThHTMLAttributes, TdHTMLAttributes } from "react";
 
-export function ToastRegion({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div aria-live="polite" className={["fixed right-4 bottom-4 z-50 grid gap-2", className].join(" ")} role="region" {...props} />;
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
 }
 
-export function Toast({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={["w-80 rounded-[0.5rem] border-hairline border-border bg-surface p-4 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none", className].join(" ")} role="status" {...props} />;
+export function Table({ className = "", ...props }: TableHTMLAttributes<HTMLTableElement>) {
+  return <table className={cx("w-full caption-bottom border-collapse text-sm", className)} {...props} />;
+}
+
+export function TableHeader({ className = "", ...props }: HTMLAttributes<HTMLTableSectionElement>) {
+  return <thead className={cx("border-b border-border bg-muted/60", className)} {...props} />;
+}
+
+export function TableBody({ className = "", ...props }: HTMLAttributes<HTMLTableSectionElement>) {
+  return <tbody className={cx("[&_tr:last-child]:border-0", className)} {...props} />;
+}
+
+export function TableFooter({ className = "", ...props }: HTMLAttributes<HTMLTableSectionElement>) {
+  return <tfoot className={cx("border-t border-border bg-muted/60 font-medium", className)} {...props} />;
+}
+
+export function TableRow({ className = "", ...props }: HTMLAttributes<HTMLTableRowElement>) {
+  return <tr className={cx("border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-primary/10", className)} {...props} />;
+}
+
+export function TableHead({ className = "", ...props }: ThHTMLAttributes<HTMLTableCellElement>) {
+  return <th className={cx("h-10 px-3 text-left align-middle text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground", className)} {...props} />;
+}
+
+export function TableCell({ className = "", ...props }: TdHTMLAttributes<HTMLTableCellElement>) {
+  return <td className={cx("px-3 py-3 align-middle", className)} {...props} />;
+}
+
+export function TableCaption({ className = "", ...props }: HTMLAttributes<HTMLTableCaptionElement>) {
+  return <caption className={cx("mt-3 text-sm text-muted-foreground", className)} {...props} />;
+}
+`;
+
+const formSource = `import type { FormHTMLAttributes, HTMLAttributes } from "react";
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export function Form({ className = "", ...props }: FormHTMLAttributes<HTMLFormElement>) {
+  return <form className={cx("grid gap-4", className)} {...props} />;
+}
+
+export function FormSection({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <section className={cx("grid gap-4 rounded-[0.5rem] border-hairline border-border bg-surface p-4", className)} {...props} />;
+}
+
+export function FormHeader({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={cx("grid gap-1", className)} {...props} />;
+}
+
+export function FormTitle({ className = "", ...props }: HTMLAttributes<HTMLHeadingElement>) {
+  return <h3 className={cx("text-base font-semibold tracking-tight", className)} {...props} />;
+}
+
+export function FormDescription({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={cx("text-sm leading-6 text-muted-foreground", className)} {...props} />;
+}
+
+export function FormActions({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={cx("flex items-center justify-end gap-2 border-t border-border pt-4", className)} {...props} />;
+}
+`;
+
+const scrollAreaSource = `"use client";
+
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
+import type { ComponentPropsWithoutRef } from "react";
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export function ScrollArea({
+  className = "",
+  children,
+  ...props
+}: ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>) {
+  return (
+    <ScrollAreaPrimitive.Root className={cx("relative overflow-hidden", className)} {...props}>
+      <ScrollAreaPrimitive.Viewport className="size-full rounded-[inherit]">{children}</ScrollAreaPrimitive.Viewport>
+      <ScrollBar />
+      <ScrollAreaPrimitive.Corner />
+    </ScrollAreaPrimitive.Root>
+  );
+}
+
+export function ScrollBar({
+  className = "",
+  orientation = "vertical",
+  ...props
+}: ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>) {
+  return (
+    <ScrollAreaPrimitive.ScrollAreaScrollbar
+      className={cx(
+        "flex touch-none select-none p-0.5 transition-colors",
+        orientation === "vertical" && "h-full w-2.5 border-l border-l-transparent",
+        orientation === "horizontal" && "h-2.5 flex-col border-t border-t-transparent",
+        className,
+      )}
+      orientation={orientation}
+      {...props}
+    >
+      <ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-muted-foreground/35 hover:bg-muted-foreground/55" />
+    </ScrollAreaPrimitive.ScrollAreaScrollbar>
+  );
+}
+`;
+
+const toastSource = `"use client";
+
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
+
+export interface ToastMessage {
+  description?: ReactNode;
+  id: string;
+  title: ReactNode;
+  variant?: "default" | "critical" | "primary";
+}
+
+interface ToastContextValue {
+  dismiss: (id: string) => void;
+  toast: (message: Omit<ToastMessage, "id"> & { id?: string }) => string;
+}
+
+const ToastContext = createContext<ToastContextValue | null>(null);
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export function ToastProvider({ children }: { children: ReactNode }) {
+  const [messages, setMessages] = useState<ToastMessage[]>([]);
+
+  const dismiss = useCallback((id: string) => {
+    setMessages((current) => current.filter((message) => message.id !== id));
+  }, []);
+
+  const toast = useCallback((message: Omit<ToastMessage, "id"> & { id?: string }) => {
+    const id = message.id ?? crypto.randomUUID();
+    setMessages((current) => [{ ...message, id }, ...current].slice(0, 4));
+    return id;
+  }, []);
+
+  const value = useMemo(() => ({ dismiss, toast }), [dismiss, toast]);
+
+  return (
+    <ToastContext.Provider value={value}>
+      {children}
+      <ToastRegion>
+        {messages.map((message) => (
+          <Toast key={message.id} variant={message.variant}>
+            <div className="min-w-0">
+              <ToastTitle>{message.title}</ToastTitle>
+              {message.description ? <ToastDescription>{message.description}</ToastDescription> : null}
+            </div>
+            <ToastClose onClick={() => dismiss(message.id)} />
+          </Toast>
+        ))}
+      </ToastRegion>
+    </ToastContext.Provider>
+  );
+}
+
+export function useToast() {
+  const context = useContext(ToastContext);
+  if (!context) throw new Error("useToast must be used inside <ToastProvider>.");
+  return context;
+}
+
+export function ToastRegion({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div aria-live="polite" className={cx("fixed right-4 bottom-4 z-50 grid w-[min(22rem,calc(100vw-2rem))] gap-2", className)} role="region" {...props} />;
+}
+
+export function Toast({
+  className = "",
+  variant = "default",
+  ...props
+}: HTMLAttributes<HTMLDivElement> & { variant?: ToastMessage["variant"] }) {
+  return (
+    <div
+      className={cx(
+        "flex items-start justify-between gap-3 rounded-[0.5rem] border-hairline bg-surface p-4 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none",
+        variant === "default" && "border-border",
+        variant === "primary" && "border-primary/25 bg-primary/10",
+        variant === "critical" && "border-critical/30 bg-critical/10",
+        className,
+      )}
+      role="status"
+      {...props}
+    />
+  );
+}
+
+export function ToastTitle({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={cx("font-semibold tracking-tight", className)} {...props} />;
+}
+
+export function ToastDescription({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={cx("mt-1 text-sm leading-5 text-muted-foreground", className)} {...props} />;
+}
+
+export function ToastClose({
+  className = "",
+  type = "button",
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement>) {
+  return <button aria-label="Dismiss toast" className={cx("grid size-7 shrink-0 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring", className)} type={type} {...props}>×</button>;
 }
 `;
 
@@ -2542,6 +2874,41 @@ export const registry = [
     },
   },
   {
+    name: "dropdown-menu",
+    title: "Dropdown Menu",
+    description: "A Radix-powered contextual menu for secondary actions and option sets.",
+    kind: "component",
+    dependencies: ["@radix-ui/react-dropdown-menu"],
+    registryDependencies: [],
+    files: [
+      { path: "dropdown-menu.tsx", content: dropdownMenuSource, target: "ui/dropdown-menu.tsx" },
+    ],
+    metadata: {
+      purpose: "Shows contextual actions from a trigger without taking over the page.",
+      slots: [
+        "root",
+        "trigger",
+        "content",
+        "item",
+        "checkbox-item",
+        "radio-item",
+        "label",
+        "separator",
+      ],
+      accessibility: [
+        "Uses Radix Dropdown Menu for keyboard navigation and menu semantics.",
+        "Keep destructive actions clearly labeled.",
+        "Do not make menu-only actions essential.",
+      ],
+      usage: [
+        "Use for secondary object actions.",
+        "Use checkbox or radio items for compact menu preferences.",
+        "Keep menus short and grouped with labels or separators.",
+      ],
+      avoid: ["Do not use dropdown menus for primary page navigation."],
+    },
+  },
+  {
     name: "tooltip",
     title: "Tooltip",
     description: "A small hover/focus hint for controls and terse UI.",
@@ -2815,6 +3182,77 @@ export const registry = [
     },
   },
   {
+    name: "table",
+    title: "Table",
+    description: "A crisp semantic table primitive for enterprise data surfaces.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "table.tsx", content: tableSource, target: "ui/table.tsx" }],
+    metadata: {
+      purpose: "Displays structured rows and columns with dense, readable defaults.",
+      slots: ["root", "caption", "header", "body", "footer", "row", "head", "cell"],
+      accessibility: [
+        "Uses semantic table elements.",
+        "Use TableHead for column headers.",
+        "Add captions when context is not otherwise clear.",
+      ],
+      usage: [
+        "Use for simple data display.",
+        "Use selected row state with data-state=selected.",
+        "Use Data Table blocks later for sorting, filtering, and pagination.",
+      ],
+      avoid: ["Do not use tables for layout."],
+    },
+  },
+  {
+    name: "form",
+    title: "Form",
+    description: "A form composition primitive for sections, copy, and action rows.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: ["field"],
+    files: [{ path: "form.tsx", content: formSource, target: "ui/form.tsx" }],
+    metadata: {
+      purpose: "Composes product-grade forms from sections, field groups, and action rows.",
+      slots: ["root", "section", "header", "title", "description", "actions"],
+      accessibility: [
+        "Preserves native form semantics.",
+        "Pair controls with Field and Label primitives.",
+        "Use real submit buttons for form submission.",
+      ],
+      usage: [
+        "Use FormSection for grouped settings.",
+        "Use FormActions for cancel/save affordances.",
+        "Use Field for label, description, and validation state.",
+      ],
+      avoid: ["Do not hide required fields in decorative cards."],
+    },
+  },
+  {
+    name: "scroll-area",
+    title: "Scroll Area",
+    description: "A Radix-powered scroll container with Brilliant scrollbar styling.",
+    kind: "component",
+    dependencies: ["@radix-ui/react-scroll-area"],
+    registryDependencies: [],
+    files: [{ path: "scroll-area.tsx", content: scrollAreaSource, target: "ui/scroll-area.tsx" }],
+    metadata: {
+      purpose: "Contains overflow content without browser-default scrollbar chrome.",
+      slots: ["root", "viewport", "scrollbar", "thumb", "corner"],
+      accessibility: [
+        "Uses native scrolling behavior through Radix Scroll Area.",
+        "Do not trap keyboard focus inside scroll regions.",
+        "Give long regions a visible heading or label nearby.",
+      ],
+      usage: [
+        "Use for menus, sidebars, activity feeds, and constrained panels.",
+        "Keep essential content discoverable outside tiny scroll areas.",
+      ],
+      avoid: ["Do not replace normal page scrolling without a strong reason."],
+    },
+  },
+  {
     name: "breadcrumb",
     title: "Breadcrumb",
     description: "A semantic breadcrumb navigation primitive.",
@@ -2890,19 +3328,25 @@ export const registry = [
   {
     name: "toast",
     title: "Toast",
-    description: "A toast region and toast surface for transient status messages.",
+    description: "A provider-backed toast system for transient status messages.",
     kind: "component",
     dependencies: [],
     registryDependencies: [],
     files: [{ path: "toast.tsx", content: toastSource, target: "ui/toast.tsx" }],
     metadata: {
       purpose: "Shows transient non-blocking feedback.",
-      slots: ["region", "toast"],
+      slots: ["provider", "region", "toast", "title", "description", "close"],
       accessibility: [
-        "ToastRegion uses aria-live polite.",
+        "ToastRegion uses aria-live polite and role region.",
+        "Toast uses role status.",
+        "Close controls have accessible labels.",
         "Do not rely on toast for critical decisions.",
       ],
-      usage: ["Use for save, sync, and background task feedback."],
+      usage: [
+        "Wrap the app or route segment in ToastProvider.",
+        "Call useToast().toast(...) from event handlers.",
+        "Use variants for default, primary, or critical non-blocking feedback.",
+      ],
       avoid: ["Do not use toast as the only error recovery path."],
     },
   },
