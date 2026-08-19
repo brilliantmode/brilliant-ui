@@ -11,6 +11,7 @@ const navItems = [
   ["Button", "#button"],
   ["Badge", "#badge"],
   ["Card", "#card"],
+  ["Text", "#text"],
   ["Input", "#input"],
   ["Label", "#label"],
   ["Textarea", "#textarea"],
@@ -141,6 +142,15 @@ export function Example() {
       </CardHeader>
       <CardContent>2.4M events</CardContent>
     </Card>
+  );
+}`,
+  text: `import { Text } from "@/components/ui/text";
+
+export function Example() {
+  return (
+    <Text as="span" size="lg" variant="shimmer">
+      Generating workspace insights
+    </Text>
   );
 }`,
   input: `import { Input } from "@/components/ui/input";
@@ -295,6 +305,32 @@ function ComponentMiniPreview({ name }: { name: string }) {
           >
             <p className="text-sm font-semibold">{title}</p>
             <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (name === "text") {
+    return (
+      <div className="grid gap-4 md:grid-cols-2">
+        {[
+          ["Default", "Revenue intelligence", "text-foreground"],
+          ["Muted", "Updated 2 minutes ago", "text-muted-foreground"],
+          ["Glow", "AI ready", "text-primary drop-shadow-[0_0_14px_var(--brilliant-primary)]"],
+          [
+            "Shimmer",
+            "Generating workspace insights",
+            "bg-[linear-gradient(110deg,var(--brilliant-muted-foreground)_0%,var(--brilliant-foreground)_18%,var(--brilliant-primary)_34%,var(--brilliant-foreground)_50%,var(--brilliant-muted-foreground)_66%)] bg-[length:240%_100%] bg-clip-text text-transparent motion-safe:animate-text-shimmer motion-reduce:animate-none motion-reduce:bg-none motion-reduce:text-foreground",
+          ],
+        ].map(([label, copy, className]) => (
+          <div className="rounded-[0.375rem] border border-border bg-surface p-4" key={label}>
+            <p className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">
+              {label}
+            </p>
+            <p className={["mt-2 text-lg font-medium tracking-[-0.01em]", className].join(" ")}>
+              {copy}
+            </p>
           </div>
         ))}
       </div>
@@ -771,7 +807,7 @@ export function Example() {
                     </div>
                   </div>
 
-                  {item.name === "card" ? (
+                  {item.name === "card" || item.name === "text" ? (
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Variants</h3>
                       <div className="overflow-auto rounded-lg border border-border">
@@ -785,14 +821,22 @@ export function Example() {
                             </tr>
                           </thead>
                           <tbody>
-                            {[
-                              ["surface", "Default content grouping."],
-                              ["elevated", "Raised dashboard or summary surfaces."],
-                              ["accent", "Selected, highlighted, or recommended content."],
-                              ["beam", "Premium live, AI, processing, or highlighted states."],
-                              ["muted", "Low-emphasis grouping inside denser layouts."],
-                              ["ghost", "Structure without a visible panel."],
-                            ].map(([variant, use]) => (
+                            {(item.name === "card"
+                              ? [
+                                  ["surface", "Default content grouping."],
+                                  ["elevated", "Raised dashboard or summary surfaces."],
+                                  ["accent", "Selected, highlighted, or recommended content."],
+                                  ["beam", "Premium live, AI, processing, or highlighted states."],
+                                  ["muted", "Low-emphasis grouping inside denser layouts."],
+                                  ["ghost", "Structure without a visible panel."],
+                                ]
+                              : [
+                                  ["default", "Normal UI copy."],
+                                  ["muted", "Secondary or supporting copy."],
+                                  ["glow", "Premium, active, or AI-ready emphasis."],
+                                  ["shimmer", "Generating, syncing, or live processing text."],
+                                ]
+                            ).map(([variant, use]) => (
                               <tr className="border-b border-border last:border-b-0" key={variant}>
                                 <td className="px-4 py-3 font-mono text-xs">{variant}</td>
                                 <td className="px-4 py-3 text-muted-foreground">{use}</td>
@@ -801,11 +845,19 @@ export function Example() {
                           </tbody>
                         </table>
                       </div>
-                      <p className="text-sm leading-6 text-muted-foreground">
-                        Set <code>interactive</code> to add hover lift, elevation, and press
-                        feedback for clickable card targets. Set <code>beam=&#123;state&#125;</code>{" "}
-                        when a card should enter the premium live/processing state from app state.
-                      </p>
+                      {item.name === "card" ? (
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Set <code>interactive</code> to add hover lift, elevation, and press
+                          feedback for clickable card targets. Set{" "}
+                          <code>beam=&#123;state&#125;</code> when a card should enter the premium
+                          live/processing state from app state.
+                        </p>
+                      ) : (
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Use <code>variant=&quot;shimmer&quot;</code> for short live/processing
+                          text. The animation is disabled for reduced-motion users.
+                        </p>
+                      )}
                     </div>
                   ) : null}
 
@@ -824,7 +876,9 @@ export function Example() {
                       <div className="rounded-lg border border-border bg-surface p-4 text-sm leading-6 text-muted-foreground">
                         {item.name === "card"
                           ? "Interactive cards lift by 1px, increase elevation, soften the border toward primary, and compress to 99.5% on press. The beam variant adds a rotating conic border animation and disables it for reduced-motion users."
-                          : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
+                          : item.name === "text"
+                            ? "Glow adds a token-colored premium aura. Shimmer animates a tokenized gradient across the glyphs and falls back to static text for reduced-motion users."
+                            : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
                       </div>
                     </div>
                   </div>

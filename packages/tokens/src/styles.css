@@ -24,6 +24,7 @@
   --shadow-sm: var(--brilliant-shadow-sm);
   --shadow-md: var(--brilliant-shadow-md);
   --animate-border-beam: brilliant-border-beam 3.8s linear infinite;
+  --animate-text-shimmer: brilliant-text-shimmer 2.8s linear infinite;
   --animate-enter: brilliant-enter var(--brilliant-duration-normal) var(--brilliant-ease-enter);
   --animate-exit: brilliant-exit var(--brilliant-duration-fast) var(--brilliant-ease-exit);
 }
@@ -195,6 +196,12 @@ body {
 @keyframes brilliant-border-beam {
   to {
     transform: rotate(1turn);
+  }
+}
+
+@keyframes brilliant-text-shimmer {
+  to {
+    background-position: -200% center;
   }
 }
 

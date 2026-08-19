@@ -184,6 +184,51 @@ export function Badge({ className = "", variant = "neutral", ...props }: BadgePr
 }
 `;
 
+const textSource = `import type { ElementType, HTMLAttributes } from "react";
+
+const variants = {
+  default: "text-foreground",
+  muted: "text-muted-foreground",
+  glow: "text-primary drop-shadow-[0_0_14px_var(--brilliant-primary)]",
+  shimmer:
+    "bg-[linear-gradient(110deg,var(--brilliant-muted-foreground)_0%,var(--brilliant-foreground)_18%,var(--brilliant-primary)_34%,var(--brilliant-foreground)_50%,var(--brilliant-muted-foreground)_66%)] bg-[length:240%_100%] bg-clip-text text-transparent motion-safe:animate-text-shimmer motion-reduce:animate-none motion-reduce:bg-none motion-reduce:text-foreground",
+} as const;
+
+const sizes = {
+  sm: "text-sm leading-5",
+  md: "text-base leading-6",
+  lg: "text-lg leading-7",
+  xl: "text-2xl leading-8 tracking-tight",
+} as const;
+
+export interface TextProps extends HTMLAttributes<HTMLElement> {
+  as?: ElementType;
+  size?: keyof typeof sizes;
+  variant?: keyof typeof variants;
+}
+
+export function Text({
+  as: Component = "p",
+  className = "",
+  size = "md",
+  variant = "default",
+  ...props
+}: TextProps) {
+  return (
+    <Component
+      className={[
+        "font-medium tracking-[-0.01em]",
+        sizes[size],
+        variants[variant],
+        className,
+      ].join(" ")}
+      data-variant={variant}
+      {...props}
+    />
+  );
+}
+`;
+
 const cardSource = `import type { HTMLAttributes } from "react";
 
 const variants = {
@@ -514,6 +559,34 @@ export const registry = [
         "Set interactive when the card represents a clickable target.",
       ],
       avoid: ["Do not nest too many cards.", "Do not use cards as random decoration."],
+    },
+  },
+  {
+    name: "text",
+    title: "Text",
+    description: "A typography primitive with muted, glow, and shimmer variants.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "text.tsx", content: textSource, target: "ui/text.tsx" }],
+    metadata: {
+      purpose: "Renders short UI copy, premium states, and animated emphasis text.",
+      slots: ["root", "content"],
+      accessibility: [
+        "Renders real text, not an image.",
+        "Shimmer animation is disabled for reduced-motion users.",
+        "Use semantic elements through the as prop when needed.",
+      ],
+      usage: [
+        "Use default or muted for ordinary copy.",
+        "Use glow for premium status labels and AI states.",
+        "Use shimmer for short loading, generating, or live processing text.",
+        "Keep animated text short and meaningful.",
+      ],
+      avoid: [
+        "Do not use shimmer for paragraphs.",
+        "Do not rely on animation alone to communicate state.",
+      ],
     },
   },
   {
