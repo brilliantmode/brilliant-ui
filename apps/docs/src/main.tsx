@@ -913,13 +913,19 @@ export function Example() {
 }`,
   "application-shell": `import {
   ApplicationShell,
+  ApplicationShellAccountItem,
+  ApplicationShellAccountSwitcher,
   ApplicationShellBrand,
-  ApplicationShellFooter,
   ApplicationShellHeader,
   ApplicationShellMain,
+  ApplicationShellMenu,
+  ApplicationShellMenuItem,
+  ApplicationShellMenuSection,
   ApplicationShellMobileTrigger,
   ApplicationShellNav,
+  ApplicationShellNavGroupItem,
   ApplicationShellNavItem,
+  ApplicationShellNavMedia,
   ApplicationShellNavSection,
   ApplicationShellSearch,
   ApplicationShellSidebar,
@@ -940,8 +946,33 @@ export function Example() {
             </ApplicationShellNavItem>
             <ApplicationShellNavItem href="/settings">Settings</ApplicationShellNavItem>
           </ApplicationShellNavSection>
+          <ApplicationShellNavSection title="Inboxes">
+            <ApplicationShellNavGroupItem
+              description="(209) 555-0104"
+              href="/clients"
+              media={<ApplicationShellNavMedia tone="primary">C</ApplicationShellNavMedia>}
+            >
+              Clients
+            </ApplicationShellNavGroupItem>
+          </ApplicationShellNavSection>
         </ApplicationShellNav>
-        <ApplicationShellFooter>workspace@company.com</ApplicationShellFooter>
+        <ApplicationShellMenu>
+          <ApplicationShellMenuItem icon="◐">Set yourself as away</ApplicationShellMenuItem>
+          <ApplicationShellMenuItem active icon="🔕">Pause notifications</ApplicationShellMenuItem>
+          <ApplicationShellMenuSection title="Accounts">
+            <ApplicationShellMenuItem trailing="✓">Dianne Russell</ApplicationShellMenuItem>
+            <ApplicationShellMenuItem>AG Studio</ApplicationShellMenuItem>
+          </ApplicationShellMenuSection>
+        </ApplicationShellMenu>
+        <ApplicationShellAccountSwitcher>
+          <ApplicationShellAccountItem
+            description="russel@hey.com"
+            media={<ApplicationShellNavMedia>D</ApplicationShellNavMedia>}
+            trailing="⌄"
+          >
+            Dianne Russell
+          </ApplicationShellAccountItem>
+        </ApplicationShellAccountSwitcher>
       </ApplicationShellSidebar>
 
       <div className="min-w-0">
@@ -2313,7 +2344,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "application-shell") {
     return (
       <div className="overflow-hidden rounded-[0.5rem] border border-border bg-background shadow-sm">
-        <div className="grid min-h-[25rem] md:grid-cols-[16rem_minmax(0,1fr)]">
+        <div className="grid min-h-[32rem] md:grid-cols-[17.5rem_minmax(0,1fr)]">
           <aside className="border-b border-border bg-background p-4 md:border-b-0 md:border-r">
             <div className="mb-4 flex items-center gap-3">
               <div className="grid size-9 place-items-center rounded-full border border-border bg-surface text-sm font-semibold">
@@ -2332,43 +2363,111 @@ function ComponentMiniPreview({ name }: { name: string }) {
               </kbd>
             </div>
             <div className="grid gap-4">
-              {(
-                [
-                  ["Main", ["Dashboard", "Usage", "Settings"]],
-                  ["System", ["Components", "Theming", "CLI"]],
-                ] satisfies Array<[string, string[]]>
-              ).map(([section, items]) => (
-                <section className="grid gap-1" key={section}>
-                  <h4 className="px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                    {section}
-                  </h4>
-                  <div className="grid gap-0.5">
-                    {items.map((item, index) => (
-                      <div
-                        className={[
-                          "flex items-center gap-2 rounded-[0.375rem] px-2 py-1.5 text-sm",
-                          item === "Dashboard"
-                            ? "bg-muted font-medium text-foreground"
-                            : "text-muted-foreground",
-                        ].join(" ")}
-                        key={item}
-                      >
-                        <span
-                          className={[
-                            "grid size-5 place-items-center rounded-[0.3125rem] border text-[0.55rem]",
-                            index === 0
-                              ? "border-primary/30 bg-primary/10 text-primary"
-                              : "border-border bg-background",
-                          ].join(" ")}
-                        >
-                          □
-                        </span>
-                        {item}
-                      </div>
-                    ))}
+              <section className="grid gap-1">
+                <h4 className="px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Main
+                </h4>
+                <div className="grid gap-0.5">
+                  {["Contracts", "Analysts", "Setting"].map((item, index) => (
+                    <div
+                      className={[
+                        "flex items-center gap-3 rounded-[0.375rem] px-2 py-1.5 text-sm",
+                        index === 0 ? "font-medium text-foreground" : "text-muted-foreground",
+                      ].join(" ")}
+                      key={item}
+                    >
+                      <span className="grid size-5 place-items-center rounded-[0.3125rem] border border-border bg-background text-[0.55rem]">
+                        □
+                      </span>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </section>
+              <section className="grid gap-1.5">
+                <h4 className="px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Inboxes
+                </h4>
+                {(
+                  [
+                    ["Clients", "(209) 555-0104", "bg-primary/10 text-primary"],
+                    ["Personal", "(239) 555-0108", "bg-amber-500/10 text-amber-700"],
+                  ] satisfies Array<[string, string, string]>
+                ).map(([title, description, tone]) => (
+                  <div className="flex items-center gap-3 rounded-[0.5rem] px-2 py-2" key={title}>
+                    <span
+                      className={[
+                        "grid size-10 place-items-center rounded-full border border-border text-sm font-semibold",
+                        tone,
+                      ].join(" ")}
+                    >
+                      {title.slice(0, 1)}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-medium text-foreground">
+                        {title}
+                      </span>
+                      <span className="block truncate text-sm text-muted-foreground">
+                        {description}
+                      </span>
+                    </span>
                   </div>
-                </section>
-              ))}
+                ))}
+              </section>
+              <div className="overflow-hidden rounded-[0.75rem] border border-border bg-surface py-1 shadow-sm">
+                {["Set yourself as away", "Pause notifications", "Help", "Profile Settings"].map(
+                  (item, index) => (
+                    <button
+                      className={[
+                        "flex w-full items-center gap-3 px-4 py-2 text-left text-sm",
+                        index === 1 ? "bg-muted" : "",
+                      ].join(" ")}
+                      key={item}
+                      type="button"
+                    >
+                      <span className="grid size-5 place-items-center text-muted-foreground">
+                        {index === 0 ? "☾" : "○"}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate">{item}</span>
+                      {index === 1 ? <span className="text-muted-foreground">⌁</span> : null}
+                    </button>
+                  ),
+                )}
+                <div className="border-t border-border px-4 py-2 text-xs text-muted-foreground">
+                  Accounts
+                </div>
+                {["Dianne Russell", "AG Studio"].map((item, index) => (
+                  <button
+                    className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm"
+                    key={item}
+                    type="button"
+                  >
+                    <span className="grid size-6 place-items-center rounded-full bg-muted text-xs">
+                      {item.slice(0, 1)}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate">{item}</span>
+                    {index === 0 ? <span className="text-primary">✓</span> : null}
+                  </button>
+                ))}
+              </div>
+              <div className="mt-auto border-t border-border pt-3">
+                <button
+                  className="flex w-full items-center gap-3 rounded-[0.5rem] px-2 py-2 text-left"
+                  type="button"
+                >
+                  <span className="relative grid size-10 place-items-center rounded-full bg-muted text-sm">
+                    DR
+                    <span className="absolute bottom-0 right-0 size-2.5 rounded-full border border-background bg-emerald-500" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium">Dianne Russell</span>
+                    <span className="block truncate text-xs text-muted-foreground">
+                      russel@hey.com
+                    </span>
+                  </span>
+                  <span className="text-muted-foreground">⌄</span>
+                </button>
+              </div>
             </div>
           </aside>
           <div className="min-w-0">

@@ -2651,6 +2651,206 @@ export function ApplicationShellNavItem({
   );
 }
 
+export function ApplicationShellNavMedia({
+  active = false,
+  children,
+  className = "",
+  tone = "default",
+  ...props
+}: HTMLAttributes<HTMLSpanElement> & {
+  active?: boolean;
+  tone?: "default" | "primary" | "success" | "warning" | "critical";
+}) {
+  const tones = {
+    default: active
+      ? "border-primary/30 bg-primary/10 text-primary"
+      : "border-border bg-background text-muted-foreground",
+    primary: "border-primary/20 bg-primary/10 text-primary",
+    success: "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+    warning: "border-amber-500/25 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+    critical: "border-critical/25 bg-critical/10 text-critical",
+  } as const;
+
+  return (
+    <span
+      className={cx(
+        "grid size-10 shrink-0 place-items-center overflow-hidden rounded-full border-hairline text-sm font-medium shadow-sm",
+        tones[tone],
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </span>
+  );
+}
+
+export function ApplicationShellNavGroupItem({
+  active = false,
+  children,
+  className = "",
+  description,
+  media,
+  onClick,
+  trailing,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & {
+  active?: boolean;
+  description?: ReactNode;
+  media?: ReactNode;
+  trailing?: ReactNode;
+}) {
+  const { closeMobileNav } = useApplicationShell();
+
+  return (
+    <a
+      aria-current={active ? "page" : undefined}
+      className={cx(
+        "group flex items-center gap-3 rounded-[0.5rem] px-2 py-2 transition-colors",
+        active
+          ? "bg-muted text-foreground"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+        className,
+      )}
+      {...props}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) closeMobileNav();
+      }}
+    >
+      {media}
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-sm font-medium text-foreground">{children}</span>
+        {description ? (
+          <span className="mt-0.5 block truncate text-sm leading-5 text-muted-foreground">
+            {description}
+          </span>
+        ) : null}
+      </span>
+      {trailing ? <span className="shrink-0 text-muted-foreground">{trailing}</span> : null}
+    </a>
+  );
+}
+
+export function ApplicationShellMenu({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cx(
+        "overflow-hidden rounded-[0.75rem] border-hairline border-border bg-surface py-1 shadow-md",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function ApplicationShellMenuSection({
+  className = "",
+  title,
+  ...props
+}: HTMLAttributes<HTMLDivElement> & { title?: string }) {
+  return (
+    <section
+      className={cx(
+        "border-b border-border py-1 last:border-b-0",
+        title ? "pt-2" : "",
+        className,
+      )}
+      {...props}
+    >
+      {title ? (
+        <h3 className="px-4 pb-1 text-xs font-medium text-muted-foreground">{title}</h3>
+      ) : null}
+      {props.children}
+    </section>
+  );
+}
+
+export function ApplicationShellMenuItem({
+  active = false,
+  children,
+  className = "",
+  icon,
+  trailing,
+  type = "button",
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  active?: boolean;
+  icon?: ReactNode;
+  trailing?: ReactNode;
+}) {
+  return (
+    <button
+      className={cx(
+        "flex w-full items-center gap-3 px-4 py-2 text-left text-sm transition-colors",
+        active ? "bg-muted text-foreground" : "text-foreground hover:bg-muted",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring",
+        className,
+      )}
+      type={type}
+      {...props}
+    >
+      {icon ? <span className="grid size-5 shrink-0 place-items-center text-muted-foreground">{icon}</span> : null}
+      <span className="min-w-0 flex-1 truncate">{children}</span>
+      {trailing ? <span className="shrink-0 text-muted-foreground">{trailing}</span> : null}
+    </button>
+  );
+}
+
+export function ApplicationShellAccountSwitcher({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cx(
+        "mt-auto border-t border-border pt-3",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function ApplicationShellAccountItem({
+  active = false,
+  children,
+  className = "",
+  description,
+  media,
+  trailing,
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  active?: boolean;
+  description?: ReactNode;
+  media?: ReactNode;
+  trailing?: ReactNode;
+}) {
+  return (
+    <button
+      className={cx(
+        "flex w-full items-center gap-3 rounded-[0.5rem] px-2 py-2 text-left transition-colors",
+        active ? "bg-muted text-foreground" : "text-foreground hover:bg-muted",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+        className,
+      )}
+      type="button"
+      {...props}
+    >
+      {media}
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-sm font-medium">{children}</span>
+        {description ? (
+          <span className="mt-0.5 block truncate text-xs leading-5 text-muted-foreground">
+            {description}
+          </span>
+        ) : null}
+      </span>
+      {trailing ? <span className="shrink-0 text-muted-foreground">{trailing}</span> : null}
+    </button>
+  );
+}
+
 export function ApplicationShellMain({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
   return <main className={cx("min-w-0 px-4 py-6 md:px-8 lg:px-10", className)} {...props} />;
 }
@@ -3580,6 +3780,13 @@ export const registry = [
         "nav",
         "nav-section",
         "nav-item",
+        "nav-media",
+        "nav-group-item",
+        "menu",
+        "menu-section",
+        "menu-item",
+        "account-switcher",
+        "account-item",
         "main",
         "footer",
       ],
@@ -3592,6 +3799,8 @@ export const registry = [
       usage: [
         "Use as the top-level frame for authenticated product screens.",
         "Keep primary navigation in ApplicationShellSidebar.",
+        "Use NavItem for simple destinations and NavGroupItem for inbox/account rows with secondary text.",
+        "Use Menu and AccountSwitcher slots for user/account controls inside the sidebar.",
         "Use ApplicationShellHeader for page actions and the mobile trigger.",
         "Use ApplicationShellMain for route/page content.",
       ],
