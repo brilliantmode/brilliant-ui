@@ -384,7 +384,7 @@ import type { InputHTMLAttributes } from "react";
 const variants = {
   default: {
     control:
-      "border-control-border bg-background text-primary-foreground peer-checked:border-primary peer-checked:bg-primary peer-indeterminate:border-primary peer-indeterminate:bg-primary",
+      "border-control-border bg-background text-primary-foreground peer-checked:border-primary peer-checked:bg-primary peer-checked:shadow-[inset_0_1px_0_color-mix(in_oklch,white_22%,transparent),0_1px_2px_oklch(0_0_0/0.08)] peer-indeterminate:border-primary peer-indeterminate:bg-primary peer-indeterminate:shadow-[inset_0_1px_0_color-mix(in_oklch,white_22%,transparent),0_1px_2px_oklch(0_0_0/0.08)]",
     indicator: "text-primary-foreground",
   },
   critical: {
@@ -394,14 +394,34 @@ const variants = {
   },
 } as const;
 
+const sizes = {
+  sm: {
+    root: "size-4",
+    control: "size-4 rounded-[0.25rem]",
+    indicator: "size-3",
+  },
+  md: {
+    root: "size-5",
+    control: "size-5 rounded-[0.3125rem]",
+    indicator: "size-3.5",
+  },
+  lg: {
+    root: "size-6",
+    control: "size-6 rounded-[0.375rem]",
+    indicator: "size-4",
+  },
+} as const;
+
 export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
   indeterminate?: boolean;
+  size?: keyof typeof sizes;
   variant?: keyof typeof variants;
 }
 
 export function Checkbox({
   className = "",
   indeterminate = false,
+  size = "md",
   variant = "default",
   ...props
 }: CheckboxProps) {
@@ -412,9 +432,18 @@ export function Checkbox({
   }, [indeterminate]);
 
   return (
-    <span className={["relative inline-grid size-4 shrink-0 place-items-center", className].join(" ")}>
+    <span
+      className={[
+        "relative inline-grid shrink-0 place-items-center",
+        sizes[size].root,
+        className,
+      ].join(" ")}
+    >
       <input
-        className="peer absolute inset-0 z-10 size-4 cursor-pointer appearance-none rounded-[0.25rem] opacity-0 disabled:cursor-not-allowed"
+        className={[
+          "peer absolute inset-0 z-10 cursor-pointer appearance-none opacity-0 disabled:cursor-not-allowed",
+          sizes[size].control,
+        ].join(" ")}
         data-variant={variant}
         ref={inputRef}
         type="checkbox"
@@ -423,19 +452,21 @@ export function Checkbox({
       <span
         aria-hidden="true"
         className={[
-          "pointer-events-none grid size-4 place-items-center rounded-[0.25rem] border-hairline shadow-[inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_12%,transparent)]",
+          "pointer-events-none grid place-items-center border-hairline shadow-[inset_0_1px_0_color-mix(in_oklch,white_70%,transparent),inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_12%,transparent)]",
           "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
           "peer-hover:shadow-[inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_18%,transparent),0_1px_2px_oklch(0_0_0/0.06)]",
           "peer-active:scale-[0.92] peer-focus-visible:ring-1 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-0 peer-disabled:opacity-50",
           "peer-checked:[&_[data-check]]:opacity-100 peer-checked:[&_[data-check]]:motion-safe:scale-100 peer-indeterminate:[&_[data-check]]:hidden",
           "peer-indeterminate:[&_[data-mixed]]:opacity-100 peer-indeterminate:[&_[data-mixed]]:motion-safe:scale-100",
+          sizes[size].control,
           variants[variant].control,
         ].join(" ")}
       >
         <svg
           aria-hidden="true"
           className={[
-            "size-3 opacity-0 motion-safe:scale-75 motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+            "opacity-0 motion-safe:scale-75 motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+            sizes[size].indicator,
             variants[variant].indicator,
           ].join(" ")}
           data-check=""
@@ -451,7 +482,8 @@ export function Checkbox({
         <svg
           aria-hidden="true"
           className={[
-            "absolute size-3 opacity-0 motion-safe:scale-75 motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+            "absolute opacity-0 motion-safe:scale-75 motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+            sizes[size].indicator,
             variants[variant].indicator,
           ].join(" ")}
           data-mixed=""
@@ -741,6 +773,7 @@ export const registry = [
       ],
       usage: [
         "Use for independent boolean choices.",
+        "Use size lg when the checkbox is the primary control in a settings row.",
         "Use indeterminate for partial table or tree selections.",
         "Use variant critical only for destructive selection contexts.",
       ],

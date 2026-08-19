@@ -173,7 +173,7 @@ export function Example() {
 export function Example() {
   return (
     <label className="flex items-center gap-3">
-      <Checkbox defaultChecked />
+      <Checkbox defaultChecked size="lg" />
       <span>Require approval</span>
     </label>
   );
@@ -386,23 +386,23 @@ function ComponentMiniPreview({ name }: { name: string }) {
           ["Mixed", "3 of 8 selected", "mixed"],
         ].map(([label, copy, state]) => (
           <label
-            className="flex items-center gap-3 rounded-[0.375rem] border border-border bg-surface p-3 text-sm"
+            className="group flex items-center gap-4 rounded-[0.5rem] border border-border bg-surface p-4 text-sm shadow-sm transition-[border-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] hover:-translate-y-px hover:border-primary/25 hover:shadow-md"
             key={label}
           >
-            <span className="relative inline-grid size-4 shrink-0 place-items-center">
+            <span className="relative inline-grid size-6 shrink-0 place-items-center">
               <input
                 aria-label={label}
-                className="peer absolute inset-0 z-10 size-4 cursor-pointer appearance-none rounded-[0.25rem] opacity-0"
+                className="peer absolute inset-0 z-10 size-6 cursor-pointer appearance-none rounded-[0.375rem] opacity-0"
                 defaultChecked={state === "checked"}
                 ref={(node) => {
                   if (node) node.indeterminate = state === "mixed";
                 }}
                 type="checkbox"
               />
-              <span className="pointer-events-none grid size-4 place-items-center rounded-[0.25rem] border border-control-border bg-background shadow-[inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_12%,transparent)] transition-[background-color,border-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] peer-active:scale-[0.92] peer-checked:border-primary peer-checked:bg-primary peer-indeterminate:border-primary peer-indeterminate:bg-primary peer-checked:[&_[data-check]]:opacity-100 peer-checked:[&_[data-check]]:scale-100 peer-indeterminate:[&_[data-check]]:hidden peer-indeterminate:[&_[data-mixed]]:opacity-100 peer-indeterminate:[&_[data-mixed]]:scale-100">
+              <span className="pointer-events-none grid size-6 place-items-center rounded-[0.375rem] border border-control-border bg-background shadow-[inset_0_1px_0_color-mix(in_oklch,white_70%,transparent),inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_12%,transparent)] transition-[background-color,border-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] peer-active:scale-[0.92] peer-checked:border-primary peer-checked:bg-primary peer-checked:shadow-[inset_0_1px_0_color-mix(in_oklch,white_22%,transparent),0_1px_2px_oklch(0_0_0/0.08)] peer-indeterminate:border-primary peer-indeterminate:bg-primary peer-indeterminate:shadow-[inset_0_1px_0_color-mix(in_oklch,white_22%,transparent),0_1px_2px_oklch(0_0_0/0.08)] peer-checked:[&_[data-check]]:opacity-100 peer-checked:[&_[data-check]]:scale-100 peer-indeterminate:[&_[data-check]]:hidden peer-indeterminate:[&_[data-mixed]]:opacity-100 peer-indeterminate:[&_[data-mixed]]:scale-100">
                 <svg
                   aria-hidden="true"
-                  className="size-3 scale-75 text-primary-foreground opacity-0 transition-[opacity,transform] duration-[var(--brilliant-duration-fast)]"
+                  className="size-4 scale-75 text-primary-foreground opacity-0 transition-[opacity,transform] duration-[var(--brilliant-duration-fast)]"
                   data-check=""
                   fill="none"
                   stroke="currentColor"
@@ -415,7 +415,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                 </svg>
                 <svg
                   aria-hidden="true"
-                  className="absolute size-3 scale-75 text-primary-foreground opacity-0 transition-[opacity,transform] duration-[var(--brilliant-duration-fast)]"
+                  className="absolute size-4 scale-75 text-primary-foreground opacity-0 transition-[opacity,transform] duration-[var(--brilliant-duration-fast)]"
                   data-mixed=""
                   fill="none"
                   stroke="currentColor"
@@ -428,8 +428,8 @@ function ComponentMiniPreview({ name }: { name: string }) {
               </span>
             </span>
             <span>
-              <span className="block font-medium">{label}</span>
-              <span className="block text-xs text-muted-foreground">{copy}</span>
+              <span className="block font-semibold tracking-[-0.01em]">{label}</span>
+              <span className="mt-0.5 block text-xs text-muted-foreground">{copy}</span>
             </span>
           </label>
         ))}
@@ -859,7 +859,7 @@ export function Example() {
                     </div>
                   </div>
 
-                  {item.name === "card" || item.name === "text" ? (
+                  {item.name === "card" || item.name === "text" || item.name === "checkbox" ? (
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Variants</h3>
                       <div className="overflow-auto rounded-lg border border-border">
@@ -882,12 +882,17 @@ export function Example() {
                                   ["muted", "Low-emphasis grouping inside denser layouts."],
                                   ["ghost", "Structure without a visible panel."],
                                 ]
-                              : [
-                                  ["default", "Normal UI copy."],
-                                  ["muted", "Secondary or supporting copy."],
-                                  ["glow", "Premium, active, or AI-ready emphasis."],
-                                  ["shimmer", "Generating, syncing, or live processing text."],
-                                ]
+                              : item.name === "checkbox"
+                                ? [
+                                    ["default", "Normal selection state."],
+                                    ["critical", "Destructive or high-risk selection context."],
+                                  ]
+                                : [
+                                    ["default", "Normal UI copy."],
+                                    ["muted", "Secondary or supporting copy."],
+                                    ["glow", "Premium, active, or AI-ready emphasis."],
+                                    ["shimmer", "Generating, syncing, or live processing text."],
+                                  ]
                             ).map(([variant, use]) => (
                               <tr className="border-b border-border last:border-b-0" key={variant}>
                                 <td className="px-4 py-3 font-mono text-xs">{variant}</td>
@@ -904,6 +909,11 @@ export function Example() {
                           <code>beam=&#123;state&#125;</code> when a card should enter the premium
                           live/processing state from app state.
                         </p>
+                      ) : item.name === "checkbox" ? (
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Use <code>variant=&quot;critical&quot;</code> only when selecting the
+                          option has destructive or high-risk meaning.
+                        </p>
                       ) : (
                         <p className="text-sm leading-6 text-muted-foreground">
                           Use <code>variant=&quot;shimmer&quot;</code> for short live/processing
@@ -913,6 +923,34 @@ export function Example() {
                           disabled for reduced-motion users.
                         </p>
                       )}
+                    </div>
+                  ) : null}
+
+                  {item.name === "checkbox" ? (
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-semibold">Sizes</h3>
+                      <div className="overflow-auto rounded-lg border border-border">
+                        <table className="w-full border-collapse text-sm">
+                          <thead className="bg-muted text-left">
+                            <tr>
+                              <th className="border-b border-border px-4 py-3 font-medium">Prop</th>
+                              <th className="border-b border-border px-4 py-3 font-medium">Use</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              ["sm", "Dense tables and compact filter menus."],
+                              ["md", "Default form rows and settings lists."],
+                              ["lg", "Prominent settings rows, approvals, and touch-friendly UI."],
+                            ].map(([size, use]) => (
+                              <tr className="border-b border-border last:border-b-0" key={size}>
+                                <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>
+                                <td className="px-4 py-3 text-muted-foreground">{use}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   ) : null}
 
