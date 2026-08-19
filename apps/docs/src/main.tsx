@@ -8430,8 +8430,10 @@ import { animationPresets, microUx } from "@brilliant/ui/animations";`}</CodeBlo
         </main>
 
         <StatusRail firstItemTitle={selectedItem?.title ?? firstItem?.title ?? "None"} />
+        <div className="min-w-0 md:col-start-2 xl:col-span-2">
+          <AppFooter onNavigate={navigate} shellTone={shellTone} />
+        </div>
       </div>
-      <AppFooter onNavigate={navigate} shellTone={shellTone} />
     </div>
   );
 }
