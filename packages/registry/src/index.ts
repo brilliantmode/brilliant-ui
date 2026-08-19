@@ -108,15 +108,15 @@ const buttonSource = `import type { ButtonHTMLAttributes } from "react";
 
 const variants = {
   primary:
-    "border border-foreground bg-foreground text-background shadow-[inset_0_1px_0_oklch(1_0_0_/_0.18),0_1px_2px_oklch(0_0_0_/_0.08)] hover:-translate-y-px hover:shadow-[inset_0_1px_0_oklch(1_0_0_/_0.22),0_3px_8px_oklch(0_0_0_/_0.10)] active:translate-y-0 active:shadow-[inset_0_1px_2px_oklch(0_0_0_/_0.16)]",
+    "border border-foreground bg-foreground text-background shadow-sm hover:bg-foreground/92 active:bg-foreground/88",
   secondary:
-    "border border-border bg-surface text-foreground shadow-[inset_0_1px_0_oklch(1_0_0_/_0.72),0_1px_2px_oklch(0_0_0_/_0.05)] hover:-translate-y-px hover:border-foreground/70 hover:bg-muted hover:shadow-[inset_0_1px_0_oklch(1_0_0_/_0.84),0_3px_8px_oklch(0_0_0_/_0.08)] active:translate-y-0 active:shadow-[inset_0_1px_2px_oklch(0_0_0_/_0.10)]",
+    "border border-border bg-surface text-foreground shadow-sm hover:border-foreground/40 hover:bg-muted active:bg-secondary",
   outline:
-    "border border-border bg-background text-foreground shadow-[inset_0_0_0_1px_oklch(1_0_0_/_0.42)] hover:-translate-y-px hover:border-foreground/70 hover:bg-muted active:translate-y-0 active:shadow-[inset_0_1px_2px_oklch(0_0_0_/_0.08)]",
+    "border border-border bg-background text-foreground hover:border-foreground/50 hover:bg-muted active:bg-secondary",
   ghost:
-    "border border-transparent text-foreground hover:bg-muted active:translate-y-px",
+    "border border-transparent text-foreground hover:bg-muted active:bg-secondary",
   critical:
-    "border border-critical bg-critical text-critical-foreground shadow-[inset_0_1px_0_oklch(1_0_0_/_0.18),0_1px_2px_oklch(0_0_0_/_0.08)] hover:-translate-y-px hover:shadow-[inset_0_1px_0_oklch(1_0_0_/_0.22),0_3px_8px_oklch(0_0_0_/_0.10)] active:translate-y-0 active:shadow-[inset_0_1px_2px_oklch(0_0_0_/_0.16)]",
+    "border border-critical bg-critical text-critical-foreground shadow-sm hover:bg-critical/92 active:bg-critical/88",
 } as const;
 
 const sizes = {
@@ -141,8 +141,8 @@ export function Button({
   return (
     <button
       className={[
-        "relative isolate inline-flex shrink-0 items-center justify-center gap-2 rounded-[0.25rem] font-semibold tracking-[-0.01em]",
-        "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+        "relative isolate inline-flex shrink-0 items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em]",
+        "motion-safe:transition-[color,background-color,border-color,box-shadow,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         "focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
