@@ -68,6 +68,19 @@ describe("registry", () => {
     expect(footerSource).toContain("export function FooterBottom");
   });
 
+  it("ships a functional native file upload", () => {
+    const item = findRegistryItem("file-upload");
+    const source = item?.files[0]?.content;
+
+    expect(item?.kind).toBe("component");
+    expect(source).toContain('type="file"');
+    expect(source).toContain("event.dataTransfer.files");
+    expect(source).toContain("maxSize?: number");
+    expect(source).toContain("export function FileUploadList");
+    expect(source).toContain('role="progressbar"');
+    expect(source).toContain('role="alert"');
+  });
+
   it("defines a versioned JSON schema", () => {
     expect(registryItemSchema.properties.kind.enum).toBe(registryKinds);
     expect(registryItemSchema.required).toContain("registryDependencies");

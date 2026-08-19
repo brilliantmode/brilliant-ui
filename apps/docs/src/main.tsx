@@ -10,6 +10,15 @@ import {
 } from "react";
 import { createRoot } from "react-dom/client";
 import {
+  FileUpload,
+  FileUploadDescription,
+  FileUploadDropzone,
+  FileUploadError,
+  FileUploadIcon,
+  FileUploadList,
+  FileUploadTitle,
+} from "./components/ui/file-upload";
+import {
   Footer,
   FooterBottom,
   FooterBrand,
@@ -63,6 +72,7 @@ const navGroups = [
   {
     items: [
       ["Input", "/components/input"],
+      ["File Upload", "/components/file-upload"],
       ["Label", "/components/label"],
       ["Textarea", "/components/textarea"],
       ["Field", "/components/field"],
@@ -618,6 +628,36 @@ export function Example() {
 
 export function Example() {
   return <Input name="brilliant-input-preview" placeholder="Acme workspace" />;
+}`,
+  "file-upload": `import {
+  FileUpload,
+  FileUploadDescription,
+  FileUploadDropzone,
+  FileUploadError,
+  FileUploadIcon,
+  FileUploadList,
+  FileUploadTitle,
+} from "@/components/ui/file-upload";
+
+export function Example() {
+  return (
+    <FileUpload
+      accept=".csv,text/csv"
+      maxFiles={3}
+      maxSize={5 * 1024 * 1024}
+      multiple
+    >
+      <FileUploadDropzone>
+        <span>
+          <FileUploadIcon />
+          <FileUploadTitle>Drop CSV files here or click to browse</FileUploadTitle>
+          <FileUploadDescription>Up to 3 files, 5 MB each.</FileUploadDescription>
+        </span>
+      </FileUploadDropzone>
+      <FileUploadList />
+      <FileUploadError />
+    </FileUpload>
+  );
 }`,
   label: `import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -3457,6 +3497,22 @@ function ComponentMiniPreview({ name }: { name: string }) {
           </div>
         ))}
       </div>
+    );
+  }
+
+  if (name === "file-upload") {
+    return (
+      <FileUpload accept=".csv,text/csv" maxFiles={3} maxSize={5 * 1024 * 1024} multiple>
+        <FileUploadDropzone>
+          <span>
+            <FileUploadIcon />
+            <FileUploadTitle>Drop CSV files here or click to browse</FileUploadTitle>
+            <FileUploadDescription>Up to 3 files, 5 MB each.</FileUploadDescription>
+          </span>
+        </FileUploadDropzone>
+        <FileUploadList />
+        <FileUploadError />
+      </FileUpload>
     );
   }
 
