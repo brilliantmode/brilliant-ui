@@ -13,6 +13,7 @@
   --color-critical-foreground: var(--brilliant-critical-foreground);
   --color-border: var(--brilliant-border);
   --color-ring: var(--brilliant-ring);
+  --border-width-hairline: var(--brilliant-border-width-hairline);
   --radius-sm: calc(var(--brilliant-radius) - 0.25rem);
   --radius-md: calc(var(--brilliant-radius) - 0.125rem);
   --radius-lg: var(--brilliant-radius);
@@ -39,7 +40,8 @@
   --brilliant-secondary-foreground: oklch(0.278 0.033 256.848);
   --brilliant-critical: oklch(0.577 0.245 27.325);
   --brilliant-critical-foreground: oklch(0.985 0 0);
-  --brilliant-border: oklch(0.872 0.01 258.338);
+  --brilliant-border: oklch(0.928 0.006 264.531);
+  --brilliant-border-width-hairline: 0.5px;
   --brilliant-ring: oklch(0.61 0.22 276);
   --brilliant-radius: 0.625rem;
   --brilliant-font-sans:
@@ -114,6 +116,7 @@ body {
   --brilliant-critical: oklch(0.704 0.191 22.216);
   --brilliant-critical-foreground: oklch(0.13 0.028 261.692);
   --brilliant-border: oklch(1 0 0 / 0.12);
+  --brilliant-border-width-hairline: 0.5px;
   --brilliant-ring: oklch(0.69 0.18 276);
   --brilliant-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.24);
   --brilliant-shadow-md: 0 6px 18px oklch(0 0 0 / 0.32);
@@ -133,6 +136,7 @@ body {
   --brilliant-critical: oklch(0.42 0.22 27);
   --brilliant-critical-foreground: oklch(1 0 0);
   --brilliant-border: oklch(0 0 0);
+  --brilliant-border-width-hairline: 1px;
   --brilliant-ring: oklch(0 0 0);
 }
 

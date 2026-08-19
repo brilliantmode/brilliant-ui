@@ -121,7 +121,7 @@ export const opacity = {
   overlay: 0.72,
 } as const;
 
-export const borderWidth = { 0: "0", 1: "1px", 2: "2px" } as const;
+export const borderWidth = { 0: "0", hairline: "0.5px", 1: "1px", 2: "2px" } as const;
 
 export const semanticColorTokens = [
   "background",
@@ -158,7 +158,7 @@ export const semanticColors = {
     "secondary-foreground": primitiveColors.neutral[800],
     critical: "oklch(0.577 0.245 27.325)",
     "critical-foreground": "oklch(0.985 0 0)",
-    border: primitiveColors.neutral[300],
+    border: primitiveColors.neutral[200],
     ring: primitiveColors.brand[500],
   },
   dark: {

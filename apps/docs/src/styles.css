@@ -20,6 +20,35 @@
 * {
   border-color: var(--brilliant-border);
 }
+
+.border {
+  border-width: var(--brilliant-border-width-hairline);
+}
+
+.border-t {
+  border-top-width: var(--brilliant-border-width-hairline);
+}
+
+.border-r {
+  border-right-width: var(--brilliant-border-width-hairline);
+}
+
+.border-b {
+  border-bottom-width: var(--brilliant-border-width-hairline);
+}
+
+.border-l {
+  border-left-width: var(--brilliant-border-width-hairline);
+}
+
+:where(.divide-y > :not(:last-child)) {
+  border-bottom-width: var(--brilliant-border-width-hairline);
+}
+
+:where(.divide-x > :not(:last-child)) {
+  border-right-width: var(--brilliant-border-width-hairline);
+}
+
 body {
   margin: 0;
 }

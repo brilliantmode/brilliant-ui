@@ -110,13 +110,13 @@ const variants = {
   primary:
     "bg-primary text-primary-foreground hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.99] active:bg-primary/88",
   secondary:
-    "border border-border bg-surface text-foreground shadow-sm hover:-translate-y-px hover:border-foreground/40 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-secondary active:shadow-sm",
+    "border-hairline border-border bg-surface text-foreground shadow-sm hover:-translate-y-px hover:border-foreground/40 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-secondary active:shadow-sm",
   outline:
-    "border border-border bg-background text-foreground hover:border-foreground/50 hover:bg-muted active:scale-[0.99] active:bg-secondary",
+    "border-hairline border-border bg-background text-foreground hover:border-foreground/50 hover:bg-muted active:scale-[0.99] active:bg-secondary",
   ghost:
-    "border border-transparent text-foreground hover:bg-muted active:scale-[0.99] active:bg-secondary",
+    "border-hairline border-transparent text-foreground hover:bg-muted active:scale-[0.99] active:bg-secondary",
   critical:
-    "border border-critical bg-critical text-critical-foreground shadow-sm hover:-translate-y-px hover:bg-critical/92 hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-critical/88 active:shadow-sm",
+    "border-hairline border-critical bg-critical text-critical-foreground shadow-sm hover:-translate-y-px hover:bg-critical/92 hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-critical/88 active:shadow-sm",
 } as const;
 
 const sizes = {
@@ -174,7 +174,7 @@ export function Badge({ className = "", variant = "neutral", ...props }: BadgePr
   return (
     <span
       className={[
-        "inline-flex h-6 shrink-0 items-center rounded-[0.25rem] border px-2 text-xs font-medium tracking-[-0.005em]",
+        "inline-flex h-6 shrink-0 items-center rounded-[0.25rem] border-hairline px-2 text-xs font-medium tracking-[-0.005em]",
         variants[variant],
         className,
       ].join(" ")}
@@ -190,7 +190,7 @@ export function Card({ className = "", ...props }: HTMLAttributes<HTMLDivElement
   return (
     <div
       className={[
-        "rounded-[0.375rem] border border-border bg-surface text-foreground shadow-sm",
+        "rounded-[0.375rem] border-hairline border-border bg-surface text-foreground shadow-sm",
         className,
       ].join(" ")}
       {...props}
@@ -222,7 +222,7 @@ export function CardContent({ className = "", ...props }: HTMLAttributes<HTMLDiv
 export function CardFooter({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={["flex items-center gap-3 border-t border-border p-5", className].join(" ")}
+      className={["flex items-center gap-3 border-t-[0.5px] border-border p-5", className].join(" ")}
       {...props}
     />
   );
@@ -237,7 +237,7 @@ export function Input({ className = "", type = "text", ...props }: InputProps) {
   return (
     <input
       className={[
-        "flex h-9 w-full rounded-[0.25rem] border border-border bg-background px-3 text-sm text-foreground shadow-sm",
+        "flex h-9 w-full rounded-[0.25rem] border-hairline border-border bg-background px-3 text-sm text-foreground shadow-sm",
         "placeholder:text-muted-foreground",
         "motion-safe:transition-[border-color,box-shadow,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -277,7 +277,7 @@ export function Textarea({ className = "", ...props }: TextareaProps) {
   return (
     <textarea
       className={[
-        "flex min-h-24 w-full rounded-[0.25rem] border border-border bg-background px-3 py-2 text-sm text-foreground shadow-sm",
+        "flex min-h-24 w-full rounded-[0.25rem] border-hairline border-border bg-background px-3 py-2 text-sm text-foreground shadow-sm",
         "placeholder:text-muted-foreground",
         "motion-safe:transition-[border-color,box-shadow,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -298,7 +298,7 @@ export function Checkbox({ className = "", ...props }: CheckboxProps) {
   return (
     <input
       className={[
-        "peer size-4 appearance-none rounded-[0.1875rem] border border-border bg-background shadow-sm",
+        "peer size-4 appearance-none rounded-[0.1875rem] border-hairline border-border bg-background shadow-sm",
         "checked:border-primary checked:bg-primary",
         "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         "checked:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -320,7 +320,7 @@ export function Switch({ className = "", ...props }: SwitchProps) {
   return (
     <input
       className={[
-        "h-5 w-9 appearance-none rounded-full border border-transparent bg-secondary shadow-inner",
+        "h-5 w-9 appearance-none rounded-full border-hairline border-transparent bg-secondary shadow-inner",
         "before:block before:size-4 before:translate-x-0 before:rounded-full before:bg-surface before:shadow-sm before:content-['']",
         "checked:bg-primary checked:before:translate-x-4",
         "motion-safe:transition-[background-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
@@ -353,7 +353,7 @@ export function Alert({ className = "", variant = "info", ...props }: AlertProps
   return (
     <div
       className={[
-        "rounded-[0.375rem] border p-4 text-sm leading-6",
+        "rounded-[0.375rem] border-hairline p-4 text-sm leading-6",
         "motion-safe:animate-enter motion-reduce:animate-none",
         variants[variant],
         className,
@@ -389,7 +389,7 @@ export function Separator({
       aria-orientation={orientation}
       className={[
         "shrink-0 bg-border",
-        orientation === "horizontal" ? "h-px w-full" : "h-full w-px",
+        orientation === "horizontal" ? "h-[0.5px] w-full" : "h-full w-[0.5px]",
         className,
       ].join(" ")}
       role="separator"
