@@ -78,6 +78,7 @@ import {
   HeaderBrand,
   HeaderContainer,
   HeaderLink,
+  HeaderMobileTrigger,
   HeaderNav,
 } from "./components/ui/header";
 import { Meter } from "./components/ui/meter";
@@ -3832,68 +3833,39 @@ function PhotoExamplePreview({ example }: { example: keyof typeof photoExampleCo
 }
 
 function HeaderPreview() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
-    <header className="relative z-20 w-full border-b border-border bg-background/95 text-foreground backdrop-blur">
-      <div className="relative mx-auto flex min-h-14 max-w-screen-2xl items-center gap-3 px-4 md:px-6">
-        <a
-          className="inline-flex items-center gap-2 font-semibold tracking-[-0.015em] md:mr-3"
-          href="#header-preview"
-        >
+    <Header behavior="none" className="bg-background/95" position="static">
+      <HeaderContainer>
+        <HeaderBrand href="#header-preview">
           <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
           <span>Brilliant</span>
-        </a>
-        <button
-          aria-expanded={menuOpen}
-          aria-label={menuOpen ? "Close navigation" : "Open navigation"}
-          className="ml-auto inline-grid size-9 place-items-center rounded-[0.25rem] hover:bg-muted active:scale-[0.97] md:hidden"
-          onClick={() => setMenuOpen((open) => !open)}
-          type="button"
-        >
-          <span aria-hidden="true" className="grid gap-1">
-            <span
-              className={`block h-px w-4 bg-current transition-transform ${menuOpen ? "translate-y-[2.5px] rotate-45" : ""}`}
-            />
-            <span
-              className={`block h-px w-4 bg-current transition-transform ${menuOpen ? "-translate-y-[2.5px] -rotate-45" : ""}`}
-            />
-          </span>
-        </button>
-        <nav
-          aria-label="Primary navigation"
-          className={[
-            "absolute inset-x-0 top-full grid gap-1 max-md:border-b max-md:border-border max-md:bg-background max-md:p-3 max-md:shadow-md",
-            menuOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0",
-            "md:static md:ml-0 md:flex md:visible md:translate-y-0 md:items-center md:justify-center md:opacity-100",
-          ].join(" ")}
-        >
+        </HeaderBrand>
+        <HeaderMobileTrigger />
+        <HeaderNav align="center">
           {[
             ["Dashboard", true],
             ["Projects", false],
             ["Settings", false],
           ].map(([label, active]) => (
-            <a
-              aria-current={active ? "page" : undefined}
-              className={`rounded-[0.25rem] px-3 py-2 text-sm ${active ? "bg-muted font-medium text-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+            <HeaderLink
+              active={Boolean(active)}
               href={`#header-${String(label).toLowerCase()}`}
               key={String(label)}
-              onClick={() => setMenuOpen(false)}
             >
               {label}
-            </a>
+            </HeaderLink>
           ))}
-        </nav>
-        <div className="ml-auto hidden items-center gap-2 md:flex">
+        </HeaderNav>
+        <HeaderActions className="hidden md:flex">
           <button
             className="h-8 rounded-[0.25rem] bg-primary px-3 text-xs font-medium text-primary-foreground hover:-translate-y-px active:translate-y-0 active:scale-[0.99]"
             type="button"
           >
             New project
           </button>
-        </div>
-      </div>
-    </header>
+        </HeaderActions>
+      </HeaderContainer>
+    </Header>
   );
 }
 
@@ -5943,7 +5915,7 @@ function AppHeader({
   theme: "dark" | "light";
 }) {
   return (
-    <Header behavior="elevate" position="sticky" scrollThreshold={24}>
+    <Header behavior="elevate" border position="sticky" scrollThreshold={24}>
       <HeaderContainer>
         <button
           aria-controls="mobile-docs-nav"
@@ -6837,7 +6809,9 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                     item.name === "empty-state" ? (
                       <div className="space-y-3">
                         <h3 className="text-lg font-semibold">
-                          {item.name === "header" ? "Positioning and scroll behavior" : "Variants"}
+                          {item.name === "header"
+                            ? "Positioning, border, and scroll behavior"
+                            : "Variants"}
                         </h3>
                         <div className="overflow-auto rounded-lg border border-border">
                           <table className="w-full border-collapse text-sm">
@@ -6877,6 +6851,11 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                                     [
                                       'behavior="none"',
                                       "Exposes scroll state without applying built-in presentation.",
+                                    ],
+                                    ["border", "Adds the shell separator below the header."],
+                                    [
+                                      "border={false}",
+                                      "Keeps the header borderless. This is the default.",
                                     ],
                                   ]
                                 : item.name === "footer"

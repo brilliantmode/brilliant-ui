@@ -65,6 +65,11 @@ describe("registry", () => {
     expect(headerSource).toContain("max-md:p-3 max-md:shadow-md");
     expect(headerSource).not.toContain("gap-1 border-b border-border bg-background p-3 shadow-md");
     expect(headerSource).not.toContain("bg-background p-3 shadow-md");
+    expect(headerSource).not.toContain("border-b border-transparent");
+    expect(headerSource).not.toContain("data-[scrolled=true]:border-border");
+    expect(headerSource).toContain("border?: boolean");
+    expect(headerSource).toContain('border && "border-b border-border"');
+    expect(headerSource).toContain('data-border={border ? "visible" : "none"}');
 
     expect(footer?.kind).toBe("layout");
     expect(footerSource).toContain("export function FooterNav");

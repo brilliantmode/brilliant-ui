@@ -2633,9 +2633,9 @@ const positions = {
 const behaviors = {
   none: "",
   elevate:
-    "data-[scrolled=true]:border-border data-[scrolled=true]:bg-background/95 data-[scrolled=true]:shadow-sm",
+    "data-[scrolled=true]:bg-background/95 data-[scrolled=true]:shadow-sm",
   reveal:
-    "data-[scrolled=true]:border-border data-[scrolled=true]:bg-background/95 data-[scrolled=true]:shadow-sm data-[visibility=hidden]:-translate-y-full data-[visibility=visible]:translate-y-0",
+    "data-[scrolled=true]:bg-background/95 data-[scrolled=true]:shadow-sm data-[visibility=hidden]:-translate-y-full data-[visibility=visible]:translate-y-0",
 } as const;
 
 const navAlignments = {
@@ -2670,6 +2670,7 @@ function useHeader() {
 
 export interface HeaderProps extends HTMLAttributes<HTMLElement> {
   behavior?: keyof typeof behaviors;
+  border?: boolean;
   defaultMenuOpen?: boolean;
   onScrollStateChange?: (state: HeaderScrollState) => void;
   position?: keyof typeof positions;
@@ -2678,6 +2679,7 @@ export interface HeaderProps extends HTMLAttributes<HTMLElement> {
 
 export function Header({
   behavior = "elevate",
+  border = false,
   children,
   className = "",
   defaultMenuOpen = false,
@@ -2761,13 +2763,15 @@ export function Header({
     <HeaderContext.Provider value={value}>
       <header
         className={cx(
-          "z-40 w-full border-b border-transparent bg-background/80 text-foreground backdrop-blur",
+          "z-40 w-full bg-background/80 text-foreground backdrop-blur",
           "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transform-none motion-reduce:transition-none",
+          border && "border-b border-border",
           positions[position],
           behaviors[behavior],
           className,
         )}
         data-behavior={behavior}
+        data-border={border ? "visible" : "none"}
         data-position={position}
         data-scroll-direction={scrollState.direction}
         data-scrolled={scrollState.scrolled}
@@ -4860,6 +4864,7 @@ export const registry = [
         "Use onScrollStateChange when scroll state must change rendered content such as a logo or action set.",
         "Use HeaderContainer to constrain content width and align the brand, navigation, and actions.",
         "Set HeaderNav align to start, center, or end to position desktop navigation within the available header space.",
+        "Set border to true when the application shell needs a persistent header separator; it is off by default.",
         "Place an img, inline SVG, or framework image component inside HeaderBrand alongside optional brand text.",
         "Use HeaderMobileTrigger to expose the navigation below the mobile breakpoint.",
       ],
