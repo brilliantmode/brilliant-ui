@@ -93,6 +93,7 @@ const navGroups = [
   },
   {
     items: [
+      ["Application Shell", "#application-shell"],
       ["Foundations", "#foundations"],
       ["Blocks", "#blocks"],
       ["Theming", "#theming"],
@@ -908,6 +909,49 @@ export function Example() {
         <CommandItem>Invite teammate</CommandItem>
       </CommandList>
     </Command>
+  );
+}`,
+  "application-shell": `import {
+  ApplicationShell,
+  ApplicationShellBrand,
+  ApplicationShellFooter,
+  ApplicationShellHeader,
+  ApplicationShellMain,
+  ApplicationShellMobileTrigger,
+  ApplicationShellNav,
+  ApplicationShellNavItem,
+  ApplicationShellNavSection,
+  ApplicationShellSearch,
+  ApplicationShellSidebar,
+} from "@/components/ui/application-shell";
+
+export function Example() {
+  return (
+    <ApplicationShell>
+      <ApplicationShellSidebar>
+        <ApplicationShellBrand href="/">Brilliant</ApplicationShellBrand>
+        <ApplicationShellSearch href="/search">
+          Search docs <kbd>/</kbd>
+        </ApplicationShellSearch>
+        <ApplicationShellNav>
+          <ApplicationShellNavSection title="Main">
+            <ApplicationShellNavItem active href="/dashboard">
+              Dashboard
+            </ApplicationShellNavItem>
+            <ApplicationShellNavItem href="/settings">Settings</ApplicationShellNavItem>
+          </ApplicationShellNavSection>
+        </ApplicationShellNav>
+        <ApplicationShellFooter>workspace@company.com</ApplicationShellFooter>
+      </ApplicationShellSidebar>
+
+      <div className="min-w-0">
+        <ApplicationShellHeader>
+          <ApplicationShellMobileTrigger />
+          <h1 className="text-sm font-semibold">Dashboard</h1>
+        </ApplicationShellHeader>
+        <ApplicationShellMain>Route content goes here.</ApplicationShellMain>
+      </div>
+    </ApplicationShell>
   );
 }`,
   "empty-state": `import {
@@ -2261,6 +2305,100 @@ function ComponentMiniPreview({ name }: { name: string }) {
               {item}
             </div>
           ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (name === "application-shell") {
+    return (
+      <div className="overflow-hidden rounded-[0.5rem] border border-border bg-background shadow-sm">
+        <div className="grid min-h-[25rem] md:grid-cols-[16rem_minmax(0,1fr)]">
+          <aside className="border-b border-border bg-background p-4 md:border-b-0 md:border-r">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="grid size-9 place-items-center rounded-full border border-border bg-surface text-sm font-semibold">
+                B
+              </div>
+              <div>
+                <div className="text-sm font-semibold tracking-tight">Brilliant</div>
+                <div className="text-xs text-muted-foreground">Component system</div>
+              </div>
+            </div>
+            <div className="mb-4 flex h-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm">
+              <span aria-hidden="true">⌕</span>
+              <span className="flex-1">Search docs</span>
+              <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[0.65rem]">
+                /
+              </kbd>
+            </div>
+            <div className="grid gap-4">
+              {(
+                [
+                  ["Main", ["Dashboard", "Usage", "Settings"]],
+                  ["System", ["Components", "Theming", "CLI"]],
+                ] satisfies Array<[string, string[]]>
+              ).map(([section, items]) => (
+                <section className="grid gap-1" key={section}>
+                  <h4 className="px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                    {section}
+                  </h4>
+                  <div className="grid gap-0.5">
+                    {items.map((item, index) => (
+                      <div
+                        className={[
+                          "flex items-center gap-2 rounded-[0.375rem] px-2 py-1.5 text-sm",
+                          item === "Dashboard"
+                            ? "bg-muted font-medium text-foreground"
+                            : "text-muted-foreground",
+                        ].join(" ")}
+                        key={item}
+                      >
+                        <span
+                          className={[
+                            "grid size-5 place-items-center rounded-[0.3125rem] border text-[0.55rem]",
+                            index === 0
+                              ? "border-primary/30 bg-primary/10 text-primary"
+                              : "border-border bg-background",
+                          ].join(" ")}
+                        >
+                          □
+                        </span>
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          </aside>
+          <div className="min-w-0">
+            <header className="flex h-14 items-center justify-between border-b border-border px-4">
+              <div>
+                <div className="text-sm font-semibold">Dashboard</div>
+                <div className="text-xs text-muted-foreground">Live workspace overview</div>
+              </div>
+              <button
+                className="rounded-[0.25rem] bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground"
+                type="button"
+              >
+                New report
+              </button>
+            </header>
+            <main className="grid gap-4 p-4">
+              <div className="grid gap-4 sm:grid-cols-3">
+                {["Usage", "Members", "Revenue"].map((item) => (
+                  <div className="rounded-[0.5rem] border border-border bg-surface p-4" key={item}>
+                    <div className="text-sm font-medium">{item}</div>
+                    <div className="mt-1 text-2xl font-semibold tracking-tight">24K</div>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-[0.5rem] border border-border bg-surface p-4">
+                <div className="h-3 w-1/3 rounded bg-muted" />
+                <div className="mt-3 h-3 w-2/3 rounded bg-muted" />
+              </div>
+            </main>
+          </div>
         </div>
       </div>
     );

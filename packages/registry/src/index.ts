@@ -2406,6 +2406,268 @@ export function CommandItem({ className = "", ...props }: HTMLAttributes<HTMLDiv
 }
 `;
 
+const applicationShellSource = `"use client";
+
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import type {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
+
+interface ApplicationShellContextValue {
+  closeMobileNav: () => void;
+  mobileNavOpen: boolean;
+  openMobileNav: () => void;
+}
+
+const ApplicationShellContext = createContext<ApplicationShellContextValue | null>(null);
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+function useApplicationShell() {
+  const context = useContext(ApplicationShellContext);
+  if (!context) {
+    throw new Error("Application Shell parts must be rendered inside <ApplicationShell>.");
+  }
+  return context;
+}
+
+export interface ApplicationShellProps extends HTMLAttributes<HTMLDivElement> {
+  defaultMobileNavOpen?: boolean;
+}
+
+export function ApplicationShell({
+  children,
+  className = "",
+  defaultMobileNavOpen = false,
+  ...props
+}: ApplicationShellProps) {
+  const [mobileNavOpen, setMobileNavOpen] = useState(defaultMobileNavOpen);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileNavOpen(false);
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [mobileNavOpen]);
+
+  const value = useMemo<ApplicationShellContextValue>(
+    () => ({
+      closeMobileNav: () => setMobileNavOpen(false),
+      mobileNavOpen,
+      openMobileNav: () => setMobileNavOpen(true),
+    }),
+    [mobileNavOpen],
+  );
+
+  return (
+    <ApplicationShellContext.Provider value={value}>
+      <div
+        className={cx(
+          "min-h-screen bg-background text-foreground md:grid md:grid-cols-[17.5rem_minmax(0,1fr)]",
+          className,
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    </ApplicationShellContext.Provider>
+  );
+}
+
+export function ApplicationShellHeader({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  return (
+    <header
+      className={cx(
+        "sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/82 md:px-6",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function ApplicationShellMobileTrigger({
+  children = "☰",
+  className = "",
+  type = "button",
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement>) {
+  const { openMobileNav } = useApplicationShell();
+
+  return (
+    <button
+      aria-label="Open navigation"
+      className={cx(
+        "inline-flex size-9 shrink-0 items-center justify-center rounded-[0.25rem] border-hairline border-border bg-surface text-sm text-foreground shadow-sm",
+        "motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.98] md:hidden",
+        className,
+      )}
+      {...props}
+      onClick={(event) => {
+        props.onClick?.(event);
+        if (!event.defaultPrevented) openMobileNav();
+      }}
+      type={type}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function ApplicationShellSidebar({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  const { closeMobileNav, mobileNavOpen } = useApplicationShell();
+
+  return (
+    <>
+      <button
+        aria-hidden={!mobileNavOpen}
+        className={cx(
+          "fixed inset-0 z-40 bg-foreground/20 backdrop-blur-[2px] transition-opacity md:hidden",
+          mobileNavOpen ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+        onClick={closeMobileNav}
+        tabIndex={mobileNavOpen ? 0 : -1}
+        type="button"
+      />
+      <aside
+        aria-label="Application navigation"
+        className={cx(
+          "fixed inset-y-0 left-0 z-50 flex w-[min(17.5rem,calc(100vw-2rem))] flex-col overflow-y-auto border-r border-border bg-background px-4 py-4 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] md:sticky md:top-0 md:z-auto md:h-screen md:w-auto md:translate-x-0 md:shadow-none",
+          "motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          mobileNavOpen ? "translate-x-0" : "-translate-x-full",
+          className,
+        )}
+        {...props}
+      />
+    </>
+  );
+}
+
+export function ApplicationShellBrand({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  return (
+    <a
+      className={cx(
+        "mb-5 flex items-center gap-3 rounded-[0.375rem] text-foreground outline-none focus-visible:ring-1 focus-visible:ring-ring",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function ApplicationShellSearch({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  return (
+    <a
+      className={cx(
+        "mb-5 flex h-9 items-center gap-2 rounded-[0.375rem] border-hairline border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm",
+        "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function ApplicationShellNav({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  return <nav className={cx("grid gap-4 text-sm", className)} {...props} />;
+}
+
+export function ApplicationShellNavSection({
+  children,
+  className = "",
+  title,
+  ...props
+}: HTMLAttributes<HTMLDivElement> & { title: string }) {
+  return (
+    <section className={cx("grid gap-1", className)} {...props}>
+      <h2 className="px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        {title}
+      </h2>
+      <div className="grid gap-0.5">{children}</div>
+    </section>
+  );
+}
+
+export function ApplicationShellNavItem({
+  active = false,
+  children,
+  className = "",
+  icon,
+  onClick,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & {
+  active?: boolean;
+  icon?: ReactNode;
+}) {
+  const { closeMobileNav } = useApplicationShell();
+
+  return (
+    <a
+      aria-current={active ? "page" : undefined}
+      className={cx(
+        "group flex items-center gap-2 rounded-[0.375rem] px-2 py-1.5 leading-5 transition-colors",
+        active
+          ? "bg-muted font-medium text-foreground"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+        className,
+      )}
+      {...props}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) closeMobileNav();
+      }}
+    >
+      {icon ? (
+        <span
+          aria-hidden="true"
+          className={cx(
+            "grid size-5 shrink-0 place-items-center rounded-[0.3125rem] border-hairline transition-colors",
+            active
+              ? "border-primary/30 bg-primary/10 text-primary"
+              : "border-border bg-background text-muted-foreground",
+          )}
+        >
+          {icon}
+        </span>
+      ) : null}
+      <span className="min-w-0 truncate">{children}</span>
+    </a>
+  );
+}
+
+export function ApplicationShellMain({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  return <main className={cx("min-w-0 px-4 py-6 md:px-8 lg:px-10", className)} {...props} />;
+}
+
+export function ApplicationShellFooter({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  return (
+    <footer
+      className={cx(
+        "mt-auto border-t border-border pt-4 text-sm text-muted-foreground",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+`;
+
 export const registry = [
   {
     name: "button",
@@ -3288,6 +3550,55 @@ export const registry = [
       accessibility: ["Uses nav semantics.", "Links remain real anchors."],
       usage: ["Use for top bars and side sections."],
       avoid: ["Do not use buttons for navigation destinations."],
+    },
+  },
+  {
+    name: "application-shell",
+    title: "Application Shell",
+    description:
+      "A responsive app frame with header, mobile sidebar, navigation, main, and footer slots.",
+    kind: "layout",
+    dependencies: [],
+    registryDependencies: [],
+    files: [
+      {
+        path: "application-shell.tsx",
+        content: applicationShellSource,
+        target: "ui/application-shell.tsx",
+      },
+    ],
+    metadata: {
+      purpose:
+        "Provides the outer frame for SaaS apps, dashboards, internal tools, and AI workspaces.",
+      slots: [
+        "root",
+        "header",
+        "mobile-trigger",
+        "sidebar",
+        "brand",
+        "search",
+        "nav",
+        "nav-section",
+        "nav-item",
+        "main",
+        "footer",
+      ],
+      accessibility: [
+        "Sidebar navigation uses nav and anchor semantics.",
+        "Mobile navigation closes with Escape and backdrop click.",
+        "Active navigation items expose aria-current.",
+        "The mobile trigger is a native button with visible focus.",
+      ],
+      usage: [
+        "Use as the top-level frame for authenticated product screens.",
+        "Keep primary navigation in ApplicationShellSidebar.",
+        "Use ApplicationShellHeader for page actions and the mobile trigger.",
+        "Use ApplicationShellMain for route/page content.",
+      ],
+      avoid: [
+        "Do not use for marketing pages or one-off landing layouts.",
+        "Do not put every possible destination in the primary sidebar.",
+      ],
     },
   },
   {
