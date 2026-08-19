@@ -108,14 +108,15 @@ const buttonSource = `import type { ButtonHTMLAttributes } from "react";
 
 const variants = {
   primary:
-    "border border-foreground bg-foreground text-background shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-background/30 before:content-[''] hover:-translate-y-0.5 hover:shadow-md active:translate-y-0",
+    "border border-foreground bg-foreground text-background shadow-[3px_3px_0_var(--brilliant-border)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_var(--brilliant-border)] active:translate-x-0 active:translate-y-0 active:shadow-[1px_1px_0_var(--brilliant-border)]",
   secondary:
-    "border border-border bg-surface text-foreground shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-background/80 before:content-[''] hover:-translate-y-0.5 hover:bg-muted hover:shadow-md active:translate-y-0",
+    "border border-foreground bg-surface text-foreground shadow-[3px_3px_0_var(--brilliant-border)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:bg-muted hover:shadow-[5px_5px_0_var(--brilliant-border)] active:translate-x-0 active:translate-y-0 active:shadow-[1px_1px_0_var(--brilliant-border)]",
   outline:
-    "border border-border bg-background text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-border)] hover:border-foreground hover:bg-muted",
-  ghost: "text-foreground hover:bg-muted",
+    "border border-foreground bg-background text-foreground shadow-[2px_2px_0_var(--brilliant-border)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:bg-muted hover:shadow-[4px_4px_0_var(--brilliant-border)] active:translate-x-0 active:translate-y-0 active:shadow-none",
+  ghost:
+    "border border-transparent text-foreground hover:border-border hover:bg-muted active:translate-y-px",
   critical:
-    "border border-critical bg-critical text-critical-foreground shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-critical-foreground/30 before:content-[''] hover:-translate-y-0.5 active:translate-y-0",
+    "border border-critical bg-critical text-critical-foreground shadow-[3px_3px_0_var(--brilliant-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_var(--brilliant-foreground)] active:translate-x-0 active:translate-y-0 active:shadow-[1px_1px_0_var(--brilliant-foreground)]",
 } as const;
 
 const sizes = {
@@ -140,7 +141,7 @@ export function Button({
   return (
     <button
       className={[
-        "relative isolate inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden rounded-[0.375rem] font-medium",
+        "relative isolate inline-flex shrink-0 items-center justify-center gap-2 rounded-[0.25rem] font-semibold tracking-[-0.01em]",
         "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         "focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
