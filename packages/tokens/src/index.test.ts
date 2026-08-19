@@ -22,7 +22,8 @@ describe("design tokens", () => {
   });
 
   it("uses a native crisp UI font stack with a stable mono", () => {
-    expect(typography.fontFamily.sans).toContain("system-ui");
+    expect(typography.fontFamily.sans).toContain("-apple-system");
+    expect(typography.fontFamily.sans).toContain("BlinkMacSystemFont");
     expect(typography.fontFamily.sans).toContain("Segoe UI");
     expect(typography.fontFamily.mono).toContain("IBM Plex Mono");
   });
@@ -36,6 +37,8 @@ describe("design tokens", () => {
 
   it("exports CSS, JSON, and Tailwind artifacts from the token source", () => {
     expect(tokenArtifacts.css).toContain("--brilliant-background");
+    expect(tokenArtifacts.css).toContain("-webkit-font-smoothing: antialiased");
+    expect(tokenArtifacts.css).toContain("font-synthesis-weight: none");
     expect(JSON.parse(tokenArtifacts.json)).toMatchObject({ typography });
     expect(tokenArtifacts.tailwindTheme.colors.primary).toBe("var(--brilliant-primary)");
   });

@@ -6,6 +6,7 @@ import { checksumContent, resolveRegistryDependencies } from "@brilliant-ui/regi
 const CONFIG_FILE = "brilliant-ui.json";
 const MANIFEST_FILE = ".brilliant-ui/manifest.json";
 const SHADCN_CONFIG_FILE = "components.json";
+const TOKEN_STYLES_IMPORT = '@import "@brilliant-ui/tokens/styles.css";';
 
 export interface CommandContext {
   readonly cwd: string;
@@ -95,6 +96,33 @@ async function writeJsonForContext(
   await writeJson(path, value);
 }
 
+async function ensureTokenStylesImport(cssPath: string, context: CommandContext): Promise<void> {
+  const outputPath = resolve(context.cwd, cssPath);
+  const projectRelativePath = relative(resolve(context.cwd), outputPath);
+  if (projectRelativePath.startsWith("..") || isAbsolute(projectRelativePath)) {
+    throw new Error(`Configured CSS path "${cssPath}" is outside the project.`);
+  }
+
+  const existing = (await exists(outputPath)) ? await readFile(outputPath, "utf8") : "";
+  if (existing.includes(TOKEN_STYLES_IMPORT)) {
+    context.log(`Found Brilliant token import in ${cssPath}`);
+    return;
+  }
+
+  const nextContent = existing.trimStart().length
+    ? `${TOKEN_STYLES_IMPORT}\n${existing}`
+    : `${TOKEN_STYLES_IMPORT}\n`;
+
+  if (context.dryRun) {
+    context.log(`Would add Brilliant token import to ${cssPath}`);
+    return;
+  }
+
+  await mkdir(dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, nextContent, "utf8");
+  context.log(`${existing ? "Updated" : "Created"} ${cssPath} with Brilliant token import`);
+}
+
 function aliasRoot(alias: string): string {
   if (!alias.startsWith("@/")) {
     throw new Error(
@@ -158,9 +186,10 @@ export async function initProject(context: CommandContext): Promise<void> {
   } satisfies BrilliantConfig;
 
   await writeJsonForContext(configPath, config, context);
+  await ensureTokenStylesImport(config.css, context);
   context.log(`${context.dryRun ? "Would create" : "Created"} ${CONFIG_FILE}`);
   if (detected.shadcn.found) context.log(`Mapped ${SHADCN_CONFIG_FILE} aliases.`);
-  context.log("Next: import @brilliant-ui/tokens/styles.css from your global stylesheet.");
+  context.log("Typography: crisp system font rendering is enabled through Brilliant tokens.");
 }
 
 export async function addItems(names: readonly string[], context: CommandContext): Promise<void> {

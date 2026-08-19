@@ -64,7 +64,7 @@ export const spacing = {
 
 export const typography = {
   fontFamily: {
-    sans: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    sans: '-apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     mono: '"IBM Plex Mono", ui-monospace, SFMono-Regular, monospace',
   },
   fontSize: {
@@ -261,6 +261,22 @@ export const tokenArtifacts = {
     `  --brilliant-control-height: ${density.comfortable.controlHeight};`,
     `  --brilliant-control-padding-x: ${density.comfortable.controlPaddingX};`,
     `  --brilliant-control-gap: ${density.comfortable.controlGap};`,
+    "}",
+    "",
+    "body {",
+    "  -moz-osx-font-smoothing: grayscale;",
+    "  -webkit-font-smoothing: antialiased;",
+    "  font-family: var(--brilliant-font-sans);",
+    '  font-feature-settings: "kern", "liga", "case";',
+    "  font-optical-sizing: auto;",
+    "  font-synthesis-weight: none;",
+    "  font-weight: 400;",
+    "  text-rendering: optimizeLegibility;",
+    "}",
+    "",
+    ":where(h1, h2, h3, [data-brilliant-heading]) {",
+    "  font-weight: 600;",
+    "  letter-spacing: -0.02em;",
     "}",
     "",
     '.dark, [data-theme="dark"] {',
