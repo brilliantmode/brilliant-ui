@@ -10,6 +10,7 @@ const navItems = [
   ["Components", "#components"],
   ["Button", "#button"],
   ["Badge", "#badge"],
+  ["Avatar", "#avatar"],
   ["Card", "#card"],
   ["Text", "#text"],
   ["Input", "#input"],
@@ -23,6 +24,7 @@ const navItems = [
   ["Skeleton", "#skeleton"],
   ["Progress", "#progress"],
   ["Spinner", "#spinner"],
+  ["Empty State", "#empty-state"],
   ["Foundations", "#foundations"],
   ["Blocks", "#blocks"],
   ["Theming", "#theming"],
@@ -124,6 +126,22 @@ const usageByComponent = {
 
 export function Example() {
   return <Badge variant="primary">Live</Badge>;
+}`,
+  avatar: `import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  AvatarStatus,
+} from "@/components/ui/avatar";
+
+export function Example() {
+  return (
+    <Avatar size="md">
+      <AvatarFallback>NR</AvatarFallback>
+      <AvatarImage alt="Nirvana" src="/avatars/nirvana.png" />
+      <AvatarStatus status="online" />
+    </Avatar>
+  );
 }`,
   card: `import {
   Card,
@@ -236,6 +254,26 @@ export function Example() {
 export function Example() {
   return <Spinner label="Saving settings" size="md" variant="default" />;
 }`,
+  "empty-state": `import {
+  EmptyState,
+  EmptyStateActions,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/ui/empty-state";
+
+export function Example() {
+  return (
+    <EmptyState variant="surface">
+      <EmptyStateIcon>⌘</EmptyStateIcon>
+      <EmptyStateTitle>No API keys</EmptyStateTitle>
+      <EmptyStateDescription>
+        Create a key to connect this workspace to your automation pipeline.
+      </EmptyStateDescription>
+      <EmptyStateActions>{/* Button or link actions */}</EmptyStateActions>
+    </EmptyState>
+  );
+}`,
 } as const;
 
 function Badge({ children, tone = "muted" }: { children: ReactNode; tone?: "muted" | "ready" }) {
@@ -336,6 +374,37 @@ function ComponentMiniPreview({ name }: { name: string }) {
         <span className="rounded-[0.25rem] border border-border bg-muted px-2 py-1 text-xs font-medium">
           Enterprise
         </span>
+      </div>
+    );
+  }
+
+  if (name === "avatar") {
+    return (
+      <div className="flex items-end gap-4">
+        {[
+          ["sm", "NR", "size-7 text-xs", "size-2"],
+          ["md", "BU", "size-9 text-sm", "size-2.5"],
+          ["lg", "AI", "size-11 text-base", "size-3"],
+          ["xl", "UF", "size-14 text-lg", "size-3.5"],
+        ].map(([label, initials, rootSize, statusSize]) => (
+          <div
+            className={[
+              "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted font-medium uppercase text-muted-foreground shadow-[inset_0_0_0_0.5px_var(--brilliant-control-border)]",
+              rootSize,
+            ].join(" ")}
+            key={label}
+          >
+            {initials}
+            <span
+              aria-label="online"
+              className={[
+                "absolute right-0 bottom-0 rounded-full border-2 border-background bg-primary shadow-sm",
+                statusSize,
+              ].join(" ")}
+              role="status"
+            />
+          </div>
+        ))}
       </div>
     );
   }
@@ -633,6 +702,31 @@ function ComponentMiniPreview({ name }: { name: string }) {
             <span>{label}</span>
           </span>
         ))}
+      </div>
+    );
+  }
+
+  if (name === "empty-state") {
+    return (
+      <div className="grid justify-items-center rounded-[0.5rem] border border-border bg-surface p-6 text-center motion-safe:animate-enter motion-reduce:animate-none">
+        <div
+          aria-hidden="true"
+          className="mb-3 grid size-10 place-items-center rounded-full bg-primary/10 text-primary shadow-[inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_20%,transparent)]"
+        >
+          ⌘
+        </div>
+        <h3 className="text-base font-semibold tracking-tight">No API keys</h3>
+        <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
+          Create a key to connect this workspace to your automation pipeline.
+        </p>
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
+          <button
+            className={`${buttonVariants[0][2]} h-8 rounded-[0.375rem] px-3 text-xs font-medium`}
+            type="button"
+          >
+            Create key
+          </button>
+        </div>
       </div>
     );
   }
@@ -1026,7 +1120,8 @@ export function Example() {
                   item.name === "separator" ||
                   item.name === "skeleton" ||
                   item.name === "progress" ||
-                  item.name === "spinner" ? (
+                  item.name === "spinner" ||
+                  item.name === "empty-state" ? (
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Variants</h3>
                       <div className="overflow-auto rounded-lg border border-border">
@@ -1076,27 +1171,33 @@ export function Example() {
                                             ["muted", "Secondary loading next to text."],
                                             ["critical", "Loading tied to risky/error recovery."],
                                           ]
-                                        : item.name === "skeleton"
+                                        : item.name === "empty-state"
                                           ? [
-                                              ["surface", "Default loading placeholder."],
-                                              [
-                                                "raised",
-                                                "Slightly stronger placeholder hierarchy.",
-                                              ],
-                                              [
-                                                "primary",
-                                                "Branded loading placeholder, used sparingly.",
-                                              ],
+                                              ["surface", "Default empty region panel."],
+                                              ["muted", "Lower-emphasis empty region."],
+                                              ["ghost", "Use inside an already bordered surface."],
                                             ]
-                                          : [
-                                              ["default", "Normal UI copy."],
-                                              ["muted", "Secondary or supporting copy."],
-                                              ["glow", "Premium, active, or AI-ready emphasis."],
-                                              [
-                                                "shimmer",
-                                                "Generating, syncing, or live processing text.",
-                                              ],
-                                            ]
+                                          : item.name === "skeleton"
+                                            ? [
+                                                ["surface", "Default loading placeholder."],
+                                                [
+                                                  "raised",
+                                                  "Slightly stronger placeholder hierarchy.",
+                                                ],
+                                                [
+                                                  "primary",
+                                                  "Branded loading placeholder, used sparingly.",
+                                                ],
+                                              ]
+                                            : [
+                                                ["default", "Normal UI copy."],
+                                                ["muted", "Secondary or supporting copy."],
+                                                ["glow", "Premium, active, or AI-ready emphasis."],
+                                                [
+                                                  "shimmer",
+                                                  "Generating, syncing, or live processing text.",
+                                                ],
+                                              ]
                             ).map(([variant, use]) => (
                               <tr className="border-b border-border last:border-b-0" key={variant}>
                                 <td className="px-4 py-3 font-mono text-xs">{variant}</td>
@@ -1147,6 +1248,11 @@ export function Example() {
                           Use <code>label</code> to describe the loading operation for screen reader
                           users. Prefer <code>variant=&quot;muted&quot;</code> beside visible copy.
                         </p>
+                      ) : item.name === "empty-state" ? (
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Use <code>variant=&quot;ghost&quot;</code> when the parent already has a
+                          visible panel. Keep actions concrete and limited.
+                        </p>
                       ) : (
                         <p className="text-sm leading-6 text-muted-foreground">
                           Use <code>variant=&quot;shimmer&quot;</code> for short live/processing
@@ -1194,9 +1300,11 @@ export function Example() {
                   ) : null}
 
                   {item.name === "checkbox" ||
+                  item.name === "avatar" ||
                   item.name === "radio-group" ||
                   item.name === "progress" ||
-                  item.name === "spinner" ? (
+                  item.name === "spinner" ||
+                  item.name === "empty-state" ? (
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Sizes</h3>
                       <div className="overflow-auto rounded-lg border border-border">
@@ -1208,32 +1316,45 @@ export function Example() {
                             </tr>
                           </thead>
                           <tbody>
-                            {(item.name === "radio-group"
+                            {(item.name === "avatar"
                               ? [
-                                  ["sm", "Dense settings panels and compact filters."],
-                                  ["md", "Default form rows and preference groups."],
-                                  ["lg", "Prominent plan, permission, or approval choices."],
+                                  ["sm", "Dense tables, comments, and compact member lists."],
+                                  ["md", "Default identity display."],
+                                  ["lg", "Profile rows and detail panels."],
+                                  ["xl", "Prominent profile headers."],
                                 ]
-                              : item.name === "progress"
+                              : item.name === "radio-group"
                                 ? [
-                                    ["sm", "Subtle inline or table-level progress."],
-                                    ["md", "Default task progress."],
-                                    ["lg", "Prominent page or modal progress."],
+                                    ["sm", "Dense settings panels and compact filters."],
+                                    ["md", "Default form rows and preference groups."],
+                                    ["lg", "Prominent plan, permission, or approval choices."],
                                   ]
-                                : item.name === "spinner"
+                                : item.name === "progress"
                                   ? [
-                                      ["sm", "Inline button and table-cell loading."],
-                                      ["md", "Default compact loading status."],
-                                      ["lg", "Prominent empty-state or page-region loading."],
+                                      ["sm", "Subtle inline or table-level progress."],
+                                      ["md", "Default task progress."],
+                                      ["lg", "Prominent page or modal progress."],
                                     ]
-                                  : [
-                                      ["sm", "Dense tables and compact filter menus."],
-                                      ["md", "Default form rows and settings lists."],
-                                      [
-                                        "lg",
-                                        "Prominent settings rows, approvals, and touch-friendly UI.",
-                                      ],
-                                    ]
+                                  : item.name === "spinner"
+                                    ? [
+                                        ["sm", "Inline button and table-cell loading."],
+                                        ["md", "Default compact loading status."],
+                                        ["lg", "Prominent empty-state or page-region loading."],
+                                      ]
+                                    : item.name === "empty-state"
+                                      ? [
+                                          ["sm", "Compact empty rows and side panels."],
+                                          ["md", "Default empty region."],
+                                          ["lg", "Primary page or modal empty state."],
+                                        ]
+                                      : [
+                                          ["sm", "Dense tables and compact filter menus."],
+                                          ["md", "Default form rows and settings lists."],
+                                          [
+                                            "lg",
+                                            "Prominent settings rows, approvals, and touch-friendly UI.",
+                                          ],
+                                        ]
                             ).map(([size, use]) => (
                               <tr className="border-b border-border last:border-b-0" key={size}>
                                 <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>

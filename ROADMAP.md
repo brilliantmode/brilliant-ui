@@ -157,11 +157,11 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 - [ ] Select and combobox.
 - [ ] Dialog, alert dialog, drawer, and sheet.
 - [ ] Popover, tooltip, hover card, and context menu.
-- [ ] Badge, avatar, separator, and aspect ratio. Badge and separator shipped; avatar and aspect ratio remain.
+- [ ] Badge, avatar, separator, and aspect ratio. Badge, avatar, and separator shipped; aspect ratio remains.
 - [ ] Tabs, accordion, collapsible, and carousel.
 - [ ] Breadcrumb, navigation menu, menubar, and pagination.
 - [ ] Toast and notification region.
-- [ ] Progress, spinner, skeleton, and empty state. Progress, spinner, and skeleton shipped; empty state remains.
+- [x] Progress, spinner, skeleton, and empty state.
 - [ ] Calendar, date input, and command palette.
 
 ### Near-term primitive backlog
@@ -169,7 +169,7 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 - [x] Radio group with native keyboard and form semantics.
 - [ ] Slider with range support, marks, disabled state, and keyboard control.
 - [x] Progress and spinner with determinate, indeterminate, and reduced-motion states.
-- [ ] Avatar with fallback initials, image loading/error states, and status presence.
+- [x] Avatar with fallback initials, image loading/error states, and status presence.
 - [ ] Tooltip and popover using Radix primitives.
 - [ ] Dialog and alert dialog using Radix primitives.
 - [ ] Select and combobox using Radix/command foundations.

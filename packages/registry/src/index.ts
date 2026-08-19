@@ -184,6 +184,117 @@ export function Badge({ className = "", variant = "neutral", ...props }: BadgePr
 }
 `;
 
+const avatarSource = `import { useState } from "react";
+import type { HTMLAttributes, ImgHTMLAttributes } from "react";
+
+const sizes = {
+  sm: {
+    root: "size-7 text-xs",
+    status: "size-2",
+  },
+  md: {
+    root: "size-9 text-sm",
+    status: "size-2.5",
+  },
+  lg: {
+    root: "size-11 text-base",
+    status: "size-3",
+  },
+  xl: {
+    root: "size-14 text-lg",
+    status: "size-3.5",
+  },
+} as const;
+
+const statuses = {
+  online: "bg-primary",
+  busy: "bg-critical",
+  offline: "bg-muted-foreground",
+} as const;
+
+export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
+  size?: keyof typeof sizes;
+}
+
+export function Avatar({ className = "", size = "md", ...props }: AvatarProps) {
+  return (
+    <div
+      className={[
+        "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted text-muted-foreground shadow-[inset_0_0_0_0.5px_var(--brilliant-control-border)]",
+        "motion-safe:transition-[box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        sizes[size].root,
+        className,
+      ].join(" ")}
+      data-size={size}
+      {...props}
+    />
+  );
+}
+
+export interface AvatarImageProps extends ImgHTMLAttributes<HTMLImageElement> {}
+
+export function AvatarImage({ className = "", onError, ...props }: AvatarImageProps) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) return null;
+
+  return (
+    <img
+      className={[
+        "absolute inset-0 size-full object-cover motion-safe:animate-enter motion-reduce:animate-none",
+        className,
+      ].join(" ")}
+      onError={(event) => {
+        setFailed(true);
+        onError?.(event);
+      }}
+      {...props}
+    />
+  );
+}
+
+export interface AvatarFallbackProps extends HTMLAttributes<HTMLSpanElement> {}
+
+export function AvatarFallback({ className = "", ...props }: AvatarFallbackProps) {
+  return (
+    <span
+      className={[
+        "grid size-full place-items-center font-medium uppercase tracking-[-0.01em]",
+        className,
+      ].join(" ")}
+      {...props}
+    />
+  );
+}
+
+export interface AvatarStatusProps extends HTMLAttributes<HTMLSpanElement> {
+  size?: keyof typeof sizes;
+  status?: keyof typeof statuses;
+}
+
+export function AvatarStatus({
+  className = "",
+  size = "md",
+  status = "online",
+  ...props
+}: AvatarStatusProps) {
+  return (
+    <span
+      aria-label={status}
+      className={[
+        "absolute right-0 bottom-0 rounded-full border-2 border-background shadow-sm",
+        "motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-spring)] motion-reduce:transition-none",
+        statuses[status],
+        sizes[size].status,
+        className,
+      ].join(" ")}
+      role="status"
+      {...props}
+    />
+  );
+}
+`;
+
 const textSource = `import type { CSSProperties, ElementType, HTMLAttributes } from "react";
 
 const variants = {
@@ -719,6 +830,82 @@ export function AlertDescription({ className = "", ...props }: HTMLAttributes<HT
 }
 `;
 
+const emptyStateSource = `import type { HTMLAttributes, ReactNode } from "react";
+
+const variants = {
+  surface: "border-border bg-surface",
+  muted: "border-border bg-muted/50",
+  ghost: "border-transparent bg-transparent",
+} as const;
+
+const sizes = {
+  sm: "p-4",
+  md: "p-6",
+  lg: "p-8",
+} as const;
+
+export interface EmptyStateProps extends HTMLAttributes<HTMLDivElement> {
+  size?: keyof typeof sizes;
+  variant?: keyof typeof variants;
+}
+
+export function EmptyState({
+  className = "",
+  size = "md",
+  variant = "surface",
+  ...props
+}: EmptyStateProps) {
+  return (
+    <div
+      className={[
+        "grid justify-items-center rounded-[0.5rem] border-hairline text-center motion-safe:animate-enter motion-reduce:animate-none",
+        sizes[size],
+        variants[variant],
+        className,
+      ].join(" ")}
+      {...props}
+    />
+  );
+}
+
+export interface EmptyStateIconProps extends HTMLAttributes<HTMLDivElement> {
+  children?: ReactNode;
+}
+
+export function EmptyStateIcon({ className = "", ...props }: EmptyStateIconProps) {
+  return (
+    <div
+      className={[
+        "mb-3 grid size-10 place-items-center rounded-full bg-primary/10 text-primary shadow-[inset_0_0_0_0.5px_color-mix(in_oklch,currentColor_20%,transparent)]",
+        className,
+      ].join(" ")}
+      aria-hidden="true"
+      {...props}
+    />
+  );
+}
+
+export function EmptyStateTitle({ className = "", ...props }: HTMLAttributes<HTMLHeadingElement>) {
+  return <h3 className={["text-base font-semibold tracking-tight", className].join(" ")} {...props} />;
+}
+
+export function EmptyStateDescription({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLParagraphElement>) {
+  return (
+    <p
+      className={["mt-2 max-w-sm text-sm leading-6 text-muted-foreground", className].join(" ")}
+      {...props}
+    />
+  );
+}
+
+export function EmptyStateActions({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["mt-4 flex flex-wrap justify-center gap-2", className].join(" ")} {...props} />;
+}
+`;
+
 const separatorSource = `import type { HTMLAttributes } from "react";
 
 const variants = {
@@ -975,6 +1162,30 @@ export const registry = [
       accessibility: ["Uses readable text by default.", "Avoid color-only meaning."],
       usage: ["Use one or two words.", "Pair semantic color with clear copy."],
       avoid: ["Do not use for primary actions.", "Do not use long sentences."],
+    },
+  },
+  {
+    name: "avatar",
+    title: "Avatar",
+    description: "A user/object avatar with image fallback, size presets, and status presence.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "avatar.tsx", content: avatarSource, target: "ui/avatar.tsx" }],
+    metadata: {
+      purpose: "Represents a person, team, workspace, or object identity.",
+      slots: ["root", "image", "fallback", "status"],
+      accessibility: [
+        "Use meaningful alt text for profile images or empty alt for decorative avatars.",
+        "Fallback text remains visible when the image fails.",
+        "Status exposes a short status label.",
+      ],
+      usage: [
+        "Use initials as fallback for people and short labels for workspaces.",
+        "Use status only when presence is meaningful.",
+        "Keep avatar sizes consistent inside dense lists.",
+      ],
+      avoid: ["Do not rely on color alone to identify a person or state."],
     },
   },
   {
@@ -1263,6 +1474,30 @@ export const registry = [
         "Use muted when the spinner is secondary to nearby loading copy.",
       ],
       avoid: ["Do not use for long-running work without descriptive progress text."],
+    },
+  },
+  {
+    name: "empty-state",
+    title: "Empty State",
+    description: "A calm empty-region primitive for no data, no results, and first-run states.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "empty-state.tsx", content: emptyStateSource, target: "ui/empty-state.tsx" }],
+    metadata: {
+      purpose: "Explains why a region is empty and offers a useful next action.",
+      slots: ["root", "icon", "title", "description", "actions"],
+      accessibility: [
+        "Uses semantic headings authored by the consumer.",
+        "Actions remain real buttons or links.",
+        "Entry motion is disabled for reduced-motion users.",
+      ],
+      usage: [
+        "Use title and description to explain the empty state clearly.",
+        "Use actions only when there is a meaningful next step.",
+        "Use ghost inside already bordered parent surfaces.",
+      ],
+      avoid: ["Do not use empty states as marketing panels inside component docs."],
     },
   },
 ] as const satisfies readonly RegistryItem[];
