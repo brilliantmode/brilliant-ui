@@ -2400,51 +2400,30 @@ function DocsNavGroup({
   group: NavGroup;
   onNavigate: (() => void) | undefined;
 }) {
-  const isActiveGroup = group.items.some(([, href]) => href === activeHref);
-
   return (
-    <section
-      className={[
-        "overflow-hidden rounded-[0.375rem] border transition-colors",
-        isActiveGroup ? "border-primary/35 bg-primary/[0.035]" : "border-border bg-surface/70",
-      ].join(" ")}
-    >
-      <div
-        className={[
-          "flex items-center justify-between gap-3 border-b px-3 py-2",
-          isActiveGroup ? "border-primary/20 bg-primary/10" : "border-border bg-muted/35",
-        ].join(" ")}
-      >
-        <h2 className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          {group.label}
-        </h2>
-        <span
-          className={[
-            "rounded-full px-1.5 py-0.5 text-[0.62rem] font-medium tabular-nums",
-            isActiveGroup ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground",
-          ].join(" ")}
-        >
-          {group.items.length}
-        </span>
-      </div>
-      <div className="py-1">
+    <section className="pb-5 last:pb-0">
+      <h2 className="mb-2 px-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        {group.label}
+      </h2>
+      <ul className="space-y-0.5 border-l border-border/80 pl-3">
         {group.items.map(([label, href]) => (
-          <a
-            aria-current={activeHref === href ? "location" : undefined}
-            className={[
-              "relative block px-3 py-1.5 text-[0.84rem] leading-5 transition-colors",
-              activeHref === href
-                ? "bg-primary/10 font-medium text-foreground before:absolute before:bottom-1.5 before:left-0 before:top-1.5 before:w-0.5 before:rounded-r-full before:bg-primary"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
-            ].join(" ")}
-            href={href}
-            key={href}
-            onClick={onNavigate}
-          >
-            {label}
-          </a>
+          <li key={href}>
+            <a
+              aria-current={activeHref === href ? "location" : undefined}
+              className={[
+                "relative block rounded-[0.25rem] px-2 py-1.5 text-[0.86rem] leading-5 transition-colors",
+                activeHref === href
+                  ? "bg-primary/10 font-medium text-foreground before:absolute before:bottom-1.5 before:-left-[0.8125rem] before:top-1.5 before:w-px before:bg-primary"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
+              ].join(" ")}
+              href={href}
+              onClick={onNavigate}
+            >
+              {label}
+            </a>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }
@@ -2455,7 +2434,7 @@ function DocsNav({ activeHref, onNavigate }: { activeHref: NavHref; onNavigate?:
       <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
         Docs
       </p>
-      <div className="space-y-3">
+      <div>
         {navGroups.map((group) => (
           <DocsNavGroup
             activeHref={activeHref}
