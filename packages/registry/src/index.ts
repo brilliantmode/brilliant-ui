@@ -541,15 +541,15 @@ export function Switch({
         className={[
           "pointer-events-none h-6 w-10 rounded-full border-hairline border-transparent bg-secondary shadow-inner",
           "motion-safe:transition-[background-color,border-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
-          "peer-checked:bg-primary peer-focus-visible:ring-1 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-0 peer-disabled:opacity-50",
+          "peer-checked:bg-primary peer-checked:shadow-[inset_0_1px_0_color-mix(in_oklch,white_20%,transparent),0_0_0_1px_color-mix(in_oklch,var(--brilliant-primary)_14%,transparent)] peer-focus-visible:ring-1 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-0 peer-disabled:opacity-50",
         ].join(" ")}
       />
       <span
         aria-hidden="true"
         className={[
-          "pointer-events-none absolute left-0.5 size-5 rounded-full bg-surface shadow-sm",
-          "motion-safe:transition-[transform,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
-          "peer-hover:shadow-md peer-active:scale-95 peer-checked:translate-x-4",
+          "pointer-events-none absolute left-0.5 size-5 rounded-full bg-surface shadow-sm will-change-transform",
+          "motion-safe:transition-[transform,box-shadow] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-spring)] motion-reduce:transition-none",
+          "peer-hover:shadow-md peer-active:scale-x-110 peer-active:scale-y-90 peer-checked:translate-x-4 peer-checked:shadow-[0_1px_3px_oklch(0_0_0/0.14)]",
         ].join(" ")}
       />
     </span>

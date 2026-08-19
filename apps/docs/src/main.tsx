@@ -289,8 +289,8 @@ function SwitchPreview() {
           role="switch"
           type="checkbox"
         />
-        <span className="pointer-events-none h-6 w-10 rounded-full border border-transparent bg-secondary shadow-inner transition-[background-color,border-color,box-shadow] duration-[var(--brilliant-duration-fast)] peer-checked:bg-primary peer-focus-visible:ring-1 peer-focus-visible:ring-ring" />
-        <span className="pointer-events-none absolute left-0.5 size-5 rounded-full bg-surface shadow-sm transition-[transform,box-shadow] duration-[var(--brilliant-duration-fast)] peer-active:scale-95 peer-checked:translate-x-4" />
+        <span className="pointer-events-none h-6 w-10 rounded-full border border-transparent bg-secondary shadow-inner transition-[background-color,border-color,box-shadow] duration-[var(--brilliant-duration-fast)] peer-checked:bg-primary peer-checked:shadow-[inset_0_1px_0_color-mix(in_oklch,white_20%,transparent),0_0_0_1px_color-mix(in_oklch,var(--brilliant-primary)_14%,transparent)] peer-focus-visible:ring-1 peer-focus-visible:ring-ring" />
+        <span className="pointer-events-none absolute left-0.5 size-5 rounded-full bg-surface shadow-sm transition-[transform,box-shadow] duration-[var(--brilliant-duration-normal)] ease-[var(--brilliant-ease-spring)] will-change-transform peer-active:scale-x-110 peer-active:scale-y-90 peer-checked:translate-x-4 peer-checked:shadow-[0_1px_3px_oklch(0_0_0/0.14)]" />
       </span>
       <span className="text-sm">{enabled ? "Enabled" : "Disabled"}</span>
     </label>
@@ -1050,7 +1050,9 @@ export function Example() {
                           ? "Interactive cards lift by 1px, increase elevation, soften the border toward primary, and compress to 99.5% on press. The beam variant adds a rotating conic border animation and disables it for reduced-motion users."
                           : item.name === "text"
                             ? "Glow adds a token-colored premium aura. Shimmer animates a tokenized gradient across the glyphs and falls back to static text for reduced-motion users."
-                            : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
+                            : item.name === "switch"
+                              ? "The thumb uses a spring-timed snap, stretches slightly on press, and the active track gains a subtle inset highlight. Motion is disabled for reduced-motion users."
+                              : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
                       </div>
                     </div>
                   </div>
