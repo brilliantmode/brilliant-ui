@@ -70,6 +70,8 @@ const topNavItems = [
   ["CLI", "#cli"],
 ] as const;
 
+type NavHref = (typeof navItems)[number][1];
+
 const buttonVariants = [
   [
     "Default",
@@ -2346,9 +2348,203 @@ function ComponentMiniPreview({ name }: { name: string }) {
   );
 }
 
+function DocsNav({ activeHref, onNavigate }: { activeHref: NavHref; onNavigate?: () => void }) {
+  return (
+    <nav aria-label="Documentation" className="space-y-1 text-sm">
+      <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        Docs
+      </p>
+      {navItems.map(([label, href]) => (
+        <a
+          aria-current={activeHref === href ? "location" : undefined}
+          className={[
+            "block rounded-[0.25rem] border-l px-3 py-2 transition-colors",
+            activeHref === href
+              ? "border-primary bg-primary/10 text-foreground"
+              : "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground",
+          ].join(" ")}
+          href={href}
+          key={href}
+          onClick={onNavigate}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+  );
+}
+
+function isTopNavActive(activeHref: NavHref, topHref: (typeof topNavItems)[number][1]) {
+  if (topHref === "#getting-started") {
+    return (
+      activeHref === "#getting-started" ||
+      activeHref === "#why-brilliant" ||
+      activeHref === "#shadcn"
+    );
+  }
+
+  if (topHref === "#components") {
+    return (
+      activeHref === "#components" ||
+      registry.some((item) => activeHref === (`#${item.name}` as NavHref))
+    );
+  }
+
+  return activeHref === topHref;
+}
+
+function AppHeader({ activeHref, onMenuClick }: { activeHref: NavHref; onMenuClick: () => void }) {
+  return (
+    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/82">
+      <div className="mx-auto flex h-14 max-w-screen-2xl items-center gap-3 px-4 md:px-6">
+        <button
+          aria-controls="mobile-docs-nav"
+          aria-label="Open documentation navigation"
+          className="inline-flex size-9 items-center justify-center rounded-[0.25rem] border border-border bg-surface text-foreground transition-colors hover:bg-muted md:hidden"
+          onClick={onMenuClick}
+          type="button"
+        >
+          <span aria-hidden="true" className="text-lg leading-none">
+            ☰
+          </span>
+        </button>
+        <a className="shrink-0 whitespace-nowrap text-sm font-semibold tracking-tight" href="/">
+          Brilliant UI
+        </a>
+        <nav
+          aria-label="Primary"
+          className="hidden min-w-0 flex-1 items-center gap-1 overflow-x-auto text-sm text-muted-foreground md:flex"
+        >
+          {topNavItems.map(([label, href]) => (
+            <a
+              aria-current={isTopNavActive(activeHref, href) ? "page" : undefined}
+              className={[
+                "shrink-0 whitespace-nowrap rounded-[0.25rem] px-3 py-1.5 transition-colors hover:bg-muted hover:text-foreground",
+                isTopNavActive(activeHref, href) ? "bg-primary/10 text-foreground" : "",
+              ].join(" ")}
+              href={href}
+              key={href}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+        <div className="ml-auto flex shrink-0 items-center gap-2">
+          <Badge tone="ready">v0.1 foundation</Badge>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function MobileDocsNav({
+  activeHref,
+  onClose,
+  open,
+}: {
+  activeHref: NavHref;
+  onClose: () => void;
+  open: boolean;
+}) {
+  if (!open) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 md:hidden" id="mobile-docs-nav">
+      <button
+        aria-label="Close documentation navigation"
+        className="absolute inset-0 bg-foreground/20 backdrop-blur-[2px]"
+        onClick={onClose}
+        type="button"
+      />
+      <aside
+        aria-modal="true"
+        aria-label="Documentation navigation"
+        className="relative h-full w-[min(21rem,calc(100vw-2rem))] overflow-y-auto border-r border-border bg-background px-5 py-5 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] motion-safe:animate-enter motion-reduce:animate-none"
+        role="dialog"
+      >
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <a className="text-sm font-semibold tracking-tight" href="/" onClick={onClose}>
+            Brilliant UI
+          </a>
+          <button
+            aria-label="Close documentation navigation"
+            className="inline-flex size-8 items-center justify-center rounded-[0.25rem] border border-border bg-surface text-sm hover:bg-muted"
+            onClick={onClose}
+            type="button"
+          >
+            ×
+          </button>
+        </div>
+        <DocsNav activeHref={activeHref} onNavigate={onClose} />
+      </aside>
+    </div>
+  );
+}
+
+function StatusRail({ firstItemTitle }: { firstItemTitle: string }) {
+  return (
+    <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] border-l border-border px-6 py-6 xl:block">
+      <div className="space-y-5 text-sm">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            Status
+          </p>
+          <dl className="mt-3 space-y-2">
+            <div className="flex justify-between gap-4">
+              <dt className="text-muted-foreground">Complete</dt>
+              <dd className="font-medium">41</dd>
+            </div>
+            <div className="flex justify-between gap-4">
+              <dt className="text-muted-foreground">Remaining</dt>
+              <dd className="font-medium">209</dd>
+            </div>
+            <div className="flex justify-between gap-4">
+              <dt className="text-muted-foreground">Registry items</dt>
+              <dd className="font-medium">{registry.length}</dd>
+            </div>
+            <div className="flex justify-between gap-4">
+              <dt className="text-muted-foreground">Micro UX</dt>
+              <dd className="font-medium">built in</dd>
+            </div>
+          </dl>
+        </div>
+        <div className="rounded-lg border border-border bg-surface p-4">
+          <p className="font-medium">Current component</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            {firstItemTitle} is available from the local registry.
+          </p>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function AppFooter() {
+  return (
+    <footer className="border-t border-border bg-background">
+      <div className="mx-auto grid max-w-screen-2xl gap-4 px-4 py-6 text-sm text-muted-foreground md:grid-cols-[240px_minmax(0,1fr)_280px] md:px-6">
+        <p className="font-medium text-foreground">Brilliant UI</p>
+        <p>
+          Copy-owned shadcn-compatible source, enterprise-grade tokens, and micro UX primitives.
+        </p>
+        <div className="flex flex-wrap gap-3 md:justify-end">
+          {topNavItems.map(([label, href]) => (
+            <a className="hover:text-foreground" href={href} key={href}>
+              {label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 function App() {
   const firstItem = registry[0];
-  const [activeHref, setActiveHref] = useState<(typeof navItems)[number][1]>("#getting-started");
+  const [activeHref, setActiveHref] = useState<NavHref>("#getting-started");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     const sectionIds = navItems.map(([, href]) => href.slice(1));
@@ -2386,50 +2582,42 @@ function App() {
     };
   }, []);
 
-  return (
-    <main className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-screen-2xl items-center gap-6 px-4 md:px-6">
-          <a className="shrink-0 whitespace-nowrap text-sm font-semibold tracking-tight" href="/">
-            Brilliant UI
-          </a>
-          <nav className="hidden min-w-0 items-center gap-5 overflow-hidden text-sm text-muted-foreground md:flex">
-            {topNavItems.map(([label, href]) => (
-              <a
-                className="shrink-0 whitespace-nowrap hover:text-foreground"
-                href={href}
-                key={href}
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-          <div className="ml-auto flex items-center gap-2">
-            <Badge tone="ready">v0.1 foundation</Badge>
-          </div>
-        </div>
-      </header>
+  useEffect(() => {
+    if (!mobileNavOpen) {
+      return;
+    }
 
-      <div className="mx-auto grid max-w-screen-2xl md:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_280px]">
-        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] border-r border-border px-6 py-6 md:block">
-          <nav className="space-y-1 text-sm">
-            <p className="mb-3 text-xs font-medium uppercase text-muted-foreground">Docs</p>
-            {navItems.map(([label, href]) => (
-              <a
-                aria-current={activeHref === href ? "location" : undefined}
-                className={[
-                  "block rounded-[0.25rem] border-l-2 px-3 py-2 transition-colors",
-                  activeHref === href
-                    ? "border-primary bg-primary/10 text-foreground"
-                    : "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground",
-                ].join(" ")}
-                href={href}
-                key={href}
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileNavOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [mobileNavOpen]);
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <a
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-[0.25rem] focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground"
+        href="#getting-started"
+      >
+        Skip to content
+      </a>
+      <AppHeader activeHref={activeHref} onMenuClick={() => setMobileNavOpen(true)} />
+      <MobileDocsNav
+        activeHref={activeHref}
+        onClose={() => setMobileNavOpen(false)}
+        open={mobileNavOpen}
+      />
+
+      <main className="mx-auto grid max-w-screen-2xl md:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_280px]">
+        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-y-auto border-r border-border px-6 py-6 md:block">
+          <DocsNav activeHref={activeHref} />
         </aside>
 
         <div className="min-w-0 px-4 py-10 md:px-8 lg:px-10">
@@ -3182,39 +3370,10 @@ find "$TMP_DEMO" -maxdepth 4 -type f | sort`}</CodeBlock>
           </section>
         </div>
 
-        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] border-l border-border px-6 py-6 xl:block">
-          <div className="space-y-5 text-sm">
-            <div>
-              <p className="text-xs font-medium uppercase text-muted-foreground">Status</p>
-              <dl className="mt-3 space-y-2">
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Complete</dt>
-                  <dd className="font-medium">41</dd>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Remaining</dt>
-                  <dd className="font-medium">209</dd>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Registry items</dt>
-                  <dd className="font-medium">{registry.length}</dd>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Micro UX</dt>
-                  <dd className="font-medium">built in</dd>
-                </div>
-              </dl>
-            </div>
-            <div className="rounded-lg border border-border bg-surface p-4">
-              <p className="font-medium">Current component</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {firstItem?.title ?? "None"} is available from the local registry.
-              </p>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </main>
+        <StatusRail firstItemTitle={firstItem?.title ?? "None"} />
+      </main>
+      <AppFooter />
+    </div>
   );
 }
 
