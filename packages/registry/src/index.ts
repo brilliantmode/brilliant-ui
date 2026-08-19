@@ -3143,7 +3143,7 @@ export function ApplicationShellHeaderBrand({
   return (
     <a
       className={cx(
-        "inline-flex shrink-0 items-center gap-2 rounded-[0.375rem] text-sm font-semibold text-foreground",
+        "inline-flex shrink-0 items-center gap-2 rounded-[0.375rem] text-sm font-semibold text-foreground md:hidden",
         "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         className,
       )}
@@ -5101,6 +5101,7 @@ export const registry = [
         "The desktop sidebar toggle exposes its expanded state and an action-specific accessible name.",
         "Header actions use native buttons and require an accessible name when icon-only.",
         "HeaderBrand is a native link; decorative logo images should use an empty alt when the adjacent brand name supplies the accessible text.",
+        "HeaderBrand is hidden on desktop by default because the sidebar brand is the canonical desktop identity.",
         "The profile menu uses native details and summary disclosure semantics.",
         "Scrollable sidebar content keeps native scrolling while suppressing the visual scrollbar; keyboard, wheel, and touch scrolling remain available.",
       ],
@@ -5116,12 +5117,13 @@ export const registry = [
         "Compose Profile, ProfileMenu, and ProfileTrigger for account, workspace, settings, and sign-out actions.",
         "Use menu item icon for action glyphs and media for avatars/account bubbles.",
         "Compose HeaderContent, HeaderTitle, HeaderDescription, HeaderActions, and HeaderAction for page context and global actions.",
-        "Use HeaderBrand for a logo image, inline SVG mark, or brand name; hide either the sidebar or header copy responsively when duplication is unnecessary.",
+        "Use ApplicationShellBrand as the canonical desktop identity and HeaderBrand as the compact mobile fallback.",
         "Use ApplicationShellMain for route/page content.",
       ],
       avoid: [
         "Do not use for marketing pages or one-off landing layouts.",
         "Do not put every possible destination in the primary sidebar.",
+        "Do not repeat the full brand in both the desktop sidebar and desktop header.",
       ],
     },
   },

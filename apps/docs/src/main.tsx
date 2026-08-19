@@ -5481,9 +5481,12 @@ function ComponentMiniPreview({ name }: { name: string }) {
           </aside>
           <div className="min-w-0">
             <header className="flex h-14 items-center gap-3 border-b border-border px-4">
-              <a className="inline-flex items-center gap-2 text-sm font-semibold" href="/">
+              <a
+                className="inline-flex items-center gap-2 text-sm font-semibold md:hidden"
+                href="/"
+              >
                 <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
-                <span className="hidden lg:inline">Brilliant</span>
+                <span>Brilliant</span>
               </a>
               <div className="min-w-0 flex-1">
                 <div className="text-sm font-semibold">Dashboard</div>
@@ -6250,9 +6253,9 @@ function AppHeader({
             ☰
           </span>
         </button>
-        <HeaderBrand href="/" onClick={(event) => onNavigate(event, "/")}>
+        <HeaderBrand className="md:hidden" href="/" onClick={(event) => onNavigate(event, "/")}>
           <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
-          <span className="hidden sm:inline">Brilliant UI</span>
+          <span>Brilliant UI</span>
         </HeaderBrand>
         <HeaderNav align="center" className="!hidden min-w-0 flex-1 md:!flex">
           {topNavItems.map(([label, href]) => (

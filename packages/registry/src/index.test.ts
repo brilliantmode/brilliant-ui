@@ -96,6 +96,7 @@ describe("registry", () => {
     expect(source).toContain("export function ApplicationShellHeaderActions");
     expect(source).toContain("export function ApplicationShellHeaderAction");
     expect(source).toContain("export function ApplicationShellHeaderBrand");
+    expect(source).toContain("rounded-[0.375rem] text-sm font-semibold text-foreground md:hidden");
     expect(source).toContain("export function ApplicationShellSidebarToggle");
     expect(source).toContain("export function ApplicationShellSidebarHeader");
     expect(source).toContain("collapsed?: boolean");
