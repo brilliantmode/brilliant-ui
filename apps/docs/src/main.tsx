@@ -1,5 +1,5 @@
 import { registry } from "@brilliant-ui/registry";
-import { type MouseEvent, type ReactNode, StrictMode, useEffect, useState } from "react";
+import { type MouseEvent, type ReactNode, StrictMode, useEffect, useId, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
@@ -1784,6 +1784,7 @@ function CodeBlock({
 function ExamplePanel({ children, code }: { children: ReactNode; code: string }) {
   const [activeTab, setActiveTab] = useState<"code" | "preview">("preview");
   const [copied, setCopied] = useState(false);
+  const panelId = useId();
 
   useEffect(() => {
     if (!copied) return;
@@ -1821,6 +1822,7 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
         >
           {(["preview", "code"] as const).map((tab) => (
             <button
+              aria-controls={`${panelId}-${tab}-panel`}
               aria-selected={activeTab === tab}
               className={[
                 "h-7 rounded-[0.25rem] px-3 text-xs font-medium capitalize transition-colors",
@@ -1830,6 +1832,7 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
               ].join(" ")}
               key={tab}
               onClick={() => setActiveTab(tab)}
+              id={`${panelId}-${tab}-tab`}
               role="tab"
               type="button"
             >
@@ -1838,57 +1841,68 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
           ))}
         </div>
       </div>
-      <div className="min-w-0 max-w-full" role="tabpanel">
-        {activeTab === "preview" ? (
-          <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-background p-6">
-            {children}
+      <div
+        aria-labelledby={`${panelId}-preview-tab`}
+        className="min-w-0 max-w-full"
+        hidden={activeTab !== "preview"}
+        id={`${panelId}-preview-panel`}
+        role="tabpanel"
+      >
+        <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-background p-6">
+          {children}
+        </div>
+      </div>
+      <div
+        aria-labelledby={`${panelId}-code-tab`}
+        className="min-w-0 max-w-full"
+        hidden={activeTab !== "code"}
+        id={`${panelId}-code-panel`}
+        role="tabpanel"
+      >
+        <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-code shadow-sm">
+          <div className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-2">
+            <span className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.14em] text-code-comment">
+              TSX
+            </span>
+            <button
+              aria-label={copied ? "Code copied" : "Copy code"}
+              className="inline-grid size-8 shrink-0 place-items-center rounded-[0.25rem] bg-transparent text-white transition-[background-color,color,transform] hover:bg-white/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              onClick={copyCode}
+              title={copied ? "Copied" : "Copy code"}
+              type="button"
+            >
+              {copied ? (
+                <svg
+                  aria-hidden="true"
+                  className="size-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M3.5 8.5 6.5 11.5 12.5 4.5" />
+                </svg>
+              ) : (
+                <svg
+                  aria-hidden="true"
+                  className="size-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.8"
+                  viewBox="0 0 16 16"
+                >
+                  <rect height="8" rx="1.5" width="8" x="5" y="5" />
+                  <path d="M3 10.5V4.5A1.5 1.5 0 0 1 4.5 3h6" />
+                </svg>
+              )}
+            </button>
           </div>
-        ) : (
-          <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-code shadow-sm">
-            <div className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-2">
-              <span className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.14em] text-code-comment">
-                TSX
-              </span>
-              <button
-                aria-label={copied ? "Code copied" : "Copy code"}
-                className="inline-grid size-8 shrink-0 place-items-center rounded-[0.25rem] bg-transparent text-white transition-[background-color,color,transform] hover:bg-white/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                onClick={copyCode}
-                title={copied ? "Copied" : "Copy code"}
-                type="button"
-              >
-                {copied ? (
-                  <svg
-                    aria-hidden="true"
-                    className="size-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M3.5 8.5 6.5 11.5 12.5 4.5" />
-                  </svg>
-                ) : (
-                  <svg
-                    aria-hidden="true"
-                    className="size-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.8"
-                    viewBox="0 0 16 16"
-                  >
-                    <rect height="8" rx="1.5" width="8" x="5" y="5" />
-                    <path d="M3 10.5V4.5A1.5 1.5 0 0 1 4.5 3h6" />
-                  </svg>
-                )}
-              </button>
-            </div>
-            <CodeBlock className="rounded-none border-0 shadow-none">{code}</CodeBlock>
-          </div>
-        )}
+          <CodeBlock className="rounded-none border-0 shadow-none">{code}</CodeBlock>
+        </div>
       </div>
     </div>
   );
