@@ -201,10 +201,156 @@ const blockGroups = [
   ["Enterprise", "Permissions, roles, policies, org tree, access timeline"],
 ] as const;
 
-const premiumSystems = [
-  ["AI workspace", "Prompt input, tool-call timeline, citations, approvals, agent status"],
-  ["Access control", "Roles, permissions, policy builder, audit explorer, identity timeline"],
-  ["SaaS operations", "Billing, usage meters, API keys, webhooks, members, feature flags"],
+const productBlockExamples = [
+  {
+    category: "Activation",
+    code: `import {
+  OnboardingWizard,
+  OnboardingWizardActions,
+  OnboardingWizardContent,
+  OnboardingWizardMeta,
+  OnboardingWizardPanel,
+  OnboardingWizardProgress,
+  OnboardingWizardStep,
+  OnboardingWizardStepList,
+} from "@/components/ui/onboarding-wizard";
+import { Button } from "@/components/ui/button";
+
+export function WorkspaceImportBlock() {
+  return (
+    <OnboardingWizard variant="split">
+      <div>
+        <div className="border-b border-border p-5">
+          <h2 className="text-lg font-semibold">Launch workspace</h2>
+          <p className="text-sm text-muted-foreground">Complete the setup checklist.</p>
+          <OnboardingWizardProgress value={42} />
+        </div>
+        <OnboardingWizardStepList>
+          <OnboardingWizardStep index={1} state="complete" title="Workspace" />
+          <OnboardingWizardStep index={2} state="current" title="Import data" />
+          <OnboardingWizardStep index={3} state="upcoming" title="Invite team" />
+        </OnboardingWizardStepList>
+      </div>
+
+      <OnboardingWizardPanel>
+        <OnboardingWizardContent>
+          <OnboardingWizardMeta>Recommended next step</OnboardingWizardMeta>
+          <div>
+            <h3 className="text-lg font-semibold">Import customer records</h3>
+            <p className="text-sm text-muted-foreground">
+              Connect Salesforce or upload a CSV. Nothing is written until fields are mapped.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button className="rounded-lg border border-border p-4 text-left">
+              <span className="block font-medium">Connect Salesforce</span>
+              <span className="text-sm text-muted-foreground">Sync accounts and owners.</span>
+            </button>
+            <button className="rounded-lg border border-border p-4 text-left">
+              <span className="block font-medium">Upload CSV</span>
+              <span className="text-sm text-muted-foreground">Review columns before import.</span>
+            </button>
+          </div>
+        </OnboardingWizardContent>
+        <OnboardingWizardActions>
+          <Button variant="ghost">Back</Button>
+          <Button>Continue</Button>
+        </OnboardingWizardActions>
+      </OnboardingWizardPanel>
+    </OnboardingWizard>
+  );
+}`,
+    description: "A first-run setup block with progress, step rail, import choices, and actions.",
+    id: "workspace-import",
+    title: "Workspace import flow",
+  },
+  {
+    category: "SaaS",
+    code: `import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+
+const keys = [
+  ["Production", "Last used 2 minutes ago", "Live"],
+  ["Staging", "Last used yesterday", "Scoped"],
+];
+
+export function ApiKeysBlock() {
+  return (
+    <Card className="p-5" variant="surface">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h3 className="font-semibold">API keys</h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Manage keys used by integrations and automations.
+          </p>
+        </div>
+        <Button size="sm">Create key</Button>
+      </div>
+      <div className="mt-5 divide-y divide-border rounded-lg border border-border">
+        {keys.map(([name, detail, state]) => (
+          <div className="flex items-center justify-between gap-3 p-3" key={name}>
+            <div>
+              <p className="text-sm font-medium">{name}</p>
+              <p className="text-xs text-muted-foreground">{detail}</p>
+            </div>
+            <Badge variant={state === "Live" ? "primary" : "muted"}>{state}</Badge>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}`,
+    description:
+      "A production admin block for API keys with status, dense rows, and action hierarchy.",
+    id: "api-keys",
+    title: "API key management",
+  },
+  {
+    category: "Billing",
+    code: `import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+
+export function BillingUsageBlock() {
+  return (
+    <Card className="p-5" variant="elevated">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="text-sm font-medium text-muted-foreground">Current billing period</p>
+          <h3 className="mt-1 text-2xl font-semibold tracking-tight">2.4M events</h3>
+        </div>
+        <Button size="sm" variant="outline">Manage plan</Button>
+      </div>
+      <div className="mt-5 grid gap-2">
+        <div className="flex items-center justify-between text-sm">
+          <span>Usage included</span>
+          <span className="font-medium">64%</span>
+        </div>
+        <Progress aria-label="Usage included" value={64} />
+      </div>
+      <dl className="mt-5 grid gap-3 sm:grid-cols-3">
+        <div>
+          <dt className="text-xs text-muted-foreground">Seats</dt>
+          <dd className="text-sm font-medium">48 active</dd>
+        </div>
+        <div>
+          <dt className="text-xs text-muted-foreground">Renewal</dt>
+          <dd className="text-sm font-medium">Aug 30</dd>
+        </div>
+        <div>
+          <dt className="text-xs text-muted-foreground">Forecast</dt>
+          <dd className="text-sm font-medium">12% below</dd>
+        </div>
+      </dl>
+    </Card>
+  );
+}`,
+    description:
+      "A billing block with usage meter, renewal metadata, forecast status, and plan action.",
+    id: "billing-usage",
+    title: "Billing usage summary",
+  },
 ] as const;
 
 const usageByComponent = {
@@ -1606,6 +1752,173 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function ProductBlockPreview({ id }: { id: (typeof productBlockExamples)[number]["id"] }) {
+  if (id === "workspace-import") {
+    return (
+      <div className="overflow-hidden rounded-[0.75rem] border border-border bg-surface shadow-sm">
+        <div className="grid md:grid-cols-[17rem_minmax(0,1fr)]">
+          <div>
+            <div className="border-b border-border p-5">
+              <h3 className="text-lg font-semibold tracking-tight">Launch workspace</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Complete the setup checklist.</p>
+              <div className="mt-4 grid gap-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium text-muted-foreground">Onboarding progress</span>
+                  <span className="font-medium">42%</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-muted">
+                  <div className="h-full w-[42%] rounded-full bg-primary" />
+                </div>
+              </div>
+            </div>
+            <ol className="grid gap-2 border-b border-border p-4 md:border-r md:border-b-0">
+              {[
+                ["Workspace", "complete"],
+                ["Import data", "current"],
+                ["Invite team", "upcoming"],
+              ].map(([title, state], index) => (
+                <li className="list-none" key={title}>
+                  <button
+                    className={[
+                      "flex w-full items-center gap-3 rounded-[0.5rem] px-3 py-2.5 text-left text-sm",
+                      state === "current" ? "bg-muted font-medium" : "text-muted-foreground",
+                    ].join(" ")}
+                    type="button"
+                  >
+                    <span
+                      className={[
+                        "grid size-6 place-items-center rounded-full border text-xs font-semibold",
+                        state === "complete"
+                          ? "border-primary/30 bg-primary/10 text-primary"
+                          : state === "current"
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border bg-background",
+                      ].join(" ")}
+                    >
+                      {state === "complete" ? "✓" : index + 1}
+                    </span>
+                    {title}
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <section className="grid min-h-72 content-between gap-6 p-5">
+            <div className="grid gap-4">
+              <Badge tone="ready">Recommended next step</Badge>
+              <div>
+                <h3 className="text-lg font-semibold">Import customer records</h3>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  Connect Salesforce or upload a CSV. Nothing is written until fields are mapped.
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[
+                  ["Connect Salesforce", "Sync accounts and owners."],
+                  ["Upload CSV", "Review columns before import."],
+                ].map(([title, description]) => (
+                  <button
+                    className="rounded-[0.5rem] border border-border bg-background p-4 text-left transition-[border-color,box-shadow,transform] hover:-translate-y-px hover:border-primary/35 hover:shadow-sm"
+                    key={title}
+                    type="button"
+                  >
+                    <span className="block text-sm font-medium">{title}</span>
+                    <span className="mt-1 block text-sm text-muted-foreground">{description}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center justify-between border-t border-border pt-4">
+              <button className="text-sm font-medium text-muted-foreground" type="button">
+                Back
+              </button>
+              <button
+                className={`${buttonVariants[0][2]} h-9 rounded-[0.25rem] px-3.5 text-sm font-medium`}
+                type="button"
+              >
+                Continue
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
+  }
+
+  if (id === "api-keys") {
+    return (
+      <div className="rounded-[0.5rem] border border-border bg-surface p-5 shadow-sm">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="font-semibold">API keys</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Manage keys used by integrations and automations.
+            </p>
+          </div>
+          <button
+            className={`${buttonVariants[0][2]} h-8 rounded-[0.25rem] px-3 text-xs font-medium`}
+            type="button"
+          >
+            Create key
+          </button>
+        </div>
+        <div className="mt-5 divide-y divide-border rounded-[0.5rem] border border-border">
+          {[
+            ["Production", "Last used 2 minutes ago", "Live"],
+            ["Staging", "Last used yesterday", "Scoped"],
+          ].map(([name, detail, state]) => (
+            <div className="flex items-center justify-between gap-3 p-3" key={name}>
+              <div>
+                <p className="text-sm font-medium">{name}</p>
+                <p className="text-xs text-muted-foreground">{detail}</p>
+              </div>
+              <Badge tone={state === "Live" ? "ready" : "muted"}>{state}</Badge>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-[0.5rem] border border-border bg-surface p-5 shadow-md">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="text-sm font-medium text-muted-foreground">Current billing period</p>
+          <h3 className="mt-1 text-2xl font-semibold tracking-tight">2.4M events</h3>
+        </div>
+        <button
+          className="h-8 rounded-[0.25rem] border border-border px-3 text-xs font-medium"
+          type="button"
+        >
+          Manage plan
+        </button>
+      </div>
+      <div className="mt-5 grid gap-2">
+        <div className="flex items-center justify-between text-sm">
+          <span>Usage included</span>
+          <span className="font-medium">64%</span>
+        </div>
+        <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+          <div className="h-full w-[64%] rounded-full bg-primary" />
+        </div>
+      </div>
+      <dl className="mt-5 grid gap-3 sm:grid-cols-3">
+        {[
+          ["Seats", "48 active"],
+          ["Renewal", "Aug 30"],
+          ["Forecast", "12% below"],
+        ].map(([term, value]) => (
+          <div key={term}>
+            <dt className="text-xs text-muted-foreground">{term}</dt>
+            <dd className="text-sm font-medium">{value}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
   );
 }
@@ -4323,39 +4636,49 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
 
           <section className="mx-auto max-w-4xl space-y-6 pb-14">
             <SectionHeading
-              description="Higher-level systems that make Brilliant more than primitive wrappers."
+              description="Real product sections composed from Brilliant primitives. These are the things teams paste into SaaS apps, admin portals, and onboarding flows."
               id="blocks"
             >
-              Product systems
+              Blocks
             </SectionHeading>
-            <div className="grid gap-4">
-              {premiumSystems.map(([title, description]) => (
-                <article
-                  className="rounded-lg border border-border bg-surface p-5 hover:border-primary/30"
-                  key={title}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <h3 className="font-semibold">{title}</h3>
-                    <Badge>planned</Badge>
+
+            <div className="grid gap-8">
+              {productBlockExamples.map((block) => (
+                <article className="space-y-3" key={block.id}>
+                  <div className="flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                      <div className="mb-2">
+                        <Badge>{block.category}</Badge>
+                      </div>
+                      <h3 className="text-xl font-semibold tracking-tight">{block.title}</h3>
+                      <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+                        {block.description}
+                      </p>
+                    </div>
                   </div>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+                  <ExamplePanel code={block.code}>
+                    <ProductBlockPreview id={block.id} />
+                  </ExamplePanel>
                 </article>
               ))}
             </div>
-            <div className="pt-2">
-              <h3 className="text-lg font-semibold">Block families</h3>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {blockGroups.map(([title, description]) => (
-                <article className="rounded-lg border border-border bg-surface p-5" key={title}>
-                  <div className="flex items-center justify-between gap-3">
+
+            <details className="rounded-lg border border-border bg-surface">
+              <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
+                Planned block families
+              </summary>
+              <div className="grid gap-4 border-t border-border p-4 sm:grid-cols-2">
+                {blockGroups.map(([title, description]) => (
+                  <article
+                    className="rounded-lg border border-border bg-background p-4"
+                    key={title}
+                  >
                     <h3 className="font-semibold">{title}</h3>
-                    <Badge>planned</Badge>
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
-                </article>
-              ))}
-            </div>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+                  </article>
+                ))}
+              </div>
+            </details>
           </section>
 
           <section className="mx-auto max-w-4xl space-y-6 pb-14">
