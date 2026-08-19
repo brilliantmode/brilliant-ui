@@ -29,6 +29,9 @@ placement into `brilliant-ui.json`.
 | `@brilliant-ui/tokens` | Typed tokens and Tailwind v4-compatible CSS variables |
 | `@brilliant-ui/themes` | Typed theme contracts, brand overrides, and SSR-safe theme helpers |
 | `@brilliant-ui/core` | Shared type-safe utilities and configuration contracts |
+| `@brilliant-ui/components` | Shared component conventions, `cn`, CVA, state classes, and Radix Slot |
+| `@brilliant-ui/animations` | Motion presets and reduced-motion helpers |
+| `@brilliant-ui/icons` | Lucide icon adapter contracts, sizing, and accessibility props |
 | `@brilliant-ui/registry` | Machine-readable component registry and AI metadata |
 | `@brilliant-ui/cli` | `brilliant-ui init`, `add`, and `update` commands |
 | `@brilliant-ui/docs` | Documentation application shell |
@@ -43,6 +46,13 @@ consumer applications. Self-host them, load them through your application framew
 
 Read [ARCHITECTURE.md](./ARCHITECTURE.md) for package boundaries and design decisions. The
 version-controlled implementation backlog lives in [ROADMAP.md](./ROADMAP.md).
+
+## Foundation Dependencies
+
+The workspace is now wired for the shadcn-compatible stack: Radix primitives, Class Variance
+Authority, `clsx`, `tailwind-merge`, Lucide, Motion, React Hook Form, Zod, TanStack Table, and the
+official `shadcn` CLI package are available through the pnpm catalog for the packages that need
+them.
 
 ## Principles
 

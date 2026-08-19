@@ -143,11 +143,11 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 ### Component infrastructure
 
 - [ ] Create `@brilliant-ui/components` with copy-owned registry output.
-- [ ] Add `cn` using `clsx` and `tailwind-merge` for generated components.
-- [ ] Add variant conventions with Class Variance Authority.
-- [ ] Define component anatomy, data attributes, and slot conventions.
-- [ ] Create shared focus, disabled, loading, empty, and error-state patterns.
-- [ ] Add polymorphism only where it preserves accessible semantics.
+- [x] Add `cn` using `clsx` and `tailwind-merge` for generated components.
+- [x] Add variant conventions with Class Variance Authority.
+- [x] Define component anatomy, data attributes, and slot conventions.
+- [x] Create shared focus, disabled, loading, empty, and error-state patterns.
+- [x] Add polymorphism only where it preserves accessible semantics.
 
 ### Foundation components
 
@@ -199,10 +199,10 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 
 ### Motion and icons
 
-- [ ] Create `@brilliant-ui/animations` with Motion presets and reduced-motion fallbacks.
+- [x] Create `@brilliant-ui/animations` with Motion presets and reduced-motion fallbacks.
 - [ ] Add enter, exit, layout, list, disclosure, and feedback motion recipes.
-- [ ] Create `@brilliant-ui/icons` with Lucide defaults and adapter contracts.
-- [ ] Establish icon sizing, stroke, accessibility, and tree-shaking rules.
+- [x] Create `@brilliant-ui/icons` with Lucide defaults and adapter contracts.
+- [x] Establish icon sizing, stroke, accessibility, and tree-shaking rules.
 
 ### Phase 3 exit gate
 
