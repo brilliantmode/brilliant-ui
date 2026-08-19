@@ -595,24 +595,35 @@ export function AlertDescription({ className = "", ...props }: HTMLAttributes<HT
 
 const separatorSource = `import type { HTMLAttributes } from "react";
 
+const variants = {
+  default: "bg-border",
+  muted: "bg-muted",
+  primary: "bg-primary",
+} as const;
+
 export interface SeparatorProps extends HTMLAttributes<HTMLDivElement> {
+  decorative?: boolean;
   orientation?: "horizontal" | "vertical";
+  variant?: keyof typeof variants;
 }
 
 export function Separator({
   className = "",
+  decorative = true,
   orientation = "horizontal",
+  variant = "default",
   ...props
 }: SeparatorProps) {
   return (
     <div
-      aria-orientation={orientation}
+      aria-orientation={decorative ? undefined : orientation}
       className={[
-        "shrink-0 bg-border",
+        "shrink-0",
         orientation === "horizontal" ? "h-[0.5px] w-full" : "h-full w-[0.5px]",
+        variants[variant],
         className,
       ].join(" ")}
-      role="separator"
+      role={decorative ? "none" : "separator"}
       {...props}
     />
   );
@@ -854,8 +865,16 @@ export const registry = [
     metadata: {
       purpose: "Separates content groups visually and semantically.",
       slots: ["root"],
-      accessibility: ["Uses role separator.", "Sets aria-orientation."],
-      usage: ["Use sparingly between meaningful groups."],
+      accessibility: [
+        "Decorative by default.",
+        "Set decorative=false when the separator conveys meaningful structure.",
+        "Sets aria-orientation for non-decorative separators.",
+      ],
+      usage: [
+        "Use variant default for normal dividers.",
+        "Use variant muted for subtle grouping.",
+        "Use variant primary only for active or branded section breaks.",
+      ],
       avoid: ["Do not use as decoration when spacing is enough."],
     },
   },

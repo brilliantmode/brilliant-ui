@@ -200,7 +200,7 @@ export function Example() {
   separator: `import { Separator } from "@/components/ui/separator";
 
 export function Example() {
-  return <Separator />;
+  return <Separator variant="primary" />;
 }`,
   skeleton: `import { Skeleton } from "@/components/ui/skeleton";
 
@@ -474,7 +474,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
     return (
       <div className="space-y-3 text-sm">
         <p>Account</p>
-        <div className="h-px w-full bg-border" />
+        <div className="h-[0.5px] w-full bg-primary" />
         <p className="text-muted-foreground">Billing</p>
       </div>
     );
@@ -872,7 +872,10 @@ export function Example() {
                     </div>
                   </div>
 
-                  {item.name === "card" || item.name === "text" || item.name === "checkbox" ? (
+                  {item.name === "card" ||
+                  item.name === "text" ||
+                  item.name === "checkbox" ||
+                  item.name === "separator" ? (
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Variants</h3>
                       <div className="overflow-auto rounded-lg border border-border">
@@ -900,12 +903,18 @@ export function Example() {
                                     ["default", "Normal selection state."],
                                     ["critical", "Destructive or high-risk selection context."],
                                   ]
-                                : [
-                                    ["default", "Normal UI copy."],
-                                    ["muted", "Secondary or supporting copy."],
-                                    ["glow", "Premium, active, or AI-ready emphasis."],
-                                    ["shimmer", "Generating, syncing, or live processing text."],
-                                  ]
+                                : item.name === "separator"
+                                  ? [
+                                      ["default", "Standard divider using the border token."],
+                                      ["muted", "Subtle divider for dense grouped content."],
+                                      ["primary", "Branded or active section divider."],
+                                    ]
+                                  : [
+                                      ["default", "Normal UI copy."],
+                                      ["muted", "Secondary or supporting copy."],
+                                      ["glow", "Premium, active, or AI-ready emphasis."],
+                                      ["shimmer", "Generating, syncing, or live processing text."],
+                                    ]
                             ).map(([variant, use]) => (
                               <tr className="border-b border-border last:border-b-0" key={variant}>
                                 <td className="px-4 py-3 font-mono text-xs">{variant}</td>
@@ -926,6 +935,14 @@ export function Example() {
                         <p className="text-sm leading-6 text-muted-foreground">
                           Use <code>variant=&quot;critical&quot;</code> only when selecting the
                           option has destructive or high-risk meaning.
+                        </p>
+                      ) : item.name === "separator" ? (
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Use <code>variant=&quot;default&quot;</code>,{" "}
+                          <code>variant=&quot;muted&quot;</code>, or{" "}
+                          <code>variant=&quot;primary&quot;</code>. The separator is decorative by
+                          default; set <code>decorative=&#123;false&#125;</code> when it carries
+                          semantic structure.
                         </p>
                       ) : (
                         <p className="text-sm leading-6 text-muted-foreground">
