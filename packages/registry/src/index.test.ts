@@ -24,6 +24,16 @@ describe("registry", () => {
     expect(findRegistryItem("missing")).toBeUndefined();
   });
 
+  it("ships enforced square and circle photo crops", () => {
+    const photoSource = findRegistryItem("photo")?.files[0]?.content;
+
+    expect(photoSource).toContain("crop?: keyof typeof crops");
+    expect(photoSource).toContain(
+      'crop === "rectangle" ? (style?.aspectRatio ?? String(ratio)) : "1"',
+    );
+    expect(photoSource).toContain('circle: "rounded-full"');
+  });
+
   it("defines a versioned JSON schema", () => {
     expect(registryItemSchema.properties.kind.enum).toBe(registryKinds);
     expect(registryItemSchema.required).toContain("registryDependencies");

@@ -1509,6 +1509,23 @@ export function Example() {
 } as const;
 
 const photoExampleCode = {
+  crops: `import { Photo, PhotoImage } from "@/components/ui/photo";
+
+export function CropExample() {
+  return (
+    <div className="grid items-end gap-4 sm:grid-cols-3">
+      <Photo crop="rectangle" ratio={4 / 3} radius="sm">
+        <PhotoImage alt="Rectangular atrium crop" src="/images/photo-architecture.jpg" />
+      </Photo>
+      <Photo crop="square" radius="lg">
+        <PhotoImage alt="Square atrium crop" src="/images/photo-architecture.jpg" />
+      </Photo>
+      <Photo crop="circle">
+        <PhotoImage alt="Circular atrium crop" src="/images/photo-architecture.jpg" />
+      </Photo>
+    </div>
+  );
+}`,
   "fit-and-fallback": `import {
   Photo,
   PhotoFallback,
@@ -2799,17 +2816,21 @@ const photoArchitectureImage = "/images/photo-architecture.jpg";
 function PhotoPreviewFigure({
   alt,
   caption,
+  crop = "rectangle",
   fallback = false,
   fit = "cover",
   ratio,
+  radius = "md",
   src,
   variant = "surface",
 }: {
   alt: string;
   caption?: string;
+  crop?: "circle" | "rectangle" | "square";
   fallback?: boolean;
   fit?: "contain" | "cover";
   ratio: string;
+  radius?: "full" | "lg" | "md" | "sm";
   src?: string;
   variant?: "elevated" | "ghost" | "surface";
 }) {
@@ -2819,11 +2840,17 @@ function PhotoPreviewFigure({
     ghost: "border-transparent bg-transparent shadow-none",
     surface: "border-transparent bg-surface shadow-none ring-1 ring-inset ring-border",
   }[variant];
+  const radiusClass = {
+    full: "rounded-full",
+    lg: "rounded-[0.75rem]",
+    md: "rounded-[0.5rem]",
+    sm: "rounded-[0.25rem]",
+  }[radius];
 
   return (
     <figure
-      className={`group relative isolate overflow-hidden rounded-[0.5rem] border ${variantClass}`}
-      style={{ aspectRatio: ratio }}
+      className={`group relative isolate overflow-hidden border ${crop === "circle" ? "rounded-full" : radiusClass} ${variantClass}`}
+      style={{ aspectRatio: crop === "rectangle" ? ratio : "1" }}
     >
       <div className="absolute inset-0 grid place-items-center bg-muted px-4 text-center text-sm text-muted-foreground">
         <span className="grid gap-2">
@@ -2863,6 +2890,31 @@ function PhotoExamplePreview({ example }: { example: keyof typeof photoExampleCo
               variant={variant}
             />
             <code className="text-center text-xs text-muted-foreground">{`variant="${variant}"`}</code>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (example === "crops") {
+    return (
+      <div className="grid items-end gap-5 sm:grid-cols-3">
+        {(
+          [
+            ["rectangle", "4 / 3 rectangle", "sm"],
+            ["square", "1 / 1 square", "lg"],
+            ["circle", "1 / 1 circle", "full"],
+          ] as const
+        ).map(([crop, label, radius]) => (
+          <div className="grid gap-2" key={crop}>
+            <PhotoPreviewFigure
+              alt={`${label} atrium crop`}
+              crop={crop}
+              ratio="4/3"
+              radius={radius}
+              src={photoArchitectureImage}
+            />
+            <code className="text-center text-xs text-muted-foreground">{`crop="${crop}"`}</code>
           </div>
         ))}
       </div>
@@ -4872,6 +4924,11 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                               "Use the surface treatment that matches the surrounding hierarchy.",
                             ],
                             [
+                              "crops",
+                              "Crop shapes",
+                              "Use rectangle for flexible media and square or circle for fixed 1:1 crops.",
+                            ],
+                            [
                               "ratios",
                               "Aspect ratios and captions",
                               "Reserve the final media geometry before the image loads.",
@@ -5042,9 +5099,12 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                           </p>
                         ) : item.name === "photo" ? (
                           <p className="text-sm leading-6 text-muted-foreground">
-                            Use <code>ratio</code> to reserve space, <code>radius</code> to match
-                            the surrounding surface, and <code>fit=&quot;contain&quot;</code> when
-                            cropping would hide meaningful product detail.
+                            Use <code>crop=&quot;square&quot;</code> or{" "}
+                            <code>crop=&quot;circle&quot;</code>
+                            for fixed 1:1 crops. Use <code>ratio</code> for rectangles,{" "}
+                            <code>radius</code> to match the surrounding surface, and{" "}
+                            <code>fit=&quot;contain&quot;</code> when cropping would hide meaningful
+                            detail.
                           </p>
                         ) : item.name === "separator" ? (
                           <p className="text-sm leading-6 text-muted-foreground">

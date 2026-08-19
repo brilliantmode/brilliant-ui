@@ -265,7 +265,14 @@ const fits = {
   contain: "object-contain",
 } as const;
 
+const crops = {
+  rectangle: "",
+  square: "",
+  circle: "rounded-full",
+} as const;
+
 export interface PhotoProps extends HTMLAttributes<HTMLFigureElement> {
+  crop?: keyof typeof crops;
   ratio?: number | string;
   radius?: keyof typeof radii;
   variant?: keyof typeof variants;
@@ -274,6 +281,7 @@ export interface PhotoProps extends HTMLAttributes<HTMLFigureElement> {
 export function Photo({
   children,
   className = "",
+  crop = "rectangle",
   ratio = 4 / 3,
   radius = "md",
   style,
@@ -287,9 +295,14 @@ export function Photo({
         "motion-safe:transition-[border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         variants[variant],
         radii[radius],
+        crops[crop],
         className,
       )}
-      style={{ aspectRatio: String(ratio), ...style } as CSSProperties}
+      data-crop={crop}
+      style={{
+        ...style,
+        aspectRatio: crop === "rectangle" ? (style?.aspectRatio ?? String(ratio)) : "1",
+      } as CSSProperties}
       {...props}
     >
       {children}
@@ -3298,6 +3311,7 @@ export const registry = [
       ],
       usage: [
         "Use ratio to reserve space and prevent layout shift.",
+        "Use crop square or circle for fixed 1:1 crops; circle overrides radius.",
         "Use variant surface for ordinary media cards.",
         "Use radius to align image corners with surrounding surfaces.",
         "Use PhotoCaption only when the caption describes the image, not as decoration.",
