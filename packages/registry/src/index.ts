@@ -501,27 +501,58 @@ export function Checkbox({
 }
 `;
 
-const switchSource = `import type { InputHTMLAttributes } from "react";
+const switchSource = `import { useState } from "react";
+import type { InputHTMLAttributes } from "react";
 
 export interface SwitchProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {}
 
-export function Switch({ className = "", ...props }: SwitchProps) {
+export function Switch({
+  checked,
+  className = "",
+  defaultChecked,
+  onChange,
+  ...props
+}: SwitchProps) {
+  const [internalChecked, setInternalChecked] = useState(Boolean(defaultChecked));
+  const isControlled = checked !== undefined;
+  const resolvedChecked = isControlled ? Boolean(checked) : internalChecked;
+
   return (
-    <input
+    <span
       className={[
-        "h-5 w-9 appearance-none rounded-full border-hairline border-transparent bg-secondary shadow-inner",
-        "before:block before:size-4 before:translate-x-0 before:rounded-full before:bg-surface before:shadow-sm before:content-['']",
-        "checked:bg-primary checked:before:translate-x-4",
-        "motion-safe:transition-[background-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
-        "motion-safe:before:transition-transform motion-safe:before:duration-[var(--brilliant-duration-fast)]",
-        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0",
-        "disabled:cursor-not-allowed disabled:opacity-50",
+        "relative inline-grid h-6 w-10 shrink-0 place-items-center",
         className,
       ].join(" ")}
-      role="switch"
-      type="checkbox"
-      {...props}
-    />
+    >
+      <input
+        aria-checked={resolvedChecked}
+        checked={resolvedChecked}
+        className="peer absolute inset-0 z-10 h-6 w-10 cursor-pointer appearance-none rounded-full opacity-0 disabled:cursor-not-allowed"
+        onChange={(event) => {
+          if (!isControlled) setInternalChecked(event.currentTarget.checked);
+          onChange?.(event);
+        }}
+        role="switch"
+        type="checkbox"
+        {...props}
+      />
+      <span
+        aria-hidden="true"
+        className={[
+          "pointer-events-none h-6 w-10 rounded-full border-hairline border-transparent bg-secondary shadow-inner",
+          "motion-safe:transition-[background-color,border-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          "peer-checked:bg-primary peer-focus-visible:ring-1 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-0 peer-disabled:opacity-50",
+        ].join(" ")}
+      />
+      <span
+        aria-hidden="true"
+        className={[
+          "pointer-events-none absolute left-0.5 size-5 rounded-full bg-surface shadow-sm",
+          "motion-safe:transition-[transform,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          "peer-hover:shadow-md peer-active:scale-95 peer-checked:translate-x-4",
+        ].join(" ")}
+      />
+    </span>
   );
 }
 `;

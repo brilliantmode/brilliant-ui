@@ -274,6 +274,29 @@ function MiniTerminal({ children }: { children: string }) {
   );
 }
 
+function SwitchPreview() {
+  const [enabled, setEnabled] = useState(true);
+
+  return (
+    <label className="flex items-center gap-3 text-sm">
+      <span className="relative inline-grid h-6 w-10 shrink-0 place-items-center">
+        <input
+          aria-checked={enabled}
+          aria-label="Enable sync"
+          checked={enabled}
+          className="peer absolute inset-0 z-10 h-6 w-10 cursor-pointer appearance-none rounded-full opacity-0"
+          onChange={(event) => setEnabled(event.currentTarget.checked)}
+          role="switch"
+          type="checkbox"
+        />
+        <span className="pointer-events-none h-6 w-10 rounded-full border border-transparent bg-secondary shadow-inner transition-[background-color,border-color,box-shadow] duration-[var(--brilliant-duration-fast)] peer-checked:bg-primary peer-focus-visible:ring-1 peer-focus-visible:ring-ring" />
+        <span className="pointer-events-none absolute left-0.5 size-5 rounded-full bg-surface shadow-sm transition-[transform,box-shadow] duration-[var(--brilliant-duration-fast)] peer-active:scale-95 peer-checked:translate-x-4" />
+      </span>
+      <span className="text-sm">{enabled ? "Enabled" : "Disabled"}</span>
+    </label>
+  );
+}
+
 function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "badge") {
     return (
@@ -435,14 +458,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   }
 
   if (name === "switch") {
-    return (
-      <div className="flex items-center gap-3">
-        <span className="h-5 w-9 rounded-full bg-primary p-0.5">
-          <span className="block size-4 translate-x-4 rounded-full bg-surface shadow-sm" />
-        </span>
-        <span className="text-sm">Enabled</span>
-      </div>
-    );
+    return <SwitchPreview />;
   }
 
   if (name === "alert") {
