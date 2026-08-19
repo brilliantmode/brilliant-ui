@@ -871,10 +871,8 @@ export function Example() {
                         <table className="w-full border-collapse text-sm">
                           <thead className="bg-muted text-left">
                             <tr>
-                              <th className="border-b border-border px-4 py-3 font-medium">Size</th>
-                              <th className="border-b border-border px-4 py-3 font-medium">
-                                Classes
-                              </th>
+                              <th className="border-b border-border px-4 py-3 font-medium">Prop</th>
+                              <th className="border-b border-border px-4 py-3 font-medium">Use</th>
                               <th className="border-b border-border px-4 py-3 font-medium">
                                 Example
                               </th>
@@ -882,16 +880,30 @@ export function Example() {
                           </thead>
                           <tbody>
                             {[
-                              ["sm", "text-sm leading-5", "Updated 2 minutes ago"],
-                              ["md", "text-base leading-6", "Workspace usage"],
-                              ["lg", "text-lg leading-7", "AI ready"],
-                              ["xl", "text-2xl leading-8 tracking-tight", "Generating insights"],
-                            ].map(([size, classes, example]) => (
+                              [
+                                "sm",
+                                "Supporting labels, timestamps, helper copy.",
+                                "Updated 2 minutes ago",
+                              ],
+                              [
+                                "md",
+                                "Default body copy and ordinary interface text.",
+                                "Workspace usage",
+                              ],
+                              [
+                                "lg",
+                                "Emphasis text inside cards, panels, and empty states.",
+                                "AI ready",
+                              ],
+                              [
+                                "xl",
+                                "Short premium callouts and compact headings.",
+                                "Generating insights",
+                              ],
+                            ].map(([size, use, example]) => (
                               <tr className="border-b border-border last:border-b-0" key={size}>
-                                <td className="px-4 py-3 font-mono text-xs">{size}</td>
-                                <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                                  {classes}
-                                </td>
+                                <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>
+                                <td className="px-4 py-3 text-muted-foreground">{use}</td>
                                 <td className="px-4 py-3">
                                   <span
                                     className={[
