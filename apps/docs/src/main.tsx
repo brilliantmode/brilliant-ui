@@ -102,6 +102,8 @@ const navGroups = [
   },
   {
     items: [
+      ["Header", "/components/header"],
+      ["Footer", "/components/footer"],
       ["Application Shell", "/components/application-shell"],
       ["Onboarding Wizard", "/components/onboarding-wizard"],
       ["Foundations", "/foundations"],
@@ -1243,6 +1245,84 @@ export function Example() {
         <CommandItem>Invite teammate</CommandItem>
       </CommandList>
     </Command>
+  );
+}`,
+  header: `import {
+  Header,
+  HeaderActions,
+  HeaderBrand,
+  HeaderContainer,
+  HeaderLink,
+  HeaderMobileTrigger,
+  HeaderNav,
+} from "@/components/ui/header";
+import { Button } from "@/components/ui/button";
+
+export function Example() {
+  return (
+    <Header position="sticky">
+      <HeaderContainer>
+        <HeaderBrand href="/">Brilliant</HeaderBrand>
+        <HeaderMobileTrigger />
+        <HeaderNav>
+          <HeaderLink active href="/dashboard">Dashboard</HeaderLink>
+          <HeaderLink href="/projects">Projects</HeaderLink>
+          <HeaderLink href="/settings">Settings</HeaderLink>
+        </HeaderNav>
+        <HeaderActions className="hidden md:flex">
+          <Button size="sm">New project</Button>
+        </HeaderActions>
+      </HeaderContainer>
+    </Header>
+  );
+}`,
+  footer: `import {
+  Footer,
+  FooterBottom,
+  FooterBrand,
+  FooterContainer,
+  FooterDescription,
+  FooterGroup,
+  FooterLink,
+  FooterMain,
+  FooterNav,
+} from "@/components/ui/footer";
+
+export function Example() {
+  return (
+    <Footer variant="surface">
+      <FooterContainer>
+        <FooterMain>
+          <div>
+            <FooterBrand href="/">Brilliant UI</FooterBrand>
+            <FooterDescription>
+              App-owned components with enterprise defaults and built-in micro UX.
+            </FooterDescription>
+          </div>
+          <FooterNav>
+            <FooterGroup title="Product">
+              <FooterLink href="/components">Components</FooterLink>
+              <FooterLink href="/blocks">Blocks</FooterLink>
+            </FooterGroup>
+            <FooterGroup title="Resources">
+              <FooterLink href="/docs">Documentation</FooterLink>
+              <FooterLink href="/changelog">Changelog</FooterLink>
+            </FooterGroup>
+            <FooterGroup title="Company">
+              <FooterLink href="/about">About</FooterLink>
+              <FooterLink href="/contact">Contact</FooterLink>
+            </FooterGroup>
+          </FooterNav>
+        </FooterMain>
+        <FooterBottom>
+          <span>© 2026 Brilliant UI</span>
+          <div className="flex gap-4">
+            <FooterLink href="/privacy">Privacy</FooterLink>
+            <FooterLink href="/terms">Terms</FooterLink>
+          </div>
+        </FooterBottom>
+      </FooterContainer>
+    </Footer>
   );
 }`,
   "application-shell": `import {
@@ -3052,7 +3132,129 @@ function PhotoExamplePreview({ example }: { example: keyof typeof photoExampleCo
   );
 }
 
+function HeaderPreview() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <header className="relative z-20 w-full border-b border-border bg-background/95 text-foreground backdrop-blur">
+      <div className="relative mx-auto flex min-h-14 max-w-screen-2xl items-center gap-3 px-4 md:px-6">
+        <a className="font-semibold tracking-[-0.015em]" href="#header-preview">
+          Brilliant
+        </a>
+        <button
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+          className="ml-auto inline-grid size-9 place-items-center rounded-[0.25rem] hover:bg-muted active:scale-[0.97] md:hidden"
+          onClick={() => setMenuOpen((open) => !open)}
+          type="button"
+        >
+          <span aria-hidden="true" className="grid gap-1">
+            <span
+              className={`block h-px w-4 bg-current transition-transform ${menuOpen ? "translate-y-[2.5px] rotate-45" : ""}`}
+            />
+            <span
+              className={`block h-px w-4 bg-current transition-transform ${menuOpen ? "-translate-y-[2.5px] -rotate-45" : ""}`}
+            />
+          </span>
+        </button>
+        <nav
+          aria-label="Primary navigation"
+          className={[
+            "absolute inset-x-0 top-full grid gap-1 border-b border-border bg-background p-3 shadow-md",
+            menuOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0",
+            "md:static md:ml-4 md:flex md:visible md:translate-y-0 md:items-center md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:shadow-none",
+          ].join(" ")}
+        >
+          {[
+            ["Dashboard", true],
+            ["Projects", false],
+            ["Settings", false],
+          ].map(([label, active]) => (
+            <a
+              aria-current={active ? "page" : undefined}
+              className={`rounded-[0.25rem] px-3 py-2 text-sm ${active ? "bg-muted font-medium text-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+              href={`#header-${String(label).toLowerCase()}`}
+              key={String(label)}
+              onClick={() => setMenuOpen(false)}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+        <div className="ml-auto hidden items-center gap-2 md:flex">
+          <button
+            className="h-8 rounded-[0.25rem] bg-primary px-3 text-xs font-medium text-primary-foreground hover:-translate-y-px active:translate-y-0 active:scale-[0.99]"
+            type="button"
+          >
+            New project
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function FooterPreview() {
+  return (
+    <footer className="w-full border-t border-border bg-background text-sm text-muted-foreground">
+      <div className="mx-auto w-full max-w-screen-2xl px-4 py-8 md:px-6">
+        <div className="grid gap-8 md:grid-cols-[minmax(0,1.3fr)_minmax(0,2fr)]">
+          <div>
+            <a className="font-semibold tracking-[-0.015em] text-foreground" href="#footer-brand">
+              Brilliant UI
+            </a>
+            <p className="mt-3 max-w-sm leading-6">
+              App-owned components with enterprise defaults and built-in micro UX.
+            </p>
+          </div>
+          <nav aria-label="Footer navigation" className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+            {[
+              ["Product", "Components", "Blocks"],
+              ["Resources", "Documentation", "Changelog"],
+              ["Company", "About", "Contact"],
+            ].map(([title, ...links]) => (
+              <div className="grid content-start gap-2" key={title}>
+                <h4 className="mb-1 text-xs font-semibold uppercase tracking-[0.14em] text-foreground">
+                  {title}
+                </h4>
+                {links.map((link) => (
+                  <a
+                    className="w-fit leading-6 hover:text-foreground"
+                    href="#footer-link"
+                    key={link}
+                  >
+                    {link}
+                  </a>
+                ))}
+              </div>
+            ))}
+          </nav>
+        </div>
+        <div className="mt-8 flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
+          <span>© 2026 Brilliant UI</span>
+          <div className="flex gap-4">
+            <a className="hover:text-foreground" href="#footer-privacy">
+              Privacy
+            </a>
+            <a className="hover:text-foreground" href="#footer-terms">
+              Terms
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 function ComponentMiniPreview({ name }: { name: string }) {
+  if (name === "header") {
+    return <HeaderPreview />;
+  }
+
+  if (name === "footer") {
+    return <FooterPreview />;
+  }
+
   if (name === "button-group") {
     return (
       <div className="inline-flex flex-row items-stretch [&>*]:relative [&>*]:z-0 [&>*:focus-visible]:z-10 [&>*:not(:first-child)]:-ml-px [&>*:not(:first-child)]:rounded-l-none [&>*:not(:last-child)]:rounded-r-none">
@@ -5051,7 +5253,9 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                       </div>
                     ) : null}
 
-                    {item.name === "card" ||
+                    {item.name === "header" ||
+                    item.name === "footer" ||
+                    item.name === "card" ||
                     item.name === "text" ||
                     item.name === "checkbox" ||
                     item.name === "radio-group" ||
@@ -5062,7 +5266,9 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                     item.name === "spinner" ||
                     item.name === "empty-state" ? (
                       <div className="space-y-3">
-                        <h3 className="text-lg font-semibold">Variants</h3>
+                        <h3 className="text-lg font-semibold">
+                          {item.name === "header" ? "Positioning" : "Variants"}
+                        </h3>
                         <div className="overflow-auto rounded-lg border border-border">
                           <table className="w-full border-collapse text-sm">
                             <thead className="bg-muted text-left">
@@ -5076,93 +5282,123 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                               </tr>
                             </thead>
                             <tbody>
-                              {(item.name === "card"
+                              {(item.name === "header"
                                 ? [
-                                    ["surface", "Default content grouping."],
-                                    ["elevated", "Raised dashboard or summary surfaces."],
-                                    ["accent", "Selected, highlighted, or recommended content."],
-                                    [
-                                      "beam",
-                                      "Premium live, AI, processing, or highlighted states.",
-                                    ],
-                                    ["muted", "Low-emphasis grouping inside denser layouts."],
-                                    ["ghost", "Structure without a visible panel."],
+                                    ["sticky", "Stays at the viewport top while content scrolls."],
+                                    ["static", "Remains in normal document flow and scrolls away."],
+                                    ["fixed", "Pins to the viewport and overlays page content."],
                                   ]
-                                : item.name === "checkbox"
+                                : item.name === "footer"
                                   ? [
-                                      ["default", "Normal selection state."],
-                                      ["critical", "Destructive or high-risk selection context."],
+                                      ["surface", "Default footer on the page background."],
+                                      ["muted", "Stronger separation from the page body."],
+                                      ["transparent", "Footer inside an existing surface."],
                                     ]
-                                  : item.name === "radio-group"
+                                  : item.name === "card"
                                     ? [
-                                        ["default", "Normal single-choice selection."],
-                                        ["critical", "High-risk or destructive choice context."],
+                                        ["surface", "Default content grouping."],
+                                        ["elevated", "Raised dashboard or summary surfaces."],
+                                        [
+                                          "accent",
+                                          "Selected, highlighted, or recommended content.",
+                                        ],
+                                        [
+                                          "beam",
+                                          "Premium live, AI, processing, or highlighted states.",
+                                        ],
+                                        ["muted", "Low-emphasis grouping inside denser layouts."],
+                                        ["ghost", "Structure without a visible panel."],
                                       ]
-                                    : item.name === "photo"
+                                    : item.name === "checkbox"
                                       ? [
-                                          ["surface", "Default image surface for cards and grids."],
+                                          ["default", "Normal selection state."],
                                           [
-                                            "elevated",
-                                            "Prominent gallery, profile, or hero media.",
+                                            "critical",
+                                            "Destructive or high-risk selection context.",
                                           ],
-                                          ["ghost", "Flush media inside an existing surface."],
                                         ]
-                                      : item.name === "separator"
+                                      : item.name === "radio-group"
                                         ? [
-                                            ["default", "Standard divider using the border token."],
-                                            ["muted", "Subtle divider for dense grouped content."],
-                                            ["primary", "Branded or active section divider."],
+                                            ["default", "Normal single-choice selection."],
+                                            [
+                                              "critical",
+                                              "High-risk or destructive choice context.",
+                                            ],
                                           ]
-                                        : item.name === "progress"
+                                        : item.name === "photo"
                                           ? [
-                                              ["default", "Normal progress indication."],
                                               [
-                                                "critical",
-                                                "Risky, blocking, or destructive flows.",
+                                                "surface",
+                                                "Default image surface for cards and grids.",
                                               ],
+                                              [
+                                                "elevated",
+                                                "Prominent gallery, profile, or hero media.",
+                                              ],
+                                              ["ghost", "Flush media inside an existing surface."],
                                             ]
-                                          : item.name === "spinner"
+                                          : item.name === "separator"
                                             ? [
-                                                ["default", "Primary local loading indicator."],
-                                                ["muted", "Secondary loading next to text."],
                                                 [
-                                                  "critical",
-                                                  "Loading tied to risky/error recovery.",
+                                                  "default",
+                                                  "Standard divider using the border token.",
                                                 ],
+                                                [
+                                                  "muted",
+                                                  "Subtle divider for dense grouped content.",
+                                                ],
+                                                ["primary", "Branded or active section divider."],
                                               ]
-                                            : item.name === "empty-state"
+                                            : item.name === "progress"
                                               ? [
-                                                  ["surface", "Default empty region panel."],
-                                                  ["muted", "Lower-emphasis empty region."],
+                                                  ["default", "Normal progress indication."],
                                                   [
-                                                    "ghost",
-                                                    "Use inside an already bordered surface.",
+                                                    "critical",
+                                                    "Risky, blocking, or destructive flows.",
                                                   ],
                                                 ]
-                                              : item.name === "skeleton"
+                                              : item.name === "spinner"
                                                 ? [
-                                                    ["surface", "Default loading placeholder."],
+                                                    ["default", "Primary local loading indicator."],
+                                                    ["muted", "Secondary loading next to text."],
                                                     [
-                                                      "raised",
-                                                      "Slightly stronger placeholder hierarchy.",
-                                                    ],
-                                                    [
-                                                      "primary",
-                                                      "Branded loading placeholder, used sparingly.",
+                                                      "critical",
+                                                      "Loading tied to risky/error recovery.",
                                                     ],
                                                   ]
-                                                : [
-                                                    ["default", "Normal UI copy."],
-                                                    ["muted", "Secondary or supporting copy."],
-                                                    [
-                                                      "glow",
-                                                      "Premium, active, or AI-ready emphasis.",
-                                                    ],
-                                                    [
-                                                      "shimmer",
-                                                      "Generating, syncing, or live processing text.",
-                                                    ],
-                                                  ]
+                                                : item.name === "empty-state"
+                                                  ? [
+                                                      ["surface", "Default empty region panel."],
+                                                      ["muted", "Lower-emphasis empty region."],
+                                                      [
+                                                        "ghost",
+                                                        "Use inside an already bordered surface.",
+                                                      ],
+                                                    ]
+                                                  : item.name === "skeleton"
+                                                    ? [
+                                                        ["surface", "Default loading placeholder."],
+                                                        [
+                                                          "raised",
+                                                          "Slightly stronger placeholder hierarchy.",
+                                                        ],
+                                                        [
+                                                          "primary",
+                                                          "Branded loading placeholder, used sparingly.",
+                                                        ],
+                                                      ]
+                                                    : [
+                                                        ["default", "Normal UI copy."],
+                                                        ["muted", "Secondary or supporting copy."],
+                                                        [
+                                                          "glow",
+                                                          "Premium, active, or AI-ready emphasis.",
+                                                        ],
+                                                        [
+                                                          "shimmer",
+                                                          "Generating, syncing, or live processing text.",
+                                                        ],
+                                                      ]
                               ).map(([variant, use]) => (
                                 <tr
                                   className="border-b border-border last:border-b-0"
@@ -5175,7 +5411,23 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                             </tbody>
                           </table>
                         </div>
-                        {item.name === "card" ? (
+                        {item.name === "header" ? (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            <code>position=&quot;sticky&quot;</code> is the default. Use{" "}
+                            <code>position=&quot;static&quot;</code> for a non-sticky header. Fixed
+                            headers overlay content, so the application must reserve matching top
+                            space. Mobile navigation, Escape handling, and the animated menu icon
+                            are built into the component.
+                          </p>
+                        ) : item.name === "footer" ? (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            Set <code>variant=&quot;surface&quot;</code>,{" "}
+                            <code>variant=&quot;muted&quot;</code>, or{" "}
+                            <code>variant=&quot;transparent&quot;</code>. Compose link columns with{" "}
+                            <code>FooterNav</code> and <code>FooterGroup</code>; reserve{" "}
+                            <code>FooterBottom</code> for copyright and legal links.
+                          </p>
+                        ) : item.name === "card" ? (
                           <p className="text-sm leading-6 text-muted-foreground">
                             Set <code>interactive</code> to add hover lift, elevation, and press
                             feedback for clickable card targets. Set{" "}

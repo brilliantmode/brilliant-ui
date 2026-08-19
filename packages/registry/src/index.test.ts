@@ -45,6 +45,25 @@ describe("registry", () => {
     );
   });
 
+  it("ships responsive header and structured footer layouts", () => {
+    const header = findRegistryItem("header");
+    const headerSource = header?.files[0]?.content;
+    const footer = findRegistryItem("footer");
+    const footerSource = footer?.files[0]?.content;
+
+    expect(header?.kind).toBe("layout");
+    expect(headerSource).toContain('sticky: "sticky top-0"');
+    expect(headerSource).toContain('static: "relative"');
+    expect(headerSource).toContain('fixed: "fixed inset-x-0 top-0"');
+    expect(headerSource).toContain("export function HeaderMobileTrigger");
+    expect(headerSource).toContain('event.key === "Escape"');
+
+    expect(footer?.kind).toBe("layout");
+    expect(footerSource).toContain("export function FooterNav");
+    expect(footerSource).toContain("export function FooterGroup");
+    expect(footerSource).toContain("export function FooterBottom");
+  });
+
   it("defines a versioned JSON schema", () => {
     expect(registryItemSchema.properties.kind.enum).toBe(registryKinds);
     expect(registryItemSchema.required).toContain("registryDependencies");
