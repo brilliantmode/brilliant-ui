@@ -1075,11 +1075,227 @@ function PreviewButton({ children, className }: { children: ReactNode; className
   );
 }
 
-function CodeBlock({ children }: { children: string }) {
+const tsxKeywords = new Set([
+  "as",
+  "const",
+  "export",
+  "false",
+  "from",
+  "function",
+  "import",
+  "let",
+  "return",
+  "true",
+  "type",
+]);
+
+type CodeLanguage = "bash" | "css" | "tsx";
+
+function highlightInlineCode(line: string, language: CodeLanguage): ReactNode {
+  if (language === "bash") {
+    const shellComment = line.indexOf("#");
+    if (shellComment >= 0) {
+      return (
+        <>
+          {highlightInlineCode(line.slice(0, shellComment), "bash")}
+          <span className="text-code-comment">{line.slice(shellComment)}</span>
+        </>
+      );
+    }
+
+    return line.split(/(\s+|--?[a-zA-Z0-9-]+|"[^"]*"|'[^']*')/g).map((part, index) => {
+      if (!part) return null;
+      const key = `${part}-${index}`;
+
+      if (/^["']/.test(part)) {
+        return (
+          <span className="text-code-string" key={key}>
+            {part}
+          </span>
+        );
+      }
+
+      if (/^--?/.test(part)) {
+        return (
+          <span className="text-code-attr" key={key}>
+            {part}
+          </span>
+        );
+      }
+
+      if (/^(npx|pnpm|npm|yarn|bun)$/.test(part)) {
+        return (
+          <span className="text-code-keyword" key={key}>
+            {part}
+          </span>
+        );
+      }
+
+      return part;
+    });
+  }
+
+  if (language === "css") {
+    return line
+      .split(/(\/\*.*?\*\/|--[A-Za-z0-9-]+|:[^;{}]+|#[A-Fa-f0-9]+|\[[^\]]+\]|[{};])/g)
+      .map((part, index) => {
+        if (!part) return null;
+        const key = `${part}-${index}`;
+
+        if (part.startsWith("/*")) {
+          return (
+            <span className="text-code-comment" key={key}>
+              {part}
+            </span>
+          );
+        }
+
+        if (part.startsWith("--")) {
+          return (
+            <span className="text-code-attr" key={key}>
+              {part}
+            </span>
+          );
+        }
+
+        if (part.startsWith(":")) {
+          return (
+            <span className="text-code-string" key={key}>
+              {part}
+            </span>
+          );
+        }
+
+        if (part.startsWith("[") || part.startsWith("#")) {
+          return (
+            <span className="text-code-component" key={key}>
+              {part}
+            </span>
+          );
+        }
+
+        if (/^[{};]$/.test(part)) {
+          return (
+            <span className="text-code-keyword" key={key}>
+              {part}
+            </span>
+          );
+        }
+
+        return part;
+      });
+  }
+
+  return line
+    .split(
+      /(\/\/.*|\/\*.*?\*\/|"[^"]*"|'[^']*'|`[^`]*`|<\/?[A-Z][A-Za-z0-9.]*|<\/?[a-z][A-Za-z0-9.-]*|[A-Za-z_][A-Za-z0-9_]*(?==)|\b\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b)/g,
+    )
+    .map((part, index) => {
+      if (!part) return null;
+      const key = `${part}-${index}`;
+
+      if (part.startsWith("//") || part.startsWith("/*")) {
+        return (
+          <span className="text-code-comment" key={key}>
+            {part}
+          </span>
+        );
+      }
+
+      if (/^["'`]/.test(part)) {
+        return (
+          <span className="text-code-string" key={key}>
+            {part}
+          </span>
+        );
+      }
+
+      if (/^<\/?[A-Z]/.test(part)) {
+        return (
+          <span className="text-code-component" key={key}>
+            {part}
+          </span>
+        );
+      }
+
+      if (/^<\/?[a-z]/.test(part)) {
+        return (
+          <span className="text-code-tag" key={key}>
+            {part}
+          </span>
+        );
+      }
+
+      if (/^\d/.test(part)) {
+        return (
+          <span className="text-code-number" key={key}>
+            {part}
+          </span>
+        );
+      }
+
+      if (tsxKeywords.has(part)) {
+        return (
+          <span className="text-code-keyword" key={key}>
+            {part}
+          </span>
+        );
+      }
+
+      if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(part) && line.includes(`${part}=`)) {
+        return (
+          <span className="text-code-attr" key={key}>
+            {part}
+          </span>
+        );
+      }
+
+      return part;
+    });
+}
+
+function HighlightedCode({ children, language }: { children: string; language: CodeLanguage }) {
   return (
-    <pre className="overflow-auto rounded-lg border border-border bg-surface p-4 text-sm leading-6">
-      <code>{children}</code>
+    <>
+      {children.split("\n").map((line, index, lines) => (
+        <span className="block min-h-5" key={`${line}-${index}`}>
+          {highlightInlineCode(line, language)}
+          {index < lines.length - 1 ? "\n" : null}
+        </span>
+      ))}
+    </>
+  );
+}
+
+function CodeBlock({ children, language = "tsx" }: { children: string; language?: CodeLanguage }) {
+  return (
+    <pre className="overflow-auto rounded-lg border border-border bg-code p-4 font-mono text-sm leading-6 text-code-foreground shadow-sm">
+      <code>
+        <HighlightedCode language={language}>{children}</HighlightedCode>
+      </code>
     </pre>
+  );
+}
+
+function ExamplePanel({ children, code }: { children: ReactNode; code: string }) {
+  const [showCode, setShowCode] = useState(false);
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="text-lg font-semibold">Preview</h3>
+        <button
+          aria-expanded={showCode}
+          className="inline-flex h-8 items-center rounded-[0.25rem] border border-border bg-surface px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          onClick={() => setShowCode((current) => !current)}
+          type="button"
+        >
+          {showCode ? "Hide code" : "View code"}
+        </button>
+      </div>
+      <div className="rounded-lg border border-border bg-background p-6">{children}</div>
+      {showCode ? <CodeBlock>{code}</CodeBlock> : null}
+    </div>
   );
 }
 
@@ -3126,7 +3342,7 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
               Components
             </SectionHeading>
 
-            <CodeBlock>{`npx brilliant-ui add ${registry.map((item) => item.name).join(" ")}`}</CodeBlock>
+            <CodeBlock language="bash">{`npx brilliant-ui add ${registry.map((item) => item.name).join(" ")}`}</CodeBlock>
 
             <div className="overflow-auto rounded-lg border border-border">
               <table className="w-full border-collapse text-sm">
@@ -3176,30 +3392,14 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
 
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">Installation</h3>
-              <CodeBlock>{`pnpm --filter @brilliant-ui/cli dev -- add button`}</CodeBlock>
+              <CodeBlock language="bash">{`npx brilliant-ui add button`}</CodeBlock>
             </div>
 
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold">Usage</h3>
-              <CodeBlock>{`import { Button } from "@/components/ui/button";
-
-export function Example() {
-  return (
-    <Button size="md" variant="primary">
-      Save changes
-    </Button>
-  );
-}`}</CodeBlock>
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold">Preview</h3>
-              <div className="rounded-lg border border-border bg-background p-6">
-                <PreviewButton className={`${buttonVariants[0][2]} h-9 px-3.5 text-sm`}>
-                  Save changes
-                </PreviewButton>
-              </div>
-            </div>
+            <ExamplePanel code={usageForComponent("button")}>
+              <PreviewButton className={`${buttonVariants[0][2]} h-9 px-3.5 text-sm`}>
+                Save changes
+              </PreviewButton>
+            </ExamplePanel>
 
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">Variants</h3>
@@ -3321,20 +3521,12 @@ export function Example() {
 
                   <div className="space-y-3">
                     <h3 className="text-lg font-semibold">Installation</h3>
-                    <CodeBlock>{`npx brilliant-ui add ${item.name}`}</CodeBlock>
+                    <CodeBlock language="bash">{`npx brilliant-ui add ${item.name}`}</CodeBlock>
                   </div>
 
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-semibold">Usage</h3>
-                    <CodeBlock>{usage}</CodeBlock>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-semibold">Preview</h3>
-                    <div className="rounded-lg border border-border bg-background p-6">
-                      <ComponentMiniPreview name={item.name} />
-                    </div>
-                  </div>
+                  <ExamplePanel code={usage}>
+                    <ComponentMiniPreview name={item.name} />
+                  </ExamplePanel>
 
                   {item.name === "card" ||
                   item.name === "text" ||
@@ -3754,7 +3946,7 @@ export function Example() {
               Brand theming
             </SectionHeading>
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
-              <CodeBlock>{`:root {
+              <CodeBlock language="css">{`:root {
   --brilliant-primary: oklch(0.54 0.23 276);
   --brilliant-primary-foreground: oklch(1 0 0);
   --brilliant-ring: oklch(0.61 0.22 276);
@@ -3784,7 +3976,7 @@ export function Example() {
             <div className="rounded-lg border border-border bg-surface">
               <div className="border-b border-border px-4 py-3 text-sm font-medium">Demo</div>
               <div className="p-4">
-                <CodeBlock>{`TMP_DEMO=$(mktemp -d)
+                <CodeBlock language="bash">{`TMP_DEMO=$(mktemp -d)
 pnpm --dir /Users/nirvana/brilliant-ui --filter @brilliant-ui/cli dev -- init --cwd "$TMP_DEMO"
 pnpm --dir /Users/nirvana/brilliant-ui --filter @brilliant-ui/cli dev -- add button --cwd "$TMP_DEMO"
 find "$TMP_DEMO" -maxdepth 4 -type f | sort`}</CodeBlock>

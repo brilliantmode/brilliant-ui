@@ -49,6 +49,18 @@
   border-right-width: var(--brilliant-border-width-hairline);
 }
 
+@theme inline {
+  --color-code: oklch(0.18 0.03 259);
+  --color-code-foreground: oklch(0.93 0.015 259);
+  --color-code-attr: oklch(0.78 0.14 236);
+  --color-code-comment: oklch(0.62 0.035 259);
+  --color-code-component: oklch(0.82 0.12 322);
+  --color-code-keyword: oklch(0.77 0.15 276);
+  --color-code-number: oklch(0.8 0.13 152);
+  --color-code-string: oklch(0.82 0.12 88);
+  --color-code-tag: oklch(0.78 0.13 196);
+}
+
 body {
   margin: 0;
 }
