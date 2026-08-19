@@ -1460,7 +1460,7 @@ export function Example() {
           <span>Brilliant</span>
         </HeaderBrand>
         <HeaderMobileTrigger />
-        <HeaderNav>
+        <HeaderNav align="center">
           <HeaderLink active href="/dashboard">Dashboard</HeaderLink>
           <HeaderLink href="/projects">Projects</HeaderLink>
           <HeaderLink href="/settings">Settings</HeaderLink>
@@ -3373,7 +3373,7 @@ function HeaderPreview() {
           className={[
             "absolute inset-x-0 top-full grid gap-1 border-b border-border bg-background p-3 shadow-md",
             menuOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0",
-            "md:static md:ml-0 md:flex md:visible md:translate-y-0 md:items-center md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:shadow-none",
+            "md:static md:ml-0 md:flex md:visible md:translate-y-0 md:items-center md:justify-center md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:shadow-none",
           ].join(" ")}
         >
           {[
@@ -5127,7 +5127,7 @@ function AppHeader({
           <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
           <span className="hidden sm:inline">Brilliant UI</span>
         </HeaderBrand>
-        <HeaderNav className="!hidden min-w-0 flex-1 overflow-x-auto md:!flex">
+        <HeaderNav align="center" className="!hidden min-w-0 flex-1 overflow-x-auto md:!flex">
           {topNavItems.map(([label, href]) => (
             <HeaderLink
               active={isTopNavActive(activeRoute, href)}

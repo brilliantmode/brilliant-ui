@@ -2632,6 +2632,12 @@ const behaviors = {
     "data-[scrolled=true]:border-border data-[scrolled=true]:bg-background/95 data-[scrolled=true]:shadow-sm data-[visibility=hidden]:-translate-y-full data-[visibility=visible]:translate-y-0",
 } as const;
 
+const navAlignments = {
+  start: "md:justify-start",
+  center: "md:justify-center",
+  end: "md:justify-end",
+} as const;
+
 export interface HeaderScrollState {
   direction: "down" | "none" | "up";
   scrolled: boolean;
@@ -2793,7 +2799,11 @@ export function HeaderBrand({ className = "", ...props }: AnchorHTMLAttributes<H
   );
 }
 
-export function HeaderNav({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+export interface HeaderNavProps extends HTMLAttributes<HTMLElement> {
+  align?: keyof typeof navAlignments;
+}
+
+export function HeaderNav({ align = "start", className = "", ...props }: HeaderNavProps) {
   const { menuOpen } = useHeader();
 
   return (
@@ -2806,8 +2816,10 @@ export function HeaderNav({ className = "", ...props }: HTMLAttributes<HTMLEleme
           ? "visible translate-y-0 opacity-100"
           : "invisible -translate-y-1 opacity-0",
         "md:static md:ml-0 md:flex md:visible md:translate-y-0 md:items-center md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:shadow-none",
+        navAlignments[align],
         className,
       )}
+      data-align={align}
       data-state={menuOpen ? "open" : "closed"}
       {...props}
     />
@@ -4816,6 +4828,7 @@ export const registry = [
         "Style data-scrolled, data-scroll-direction, and data-visibility states to change color, transparency, density, or other presentation.",
         "Use onScrollStateChange when scroll state must change rendered content such as a logo or action set.",
         "Use HeaderContainer to constrain content width and align the brand, navigation, and actions.",
+        "Set HeaderNav align to start, center, or end to position desktop navigation within the available header space.",
         "Place an img, inline SVG, or framework image component inside HeaderBrand alongside optional brand text.",
         "Use HeaderMobileTrigger to expose the navigation below the mobile breakpoint.",
       ],
