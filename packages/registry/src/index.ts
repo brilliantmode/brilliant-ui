@@ -2871,6 +2871,189 @@ export function ApplicationShellFooter({ className = "", ...props }: HTMLAttribu
 }
 `;
 
+const onboardingWizardSource = `import type { ButtonHTMLAttributes, CSSProperties, HTMLAttributes, ReactNode } from "react";
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+const stepStates = {
+  complete: "border-primary/30 bg-primary/10 text-primary",
+  current: "border-primary bg-primary text-primary-foreground shadow-sm",
+  upcoming: "border-border bg-background text-muted-foreground",
+} as const;
+
+export interface OnboardingWizardProps extends HTMLAttributes<HTMLDivElement> {
+  variant?: "panel" | "split" | "compact";
+}
+
+export function OnboardingWizard({
+  className = "",
+  variant = "panel",
+  ...props
+}: OnboardingWizardProps) {
+  return (
+    <div
+      className={cx(
+        "overflow-hidden rounded-[0.75rem] border-hairline border-border bg-surface shadow-sm",
+        "motion-safe:animate-enter motion-reduce:animate-none",
+        variant === "split" && "grid md:grid-cols-[18rem_minmax(0,1fr)]",
+        variant === "compact" && "max-w-2xl",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function OnboardingWizardHeader({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cx("border-b border-border bg-background/70 px-5 py-4", className)}
+      {...props}
+    />
+  );
+}
+
+export function OnboardingWizardTitle({ className = "", ...props }: HTMLAttributes<HTMLHeadingElement>) {
+  return <h2 className={cx("text-lg font-semibold tracking-tight", className)} {...props} />;
+}
+
+export function OnboardingWizardDescription({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={cx("mt-1 text-sm leading-6 text-muted-foreground", className)} {...props} />;
+}
+
+export function OnboardingWizardProgress({
+  className = "",
+  label = "Onboarding progress",
+  value,
+  ...props
+}: HTMLAttributes<HTMLDivElement> & {
+  label?: string;
+  value: number;
+}) {
+  const clampedValue = Math.max(0, Math.min(100, value));
+
+  return (
+    <div className={cx("mt-4 grid gap-2", className)} {...props}>
+      <div className="flex items-center justify-between gap-3 text-xs">
+        <span className="font-medium text-muted-foreground">{label}</span>
+        <span className="font-medium text-foreground">{clampedValue}%</span>
+      </div>
+      <div className="h-1.5 overflow-hidden rounded-full bg-muted" role="presentation">
+        <div
+          className="h-full origin-left rounded-full bg-primary transition-transform duration-[var(--brilliant-duration-normal)] ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none"
+          style={{ transform: "scaleX(var(--wizard-progress))", "--wizard-progress": clampedValue / 100 } as CSSProperties}
+        />
+      </div>
+    </div>
+  );
+}
+
+export function OnboardingWizardStepList({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLOListElement>) {
+  return (
+    <ol
+      className={cx("grid gap-2 border-b border-border p-4 md:border-r md:border-b-0", className)}
+      {...props}
+    />
+  );
+}
+
+export function OnboardingWizardStep({
+  children,
+  className = "",
+  description,
+  index,
+  state = "upcoming",
+  title,
+  type = "button",
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  description?: ReactNode;
+  index: number;
+  state?: keyof typeof stepStates;
+  title: ReactNode;
+}) {
+  return (
+    <li className="list-none">
+      <button
+        aria-current={state === "current" ? "step" : undefined}
+        className={cx(
+          "group flex w-full items-start gap-3 rounded-[0.5rem] px-3 py-2.5 text-left transition-[background-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)]",
+          "hover:bg-muted active:scale-[0.99] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+          state === "current" && "bg-muted shadow-[inset_0_0_0_0.5px_var(--brilliant-control-border)]",
+          className,
+        )}
+        type={type}
+        {...props}
+      >
+        <span
+          className={cx(
+            "mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border-hairline text-xs font-semibold transition-colors",
+            stepStates[state],
+          )}
+        >
+          {state === "complete" ? "✓" : index}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-medium text-foreground">{title}</span>
+          {description ? (
+            <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
+              {description}
+            </span>
+          ) : null}
+          {children}
+        </span>
+      </button>
+    </li>
+  );
+}
+
+export function OnboardingWizardPanel({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <section className={cx("grid min-h-80 content-between gap-6 p-5", className)} {...props} />;
+}
+
+export function OnboardingWizardMeta({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cx(
+        "inline-flex w-fit items-center rounded-[0.375rem] bg-primary/10 px-2 py-1 text-xs font-medium text-primary",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function OnboardingWizardContent({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return <div className={cx("grid gap-4", className)} {...props} />;
+}
+
+export function OnboardingWizardActions({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cx(
+        "flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+`;
+
 export const registry = [
   {
     name: "button",
@@ -3812,6 +3995,56 @@ export const registry = [
       avoid: [
         "Do not use for marketing pages or one-off landing layouts.",
         "Do not put every possible destination in the primary sidebar.",
+      ],
+    },
+  },
+  {
+    name: "onboarding-wizard",
+    title: "Onboarding Wizard",
+    description:
+      "A premium multi-step onboarding flow with step rail, progress, content panel, and actions.",
+    kind: "layout",
+    dependencies: [],
+    registryDependencies: [],
+    files: [
+      {
+        path: "onboarding-wizard.tsx",
+        content: onboardingWizardSource,
+        target: "ui/onboarding-wizard.tsx",
+      },
+    ],
+    metadata: {
+      purpose:
+        "Guides users through product setup, activation, import, provisioning, or first-run workflows.",
+      slots: [
+        "root",
+        "header",
+        "title",
+        "description",
+        "progress",
+        "step-list",
+        "step",
+        "panel",
+        "meta",
+        "content",
+        "actions",
+      ],
+      accessibility: [
+        "Current step exposes aria-current=step.",
+        "Step controls are native buttons with visible focus.",
+        "Progress includes visible text and a tokenized progress track.",
+        "Entry and interaction motion respects reduced-motion preferences.",
+      ],
+      usage: [
+        "Use for first-run onboarding, workspace setup, imports, and activation checklists.",
+        "Keep active step state in the app so form data and navigation are explicit.",
+        "Use complete/current/upcoming step states to show progress without hiding skipped steps.",
+        "Put real form fields, uploads, or integration cards inside OnboardingWizardContent.",
+      ],
+      avoid: [
+        "Do not use for one-screen settings forms.",
+        "Do not block users with unnecessary onboarding steps.",
+        "Do not rely only on color to communicate step status.",
       ],
     },
   },

@@ -94,6 +94,7 @@ const navGroups = [
   {
     items: [
       ["Application Shell", "#application-shell"],
+      ["Onboarding Wizard", "#onboarding-wizard"],
       ["Foundations", "#foundations"],
       ["Blocks", "#blocks"],
       ["Theming", "#theming"],
@@ -1112,6 +1113,86 @@ export function Example() {
         </ApplicationShellMain>
       </div>
     </ApplicationShell>
+  );
+}`,
+  "onboarding-wizard": `import {
+  OnboardingWizard,
+  OnboardingWizardActions,
+  OnboardingWizardContent,
+  OnboardingWizardDescription,
+  OnboardingWizardHeader,
+  OnboardingWizardMeta,
+  OnboardingWizardPanel,
+  OnboardingWizardProgress,
+  OnboardingWizardStep,
+  OnboardingWizardStepList,
+  OnboardingWizardTitle,
+} from "@/components/ui/onboarding-wizard";
+
+const steps = [
+  ["Workspace", "Name and team defaults", "complete"],
+  ["Import", "Bring in existing data", "current"],
+  ["Invite", "Add operators and reviewers", "upcoming"],
+] as const;
+
+export function Example() {
+  return (
+    <OnboardingWizard variant="split">
+      <div>
+        <OnboardingWizardHeader>
+          <OnboardingWizardTitle>Launch workspace</OnboardingWizardTitle>
+          <OnboardingWizardDescription>
+            Configure the basics before your team starts using Brilliant.
+          </OnboardingWizardDescription>
+          <OnboardingWizardProgress value={42} />
+        </OnboardingWizardHeader>
+
+        <OnboardingWizardStepList>
+          {steps.map(([title, description, state], index) => (
+            <OnboardingWizardStep
+              description={description}
+              index={index + 1}
+              key={title}
+              state={state}
+              title={title}
+            />
+          ))}
+        </OnboardingWizardStepList>
+      </div>
+
+      <OnboardingWizardPanel>
+        <OnboardingWizardContent>
+          <OnboardingWizardMeta>Step 2 of 3</OnboardingWizardMeta>
+          <div>
+            <OnboardingWizardTitle>Import customer data</OnboardingWizardTitle>
+            <OnboardingWizardDescription>
+              Connect a source or upload a CSV. You can map fields before anything is written.
+            </OnboardingWizardDescription>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button className="rounded-lg border border-border bg-background p-4 text-left">
+              <span className="block font-medium">Connect Salesforce</span>
+              <span className="mt-1 block text-sm text-muted-foreground">
+                Sync accounts and owners.
+              </span>
+            </button>
+            <button className="rounded-lg border border-border bg-background p-4 text-left">
+              <span className="block font-medium">Upload CSV</span>
+              <span className="mt-1 block text-sm text-muted-foreground">
+                Review columns before import.
+              </span>
+            </button>
+          </div>
+        </OnboardingWizardContent>
+
+        <OnboardingWizardActions>
+          <button className="text-sm font-medium text-muted-foreground">Back</button>
+          <button className="rounded bg-primary px-3 py-2 text-sm font-medium text-primary-foreground">
+            Continue
+          </button>
+        </OnboardingWizardActions>
+      </OnboardingWizardPanel>
+    </OnboardingWizard>
   );
 }`,
   "empty-state": `import {
@@ -2949,6 +3030,114 @@ function ComponentMiniPreview({ name }: { name: string }) {
     );
   }
 
+  if (name === "onboarding-wizard") {
+    const steps = [
+      ["Workspace", "Name and team defaults", "complete"],
+      ["Import", "Bring in existing data", "current"],
+      ["Invite", "Add operators and reviewers", "upcoming"],
+    ] as const;
+
+    return (
+      <div className="overflow-hidden rounded-[0.75rem] border border-border bg-surface shadow-sm motion-safe:animate-enter motion-reduce:animate-none">
+        <div className="grid md:grid-cols-[18rem_minmax(0,1fr)]">
+          <div>
+            <div className="border-b border-border bg-background/70 px-5 py-4">
+              <h3 className="text-lg font-semibold tracking-tight">Launch workspace</h3>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                Configure the basics before your team starts using Brilliant.
+              </p>
+              <div className="mt-4 grid gap-2">
+                <div className="flex items-center justify-between gap-3 text-xs">
+                  <span className="font-medium text-muted-foreground">Onboarding progress</span>
+                  <span className="font-medium text-foreground">42%</span>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                  <div className="h-full w-[42%] rounded-full bg-primary transition-[width] duration-[var(--brilliant-duration-normal)]" />
+                </div>
+              </div>
+            </div>
+            <ol className="grid gap-2 border-b border-border p-4 md:border-r md:border-b-0">
+              {steps.map(([title, description, state], index) => (
+                <li className="list-none" key={title}>
+                  <button
+                    aria-current={state === "current" ? "step" : undefined}
+                    className={[
+                      "group flex w-full items-start gap-3 rounded-[0.5rem] px-3 py-2.5 text-left transition-[background-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] hover:bg-muted active:scale-[0.99]",
+                      state === "current"
+                        ? "bg-muted shadow-[inset_0_0_0_0.5px_var(--brilliant-control-border)]"
+                        : "",
+                    ].join(" ")}
+                    type="button"
+                  >
+                    <span
+                      className={[
+                        "mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border text-xs font-semibold",
+                        state === "complete"
+                          ? "border-primary/30 bg-primary/10 text-primary"
+                          : state === "current"
+                            ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                            : "border-border bg-background text-muted-foreground",
+                      ].join(" ")}
+                    >
+                      {state === "complete" ? "✓" : index + 1}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-medium text-foreground">{title}</span>
+                      <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
+                        {description}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <section className="grid min-h-80 content-between gap-6 p-5">
+            <div className="grid gap-4">
+              <div className="inline-flex w-fit items-center rounded-[0.375rem] bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                Step 2 of 3
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold tracking-tight">Import customer data</h3>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  Connect a source or upload a CSV. You can map fields before anything is written.
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[
+                  ["Connect Salesforce", "Sync accounts and owners."],
+                  ["Upload CSV", "Review columns before import."],
+                ].map(([title, description]) => (
+                  <button
+                    className="rounded-[0.5rem] border border-border bg-background p-4 text-left transition-[border-color,box-shadow,transform] hover:-translate-y-px hover:border-primary/35 hover:shadow-sm active:translate-y-0 active:scale-[0.99]"
+                    key={title}
+                    type="button"
+                  >
+                    <span className="block text-sm font-medium">{title}</span>
+                    <span className="mt-1 block text-sm text-muted-foreground">{description}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+              <button className="text-sm font-medium text-muted-foreground" type="button">
+                Back
+              </button>
+              <button
+                className={`${buttonVariants[0][2]} h-9 rounded-[0.25rem] px-3.5 text-sm font-medium`}
+                type="button"
+              >
+                Continue
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
+  }
+
   if (name === "skeleton") {
     return (
       <div className="grid gap-4 md:grid-cols-[2fr_1fr]">
@@ -3109,6 +3298,7 @@ const navIcons: Record<string, ReactNode> = {
   Label: <path d="M4 7h10l6 5-6 5H4V7Z" />,
   Menubar: <path d="M4 7h16M4 12h16M4 17h16" />,
   "Navigation Menu": <path d="M4 6h16M4 12h12M4 18h8" />,
+  "Onboarding Wizard": <path d="M5 5h14v14H5V5Zm4 4h6M9 13h4" />,
   Pagination: <path d="m8 8-4 4 4 4m8-8 4 4-4 4" />,
   Popover: <path d="M6 5h12v10H9l-3 4V5Z" />,
   Progress: <path d="M5 12h14M5 12h8" />,
