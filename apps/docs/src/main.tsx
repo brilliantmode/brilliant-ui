@@ -9,6 +9,25 @@ import {
   useState,
 } from "react";
 import { createRoot } from "react-dom/client";
+import {
+  Footer,
+  FooterBottom,
+  FooterBrand,
+  FooterContainer,
+  FooterDescription,
+  FooterGroup,
+  FooterLink,
+  FooterMain,
+  FooterNav,
+} from "./components/ui/footer";
+import {
+  Header,
+  HeaderActions,
+  HeaderBrand,
+  HeaderContainer,
+  HeaderLink,
+  HeaderNav,
+} from "./components/ui/header";
 import "./styles.css";
 
 type NavItem = readonly [label: string, href: string];
@@ -4614,12 +4633,12 @@ function AppHeader({
   onNavigate: NavigateHandler;
 }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/82">
-      <div className="mx-auto flex h-14 max-w-screen-2xl items-center gap-3 px-4 md:px-6">
+    <Header position="sticky">
+      <HeaderContainer>
         <button
           aria-controls="mobile-docs-nav"
           aria-label="Open documentation navigation"
-          className="inline-flex size-9 items-center justify-center rounded-[0.25rem] border border-border bg-surface text-foreground transition-colors hover:bg-muted md:hidden"
+          className="inline-flex size-9 items-center justify-center rounded-[0.25rem] text-foreground transition-[background-color,transform] hover:bg-muted active:scale-[0.97] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring motion-reduce:transition-none md:hidden"
           onClick={onMenuClick}
           type="button"
         >
@@ -4627,37 +4646,27 @@ function AppHeader({
             ☰
           </span>
         </button>
-        <a
-          className="shrink-0 whitespace-nowrap text-sm font-semibold tracking-tight"
-          href="/"
-          onClick={(event) => onNavigate(event, "/")}
-        >
+        <HeaderBrand href="/" onClick={(event) => onNavigate(event, "/")}>
           Brilliant UI
-        </a>
-        <nav
-          aria-label="Primary"
-          className="hidden min-w-0 flex-1 items-center gap-1 overflow-x-auto text-sm text-muted-foreground md:flex"
-        >
+        </HeaderBrand>
+        <HeaderNav className="!hidden min-w-0 flex-1 overflow-x-auto md:!flex">
           {topNavItems.map(([label, href]) => (
-            <a
-              aria-current={isTopNavActive(activeRoute, href) ? "page" : undefined}
-              className={[
-                "shrink-0 whitespace-nowrap rounded-[0.25rem] px-3 py-1.5 transition-colors hover:bg-muted hover:text-foreground",
-                isTopNavActive(activeRoute, href) ? "bg-primary/10 text-foreground" : "",
-              ].join(" ")}
+            <HeaderLink
+              active={isTopNavActive(activeRoute, href)}
+              className="shrink-0 whitespace-nowrap"
               href={href}
               key={href}
               onClick={(event) => onNavigate(event, href)}
             >
               {label}
-            </a>
+            </HeaderLink>
           ))}
-        </nav>
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        </HeaderNav>
+        <HeaderActions className="shrink-0">
           <Badge tone="ready">v0.1 foundation</Badge>
-        </div>
-      </div>
-    </header>
+        </HeaderActions>
+      </HeaderContainer>
+    </Header>
   );
 }
 
@@ -4755,26 +4764,53 @@ function StatusRail({ firstItemTitle }: { firstItemTitle: string }) {
 
 function AppFooter({ onNavigate }: { onNavigate: NavigateHandler }) {
   return (
-    <footer className="border-t border-border bg-background">
-      <div className="mx-auto grid max-w-screen-2xl gap-4 px-4 py-6 text-sm text-muted-foreground md:grid-cols-[280px_minmax(0,1fr)_280px] md:px-6">
-        <p className="font-medium text-foreground">Brilliant UI</p>
-        <p>
-          Copy-owned shadcn-compatible source, enterprise-grade tokens, and micro UX primitives.
-        </p>
-        <div className="flex flex-wrap gap-3 md:justify-end">
-          {topNavItems.map(([label, href]) => (
-            <a
-              className="hover:text-foreground"
-              href={href}
-              key={href}
-              onClick={(event) => onNavigate(event, href)}
-            >
-              {label}
-            </a>
-          ))}
-        </div>
-      </div>
-    </footer>
+    <Footer variant="muted">
+      <FooterContainer className="py-8 md:py-8">
+        <FooterMain>
+          <div>
+            <FooterBrand href="/" onClick={(event) => onNavigate(event, "/")}>
+              Brilliant UI
+            </FooterBrand>
+            <FooterDescription>
+              Copy-owned shadcn-compatible source, enterprise-grade tokens, and built-in micro UX.
+            </FooterDescription>
+          </div>
+          <FooterNav>
+            <FooterGroup title="Build">
+              <FooterLink href="/components" onClick={(event) => onNavigate(event, "/components")}>
+                Components
+              </FooterLink>
+              <FooterLink href="/blocks" onClick={(event) => onNavigate(event, "/blocks")}>
+                Blocks
+              </FooterLink>
+            </FooterGroup>
+            <FooterGroup title="Customize">
+              <FooterLink
+                href="/foundations"
+                onClick={(event) => onNavigate(event, "/foundations")}
+              >
+                Foundations
+              </FooterLink>
+              <FooterLink href="/theming" onClick={(event) => onNavigate(event, "/theming")}>
+                Theming
+              </FooterLink>
+            </FooterGroup>
+            <FooterGroup title="Resources">
+              <FooterLink href="/" onClick={(event) => onNavigate(event, "/")}>
+                Documentation
+              </FooterLink>
+              <FooterLink href="/cli" onClick={(event) => onNavigate(event, "/cli")}>
+                CLI
+              </FooterLink>
+            </FooterGroup>
+          </FooterNav>
+        </FooterMain>
+        <FooterBottom className="mt-8">
+          <span>© 2026 Brilliant UI</span>
+          <span>App-owned components. Brandable by design.</span>
+        </FooterBottom>
+      </FooterContainer>
+    </Footer>
   );
 }
 

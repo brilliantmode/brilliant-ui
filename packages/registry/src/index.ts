@@ -2734,9 +2734,10 @@ export function HeaderNav({ className = "", ...props }: HTMLAttributes<HTMLEleme
 export function HeaderLink({
   active = false,
   className = "",
+  href,
   onClick,
   ...props
-}: AnchorHTMLAttributes<HTMLAnchorElement> & { active?: boolean }) {
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { active?: boolean; href: string }) {
   const { closeMenu } = useHeader();
 
   return (
@@ -2751,6 +2752,7 @@ export function HeaderLink({
           : "text-muted-foreground hover:bg-muted hover:text-foreground",
         className,
       )}
+      href={href}
       {...props}
       onClick={(event) => {
         onClick?.(event);
@@ -2872,6 +2874,7 @@ export function FooterNav({ className = "", ...props }: HTMLAttributes<HTMLEleme
 }
 
 export function FooterGroup({
+  children,
   className = "",
   title,
   ...props
@@ -2881,7 +2884,7 @@ export function FooterGroup({
       <h2 className="mb-1 text-xs font-semibold uppercase tracking-[0.14em] text-foreground">
         {title}
       </h2>
-      {props.children}
+      {children}
     </div>
   );
 }
