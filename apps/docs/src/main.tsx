@@ -1486,11 +1486,39 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
                 TSX
               </span>
               <button
-                className="inline-flex h-7 items-center rounded-[0.25rem] border border-white/10 bg-white/5 px-2.5 text-xs font-medium text-code-foreground transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                aria-label={copied ? "Code copied" : "Copy code"}
+                className="inline-grid size-7 place-items-center rounded-[0.25rem] text-code-comment transition-[background-color,color,transform] hover:bg-white/8 hover:text-code-foreground active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 onClick={copyCode}
                 type="button"
               >
-                {copied ? "Copied" : "Copy code"}
+                {copied ? (
+                  <svg
+                    aria-hidden="true"
+                    className="size-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M3.5 8.5 6.5 11.5 12.5 4.5" />
+                  </svg>
+                ) : (
+                  <svg
+                    aria-hidden="true"
+                    className="size-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.8"
+                    viewBox="0 0 16 16"
+                  >
+                    <rect height="8" rx="1.5" width="8" x="5" y="5" />
+                    <path d="M3 10.5V4.5A1.5 1.5 0 0 1 4.5 3h6" />
+                  </svg>
+                )}
               </button>
             </div>
             <CodeBlock className="rounded-none border-0 shadow-none">{code}</CodeBlock>
