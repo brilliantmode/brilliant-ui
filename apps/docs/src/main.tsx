@@ -376,6 +376,39 @@ export function Example() {
     </Dialog>
   );
 }`,
+  sheet: `import { useRef } from "react";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+
+export function Example() {
+  const sheetRef = useRef<HTMLDialogElement>(null);
+
+  return (
+    <>
+      <button type="button" onClick={() => sheetRef.current?.showModal()}>
+        Edit workspace
+      </button>
+
+      <Sheet ref={sheetRef} side="right">
+        <SheetHeader>
+          <SheetTitle>Workspace settings</SheetTitle>
+          <SheetDescription>
+            Edit billing and access defaults without leaving the page.
+          </SheetDescription>
+        </SheetHeader>
+        <SheetContent>{/* form fields */}</SheetContent>
+        <button type="button" onClick={() => sheetRef.current?.close()}>
+          Close
+        </button>
+      </Sheet>
+    </>
+  );
+}`,
   tabs: `import {
   Tabs,
   TabsContent,
@@ -898,6 +931,85 @@ function TabsPreview() {
   );
 }
 
+function SheetPreview() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative h-72 overflow-hidden rounded-[0.5rem] border border-border bg-background">
+      <div className="grid gap-3 p-4">
+        <div className="flex items-center justify-between rounded-[0.375rem] border border-border bg-surface p-3">
+          <div>
+            <p className="text-sm font-semibold">Acme workspace</p>
+            <p className="mt-1 text-xs text-muted-foreground">Enterprise plan · 48 seats</p>
+          </div>
+          <button
+            className="h-8 rounded-[0.25rem] bg-primary px-3 text-xs font-medium text-primary-foreground transition-[background-color,transform] hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.98]"
+            onClick={() => setOpen(true)}
+            type="button"
+          >
+            Edit settings
+          </button>
+        </div>
+        <div className="grid gap-2 text-xs text-muted-foreground">
+          <div className="h-8 rounded-[0.25rem] bg-muted" />
+          <div className="h-8 rounded-[0.25rem] bg-muted/70" />
+          <div className="h-8 rounded-[0.25rem] bg-muted/50" />
+        </div>
+      </div>
+
+      {open ? (
+        <div className="absolute inset-0 bg-foreground/20 motion-safe:animate-enter motion-reduce:animate-none">
+          <div className="absolute top-0 right-0 h-full w-72 border-l border-border bg-surface shadow-md motion-safe:animate-enter motion-reduce:animate-none">
+            <div className="flex items-start justify-between gap-3 border-b border-border p-4">
+              <div>
+                <h3 className="text-sm font-semibold">Workspace settings</h3>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                  Edit billing and access defaults without leaving the page.
+                </p>
+              </div>
+              <button
+                aria-label="Close sheet"
+                className="grid size-7 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground"
+                onClick={() => setOpen(false)}
+                type="button"
+              >
+                ×
+              </button>
+            </div>
+            <div className="grid gap-3 p-4">
+              <label className="grid gap-1.5 text-xs font-medium" htmlFor="sheet-preview-role">
+                Default role
+                <input
+                  className="h-8 rounded-[0.25rem] border-0 bg-background px-2 shadow-[inset_0_0_0_1px_var(--brilliant-control-border)]"
+                  defaultValue="Member"
+                  id="sheet-preview-role"
+                  readOnly
+                />
+              </label>
+              <label className="grid gap-1.5 text-xs font-medium" htmlFor="sheet-preview-seats">
+                Seat limit
+                <input
+                  className="h-8 rounded-[0.25rem] border-0 bg-background px-2 shadow-[inset_0_0_0_1px_var(--brilliant-control-border)]"
+                  defaultValue="50"
+                  id="sheet-preview-seats"
+                  readOnly
+                />
+              </label>
+              <button
+                className="mt-2 h-8 rounded-[0.25rem] bg-primary px-3 text-xs font-medium text-primary-foreground"
+                onClick={() => setOpen(false)}
+                type="button"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "button-group") {
     return (
@@ -1294,16 +1406,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   }
 
   if (name === "sheet") {
-    return (
-      <div className="relative h-52 overflow-hidden rounded-[0.5rem] border border-border bg-muted/40">
-        <div className="absolute top-0 right-0 h-full w-64 border-l border-border bg-surface p-4 shadow-md">
-          <h3 className="text-sm font-semibold">Workspace settings</h3>
-          <p className="mt-1 text-xs leading-5 text-muted-foreground">
-            Side sheet for focused edits without leaving the page.
-          </p>
-        </div>
-      </div>
-    );
+    return <SheetPreview />;
   }
 
   if (name === "tooltip") {
