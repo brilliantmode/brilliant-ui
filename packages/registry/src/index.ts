@@ -3291,7 +3291,7 @@ export function ApplicationShellSidebar({ className = "", ...props }: HTMLAttrib
       <aside
         aria-label="Application navigation"
         className={cx(
-          "group/sidebar fixed inset-y-0 left-0 z-50 flex w-[min(17.5rem,calc(100vw-2rem))] flex-col overflow-hidden border-r border-border bg-background px-4 py-4 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] md:sticky md:top-0 md:z-auto md:h-screen md:w-auto md:translate-x-0 md:shadow-none",
+          "group/sidebar fixed inset-y-0 left-0 z-50 grid w-[min(17.5rem,calc(100vw-2rem))] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden border-r border-border bg-background px-4 py-4 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] md:sticky md:top-0 md:z-auto md:h-screen md:w-auto md:translate-x-0 md:shadow-none",
           "motion-safe:transition-[transform,padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
           collapsed && "md:px-2",
           mobileNavOpen ? "translate-x-0" : "-translate-x-full",
@@ -3352,7 +3352,7 @@ export function ApplicationShellSidebarFooter({
 }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cx("mt-auto shrink-0 border-t border-border bg-background pt-3", className)}
+      className={cx("shrink-0 border-t border-border bg-background pt-3", className)}
       {...props}
     />
   );

@@ -5275,7 +5275,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
           className={`grid min-h-[32rem] motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${applicationShellCollapsed ? "md:grid-cols-[4.5rem_minmax(0,1fr)]" : "md:grid-cols-[17.5rem_minmax(0,1fr)]"}`}
         >
           <aside
-            className={`flex h-[32rem] flex-col overflow-hidden border-b border-border bg-background md:border-b-0 md:border-r motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${applicationShellCollapsed ? "p-2" : "p-4"}`}
+            className={`grid h-[32rem] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden border-b border-border bg-background md:border-b-0 md:border-r motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${applicationShellCollapsed ? "p-2" : "p-4"}`}
           >
             <div
               className={`mb-4 flex shrink-0 items-center gap-3 border-b border-border pb-4 ${applicationShellCollapsed ? "justify-center" : "-mx-4 px-4"}`}
@@ -5398,7 +5398,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                 </section>
               </div>
             </div>
-            <div className="mt-auto shrink-0 border-t border-border bg-background pt-3">
+            <div className="shrink-0 border-t border-border bg-background pt-3">
               <div className="grid gap-0.5 pb-3">
                 {[
                   ["?", "Help and support", ""],
@@ -6178,7 +6178,7 @@ function DocsNav({
   theme: "dark" | "light";
 }) {
   return (
-    <div className="flex h-full min-h-0 flex-col text-sm">
+    <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)_auto] text-sm">
       <DocsSidebarHeader
         collapsed={collapsed}
         onNavigate={onNavigate}
