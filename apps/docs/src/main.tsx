@@ -128,10 +128,13 @@ export function Example() {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useState } from "react";
 
 export function Example() {
+  const [isProcessing] = useState(true);
+
   return (
-    <Card interactive variant="beam">
+    <Card beam={isProcessing} interactive>
       <CardHeader>
         <CardTitle>Usage</CardTitle>
         <CardDescription>Current billing period</CardDescription>
@@ -796,7 +799,8 @@ export function Example() {
                       </div>
                       <p className="text-sm leading-6 text-muted-foreground">
                         Set <code>interactive</code> to add hover lift, elevation, and press
-                        feedback for clickable card targets.
+                        feedback for clickable card targets. Set <code>beam=&#123;state&#125;</code>{" "}
+                        when a card should enter the premium live/processing state from app state.
                       </p>
                     </div>
                   ) : null}

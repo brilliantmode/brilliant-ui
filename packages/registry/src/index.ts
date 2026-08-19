@@ -197,27 +197,32 @@ const variants = {
 } as const;
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  beam?: boolean;
   interactive?: boolean;
   variant?: keyof typeof variants;
 }
 
 export function Card({
+  beam = false,
   className = "",
   interactive = false,
   variant = "surface",
   ...props
 }: CardProps) {
+  const resolvedVariant = beam ? "beam" : variant;
+
   return (
     <div
       className={[
         "rounded-[0.375rem] text-foreground",
         "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
-        variants[variant],
-        interactive || variant === "beam"
+        variants[resolvedVariant],
+        interactive || resolvedVariant === "beam"
           ? "hover:-translate-y-px hover:border-primary/30 hover:shadow-md active:translate-y-0 active:scale-[0.995]"
           : "",
         className,
       ].join(" ")}
+      data-beam={beam ? "true" : undefined}
       data-interactive={interactive ? "true" : undefined}
       {...props}
     />
@@ -505,6 +510,7 @@ export const registry = [
         "Use elevated for raised dashboard summaries.",
         "Use accent for selected or highlighted information.",
         "Use beam for premium live, AI, processing, or highlighted states.",
+        "Set beam from app state for live processing states, for example beam={isProcessing}.",
         "Set interactive when the card represents a clickable target.",
       ],
       avoid: ["Do not nest too many cards.", "Do not use cards as random decoration."],
