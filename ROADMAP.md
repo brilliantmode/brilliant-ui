@@ -54,7 +54,7 @@ Goal: establish a dependable workspace, tooling contract, CLI skeleton, and toke
 - [x] Use OKLCH semantic light and dark color variables.
 - [x] Map semantic variables into Tailwind CSS v4.
 - [x] Add reduced-motion defaults.
-- [x] Establish Instrument Sans and IBM Plex Mono typography.
+- [x] Establish crisp native system UI typography and IBM Plex Mono code typography.
 - [x] Generate CSS, TypeScript, and JSON artifacts from one token source.
 - [ ] Add token schema validation and snapshot tests.
 - [x] Define density modes and high-contrast token contracts.

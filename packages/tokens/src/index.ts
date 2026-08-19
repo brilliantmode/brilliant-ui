@@ -64,7 +64,7 @@ export const spacing = {
 
 export const typography = {
   fontFamily: {
-    sans: '"Instrument Sans Variable", "Instrument Sans", ui-sans-serif, system-ui, sans-serif',
+    sans: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     mono: '"IBM Plex Mono", ui-monospace, SFMono-Regular, monospace',
   },
   fontSize: {

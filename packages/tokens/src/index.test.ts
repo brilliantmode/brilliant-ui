@@ -21,8 +21,9 @@ describe("design tokens", () => {
     expect(tokens.radii.lg).toBe("0.625rem");
   });
 
-  it("uses the Brilliant UI typeface pairing", () => {
-    expect(typography.fontFamily.sans).toContain("Instrument Sans");
+  it("uses a native crisp UI font stack with a stable mono", () => {
+    expect(typography.fontFamily.sans).toContain("system-ui");
+    expect(typography.fontFamily.sans).toContain("Segoe UI");
     expect(typography.fontFamily.mono).toContain("IBM Plex Mono");
   });
 
