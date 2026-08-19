@@ -239,6 +239,138 @@ export function AspectRatio({
 }
 `;
 
+const photoSource = `import { useState } from "react";
+import type { CSSProperties, HTMLAttributes, ImgHTMLAttributes, ReactNode } from "react";
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+const variants = {
+  surface: "border-border bg-surface shadow-sm",
+  elevated: "border-border bg-surface-raised shadow-md",
+  ghost: "border-transparent bg-transparent shadow-none",
+} as const;
+
+const radii = {
+  sm: "rounded-[0.25rem]",
+  md: "rounded-[0.5rem]",
+  lg: "rounded-[0.75rem]",
+  full: "rounded-full",
+} as const;
+
+const fits = {
+  cover: "object-cover",
+  contain: "object-contain",
+} as const;
+
+export interface PhotoProps extends HTMLAttributes<HTMLFigureElement> {
+  ratio?: number | string;
+  radius?: keyof typeof radii;
+  variant?: keyof typeof variants;
+}
+
+export function Photo({
+  children,
+  className = "",
+  ratio = 4 / 3,
+  radius = "md",
+  style,
+  variant = "surface",
+  ...props
+}: PhotoProps) {
+  return (
+    <figure
+      className={cx(
+        "relative isolate overflow-hidden border-hairline",
+        "motion-safe:transition-[border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        variants[variant],
+        radii[radius],
+        className,
+      )}
+      style={{ aspectRatio: String(ratio), ...style } as CSSProperties}
+      {...props}
+    >
+      {children}
+    </figure>
+  );
+}
+
+export interface PhotoImageProps extends ImgHTMLAttributes<HTMLImageElement> {
+  fit?: keyof typeof fits;
+}
+
+export function PhotoImage({
+  alt,
+  className = "",
+  fit = "cover",
+  onError,
+  onLoad,
+  ...props
+}: PhotoImageProps) {
+  const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  if (failed) return null;
+
+  return (
+    <img
+      alt={alt}
+      className={cx(
+        "absolute inset-0 size-full transition-[opacity,transform,filter] duration-[var(--brilliant-duration-normal)] ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+        loaded ? "scale-100 opacity-100 blur-0" : "scale-[1.015] opacity-0 blur-sm",
+        fits[fit],
+        className,
+      )}
+      onError={(event) => {
+        setFailed(true);
+        onError?.(event);
+      }}
+      onLoad={(event) => {
+        setLoaded(true);
+        onLoad?.(event);
+      }}
+      {...props}
+    />
+  );
+}
+
+export interface PhotoFallbackProps extends HTMLAttributes<HTMLDivElement> {
+  icon?: ReactNode;
+}
+
+export function PhotoFallback({ children, className = "", icon = "◌", ...props }: PhotoFallbackProps) {
+  return (
+    <div
+      className={cx(
+        "absolute inset-0 grid place-items-center bg-muted text-center text-sm text-muted-foreground",
+        className,
+      )}
+      {...props}
+    >
+      <span className="grid gap-2">
+        <span className="text-lg leading-none text-muted-foreground/70" aria-hidden="true">
+          {icon}
+        </span>
+        {children ? <span>{children}</span> : null}
+      </span>
+    </div>
+  );
+}
+
+export function PhotoCaption({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  return (
+    <figcaption
+      className={cx(
+        "absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent px-3 pt-8 pb-3 text-xs font-medium text-background",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+`;
+
 const avatarSource = `import { useState } from "react";
 import type { HTMLAttributes, ImgHTMLAttributes } from "react";
 
@@ -3145,6 +3277,35 @@ export const registry = [
         "Put images, iframes, or preview surfaces inside the wrapper.",
       ],
       avoid: ["Do not crop meaningful content without an alternate way to access it."],
+    },
+  },
+  {
+    name: "photo",
+    title: "Photo",
+    description: "A tokenized image primitive with ratio, fallback, caption, and reveal micro UX.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "photo.tsx", content: photoSource, target: "ui/photo.tsx" }],
+    metadata: {
+      purpose: "Renders product imagery, thumbnails, avatars-at-scale, and media previews.",
+      slots: ["root", "image", "fallback", "caption"],
+      accessibility: [
+        "PhotoImage requires meaningful alt text unless the image is decorative.",
+        "PhotoFallback remains visible when the image fails to load.",
+        "PhotoCaption uses figcaption semantics through the parent figure.",
+      ],
+      usage: [
+        "Use ratio to reserve space and prevent layout shift.",
+        "Use variant surface for ordinary media cards.",
+        "Use radius to align image corners with surrounding surfaces.",
+        "Use PhotoCaption only when the caption describes the image, not as decoration.",
+      ],
+      avoid: [
+        "Do not use background images for meaningful content.",
+        "Do not omit alt text for informative images.",
+        "Do not crop important product details without a fallback view.",
+      ],
     },
   },
   {

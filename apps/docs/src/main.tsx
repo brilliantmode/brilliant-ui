@@ -28,6 +28,7 @@ const navGroups = [
       ["Text", "/components/text"],
       ["Avatar", "/components/avatar"],
       ["Aspect Ratio", "/components/aspect-ratio"],
+      ["Photo", "/components/photo"],
       ["Separator", "/components/separator"],
     ],
     label: "Display",
@@ -477,6 +478,25 @@ export function Example() {
         </span>
       </div>
     </AspectRatio>
+  );
+}`,
+  photo: `import {
+  Photo,
+  PhotoCaption,
+  PhotoFallback,
+  PhotoImage,
+} from "@/components/ui/photo";
+
+export function Example() {
+  return (
+    <Photo ratio={16 / 10} radius="md" variant="surface">
+      <PhotoFallback>Workspace preview unavailable</PhotoFallback>
+      <PhotoImage
+        alt="Workspace analytics dashboard"
+        src="/workspace-preview.jpg"
+      />
+      <PhotoCaption>Workspace analytics dashboard</PhotoCaption>
+    </Photo>
   );
 }`,
   avatar: `import {
@@ -2742,6 +2762,62 @@ function ComponentMiniPreview({ name }: { name: string }) {
     );
   }
 
+  if (name === "photo") {
+    const previewImage = encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+        <defs>
+          <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#eef2ff"/>
+            <stop offset="1" stop-color="#c7d2fe"/>
+          </linearGradient>
+          <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffffff"/>
+            <stop offset="1" stop-color="#f8fafc"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="500" fill="url(#bg)"/>
+        <rect x="92" y="72" width="616" height="356" rx="24" fill="url(#card)" stroke="#dbe3ef"/>
+        <rect x="132" y="120" width="190" height="18" rx="9" fill="#111827"/>
+        <rect x="132" y="158" width="536" height="10" rx="5" fill="#dbe3ef"/>
+        <rect x="132" y="202" width="150" height="92" rx="14" fill="#4f46e5"/>
+        <rect x="310" y="202" width="150" height="92" rx="14" fill="#eef2ff" stroke="#dbe3ef"/>
+        <rect x="488" y="202" width="150" height="92" rx="14" fill="#f8fafc" stroke="#dbe3ef"/>
+        <path d="M144 354 C224 312 284 382 360 338 C432 296 492 360 656 304" fill="none" stroke="#4f46e5" stroke-width="12" stroke-linecap="round"/>
+        <circle cx="656" cy="304" r="12" fill="#4f46e5"/>
+      </svg>
+    `);
+
+    return (
+      <div className="grid gap-4 md:grid-cols-[1.4fr_0.8fr]">
+        <figure className="group relative isolate aspect-[16/10] overflow-hidden rounded-[0.5rem] border border-border bg-surface shadow-sm transition-[border-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] hover:-translate-y-px hover:border-primary/30 hover:shadow-md motion-reduce:transition-none">
+          <div className="absolute inset-0 grid place-items-center bg-muted text-sm text-muted-foreground">
+            Preview loading
+          </div>
+          <img
+            alt="Workspace analytics dashboard"
+            className="absolute inset-0 size-full object-cover transition-transform duration-[var(--brilliant-duration-normal)] group-hover:scale-[1.015] motion-reduce:transition-none"
+            src={`data:image/svg+xml,${previewImage}`}
+          />
+          <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent px-3 pt-8 pb-3 text-xs font-medium text-background">
+            Workspace analytics dashboard
+          </figcaption>
+        </figure>
+        <div className="grid gap-3">
+          {[
+            ["surface", "Default media in cards and grids."],
+            ["elevated", "Prominent gallery or hero preview."],
+            ["ghost", "Flush media inside an existing panel."],
+          ].map(([variant, description]) => (
+            <div className="rounded-[0.375rem] border border-border bg-surface p-3" key={variant}>
+              <p className="font-mono text-xs">{`variant="${variant}"`}</p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">{description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   if (name === "avatar") {
     return (
       <div className="flex items-end gap-4">
@@ -3685,6 +3761,7 @@ const navIcons: Record<string, ReactNode> = {
   "Navigation Menu": <path d="M4 6h16M4 12h12M4 18h8" />,
   "Onboarding Wizard": <path d="M5 5h14v14H5V5Zm4 4h6M9 13h4" />,
   Pagination: <path d="m8 8-4 4 4 4m8-8 4 4-4 4" />,
+  Photo: <path d="M5 6h14v12H5V6Zm3 9 3-4 2 3 1.5-2 2.5 3M9 9h.01" />,
   Popover: <path d="M6 5h12v10H9l-3 4V5Z" />,
   Progress: <path d="M5 12h14M5 12h8" />,
   "Radio Group": <path d="M8 8h.01M8 16h.01M12 8h7M12 16h7" />,
@@ -4400,6 +4477,7 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                     item.name === "text" ||
                     item.name === "checkbox" ||
                     item.name === "radio-group" ||
+                    item.name === "photo" ||
                     item.name === "separator" ||
                     item.name === "skeleton" ||
                     item.name === "progress" ||
@@ -4442,56 +4520,71 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                                         ["default", "Normal single-choice selection."],
                                         ["critical", "High-risk or destructive choice context."],
                                       ]
-                                    : item.name === "separator"
+                                    : item.name === "photo"
                                       ? [
-                                          ["default", "Standard divider using the border token."],
-                                          ["muted", "Subtle divider for dense grouped content."],
-                                          ["primary", "Branded or active section divider."],
+                                          ["surface", "Default image surface for cards and grids."],
+                                          [
+                                            "elevated",
+                                            "Prominent gallery, profile, or hero media.",
+                                          ],
+                                          ["ghost", "Flush media inside an existing surface."],
                                         ]
-                                      : item.name === "progress"
+                                      : item.name === "separator"
                                         ? [
-                                            ["default", "Normal progress indication."],
-                                            ["critical", "Risky, blocking, or destructive flows."],
+                                            ["default", "Standard divider using the border token."],
+                                            ["muted", "Subtle divider for dense grouped content."],
+                                            ["primary", "Branded or active section divider."],
                                           ]
-                                        : item.name === "spinner"
+                                        : item.name === "progress"
                                           ? [
-                                              ["default", "Primary local loading indicator."],
-                                              ["muted", "Secondary loading next to text."],
-                                              ["critical", "Loading tied to risky/error recovery."],
+                                              ["default", "Normal progress indication."],
+                                              [
+                                                "critical",
+                                                "Risky, blocking, or destructive flows.",
+                                              ],
                                             ]
-                                          : item.name === "empty-state"
+                                          : item.name === "spinner"
                                             ? [
-                                                ["surface", "Default empty region panel."],
-                                                ["muted", "Lower-emphasis empty region."],
+                                                ["default", "Primary local loading indicator."],
+                                                ["muted", "Secondary loading next to text."],
                                                 [
-                                                  "ghost",
-                                                  "Use inside an already bordered surface.",
+                                                  "critical",
+                                                  "Loading tied to risky/error recovery.",
                                                 ],
                                               ]
-                                            : item.name === "skeleton"
+                                            : item.name === "empty-state"
                                               ? [
-                                                  ["surface", "Default loading placeholder."],
+                                                  ["surface", "Default empty region panel."],
+                                                  ["muted", "Lower-emphasis empty region."],
                                                   [
-                                                    "raised",
-                                                    "Slightly stronger placeholder hierarchy.",
-                                                  ],
-                                                  [
-                                                    "primary",
-                                                    "Branded loading placeholder, used sparingly.",
+                                                    "ghost",
+                                                    "Use inside an already bordered surface.",
                                                   ],
                                                 ]
-                                              : [
-                                                  ["default", "Normal UI copy."],
-                                                  ["muted", "Secondary or supporting copy."],
-                                                  [
-                                                    "glow",
-                                                    "Premium, active, or AI-ready emphasis.",
-                                                  ],
-                                                  [
-                                                    "shimmer",
-                                                    "Generating, syncing, or live processing text.",
-                                                  ],
-                                                ]
+                                              : item.name === "skeleton"
+                                                ? [
+                                                    ["surface", "Default loading placeholder."],
+                                                    [
+                                                      "raised",
+                                                      "Slightly stronger placeholder hierarchy.",
+                                                    ],
+                                                    [
+                                                      "primary",
+                                                      "Branded loading placeholder, used sparingly.",
+                                                    ],
+                                                  ]
+                                                : [
+                                                    ["default", "Normal UI copy."],
+                                                    ["muted", "Secondary or supporting copy."],
+                                                    [
+                                                      "glow",
+                                                      "Premium, active, or AI-ready emphasis.",
+                                                    ],
+                                                    [
+                                                      "shimmer",
+                                                      "Generating, syncing, or live processing text.",
+                                                    ],
+                                                  ]
                               ).map(([variant, use]) => (
                                 <tr
                                   className="border-b border-border last:border-b-0"
@@ -4521,6 +4614,12 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                             Use <code>variant=&quot;critical&quot;</code> on an individual{" "}
                             <code>RadioItem</code> only when the choice itself carries risk. Items
                             in the same group should share the same <code>name</code>.
+                          </p>
+                        ) : item.name === "photo" ? (
+                          <p className="text-sm leading-6 text-muted-foreground">
+                            Use <code>ratio</code> to reserve space, <code>radius</code> to match
+                            the surrounding surface, and <code>fit=&quot;contain&quot;</code> when
+                            cropping would hide meaningful product detail.
                           </p>
                         ) : item.name === "separator" ? (
                           <p className="text-sm leading-6 text-muted-foreground">
@@ -4760,9 +4859,11 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                             ? "Interactive cards lift by 1px, increase elevation, soften the border toward primary, and compress to 99.5% on press. The beam variant adds a rotating conic border animation and disables it for reduced-motion users."
                             : item.name === "text"
                               ? "Glow adds a token-colored premium aura. Shimmer animates a tokenized gradient across the glyphs and falls back to static text for reduced-motion users."
-                              : item.name === "switch"
-                                ? "The thumb uses a spring-timed snap, stretches slightly on press, and the active track gains a subtle inset highlight. Motion is disabled for reduced-motion users."
-                                : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
+                              : item.name === "photo"
+                                ? "Photo reserves layout space with ratio, fades loaded images in from a subtle blur, and keeps fallback/caption layers semantic. Motion is disabled for reduced-motion users."
+                                : item.name === "switch"
+                                  ? "The thumb uses a spring-timed snap, stretches slightly on press, and the active track gains a subtle inset highlight. Motion is disabled for reduced-motion users."
+                                  : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
                         </div>
                       </div>
                     </div>
