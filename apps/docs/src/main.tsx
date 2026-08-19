@@ -148,7 +148,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <Text as="span" size="lg" variant="shimmer">
+    <Text as="span" shimmerColor="white" size="lg" variant="shimmer">
       Generating workspace insights
     </Text>
   );
@@ -321,7 +321,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
           [
             "Shimmer",
             "Generating workspace insights",
-            "bg-[linear-gradient(110deg,var(--brilliant-muted-foreground)_0%,var(--brilliant-foreground)_18%,var(--brilliant-primary)_34%,var(--brilliant-foreground)_50%,var(--brilliant-muted-foreground)_66%)] bg-[length:240%_100%] bg-clip-text text-transparent motion-safe:animate-text-shimmer motion-reduce:animate-none motion-reduce:bg-none motion-reduce:text-foreground",
+            "bg-[linear-gradient(110deg,var(--brilliant-text-shimmer-base)_0%,var(--brilliant-text-shimmer-text)_18%,var(--brilliant-text-shimmer-highlight)_34%,var(--brilliant-text-shimmer-text)_50%,var(--brilliant-text-shimmer-base)_66%)] bg-[length:240%_100%] bg-clip-text text-transparent motion-safe:animate-text-shimmer motion-reduce:animate-none motion-reduce:bg-none motion-reduce:text-foreground",
           ],
         ].map(([label, copy, className]) => (
           <div className="rounded-[0.375rem] border border-border bg-surface p-4" key={label}>
@@ -855,7 +855,10 @@ export function Example() {
                       ) : (
                         <p className="text-sm leading-6 text-muted-foreground">
                           Use <code>variant=&quot;shimmer&quot;</code> for short live/processing
-                          text. The animation is disabled for reduced-motion users.
+                          text. Override the highlight with{" "}
+                          <code>shimmerColor=&quot;white&quot;</code> or set{" "}
+                          <code>--brilliant-text-shimmer-highlight</code> globally. The animation is
+                          disabled for reduced-motion users.
                         </p>
                       )}
                     </div>

@@ -184,14 +184,14 @@ export function Badge({ className = "", variant = "neutral", ...props }: BadgePr
 }
 `;
 
-const textSource = `import type { ElementType, HTMLAttributes } from "react";
+const textSource = `import type { CSSProperties, ElementType, HTMLAttributes } from "react";
 
 const variants = {
   default: "text-foreground",
   muted: "text-muted-foreground",
   glow: "text-primary drop-shadow-[0_0_14px_var(--brilliant-primary)]",
   shimmer:
-    "bg-[linear-gradient(110deg,var(--brilliant-muted-foreground)_0%,var(--brilliant-foreground)_18%,var(--brilliant-primary)_34%,var(--brilliant-foreground)_50%,var(--brilliant-muted-foreground)_66%)] bg-[length:240%_100%] bg-clip-text text-transparent motion-safe:animate-text-shimmer motion-reduce:animate-none motion-reduce:bg-none motion-reduce:text-foreground",
+    "bg-[linear-gradient(110deg,var(--brilliant-text-shimmer-base)_0%,var(--brilliant-text-shimmer-text)_18%,var(--brilliant-text-shimmer-highlight)_34%,var(--brilliant-text-shimmer-text)_50%,var(--brilliant-text-shimmer-base)_66%)] bg-[length:240%_100%] bg-clip-text text-transparent motion-safe:animate-text-shimmer motion-reduce:animate-none motion-reduce:bg-none motion-reduce:text-foreground",
 } as const;
 
 const sizes = {
@@ -203,6 +203,7 @@ const sizes = {
 
 export interface TextProps extends HTMLAttributes<HTMLElement> {
   as?: ElementType;
+  shimmerColor?: string;
   size?: keyof typeof sizes;
   variant?: keyof typeof variants;
 }
@@ -210,10 +211,20 @@ export interface TextProps extends HTMLAttributes<HTMLElement> {
 export function Text({
   as: Component = "p",
   className = "",
+  shimmerColor,
   size = "md",
+  style,
   variant = "default",
   ...props
 }: TextProps) {
+  const shimmerStyle =
+    shimmerColor === undefined
+      ? style
+      : ({
+          ...(style ?? {}),
+          "--brilliant-text-shimmer-highlight": shimmerColor,
+        } as CSSProperties);
+
   return (
     <Component
       className={[
@@ -223,6 +234,7 @@ export function Text({
         className,
       ].join(" ")}
       data-variant={variant}
+      style={shimmerStyle}
       {...props}
     />
   );
@@ -581,6 +593,7 @@ export const registry = [
         "Use default or muted for ordinary copy.",
         "Use glow for premium status labels and AI states.",
         "Use shimmer for short loading, generating, or live processing text.",
+        "Override shimmerColor per use, or set --brilliant-text-shimmer-highlight globally.",
         "Keep animated text short and meaningful.",
       ],
       avoid: [
