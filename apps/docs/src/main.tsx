@@ -2391,6 +2391,54 @@ function ComponentMiniPreview({ name }: { name: string }) {
   );
 }
 
+function DocsSidebarHeader() {
+  return (
+    <div className="mb-6 space-y-4">
+      <a className="flex items-center gap-3" href="#getting-started">
+        <span className="grid size-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-sm font-semibold tracking-tight text-foreground shadow-sm">
+          B
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate text-sm font-semibold tracking-tight text-foreground">
+            Brilliant UI
+          </span>
+          <span className="block truncate text-xs leading-5 text-muted-foreground">
+            Component system
+          </span>
+        </span>
+      </a>
+      <a
+        className="flex h-10 items-center gap-2 rounded-[0.375rem] border border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
+        href="#components"
+      >
+        <span aria-hidden="true" className="text-base leading-none">
+          ⌕
+        </span>
+        <span className="min-w-0 flex-1 truncate">Search docs</span>
+        <kbd className="rounded-[0.25rem] border border-border bg-background px-1.5 py-0.5 font-mono text-[0.65rem] text-muted-foreground">
+          /
+        </kbd>
+      </a>
+    </div>
+  );
+}
+
+function NavGlyph({ active }: { active: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={[
+        "mt-0.5 grid size-6 shrink-0 place-items-center rounded-[0.375rem] border transition-colors",
+        active
+          ? "border-primary/30 bg-primary/10 text-primary"
+          : "border-border bg-background text-muted-foreground",
+      ].join(" ")}
+    >
+      <span className="size-2 rounded-[0.1875rem] border border-current" />
+    </span>
+  );
+}
+
 function DocsNavGroup({
   activeHref,
   group,
@@ -2401,25 +2449,26 @@ function DocsNavGroup({
   onNavigate: (() => void) | undefined;
 }) {
   return (
-    <section className="pb-5 last:pb-0">
-      <h2 className="mb-2 px-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+    <section className="pb-6 last:pb-0">
+      <h2 className="mb-2 px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
         {group.label}
       </h2>
-      <ul className="space-y-0.5 border-l border-border/80 pl-3">
+      <ul className="space-y-1">
         {group.items.map(([label, href]) => (
           <li key={href}>
             <a
               aria-current={activeHref === href ? "location" : undefined}
               className={[
-                "relative block rounded-[0.25rem] px-2 py-1.5 text-[0.86rem] leading-5 transition-colors",
+                "group flex items-center gap-2.5 rounded-[0.5rem] px-2 py-2 text-sm leading-5 transition-colors",
                 activeHref === href
-                  ? "bg-primary/10 font-medium text-foreground before:absolute before:bottom-1.5 before:-left-[0.8125rem] before:top-1.5 before:w-px before:bg-primary"
+                  ? "bg-muted font-medium text-foreground"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               ].join(" ")}
               href={href}
               onClick={onNavigate}
             >
-              {label}
+              <NavGlyph active={activeHref === href} />
+              <span className="min-w-0 truncate">{label}</span>
             </a>
           </li>
         ))}
@@ -2431,9 +2480,7 @@ function DocsNavGroup({
 function DocsNav({ activeHref, onNavigate }: { activeHref: NavHref; onNavigate?: () => void }) {
   return (
     <nav aria-label="Documentation" className="text-sm">
-      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-        Docs
-      </p>
+      <DocsSidebarHeader />
       <div>
         {navGroups.map((group) => (
           <DocsNavGroup
@@ -2598,7 +2645,7 @@ function StatusRail({ firstItemTitle }: { firstItemTitle: string }) {
 function AppFooter() {
   return (
     <footer className="border-t border-border bg-background">
-      <div className="mx-auto grid max-w-screen-2xl gap-4 px-4 py-6 text-sm text-muted-foreground md:grid-cols-[240px_minmax(0,1fr)_280px] md:px-6">
+      <div className="mx-auto grid max-w-screen-2xl gap-4 px-4 py-6 text-sm text-muted-foreground md:grid-cols-[280px_minmax(0,1fr)_280px] md:px-6">
         <p className="font-medium text-foreground">Brilliant UI</p>
         <p>
           Copy-owned shadcn-compatible source, enterprise-grade tokens, and micro UX primitives.
@@ -2689,7 +2736,7 @@ function App() {
         open={mobileNavOpen}
       />
 
-      <main className="mx-auto grid max-w-screen-2xl md:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_280px]">
+      <main className="mx-auto grid max-w-screen-2xl md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]">
         <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-y-auto border-r border-border px-6 py-6 md:block">
           <DocsNav activeHref={activeHref} />
         </aside>
