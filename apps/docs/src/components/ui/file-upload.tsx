@@ -52,6 +52,7 @@ function matchesAccept(file: File, accept?: string) {
 
 export interface FileUploadProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
   accept?: string;
+  capture?: "environment" | "user";
   defaultFiles?: readonly File[];
   disabled?: boolean;
   files?: readonly File[];
@@ -65,6 +66,7 @@ export interface FileUploadProps extends Omit<HTMLAttributes<HTMLDivElement>, "o
 
 export function FileUpload({
   accept,
+  capture,
   children,
   className = "",
   defaultFiles = [],
@@ -141,6 +143,7 @@ export function FileUpload({
       <div className={cx("grid gap-3", className)} data-disabled={disabled || undefined} {...props}>
         <input
           accept={accept}
+          capture={capture}
           className="sr-only"
           disabled={disabled}
           id={inputId}

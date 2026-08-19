@@ -37,6 +37,7 @@ import {
   HeaderLink,
   HeaderNav,
 } from "./components/ui/header";
+import { PhotoUpload } from "./components/ui/photo-upload";
 import "./styles.css";
 
 type NavItem = readonly [label: string, href: string];
@@ -73,6 +74,7 @@ const navGroups = [
     items: [
       ["Input", "/components/input"],
       ["File Upload", "/components/file-upload"],
+      ["Photo Upload", "/components/photo-upload"],
       ["Label", "/components/label"],
       ["Textarea", "/components/textarea"],
       ["Field", "/components/field"],
@@ -657,6 +659,23 @@ export function Example() {
       <FileUploadList />
       <FileUploadError />
     </FileUpload>
+  );
+}`,
+  "photo-upload": `import { PhotoUpload } from "@/components/ui/photo-upload";
+import { useState } from "react";
+
+export function Example() {
+  const [photo, setPhoto] = useState<File | null>(null);
+
+  return (
+    <PhotoUpload
+      alt="Workspace profile"
+      className="mx-auto max-w-lg"
+      crop="square"
+      file={photo}
+      maxSize={5 * 1024 * 1024}
+      onFileChange={setPhoto}
+    />
   );
 }`,
   label: `import { Input } from "@/components/ui/input";
@@ -3309,6 +3328,21 @@ function FooterPreview() {
   );
 }
 
+function PhotoUploadPreview() {
+  const [photo, setPhoto] = useState<File | null>(null);
+
+  return (
+    <PhotoUpload
+      alt="Workspace profile"
+      className="mx-auto max-w-lg"
+      crop="square"
+      file={photo}
+      maxSize={5 * 1024 * 1024}
+      onFileChange={setPhoto}
+    />
+  );
+}
+
 function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "header") {
     return <HeaderPreview />;
@@ -3316,6 +3350,10 @@ function ComponentMiniPreview({ name }: { name: string }) {
 
   if (name === "footer") {
     return <FooterPreview />;
+  }
+
+  if (name === "photo-upload") {
+    return <PhotoUploadPreview />;
   }
 
   if (name === "button-group") {
@@ -5356,6 +5394,7 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                     item.name === "checkbox" ||
                     item.name === "radio-group" ||
                     item.name === "photo" ||
+                    item.name === "photo-upload" ||
                     item.name === "separator" ||
                     item.name === "skeleton" ||
                     item.name === "progress" ||
@@ -5454,68 +5493,92 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                                               ],
                                               ["ghost", "Flush media inside an existing surface."],
                                             ]
-                                          : item.name === "separator"
+                                          : item.name === "photo-upload"
                                             ? [
                                                 [
-                                                  "default",
-                                                  "Standard divider using the border token.",
+                                                  'crop="rectangle"',
+                                                  "Flexible content, product, and cover images.",
                                                 ],
                                                 [
-                                                  "muted",
-                                                  "Subtle divider for dense grouped content.",
+                                                  'crop="square"',
+                                                  "Workspace, product, and catalog imagery.",
                                                 ],
-                                                ["primary", "Branded or active section divider."],
+                                                [
+                                                  'crop="circle"',
+                                                  "Avatars, profile photos, and round marks.",
+                                                ],
                                               ]
-                                            : item.name === "progress"
+                                            : item.name === "separator"
                                               ? [
-                                                  ["default", "Normal progress indication."],
                                                   [
-                                                    "critical",
-                                                    "Risky, blocking, or destructive flows.",
+                                                    "default",
+                                                    "Standard divider using the border token.",
                                                   ],
+                                                  [
+                                                    "muted",
+                                                    "Subtle divider for dense grouped content.",
+                                                  ],
+                                                  ["primary", "Branded or active section divider."],
                                                 ]
-                                              : item.name === "spinner"
+                                              : item.name === "progress"
                                                 ? [
-                                                    ["default", "Primary local loading indicator."],
-                                                    ["muted", "Secondary loading next to text."],
+                                                    ["default", "Normal progress indication."],
                                                     [
                                                       "critical",
-                                                      "Loading tied to risky/error recovery.",
+                                                      "Risky, blocking, or destructive flows.",
                                                     ],
                                                   ]
-                                                : item.name === "empty-state"
+                                                : item.name === "spinner"
                                                   ? [
-                                                      ["surface", "Default empty region panel."],
-                                                      ["muted", "Lower-emphasis empty region."],
                                                       [
-                                                        "ghost",
-                                                        "Use inside an already bordered surface.",
+                                                        "default",
+                                                        "Primary local loading indicator.",
+                                                      ],
+                                                      ["muted", "Secondary loading next to text."],
+                                                      [
+                                                        "critical",
+                                                        "Loading tied to risky/error recovery.",
                                                       ],
                                                     ]
-                                                  : item.name === "skeleton"
+                                                  : item.name === "empty-state"
                                                     ? [
-                                                        ["surface", "Default loading placeholder."],
+                                                        ["surface", "Default empty region panel."],
+                                                        ["muted", "Lower-emphasis empty region."],
                                                         [
-                                                          "raised",
-                                                          "Slightly stronger placeholder hierarchy.",
-                                                        ],
-                                                        [
-                                                          "primary",
-                                                          "Branded loading placeholder, used sparingly.",
+                                                          "ghost",
+                                                          "Use inside an already bordered surface.",
                                                         ],
                                                       ]
-                                                    : [
-                                                        ["default", "Normal UI copy."],
-                                                        ["muted", "Secondary or supporting copy."],
-                                                        [
-                                                          "glow",
-                                                          "Premium, active, or AI-ready emphasis.",
-                                                        ],
-                                                        [
-                                                          "shimmer",
-                                                          "Generating, syncing, or live processing text.",
-                                                        ],
-                                                      ]
+                                                    : item.name === "skeleton"
+                                                      ? [
+                                                          [
+                                                            "surface",
+                                                            "Default loading placeholder.",
+                                                          ],
+                                                          [
+                                                            "raised",
+                                                            "Slightly stronger placeholder hierarchy.",
+                                                          ],
+                                                          [
+                                                            "primary",
+                                                            "Branded loading placeholder, used sparingly.",
+                                                          ],
+                                                        ]
+                                                      : [
+                                                          ["default", "Normal UI copy."],
+                                                          [
+                                                            "muted",
+                                                            "Secondary or supporting copy.",
+                                                          ],
+                                                          [
+                                                            "glow",
+                                                            "Premium, active, or AI-ready emphasis.",
+                                                          ],
+                                                          [
+                                                            "shimmer",
+                                                            "Generating, syncing, or live processing text.",
+                                                          ],
+                                                        ]
                               ).map(([variant, use]) => (
                                 <tr
                                   className="border-b border-border last:border-b-0"

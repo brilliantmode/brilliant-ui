@@ -76,9 +76,23 @@ describe("registry", () => {
     expect(source).toContain('type="file"');
     expect(source).toContain("event.dataTransfer.files");
     expect(source).toContain("maxSize?: number");
+    expect(source).toContain('capture?: "environment" | "user"');
     expect(source).toContain("export function FileUploadList");
     expect(source).toContain('role="progressbar"');
     expect(source).toContain('role="alert"');
+  });
+
+  it("ships photo upload with a live object URL preview", () => {
+    const item = findRegistryItem("photo-upload");
+    const source = item?.files[0]?.content;
+
+    expect(item?.registryDependencies).toEqual(["file-upload", "photo"]);
+    expect(source).toContain("URL.createObjectURL(file)");
+    expect(source).toContain("URL.revokeObjectURL(nextUrl)");
+    expect(source).toContain("export function PhotoUpload");
+    expect(source).toContain("<PhotoImage alt={alt} src={displaySrc} />");
+    expect(source).toContain("<FileUploadTrigger");
+    expect(source).toContain('role="progressbar"');
   });
 
   it("defines a versioned JSON schema", () => {
