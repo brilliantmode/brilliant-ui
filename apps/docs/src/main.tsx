@@ -1,5 +1,5 @@
 import { registry } from "@brilliant-ui/registry";
-import { type ReactNode, StrictMode } from "react";
+import { type ReactNode, StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
@@ -172,6 +172,40 @@ function MiniTerminal({ children }: { children: string }) {
 
 function App() {
   const firstItem = registry[0];
+  const [activeHref, setActiveHref] = useState<(typeof navItems)[number][1]>("#getting-started");
+
+  useEffect(() => {
+    const sectionIds = navItems.map(([, href]) => href.slice(1));
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    if (sections.length === 0) {
+      return;
+    }
+
+    const setActiveFromScroll = () => {
+      const currentSection = sections
+        .filter((section) => section.getBoundingClientRect().top <= 120)
+        .at(-1);
+
+      if (currentSection) {
+        setActiveHref(`#${currentSection.id}` as (typeof navItems)[number][1]);
+        return;
+      }
+
+      setActiveHref(`#${sections[0].id}` as (typeof navItems)[number][1]);
+    };
+
+    setActiveFromScroll();
+    window.addEventListener("scroll", setActiveFromScroll, { passive: true });
+    window.addEventListener("hashchange", setActiveFromScroll);
+
+    return () => {
+      window.removeEventListener("scroll", setActiveFromScroll);
+      window.removeEventListener("hashchange", setActiveFromScroll);
+    };
+  }, []);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -199,7 +233,13 @@ function App() {
             <p className="mb-3 text-xs font-medium uppercase text-muted-foreground">Docs</p>
             {navItems.map(([label, href]) => (
               <a
-                className="block rounded-md px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+                aria-current={activeHref === href ? "location" : undefined}
+                className={[
+                  "block rounded-[0.25rem] border-l-2 px-3 py-2 transition-colors",
+                  activeHref === href
+                    ? "border-primary bg-primary/10 text-foreground"
+                    : "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground",
+                ].join(" ")}
                 href={href}
                 key={href}
               >
