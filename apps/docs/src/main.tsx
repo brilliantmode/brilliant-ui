@@ -864,6 +864,60 @@ export function Example() {
                     </div>
                   ) : null}
 
+                  {item.name === "text" ? (
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-semibold">Sizes</h3>
+                      <div className="overflow-auto rounded-lg border border-border">
+                        <table className="w-full border-collapse text-sm">
+                          <thead className="bg-muted text-left">
+                            <tr>
+                              <th className="border-b border-border px-4 py-3 font-medium">Size</th>
+                              <th className="border-b border-border px-4 py-3 font-medium">
+                                Classes
+                              </th>
+                              <th className="border-b border-border px-4 py-3 font-medium">
+                                Example
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              ["sm", "text-sm leading-5", "Updated 2 minutes ago"],
+                              ["md", "text-base leading-6", "Workspace usage"],
+                              ["lg", "text-lg leading-7", "AI ready"],
+                              ["xl", "text-2xl leading-8 tracking-tight", "Generating insights"],
+                            ].map(([size, classes, example]) => (
+                              <tr className="border-b border-border last:border-b-0" key={size}>
+                                <td className="px-4 py-3 font-mono text-xs">{size}</td>
+                                <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                                  {classes}
+                                </td>
+                                <td className="px-4 py-3">
+                                  <span
+                                    className={[
+                                      "font-medium tracking-[-0.01em]",
+                                      size === "sm" ? "text-sm leading-5" : "",
+                                      size === "md" ? "text-base leading-6" : "",
+                                      size === "lg" ? "text-lg leading-7" : "",
+                                      size === "xl" ? "text-2xl leading-8 tracking-tight" : "",
+                                    ].join(" ")}
+                                  >
+                                    {example}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <p className="text-sm leading-6 text-muted-foreground">
+                        Use <code>size=&quot;sm&quot;</code>, <code>size=&quot;md&quot;</code>,{" "}
+                        <code>size=&quot;lg&quot;</code>, or <code>size=&quot;xl&quot;</code>{" "}
+                        alongside any text variant.
+                      </p>
+                    </div>
+                  ) : null}
+
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Anatomy</h3>
