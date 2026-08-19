@@ -131,7 +131,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <Card interactive variant="elevated">
+    <Card interactive variant="beam">
       <CardHeader>
         <CardTitle>Usage</CardTitle>
         <CardDescription>Current billing period</CardDescription>
@@ -272,11 +272,16 @@ function ComponentMiniPreview({ name }: { name: string }) {
 
   if (name === "card") {
     return (
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-3 md:grid-cols-4">
         {[
           ["Surface", "Neutral group", "border-border bg-surface shadow-sm"],
           ["Elevated", "Dashboard metric", "border-border bg-surface-raised shadow-md"],
           ["Accent", "Selected state", "border-primary/25 bg-primary/5 shadow-sm"],
+          [
+            "Beam",
+            "Live premium state",
+            "relative isolate overflow-hidden border-transparent bg-surface shadow-sm before:absolute before:-inset-8 before:z-0 before:rounded-[inherit] before:bg-[conic-gradient(from_0deg,transparent_0_68%,var(--brilliant-ring)_74%,var(--brilliant-primary)_79%,transparent_86%)] before:opacity-70 before:content-[''] motion-safe:before:animate-border-beam motion-reduce:before:animate-none after:absolute after:inset-[0.5px] after:z-0 after:rounded-[calc(0.375rem-0.5px)] after:bg-surface after:content-[''] [&>*]:relative [&>*]:z-10",
+          ],
         ].map(([title, description, className]) => (
           <div
             className={[
@@ -777,6 +782,7 @@ export function Example() {
                               ["surface", "Default content grouping."],
                               ["elevated", "Raised dashboard or summary surfaces."],
                               ["accent", "Selected, highlighted, or recommended content."],
+                              ["beam", "Premium live, AI, processing, or highlighted states."],
                               ["muted", "Low-emphasis grouping inside denser layouts."],
                               ["ghost", "Structure without a visible panel."],
                             ].map(([variant, use]) => (
@@ -809,7 +815,7 @@ export function Example() {
                       <h3 className="text-lg font-semibold">Micro UX</h3>
                       <div className="rounded-lg border border-border bg-surface p-4 text-sm leading-6 text-muted-foreground">
                         {item.name === "card"
-                          ? "Interactive cards lift by 1px, increase elevation, soften the border toward primary, and compress to 99.5% on press. Motion is disabled for reduced-motion users."
+                          ? "Interactive cards lift by 1px, increase elevation, soften the border toward primary, and compress to 99.5% on press. The beam variant adds a rotating conic border animation and disables it for reduced-motion users."
                           : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
                       </div>
                     </div>

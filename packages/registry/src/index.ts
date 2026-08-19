@@ -190,6 +190,8 @@ const variants = {
   surface: "border-hairline border-border bg-surface shadow-sm",
   elevated: "border-hairline border-border bg-surface-raised shadow-md",
   accent: "border-hairline border-primary/25 bg-primary/5 shadow-sm",
+  beam:
+    "relative isolate overflow-hidden border-transparent bg-surface shadow-sm before:absolute before:-inset-8 before:z-0 before:rounded-[inherit] before:bg-[conic-gradient(from_0deg,transparent_0_68%,var(--brilliant-ring)_74%,var(--brilliant-primary)_79%,transparent_86%)] before:opacity-70 before:content-[''] motion-safe:before:animate-border-beam motion-reduce:before:animate-none after:absolute after:inset-[0.5px] after:z-0 after:rounded-[calc(0.375rem-0.5px)] after:bg-surface after:content-[''] [&>*]:relative [&>*]:z-10",
   muted: "border-hairline border-border bg-muted/45 shadow-none",
   ghost: "border-hairline border-transparent bg-transparent shadow-none",
 } as const;
@@ -211,7 +213,7 @@ export function Card({
         "rounded-[0.375rem] text-foreground",
         "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
         variants[variant],
-        interactive
+        interactive || variant === "beam"
           ? "hover:-translate-y-px hover:border-primary/30 hover:shadow-md active:translate-y-0 active:scale-[0.995]"
           : "",
         className,
@@ -502,6 +504,7 @@ export const registry = [
         "Use surface for ordinary groups.",
         "Use elevated for raised dashboard summaries.",
         "Use accent for selected or highlighted information.",
+        "Use beam for premium live, AI, processing, or highlighted states.",
         "Set interactive when the card represents a clickable target.",
       ],
       avoid: ["Do not nest too many cards.", "Do not use cards as random decoration."],

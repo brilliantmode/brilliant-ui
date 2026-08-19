@@ -23,6 +23,7 @@
   --font-mono: var(--brilliant-font-mono);
   --shadow-sm: var(--brilliant-shadow-sm);
   --shadow-md: var(--brilliant-shadow-md);
+  --animate-border-beam: brilliant-border-beam 3.8s linear infinite;
   --animate-enter: brilliant-enter var(--brilliant-duration-normal) var(--brilliant-ease-enter);
   --animate-exit: brilliant-exit var(--brilliant-duration-fast) var(--brilliant-ease-exit);
 }
@@ -188,6 +189,12 @@ body {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes brilliant-border-beam {
+  to {
+    transform: rotate(1turn);
   }
 }
 
