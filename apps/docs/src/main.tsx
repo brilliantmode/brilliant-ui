@@ -170,6 +170,125 @@ function MiniTerminal({ children }: { children: string }) {
   );
 }
 
+function ComponentMiniPreview({ name }: { name: string }) {
+  if (name === "badge") {
+    return (
+      <div className="flex flex-wrap gap-2">
+        <span className="rounded-[0.25rem] border border-primary/20 bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+          Live
+        </span>
+        <span className="rounded-[0.25rem] border border-border bg-muted px-2 py-1 text-xs font-medium">
+          Enterprise
+        </span>
+      </div>
+    );
+  }
+
+  if (name === "card") {
+    return (
+      <div className="rounded-[0.375rem] border border-border bg-surface p-3 shadow-sm">
+        <p className="text-sm font-semibold">Usage</p>
+        <p className="mt-1 text-xs text-muted-foreground">2.4M events</p>
+      </div>
+    );
+  }
+
+  if (name === "input") {
+    return (
+      <input
+        className="h-9 w-full rounded-[0.25rem] border border-border bg-background px-3 text-sm shadow-sm"
+        placeholder="workspace@company.com"
+        readOnly
+      />
+    );
+  }
+
+  if (name === "label") {
+    return (
+      <div className="space-y-2">
+        <label className="text-sm font-medium" htmlFor="label-preview-workspace">
+          Workspace name
+        </label>
+        <input
+          className="h-9 w-full rounded-[0.25rem] border border-border bg-background px-3 text-sm"
+          id="label-preview-workspace"
+          readOnly
+          value="Acme"
+        />
+      </div>
+    );
+  }
+
+  if (name === "textarea") {
+    return (
+      <textarea
+        className="min-h-20 w-full resize-none rounded-[0.25rem] border border-border bg-background px-3 py-2 text-sm shadow-sm"
+        placeholder="Add a launch note..."
+        readOnly
+      />
+    );
+  }
+
+  if (name === "checkbox") {
+    return (
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          className="size-4 accent-[var(--brilliant-primary)]"
+          defaultChecked
+          type="checkbox"
+        />
+        Require approval
+      </label>
+    );
+  }
+
+  if (name === "switch") {
+    return (
+      <div className="flex items-center gap-3">
+        <span className="h-5 w-9 rounded-full bg-primary p-0.5">
+          <span className="block size-4 translate-x-4 rounded-full bg-surface shadow-sm" />
+        </span>
+        <span className="text-sm">Enabled</span>
+      </div>
+    );
+  }
+
+  if (name === "alert") {
+    return (
+      <div className="rounded-[0.375rem] border border-primary/25 bg-primary/10 p-3 text-sm">
+        <p className="font-semibold">Sync complete</p>
+        <p className="mt-1 text-xs text-muted-foreground">All records are current.</p>
+      </div>
+    );
+  }
+
+  if (name === "separator") {
+    return (
+      <div className="space-y-3 text-sm">
+        <p>Account</p>
+        <div className="h-px w-full bg-border" />
+        <p className="text-muted-foreground">Billing</p>
+      </div>
+    );
+  }
+
+  if (name === "skeleton") {
+    return (
+      <div className="space-y-2">
+        <div className="h-4 w-2/3 rounded-[0.25rem] bg-muted" />
+        <div className="h-4 w-full rounded-[0.25rem] bg-muted" />
+        <div className="h-4 w-1/2 rounded-[0.25rem] bg-muted" />
+      </div>
+    );
+  }
+
+  return (
+    <PreviewButton className={`${buttonVariants[0][2]} h-9 px-3.5 text-sm`}>
+      Save changes
+    </PreviewButton>
+  );
+}
+
 function App() {
   const firstItem = registry[0];
   const [activeHref, setActiveHref] = useState<(typeof navItems)[number][1]>("#getting-started");
@@ -194,7 +313,10 @@ function App() {
         return;
       }
 
-      setActiveHref(`#${sections[0].id}` as (typeof navItems)[number][1]);
+      const firstSection = sections[0];
+      if (firstSection) {
+        setActiveHref(`#${firstSection.id}` as (typeof navItems)[number][1]);
+      }
     };
 
     setActiveFromScroll();
@@ -332,6 +454,8 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
               Components
             </SectionHeading>
 
+            <CodeBlock>{`npx brilliant-ui add ${registry.map((item) => item.name).join(" ")}`}</CodeBlock>
+
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {registry.map((item) => (
                 <a
@@ -344,6 +468,9 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                     <Badge tone="ready">available</Badge>
                   </div>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.description}</p>
+                  <div className="mt-4 rounded-[0.375rem] border border-border bg-background p-3">
+                    <ComponentMiniPreview name={item.name} />
+                  </div>
                 </a>
               ))}
             </div>

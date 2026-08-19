@@ -156,6 +156,266 @@ export function Button({
 }
 `;
 
+const badgeSource = `import type { HTMLAttributes } from "react";
+
+const variants = {
+  neutral: "border-border bg-muted text-foreground",
+  primary: "border-primary/20 bg-primary/10 text-primary",
+  success: "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+  warning: "border-amber-500/25 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  critical: "border-critical/20 bg-critical/10 text-critical",
+} as const;
+
+export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
+  variant?: keyof typeof variants;
+}
+
+export function Badge({ className = "", variant = "neutral", ...props }: BadgeProps) {
+  return (
+    <span
+      className={[
+        "inline-flex h-6 shrink-0 items-center rounded-[0.25rem] border px-2 text-xs font-medium tracking-[-0.005em]",
+        variants[variant],
+        className,
+      ].join(" ")}
+      {...props}
+    />
+  );
+}
+`;
+
+const cardSource = `import type { HTMLAttributes } from "react";
+
+export function Card({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={[
+        "rounded-[0.375rem] border border-border bg-surface text-foreground shadow-sm",
+        className,
+      ].join(" ")}
+      {...props}
+    />
+  );
+}
+
+export function CardHeader({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["space-y-1.5 p-5", className].join(" ")} {...props} />;
+}
+
+export function CardTitle({ className = "", ...props }: HTMLAttributes<HTMLHeadingElement>) {
+  return (
+    <h3
+      className={["text-base font-semibold tracking-tight", className].join(" ")}
+      {...props}
+    />
+  );
+}
+
+export function CardDescription({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={["text-sm leading-6 text-muted-foreground", className].join(" ")} {...props} />;
+}
+
+export function CardContent({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["p-5 pt-0", className].join(" ")} {...props} />;
+}
+
+export function CardFooter({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={["flex items-center gap-3 border-t border-border p-5", className].join(" ")}
+      {...props}
+    />
+  );
+}
+`;
+
+const inputSource = `import type { InputHTMLAttributes } from "react";
+
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
+
+export function Input({ className = "", type = "text", ...props }: InputProps) {
+  return (
+    <input
+      className={[
+        "flex h-9 w-full rounded-[0.25rem] border border-border bg-background px-3 text-sm text-foreground shadow-sm",
+        "placeholder:text-muted-foreground",
+        "motion-safe:transition-[border-color,box-shadow,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-critical aria-invalid:ring-critical",
+        className,
+      ].join(" ")}
+      type={type}
+      {...props}
+    />
+  );
+}
+`;
+
+const labelSource = `import type { LabelHTMLAttributes } from "react";
+
+export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {}
+
+export function Label({ className = "", ...props }: LabelProps) {
+  return (
+    <label
+      className={[
+        "text-sm font-medium leading-none text-foreground",
+        "peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+        className,
+      ].join(" ")}
+      {...props}
+    />
+  );
+}
+`;
+
+const textareaSource = `import type { TextareaHTMLAttributes } from "react";
+
+export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {}
+
+export function Textarea({ className = "", ...props }: TextareaProps) {
+  return (
+    <textarea
+      className={[
+        "flex min-h-24 w-full rounded-[0.25rem] border border-border bg-background px-3 py-2 text-sm text-foreground shadow-sm",
+        "placeholder:text-muted-foreground",
+        "motion-safe:transition-[border-color,box-shadow,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-critical aria-invalid:ring-critical",
+        className,
+      ].join(" ")}
+      {...props}
+    />
+  );
+}
+`;
+
+const checkboxSource = `import type { InputHTMLAttributes } from "react";
+
+export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {}
+
+export function Checkbox({ className = "", ...props }: CheckboxProps) {
+  return (
+    <input
+      className={[
+        "peer size-4 appearance-none rounded-[0.1875rem] border border-border bg-background shadow-sm",
+        "checked:border-primary checked:bg-primary",
+        "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "checked:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      ].join(" ")}
+      type="checkbox"
+      {...props}
+    />
+  );
+}
+`;
+
+const switchSource = `import type { InputHTMLAttributes } from "react";
+
+export interface SwitchProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {}
+
+export function Switch({ className = "", ...props }: SwitchProps) {
+  return (
+    <input
+      className={[
+        "h-5 w-9 appearance-none rounded-full border border-transparent bg-secondary shadow-inner",
+        "before:block before:size-4 before:translate-x-0 before:rounded-full before:bg-surface before:shadow-sm before:content-['']",
+        "checked:bg-primary checked:before:translate-x-4",
+        "motion-safe:transition-[background-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "motion-safe:before:transition-transform motion-safe:before:duration-[var(--brilliant-duration-fast)]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      ].join(" ")}
+      role="switch"
+      type="checkbox"
+      {...props}
+    />
+  );
+}
+`;
+
+const alertSource = `import type { HTMLAttributes } from "react";
+
+const variants = {
+  info: "border-border bg-surface text-foreground",
+  primary: "border-primary/25 bg-primary/10 text-foreground",
+  critical: "border-critical/25 bg-critical/10 text-foreground",
+} as const;
+
+export interface AlertProps extends HTMLAttributes<HTMLDivElement> {
+  variant?: keyof typeof variants;
+}
+
+export function Alert({ className = "", variant = "info", ...props }: AlertProps) {
+  return (
+    <div
+      className={[
+        "rounded-[0.375rem] border p-4 text-sm leading-6",
+        "motion-safe:animate-enter motion-reduce:animate-none",
+        variants[variant],
+        className,
+      ].join(" ")}
+      role="status"
+      {...props}
+    />
+  );
+}
+
+export function AlertTitle({ className = "", ...props }: HTMLAttributes<HTMLHeadingElement>) {
+  return <h5 className={["font-semibold tracking-tight", className].join(" ")} {...props} />;
+}
+
+export function AlertDescription({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={["mt-1 text-muted-foreground", className].join(" ")} {...props} />;
+}
+`;
+
+const separatorSource = `import type { HTMLAttributes } from "react";
+
+export interface SeparatorProps extends HTMLAttributes<HTMLDivElement> {
+  orientation?: "horizontal" | "vertical";
+}
+
+export function Separator({
+  className = "",
+  orientation = "horizontal",
+  ...props
+}: SeparatorProps) {
+  return (
+    <div
+      aria-orientation={orientation}
+      className={[
+        "shrink-0 bg-border",
+        orientation === "horizontal" ? "h-px w-full" : "h-full w-px",
+        className,
+      ].join(" ")}
+      role="separator"
+      {...props}
+    />
+  );
+}
+`;
+
+const skeletonSource = `import type { HTMLAttributes } from "react";
+
+export function Skeleton({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={[
+        "rounded-[0.25rem] bg-muted",
+        "motion-safe:animate-pulse motion-reduce:animate-none",
+        className,
+      ].join(" ")}
+      aria-hidden="true"
+      {...props}
+    />
+  );
+}
+`;
+
 export const registry = [
   {
     name: "button",
@@ -180,6 +440,172 @@ export const registry = [
         "Micro interactions are included in the generated source.",
       ],
       avoid: ["Do not use for navigation; use a link.", "Do not disable without explaining why."],
+    },
+  },
+  {
+    name: "badge",
+    title: "Badge",
+    description: "A compact status label for metadata, state, and categorization.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "badge.tsx", content: badgeSource, target: "ui/badge.tsx" }],
+    metadata: {
+      purpose: "Labels objects with short status or category text.",
+      slots: ["root", "label"],
+      accessibility: ["Uses readable text by default.", "Avoid color-only meaning."],
+      usage: ["Use one or two words.", "Pair semantic color with clear copy."],
+      avoid: ["Do not use for primary actions.", "Do not use long sentences."],
+    },
+  },
+  {
+    name: "card",
+    title: "Card",
+    description: "A calm content container with header, body, and footer slots.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "card.tsx", content: cardSource, target: "ui/card.tsx" }],
+    metadata: {
+      purpose: "Groups related UI into a scannable surface.",
+      slots: ["root", "header", "title", "description", "content", "footer"],
+      accessibility: ["Preserves semantic children.", "Headings remain author-controlled."],
+      usage: ["Use for dashboards, settings panels, and summaries."],
+      avoid: ["Do not nest too many cards.", "Do not use cards as random decoration."],
+    },
+  },
+  {
+    name: "input",
+    title: "Input",
+    description: "A crisp text field with focus, invalid, disabled, and tokenized styling.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "input.tsx", content: inputSource, target: "ui/input.tsx" }],
+    metadata: {
+      purpose: "Collects short freeform text, search, numbers, URLs, or emails.",
+      slots: ["root"],
+      accessibility: ["Pair with a label.", "Supports aria-invalid for error state."],
+      usage: [
+        "Use type-specific inputs where possible.",
+        "Include helpful placeholder text sparingly.",
+      ],
+      avoid: ["Do not rely on placeholder as the only label."],
+    },
+  },
+  {
+    name: "label",
+    title: "Label",
+    description: "A form label primitive tuned for dense enterprise layouts.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "label.tsx", content: labelSource, target: "ui/label.tsx" }],
+    metadata: {
+      purpose: "Names a form control.",
+      slots: ["root"],
+      accessibility: ["Use htmlFor to connect labels to controls."],
+      usage: ["Keep labels concise.", "Use helper text for extra instructions."],
+      avoid: ["Do not replace labels with placeholders."],
+    },
+  },
+  {
+    name: "textarea",
+    title: "Textarea",
+    description: "A multiline field with Brilliant focus and invalid states.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "textarea.tsx", content: textareaSource, target: "ui/textarea.tsx" }],
+    metadata: {
+      purpose: "Collects longer freeform text.",
+      slots: ["root"],
+      accessibility: ["Pair with a label.", "Supports aria-invalid for error state."],
+      usage: ["Use for notes, prompts, comments, and descriptions."],
+      avoid: ["Do not use for single-line values."],
+    },
+  },
+  {
+    name: "checkbox",
+    title: "Checkbox",
+    description: "A native checkbox with tokenized states and press micro UX.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "checkbox.tsx", content: checkboxSource, target: "ui/checkbox.tsx" }],
+    metadata: {
+      purpose: "Toggles a binary option or selects items in a set.",
+      slots: ["root"],
+      accessibility: ["Uses a native checkbox input.", "Pair with a visible label."],
+      usage: ["Use for independent boolean choices."],
+      avoid: ["Do not use for immediate on/off settings when Switch is clearer."],
+    },
+  },
+  {
+    name: "switch",
+    title: "Switch",
+    description: "A native switch-style checkbox for immediate on/off settings.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "switch.tsx", content: switchSource, target: "ui/switch.tsx" }],
+    metadata: {
+      purpose: "Toggles an immediate setting.",
+      slots: ["root", "thumb"],
+      accessibility: ["Uses a native checkbox with role switch.", "Pair with a visible label."],
+      usage: ["Use for settings that take effect immediately."],
+      avoid: ["Do not use for form submission choices that need review."],
+    },
+  },
+  {
+    name: "alert",
+    title: "Alert",
+    description: "A semantic message surface for status, guidance, and errors.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "alert.tsx", content: alertSource, target: "ui/alert.tsx" }],
+    metadata: {
+      purpose: "Communicates important contextual feedback.",
+      slots: ["root", "title", "description"],
+      accessibility: ["Uses role status by default.", "Use clear text, not color alone."],
+      usage: ["Use near the related task or form region."],
+      avoid: ["Do not overuse persistent alerts."],
+    },
+  },
+  {
+    name: "separator",
+    title: "Separator",
+    description: "A semantic divider for grouping related content.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "separator.tsx", content: separatorSource, target: "ui/separator.tsx" }],
+    metadata: {
+      purpose: "Separates content groups visually and semantically.",
+      slots: ["root"],
+      accessibility: ["Uses role separator.", "Sets aria-orientation."],
+      usage: ["Use sparingly between meaningful groups."],
+      avoid: ["Do not use as decoration when spacing is enough."],
+    },
+  },
+  {
+    name: "skeleton",
+    title: "Skeleton",
+    description: "A loading placeholder with reduced-motion behavior.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "skeleton.tsx", content: skeletonSource, target: "ui/skeleton.tsx" }],
+    metadata: {
+      purpose: "Reserves layout space while content loads.",
+      slots: ["root"],
+      accessibility: [
+        "Hidden from assistive technology.",
+        "Pair with real loading state when needed.",
+      ],
+      usage: ["Match the shape of the incoming content."],
+      avoid: ["Do not show skeletons for very fast operations."],
     },
   },
 ] as const satisfies readonly RegistryItem[];
