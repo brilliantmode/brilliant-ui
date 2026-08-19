@@ -1,5 +1,13 @@
 import { registry } from "@brilliant-ui/registry";
-import { type MouseEvent, type ReactNode, StrictMode, useEffect, useId, useState } from "react";
+import {
+  type MouseEvent,
+  type ReactNode,
+  StrictMode,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
@@ -116,6 +124,11 @@ const topNavItems = [
 
 type NavHref = string;
 type NavigateHandler = (event: MouseEvent<HTMLAnchorElement>, href: string) => void;
+type RouteSelectHandler = (href: string) => void;
+
+const docsSearchItems = navGroups.flatMap((group) =>
+  group.items.map(([label, href]) => ({ group: group.label, href, label })),
+);
 
 function normalizePathname(pathname: string) {
   const withoutTrailingSlash = pathname.replace(/\/+$/, "");
@@ -3804,7 +3817,158 @@ const navIcons: Record<string, ReactNode> = {
   "Why Brilliant": <path d="M12 3 4 7v6c0 4 3.4 6.7 8 8 4.6-1.3 8-4 8-8V7l-8-4Z" />,
 };
 
-function DocsSidebarHeader({ onNavigate }: { onNavigate: NavigateHandler | undefined }) {
+function DocsSearchDialog({
+  onClose,
+  onSelect,
+  open,
+}: {
+  onClose: () => void;
+  onSelect: RouteSelectHandler;
+  open: boolean;
+}) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const searchListId = useId();
+  const normalizedQuery = query.trim().toLowerCase();
+  const results = docsSearchItems.filter(({ group, href, label }) => {
+    if (!normalizedQuery) return true;
+    return `${label} ${group} ${href}`.toLowerCase().includes(normalizedQuery);
+  });
+
+  useEffect(() => {
+    if (!open) return;
+
+    setActiveIndex(0);
+    setQuery("");
+    window.requestAnimationFrame(() => inputRef.current?.focus());
+  }, [open]);
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [query]);
+
+  if (!open) return null;
+
+  const selectResult = (href: string) => {
+    onClose();
+    onSelect(href);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-start justify-center px-4 pt-[12vh]">
+      <button
+        aria-label="Close documentation search"
+        className="absolute inset-0 bg-foreground/20 backdrop-blur-[2px]"
+        onClick={onClose}
+        type="button"
+      />
+      <div
+        aria-label="Search documentation"
+        aria-modal="true"
+        className="relative w-full max-w-xl overflow-hidden rounded-[0.625rem] border border-border bg-background shadow-[0_24px_70px_-28px_oklch(0_0_0/0.45)]"
+        role="dialog"
+      >
+        <div className="flex items-center gap-3 border-b border-border px-4">
+          <svg
+            aria-hidden="true"
+            className="size-4 shrink-0 text-muted-foreground"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeWidth="1.8"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="11" cy="11" r="6" />
+            <path d="m16 16 4 4" />
+          </svg>
+          <input
+            aria-activedescendant={
+              results[activeIndex] ? `${searchListId}-result-${activeIndex}` : undefined
+            }
+            aria-autocomplete="list"
+            aria-controls={searchListId}
+            aria-expanded="true"
+            className="h-12 min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "ArrowDown") {
+                event.preventDefault();
+                setActiveIndex((index) => Math.min(index + 1, Math.max(results.length - 1, 0)));
+              }
+
+              if (event.key === "ArrowUp") {
+                event.preventDefault();
+                setActiveIndex((index) => Math.max(index - 1, 0));
+              }
+
+              if (event.key === "Enter" && results[activeIndex]) {
+                event.preventDefault();
+                selectResult(results[activeIndex].href);
+              }
+
+              if (event.key === "Escape") {
+                event.preventDefault();
+                onClose();
+              }
+            }}
+            placeholder="Search components, blocks, and guides…"
+            ref={inputRef}
+            role="combobox"
+            value={query}
+          />
+          <kbd className="rounded-[0.25rem] border border-border bg-muted px-1.5 py-0.5 font-mono text-[0.65rem] text-muted-foreground">
+            esc
+          </kbd>
+        </div>
+        <div
+          className="max-h-[min(28rem,60vh)] overflow-y-auto p-2"
+          id={searchListId}
+          role="listbox"
+        >
+          {results.length > 0 ? (
+            results.map((result, index) => (
+              <a
+                aria-selected={activeIndex === index}
+                className={[
+                  "flex items-center gap-3 rounded-[0.375rem] px-3 py-2 text-sm outline-none transition-colors",
+                  activeIndex === index
+                    ? "bg-primary/10 text-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                ].join(" ")}
+                href={result.href}
+                id={`${searchListId}-result-${index}`}
+                key={`${result.group}-${result.href}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  selectResult(result.href);
+                }}
+                onMouseEnter={() => setActiveIndex(index)}
+                role="option"
+              >
+                <NavIcon active={activeIndex === index} label={result.label} />
+                <span className="min-w-0 flex-1 truncate font-medium">{result.label}</span>
+                <span className="shrink-0 text-xs text-muted-foreground">{result.group}</span>
+              </a>
+            ))
+          ) : (
+            <div className="px-3 py-8 text-center text-sm text-muted-foreground">
+              No documentation found for “{query}”.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DocsSidebarHeader({
+  onNavigate,
+  onSearchOpen,
+}: {
+  onNavigate: NavigateHandler | undefined;
+  onSearchOpen: () => void;
+}) {
   return (
     <div className="mb-5 space-y-3">
       <a className="flex items-center gap-3" href="/" onClick={(event) => onNavigate?.(event, "/")}>
@@ -3820,10 +3984,11 @@ function DocsSidebarHeader({ onNavigate }: { onNavigate: NavigateHandler | undef
           </span>
         </span>
       </a>
-      <a
-        className="flex h-9 items-center gap-2 rounded-[0.5rem] border border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
-        href="/components"
-        onClick={(event) => onNavigate?.(event, "/components")}
+      <button
+        aria-haspopup="dialog"
+        className="flex h-9 w-full items-center gap-2 rounded-[0.5rem] border border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
+        onClick={onSearchOpen}
+        type="button"
       >
         <span aria-hidden="true" className="text-base leading-none">
           ⌕
@@ -3832,7 +3997,7 @@ function DocsSidebarHeader({ onNavigate }: { onNavigate: NavigateHandler | undef
         <kbd className="rounded-[0.25rem] border border-border bg-background px-1.5 py-0.5 font-mono text-[0.65rem] text-muted-foreground">
           /
         </kbd>
-      </a>
+      </button>
     </div>
   );
 }
@@ -3898,13 +4063,15 @@ function DocsNavGroup({
 function DocsNav({
   activeRoute,
   onNavigate,
+  onSearchOpen,
 }: {
   activeRoute: NavHref;
   onNavigate?: NavigateHandler;
+  onSearchOpen: () => void;
 }) {
   return (
     <nav aria-label="Documentation" className="text-sm">
-      <DocsSidebarHeader onNavigate={onNavigate} />
+      <DocsSidebarHeader onNavigate={onNavigate} onSearchOpen={onSearchOpen} />
       <div>
         {navGroups.map((group) => (
           <DocsNavGroup
@@ -3994,11 +4161,13 @@ function MobileDocsNav({
   activeRoute,
   onClose,
   onNavigate,
+  onSearchOpen,
   open,
 }: {
   activeRoute: NavHref;
   onClose: () => void;
   onNavigate: NavigateHandler;
+  onSearchOpen: () => void;
   open: boolean;
 }) {
   if (!open) {
@@ -4036,7 +4205,7 @@ function MobileDocsNav({
             ×
           </button>
         </div>
-        <DocsNav activeRoute={activeRoute} onNavigate={onNavigate} />
+        <DocsNav activeRoute={activeRoute} onNavigate={onNavigate} onSearchOpen={onSearchOpen} />
       </aside>
     </div>
   );
@@ -4109,6 +4278,7 @@ function App() {
   const firstItem = registry[0];
   const [activeRoute, setActiveRoute] = useState<NavHref>(() => getRoute());
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const pathname = routePathname(activeRoute);
   const componentName = pathname.startsWith("/components/")
     ? pathname.replace("/components/", "")
@@ -4144,15 +4314,11 @@ function App() {
     };
   }, []);
 
-  const navigate: NavigateHandler = (event, href) => {
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
-      return;
-    }
-
-    event.preventDefault();
+  const selectRoute: RouteSelectHandler = (href) => {
     window.history.pushState(null, "", href);
     setActiveRoute(getRoute());
     setMobileNavOpen(false);
+    setSearchOpen(false);
 
     window.requestAnimationFrame(() => {
       const hash = routeHash(href);
@@ -4166,6 +4332,44 @@ function App() {
       window.scrollTo({ top: 0 });
     });
   };
+
+  const navigate: NavigateHandler = (event, href) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+      return;
+    }
+
+    event.preventDefault();
+    selectRoute(href);
+  };
+
+  const openSearch = () => {
+    setMobileNavOpen(false);
+    setSearchOpen(true);
+  };
+
+  useEffect(() => {
+    const handleSearchShortcut = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const targetIsEditable =
+        target?.isContentEditable ||
+        target?.tagName === "INPUT" ||
+        target?.tagName === "TEXTAREA" ||
+        target?.tagName === "SELECT";
+
+      if (event.key === "/" && !targetIsEditable) {
+        event.preventDefault();
+        openSearch();
+      }
+
+      if (event.key === "Escape" && searchOpen) {
+        event.preventDefault();
+        setSearchOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleSearchShortcut);
+    return () => document.removeEventListener("keydown", handleSearchShortcut);
+  }, [searchOpen]);
 
   useEffect(() => {
     if (!mobileNavOpen) {
@@ -4202,12 +4406,18 @@ function App() {
         activeRoute={activeRoute}
         onClose={() => setMobileNavOpen(false)}
         onNavigate={navigate}
+        onSearchOpen={openSearch}
         open={mobileNavOpen}
+      />
+      <DocsSearchDialog
+        onClose={() => setSearchOpen(false)}
+        onSelect={selectRoute}
+        open={searchOpen}
       />
 
       <main className="mx-auto grid max-w-screen-2xl md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]">
         <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-y-auto border-r border-border px-6 py-6 md:block">
-          <DocsNav activeRoute={activeRoute} onNavigate={navigate} />
+          <DocsNav activeRoute={activeRoute} onNavigate={navigate} onSearchOpen={openSearch} />
         </aside>
 
         <div
