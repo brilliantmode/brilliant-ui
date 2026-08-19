@@ -115,4 +115,21 @@ describe("CLI project workflow", () => {
     expect(config).toContain('"css": "src/styles.css"');
     expect(messages).toContain("Mapped components.json aliases.");
   });
+
+  it("previews package installation for registry dependencies", async () => {
+    const cwd = await mkdtemp(join(tmpdir(), "brilliant-ui-test-"));
+    const messages: string[] = [];
+    await writeFile(join(cwd, "package.json"), JSON.stringify({ dependencies: {} }), "utf8");
+    await writeFile(join(cwd, "pnpm-lock.yaml"), "", "utf8");
+    await initProject({ cwd, force: false, log: () => undefined });
+
+    await addItems(["chart"], {
+      cwd,
+      dryRun: true,
+      force: false,
+      log: (message) => messages.push(message),
+    });
+
+    expect(messages).toContain("Would run pnpm add recharts react-is");
+  });
 });

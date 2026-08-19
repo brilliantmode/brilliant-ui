@@ -35,6 +35,16 @@ describe("design tokens", () => {
     }
   });
 
+  it("provides a five-color semantic chart palette in every theme", () => {
+    for (const token of ["chart-1", "chart-2", "chart-3", "chart-4", "chart-5"] as const) {
+      expect(semanticColorTokens).toContain(token);
+      expect(semanticColors.light[token]).toMatch(/^oklch\(/);
+      expect(semanticColors.dark[token]).toMatch(/^oklch\(/);
+      expect(semanticColors.highContrast[token]).toBeTruthy();
+    }
+    expect(tokenArtifacts.css).toContain("--brilliant-chart-1");
+  });
+
   it("exports CSS, JSON, and Tailwind artifacts from the token source", () => {
     expect(tokenArtifacts.css).toContain("--brilliant-background");
     expect(tokenArtifacts.css).toContain("-webkit-font-smoothing: antialiased");

@@ -111,6 +111,24 @@ describe("registry", () => {
     expect(source).toContain('role="progressbar"');
   });
 
+  it("ships the accessible dashboard system and installable dashboard blocks", () => {
+    const chart = findRegistryItem("chart");
+    const chartSource = chart?.files[0]?.content;
+    const analytics = findRegistryItem("analytics-overview-dashboard");
+    const health = findRegistryItem("system-health-dashboard");
+    const capacity = findRegistryItem("capacity-dashboard");
+
+    expect(chart?.dependencies).toEqual(["recharts", "react-is"]);
+    expect(chartSource).toContain("Partial<TooltipContentProps");
+    expect(chartSource).toContain("accessibilityLayer");
+    expect(chartSource).toContain('color = "var(--brilliant-chart-1)"');
+    expect(chartSource).toContain('state === "loading"');
+    expect(analytics?.kind).toBe("block");
+    expect(analytics?.registryDependencies).toEqual(["chart", "dashboard-layout", "stat"]);
+    expect(health?.registryDependencies).toEqual(["dashboard-layout", "meter", "stat", "status"]);
+    expect(capacity?.registryDependencies).toEqual(["chart", "dashboard-layout", "meter"]);
+  });
+
   it("defines a versioned JSON schema", () => {
     expect(registryItemSchema.properties.kind.enum).toBe(registryKinds);
     expect(registryItemSchema.required).toContain("registryDependencies");

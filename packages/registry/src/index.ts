@@ -1,3 +1,9 @@
+import {
+  analyticsOverviewSource,
+  capacityDashboardSource,
+  systemHealthDashboardSource,
+} from "./dashboard-sources";
+
 export const registryKinds = [
   "component",
   "block",
@@ -3626,6 +3632,21 @@ export function ApplicationShellFooter({ className = "", ...props }: HTMLAttribu
 }
 `;
 
+const chartSource =
+  '"use client";\n\nimport type { CSSProperties, HTMLAttributes, ReactNode } from "react";\nimport { createContext, useContext, useId } from "react";\nimport {\n  type DefaultLegendContentProps,\n  Legend,\n  Line,\n  LineChart,\n  ResponsiveContainer,\n  Tooltip,\n  type TooltipContentProps,\n} from "recharts";\n\nexport type ChartConfig = Record<\n  string,\n  {\n    color?: string;\n    label?: ReactNode;\n  }\n>;\n\nconst ChartContext = createContext<ChartConfig | null>(null);\n\nfunction useChartConfig() {\n  const config = useContext(ChartContext);\n  if (!config) throw new Error("Chart parts must be rendered inside <ChartContainer>.");\n  return config;\n}\n\nfunction cx(...classes: Array<string | false | null | undefined>) {\n  return classes.filter(Boolean).join(" ");\n}\n\nexport interface ChartContainerProps extends HTMLAttributes<HTMLDivElement> {\n  config: ChartConfig;\n  description?: string;\n  title: string;\n}\n\nexport function ChartContainer({\n  children,\n  className = "",\n  config,\n  description,\n  style,\n  title,\n  ...props\n}: ChartContainerProps) {\n  const generatedId = useId();\n  const titleId = generatedId + "-title";\n  const descriptionId = generatedId + "-description";\n  const colorVariables = Object.fromEntries(\n    Object.entries(config).map(([key, item]) => ["--color-" + key, item.color ?? "currentColor"]),\n  ) as CSSProperties;\n\n  return (\n    <ChartContext.Provider value={config}>\n      <figure\n        aria-describedby={description ? descriptionId : undefined}\n        aria-labelledby={titleId}\n        className={cx(\n          "relative min-h-64 w-full text-xs text-muted-foreground",\n          "[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line]:stroke-border/70 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border",\n          "[&_.recharts-dot[stroke=\'#fff\']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",\n          className,\n        )}\n        style={{ ...colorVariables, ...style }}\n        {...props}\n      >\n        <figcaption className="sr-only" id={titleId}>\n          {title}\n        </figcaption>\n        {description ? (\n          <span className="sr-only" id={descriptionId}>\n            {description}\n          </span>\n        ) : null}\n        <ResponsiveContainer height="100%" minHeight={1} minWidth={0} width="100%">\n          {children}\n        </ResponsiveContainer>\n      </figure>\n    </ChartContext.Provider>\n  );\n}\n\nexport const ChartTooltip = Tooltip;\nexport const ChartLegend = Legend;\n\nexport function ChartTooltipContent({\n  active,\n  className = "",\n  hideLabel = false,\n  label,\n  payload,\n}: TooltipContentProps<number | string, number | string> & {\n  className?: string;\n  hideLabel?: boolean;\n}) {\n  const config = useChartConfig();\n  if (!active || !payload?.length) return null;\n\n  return (\n    <div\n      className={cx(\n        "grid min-w-36 gap-2 rounded-[0.375rem] border-hairline border-border bg-surface/96 px-3 py-2 text-xs text-foreground shadow-md backdrop-blur",\n        "motion-safe:animate-enter motion-reduce:animate-none",\n        className,\n      )}\n    >\n      {!hideLabel && label !== undefined ? <p className="font-medium">{label}</p> : null}\n      <div className="grid gap-1.5">\n        {payload.map((item) => {\n          const key = String(item.dataKey ?? item.name ?? "value");\n          const itemConfig = config[key];\n          return (\n            <div className="flex items-center gap-2" key={key}>\n              <span\n                aria-hidden="true"\n                className="size-2 rounded-[0.125rem]"\n                style={{ background: item.color ?? itemConfig?.color }}\n              />\n              <span className="min-w-0 flex-1 truncate text-muted-foreground">\n                {itemConfig?.label ?? item.name ?? key}\n              </span>\n              <span className="font-mono font-medium tabular-nums text-foreground">\n                {typeof item.value === "number" ? item.value.toLocaleString() : item.value}\n              </span>\n            </div>\n          );\n        })}\n      </div>\n    </div>\n  );\n}\n\nexport function ChartLegendContent({\n  className = "",\n  payload,\n}: DefaultLegendContentProps & { className?: string }) {\n  const config = useChartConfig();\n  if (!payload?.length) return null;\n\n  return (\n    <div\n      className={cx("flex flex-wrap items-center justify-center gap-x-4 gap-y-2 pt-3", className)}\n    >\n      {payload.map((item) => {\n        const key = String(item.dataKey ?? item.value);\n        return (\n          <span\n            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"\n            key={key}\n          >\n            <span\n              aria-hidden="true"\n              className="size-2 rounded-[0.125rem]"\n              style={{ background: item.color }}\n            />\n            {config[key]?.label ?? item.value}\n          </span>\n        );\n      })}\n    </div>\n  );\n}\n\nexport interface SparklineProps extends Omit<HTMLAttributes<HTMLDivElement>, "children"> {\n  color?: string;\n  data: readonly number[];\n  label: string;\n}\n\nexport function Sparkline({\n  className = "",\n  color = "var(--brilliant-primary)",\n  data,\n  label,\n  ...props\n}: SparklineProps) {\n  const points = data.map((value, index) => ({ index, value }));\n\n  return (\n    <div className={cx("h-10 w-28", className)} {...props}>\n      <ResponsiveContainer height="100%" minHeight={1} minWidth={0} width="100%">\n        <LineChart\n          accessibilityLayer\n          data={points}\n          margin={{ bottom: 2, left: 2, right: 2, top: 2 }}\n        >\n          <title>{label}</title>\n          <Line\n            dataKey="value"\n            dot={false}\n            isAnimationActive="auto"\n            stroke={color}\n            strokeLinecap="round"\n            strokeWidth={2}\n            type="monotone"\n          />\n        </LineChart>\n      </ResponsiveContainer>\n    </div>\n  );\n}\n\nconst stateStyles = {\n  empty: "border-border bg-muted/35 text-muted-foreground",\n  error: "border-critical/30 bg-critical/5 text-critical",\n  loading: "border-border bg-muted/35 text-muted-foreground",\n} as const;\n\nexport function ChartState({\n  children,\n  className = "",\n  state = "empty",\n  ...props\n}: HTMLAttributes<HTMLDivElement> & { state?: keyof typeof stateStyles }) {\n  return (\n    <div\n      className={cx(\n        "grid min-h-64 place-items-center rounded-[0.375rem] border-hairline border-dashed p-6 text-center text-sm",\n        stateStyles[state],\n        state === "loading" && "motion-safe:animate-pulse motion-reduce:animate-none",\n        className,\n      )}\n      role={state === "error" ? "alert" : "status"}\n      {...props}\n    >\n      {children ??\n        (state === "loading"\n          ? "Loading chart…"\n          : state === "error"\n            ? "Chart unavailable"\n            : "No data for this period")}\n    </div>\n  );\n}\n';
+
+const statSource =
+  'import type { HTMLAttributes, ReactNode } from "react";\n\nfunction cx(...classes: Array<string | false | null | undefined>) {\n  return classes.filter(Boolean).join(" ");\n}\n\nconst trendTones = {\n  positive: "bg-primary/10 text-primary",\n  negative: "bg-critical/10 text-critical",\n  neutral: "bg-muted text-muted-foreground",\n} as const;\n\nexport function Stat({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div\n      className={cx(\n        "rounded-[0.5rem] border-hairline border-border bg-surface p-5 shadow-sm",\n        "motion-safe:transition-[border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",\n        "hover:-translate-y-px hover:border-foreground/20 hover:shadow-md",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport function StatHeader({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {\n  return <div className={cx("flex items-start justify-between gap-3", className)} {...props} />;\n}\n\nexport function StatLabel({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {\n  return <p className={cx("text-sm font-medium text-muted-foreground", className)} {...props} />;\n}\n\nexport function StatValue({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {\n  return (\n    <p\n      className={cx("mt-2 text-2xl font-semibold tracking-tight tabular-nums", className)}\n      {...props}\n    />\n  );\n}\n\nexport function StatDescription({\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLParagraphElement>) {\n  return <p className={cx("mt-2 text-xs leading-5 text-muted-foreground", className)} {...props} />;\n}\n\nexport function TrendIndicator({\n  children,\n  className = "",\n  direction = "neutral",\n  value,\n  ...props\n}: HTMLAttributes<HTMLSpanElement> & {\n  direction?: keyof typeof trendTones;\n  value?: ReactNode;\n}) {\n  return (\n    <span\n      className={cx(\n        "inline-flex h-6 items-center gap-1 rounded-[0.25rem] px-1.5 text-xs font-medium tabular-nums",\n        trendTones[direction],\n        className,\n      )}\n      {...props}\n    >\n      <span aria-hidden="true">\n        {direction === "positive" ? "↗" : direction === "negative" ? "↘" : "→"}\n      </span>\n      {value ?? children}\n    </span>\n  );\n}\n\nexport function Metric({\n  className = "",\n  label,\n  value,\n  ...props\n}: HTMLAttributes<HTMLDivElement> & { label: ReactNode; value: ReactNode }) {\n  return (\n    <div className={cx("grid gap-1", className)} {...props}>\n      <span className="text-xs text-muted-foreground">{label}</span>\n      <span className="text-sm font-medium tabular-nums text-foreground">{value}</span>\n    </div>\n  );\n}\n';
+
+const statusSource =
+  'import type { HTMLAttributes, ReactNode } from "react";\n\nfunction cx(...classes: Array<string | false | null | undefined>) {\n  return classes.filter(Boolean).join(" ");\n}\n\nconst tones = {\n  neutral: "bg-muted-foreground",\n  positive: "bg-primary",\n  warning: "bg-amber-500",\n  critical: "bg-critical",\n} as const;\n\nexport function Status({\n  children,\n  className = "",\n  pulse = false,\n  tone = "neutral",\n  ...props\n}: HTMLAttributes<HTMLSpanElement> & {\n  pulse?: boolean;\n  tone?: keyof typeof tones;\n}) {\n  return (\n    <span className={cx("inline-flex items-center gap-2 text-sm", className)} {...props}>\n      <span className="relative flex size-2" aria-hidden="true">\n        {pulse ? (\n          <span\n            className={cx(\n              "absolute inline-flex size-full rounded-full opacity-40 motion-safe:animate-ping motion-reduce:animate-none",\n              tones[tone],\n            )}\n          />\n        ) : null}\n        <span className={cx("relative inline-flex size-2 rounded-full", tones[tone])} />\n      </span>\n      {children}\n    </span>\n  );\n}\n\nexport interface StatusBarItem {\n  label: ReactNode;\n  tone?: keyof typeof tones;\n  value: number;\n}\n\nexport function StatusBar({\n  "aria-label": ariaLabel = "Status distribution",\n  className = "",\n  items,\n  ...props\n}: Omit<HTMLAttributes<HTMLDivElement>, "children"> & {\n  items: readonly StatusBarItem[];\n}) {\n  const total = items.reduce((sum, item) => sum + Math.max(0, item.value), 0) || 1;\n\n  return (\n    <div className={cx("grid gap-2", className)} {...props}>\n      <div\n        aria-label={ariaLabel}\n        className="flex h-2 w-full overflow-hidden rounded-full bg-muted"\n        role="img"\n      >\n        {items.map((item, index) => (\n          <span\n            className={cx(\n              "h-full origin-left motion-safe:animate-enter motion-reduce:animate-none",\n              tones[item.tone ?? "neutral"],\n            )}\n            key={index}\n            style={{ width: ((Math.max(0, item.value) / total) * 100).toString() + "%" }}\n          />\n        ))}\n      </div>\n      <div className="flex flex-wrap gap-x-4 gap-y-1">\n        {items.map((item, index) => (\n          <Status\n            className="text-xs text-muted-foreground"\n            key={index}\n            tone={item.tone ?? "neutral"}\n          >\n            {item.label}{" "}\n            <span className="font-mono tabular-nums text-foreground">{item.value}</span>\n          </Status>\n        ))}\n      </div>\n    </div>\n  );\n}\n';
+
+const meterSource =
+  'import type { HTMLAttributes, ReactNode } from "react";\n\nfunction cx(...classes: Array<string | false | null | undefined>) {\n  return classes.filter(Boolean).join(" ");\n}\n\nconst tones = {\n  default: "bg-primary",\n  warning: "bg-amber-500",\n  critical: "bg-critical",\n} as const;\n\nexport function Meter({\n  className = "",\n  label,\n  max = 100,\n  tone = "default",\n  value,\n  valueLabel,\n  ...props\n}: Omit<HTMLAttributes<HTMLDivElement>, "children"> & {\n  label: ReactNode;\n  max?: number;\n  tone?: keyof typeof tones;\n  value: number;\n  valueLabel?: ReactNode;\n}) {\n  const safeMax = max > 0 ? max : 100;\n  const percentage = Math.min(100, Math.max(0, (value / safeMax) * 100));\n\n  return (\n    <div className={cx("grid gap-2", className)} {...props}>\n      <div className="flex items-center justify-between gap-3 text-sm">\n        <span className="font-medium">{label}</span>\n        <span className="font-mono text-xs tabular-nums text-muted-foreground">\n          {valueLabel ?? `${value} / ${safeMax}`}\n        </span>\n      </div>\n      <meter className="sr-only" max={safeMax} min={0} value={value}>\n        {percentage}%\n      </meter>\n      <div aria-hidden="true" className="h-2 overflow-hidden rounded-full bg-muted">\n        <span\n          className={cx(\n            "block h-full origin-left rounded-full motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none",\n            tones[tone],\n          )}\n          style={{ transform: "scaleX(" + (percentage / 100).toString() + ")" }}\n        />\n      </div>\n    </div>\n  );\n}\n';
+
+const dashboardLayoutSource =
+  'import type { HTMLAttributes } from "react";\n\nfunction cx(...classes: Array<string | false | null | undefined>) {\n  return classes.filter(Boolean).join(" ");\n}\n\nexport function DashboardLayout({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {\n  return <div className={cx("grid min-w-0 gap-6", className)} {...props} />;\n}\n\nexport function DashboardHeader({ className = "", ...props }: HTMLAttributes<HTMLElement>) {\n  return (\n    <header\n      className={cx("flex flex-wrap items-start justify-between gap-4", className)}\n      {...props}\n    />\n  );\n}\n\nexport function DashboardTitle({ className = "", ...props }: HTMLAttributes<HTMLHeadingElement>) {\n  return <h1 className={cx("text-2xl font-semibold tracking-tight", className)} {...props} />;\n}\n\nexport function DashboardDescription({\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLParagraphElement>) {\n  return <p className={cx("mt-1 text-sm leading-6 text-muted-foreground", className)} {...props} />;\n}\n\nexport function DashboardActions({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {\n  return <div className={cx("flex flex-wrap items-center gap-2", className)} {...props} />;\n}\n\nexport function DashboardGrid({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div className={cx("grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-4", className)} {...props} />\n  );\n}\n\nexport function DashboardSection({ className = "", ...props }: HTMLAttributes<HTMLElement>) {\n  return <section className={cx("grid min-w-0 gap-4", className)} {...props} />;\n}\n\nexport function DashboardSectionHeader({\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div\n      className={cx("flex flex-wrap items-center justify-between gap-3", className)}\n      {...props}\n    />\n  );\n}\n\nexport function DashboardSectionTitle({\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLHeadingElement>) {\n  return <h2 className={cx("text-base font-semibold tracking-tight", className)} {...props} />;\n}\n';
+
 const onboardingWizardSource = `import type { ButtonHTMLAttributes, CSSProperties, HTMLAttributes, ReactNode } from "react";
 
 function cx(...classes: Array<string | false | null | undefined>) {
@@ -3808,6 +3829,13 @@ export function OnboardingWizardActions({
   );
 }
 `;
+
+const chartSourcePatched = chartSource
+  .replace(
+    ": TooltipContentProps<number | string, number | string> & {",
+    ": Partial<TooltipContentProps<number | string, number | string>> & {",
+  )
+  .replace('color = "var(--brilliant-primary)"', 'color = "var(--brilliant-chart-1)"');
 
 export const registry = [
   {
@@ -4952,6 +4980,274 @@ export const registry = [
       avoid: [
         "Do not use for marketing pages or one-off landing layouts.",
         "Do not put every possible destination in the primary sidebar.",
+      ],
+    },
+  },
+  {
+    name: "chart",
+    title: "Chart",
+    description:
+      "A Recharts foundation with responsive sizing, semantic configuration, premium tooltips, legends, sparklines, and dashboard states.",
+    kind: "component",
+    dependencies: ["recharts", "react-is"],
+    registryDependencies: [],
+    files: [{ path: "chart.tsx", content: chartSourcePatched, target: "ui/chart.tsx" }],
+    metadata: {
+      purpose:
+        "Provides the shared visual, accessibility, responsive, tooltip, legend, and state contract for dashboard charts without hiding Recharts composition.",
+      slots: [
+        "container",
+        "tooltip",
+        "tooltip-content",
+        "legend",
+        "legend-content",
+        "sparkline",
+        "state",
+      ],
+      accessibility: [
+        "ChartContainer requires a title and accepts a longer description for assistive technology.",
+        "Enable accessibilityLayer on Recharts chart primitives for keyboard and screen-reader navigation.",
+        "ChartState uses status or alert semantics for loading, empty, and error states.",
+        "Recharts v3 automatic animation respects reduced-motion preferences.",
+      ],
+      usage: [
+        "Compose LineChart, AreaChart, BarChart, PieChart, and other Recharts primitives inside ChartContainer.",
+        "Define human-readable labels and tokenized colors in ChartConfig.",
+        "Keep a fixed height, minimum height, or aspect ratio on ChartContainer so responsive measurement is stable.",
+        "Use Sparkline inside compact stat cards and tables where axes would add noise.",
+      ],
+      avoid: [
+        "Do not encode meaning with color alone.",
+        "Do not render charts without a title or an equivalent accessible data summary.",
+        "Do not use a chart when a single number or small table communicates the result more clearly.",
+      ],
+    },
+  },
+  {
+    name: "stat",
+    title: "Stat",
+    description:
+      "Composable metrics, KPI cards, trend indicators, and dense dashboard values with restrained micro UX.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "stat.tsx", content: statSource, target: "ui/stat.tsx" }],
+    metadata: {
+      purpose:
+        "Presents a primary metric with comparison, trend, context, and optional compact charting.",
+      slots: ["root", "header", "label", "value", "description", "trend", "metric"],
+      accessibility: [
+        "Uses normal document semantics so consumers can choose the correct heading level.",
+        "Trend arrows are decorative; direction must also be conveyed by text or value context.",
+        "Tabular figures reduce visual movement when values update.",
+      ],
+      usage: [
+        "Use Stat for dashboard KPI cards and Metric for compact label/value pairs.",
+        "Use TrendIndicator only when a comparison period or baseline is explicit.",
+        "Place Sparkline from the chart item beside a StatValue for compact trend context.",
+      ],
+      avoid: [
+        "Do not label a change positive or negative based only on its mathematical direction.",
+        "Do not fill every dashboard card with a trend badge when no useful comparison exists.",
+      ],
+    },
+  },
+  {
+    name: "status",
+    title: "Status",
+    description:
+      "Operational status dots, live-state indicators, and proportional status bars for dashboards.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "status.tsx", content: statusSource, target: "ui/status.tsx" }],
+    metadata: {
+      purpose: "Communicates service state, health, presence, and category distribution.",
+      slots: ["status", "indicator", "status-bar", "status-bar-segment", "legend"],
+      accessibility: [
+        "Visible text accompanies every status color.",
+        "StatusBar exposes one accessible image label and a visible text legend.",
+        "Pulse motion is disabled when reduced motion is preferred.",
+      ],
+      usage: [
+        "Use Status for a named state and StatusBar for a proportional distribution.",
+        "Use pulse only for genuinely live or actively changing states.",
+        "Choose positive, warning, critical, or neutral based on product meaning.",
+      ],
+      avoid: [
+        "Do not use pulse as decoration.",
+        "Do not rely on green, amber, or red without accompanying text.",
+      ],
+    },
+  },
+  {
+    name: "meter",
+    title: "Meter",
+    description:
+      "A labeled scalar measurement for quotas, capacity, budgets, and dashboard utilization.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "meter.tsx", content: meterSource, target: "ui/meter.tsx" }],
+    metadata: {
+      purpose: "Shows a current scalar value within a known range, distinct from task progress.",
+      slots: ["root", "label", "value", "track", "indicator"],
+      accessibility: [
+        "Uses the native meter element for assistive technology.",
+        "The visual bar is hidden from assistive technology to prevent duplicate announcements.",
+        "Value and maximum are clamped into a stable visual percentage.",
+      ],
+      usage: [
+        "Use Meter for usage, quotas, budgets, storage, and capacity.",
+        "Use Progress instead for completion of an ongoing task.",
+        "Use warning or critical tones only when thresholds carry product meaning.",
+      ],
+      avoid: [
+        "Do not use Meter for an indeterminate operation.",
+        "Do not change tone without explaining the threshold elsewhere in the interface.",
+      ],
+    },
+  },
+  {
+    name: "dashboard-layout",
+    title: "Dashboard Layout",
+    description:
+      "Responsive dashboard page structure with headers, actions, KPI grids, and composable content sections.",
+    kind: "layout",
+    dependencies: [],
+    registryDependencies: [],
+    files: [
+      {
+        path: "dashboard-layout.tsx",
+        content: dashboardLayoutSource,
+        target: "ui/dashboard-layout.tsx",
+      },
+    ],
+    metadata: {
+      purpose:
+        "Standardizes responsive dashboard page hierarchy without prescribing business content.",
+      slots: [
+        "root",
+        "header",
+        "title",
+        "description",
+        "actions",
+        "grid",
+        "section",
+        "section-header",
+        "section-title",
+      ],
+      accessibility: [
+        "Uses semantic header, section, and heading elements.",
+        "Consumers remain responsible for one logical page heading and unique section labels.",
+        "Responsive grids preserve DOM and reading order.",
+      ],
+      usage: [
+        "Use inside ApplicationShellMain for authenticated dashboard routes.",
+        "Compose Stat, Chart, Status, Meter, Card, Table, and filter controls inside sections.",
+        "Keep actions close to the dashboard or section they affect.",
+      ],
+      avoid: [
+        "Do not use visual grid order to contradict document reading order.",
+        "Do not turn every dashboard section into an unrelated card.",
+      ],
+    },
+  },
+  {
+    name: "analytics-overview-dashboard",
+    title: "Analytics Overview Dashboard",
+    description:
+      "A responsive analytics dashboard with KPI trends and an accessible revenue chart.",
+    kind: "block",
+    dependencies: ["recharts", "react-is"],
+    registryDependencies: ["chart", "dashboard-layout", "stat"],
+    files: [
+      {
+        path: "analytics-overview-dashboard.tsx",
+        content: analyticsOverviewSource,
+        target: "blocks/analytics-overview-dashboard.tsx",
+      },
+    ],
+    metadata: {
+      purpose: "Provides a production-ready executive analytics overview for SaaS products.",
+      slots: ["kpi-grid", "trend-chart", "reporting-context"],
+      accessibility: [
+        "The chart has an accessible title and Recharts accessibility layer.",
+        "Trend direction is expressed with a value and arrow, not color alone.",
+        "The responsive grid preserves source order.",
+      ],
+      usage: [
+        "Install as a route-level dashboard block and replace the example data with product data.",
+        "Keep reporting ranges and comparison baselines explicit.",
+      ],
+      avoid: [
+        "Do not show KPIs without a defined reporting period.",
+        "Do not add chart series that do not support a concrete decision.",
+      ],
+    },
+  },
+  {
+    name: "system-health-dashboard",
+    title: "System Health Dashboard",
+    description:
+      "An operational dashboard for uptime, latency, service health, incidents, and capacity.",
+    kind: "block",
+    dependencies: [],
+    registryDependencies: ["dashboard-layout", "meter", "stat", "status"],
+    files: [
+      {
+        path: "system-health-dashboard.tsx",
+        content: systemHealthDashboardSource,
+        target: "blocks/system-health-dashboard.tsx",
+      },
+    ],
+    metadata: {
+      purpose: "Summarizes live production health without relying on decorative telemetry.",
+      slots: ["health-kpis", "live-status", "service-list", "capacity-meter"],
+      accessibility: [
+        "Every service state has visible text in addition to color.",
+        "The live indicator respects reduced-motion preferences.",
+        "Status distribution exposes an accessible summary.",
+      ],
+      usage: [
+        "Connect status values to monitored service data.",
+        "Use live pulse only while telemetry is actively updating.",
+      ],
+      avoid: [
+        "Do not use healthy colors to conceal partial outages.",
+        "Do not display stale telemetry without an updated-at timestamp.",
+      ],
+    },
+  },
+  {
+    name: "capacity-dashboard",
+    title: "Capacity Dashboard",
+    description: "A stacked capacity comparison with quota meters for storage, events, and seats.",
+    kind: "block",
+    dependencies: ["recharts", "react-is"],
+    registryDependencies: ["chart", "dashboard-layout", "meter"],
+    files: [
+      {
+        path: "capacity-dashboard.tsx",
+        content: capacityDashboardSource,
+        target: "blocks/capacity-dashboard.tsx",
+      },
+    ],
+    metadata: {
+      purpose: "Makes team-level utilization and quota risk directly comparable.",
+      slots: ["stacked-chart", "quota-meters", "billing-period"],
+      accessibility: [
+        "The chart exposes an accessible title and keyboard layer.",
+        "Meters use native scalar semantics.",
+        "Warning and critical states include visible labels and values.",
+      ],
+      usage: [
+        "Use for quotas with known minimum and maximum values.",
+        "Keep used and available values on the same scale.",
+      ],
+      avoid: [
+        "Do not use stacked bars for unrelated measures.",
+        "Do not imply risk thresholds that the product does not enforce.",
       ],
     },
   },

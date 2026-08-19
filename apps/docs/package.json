@@ -16,7 +16,9 @@
     "@fontsource-variable/instrument-sans": "catalog:",
     "@fontsource/ibm-plex-mono": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "react-is": "catalog:",
+    "recharts": "catalog:"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

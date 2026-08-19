@@ -201,8 +201,8 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 
 ### Layouts
 
-- [ ] Application shell and responsive sidebar.
-- [ ] Dashboard layout.
+- [x] Application shell and responsive sidebar.
+- [x] Dashboard layout.
 - [ ] Settings layout.
 - [ ] Authentication layout.
 - [ ] Documentation layout.
@@ -268,9 +268,9 @@ Goal: add differentiated, composable product systems on top of stable foundation
 
 ### Advanced data visualization
 
-- [ ] Create `@brilliant-ui/charts` around a mature charting foundation selected by evaluation.
-- [ ] Define accessible palettes, legends, tooltips, and empty/error states.
-- [ ] Metrics, sparklines, time series, comparisons, and distributions.
+- [x] Create an installable shadcn-style chart foundation around Recharts.
+- [x] Define accessible palettes, legends, tooltips, and empty/error states.
+- [x] Metrics, sparklines, time series, comparisons, and distributions.
 - [ ] Timeline, kanban, audit log, activity feed, and event stream.
 - [ ] Tree table and hierarchical data exploration.
 - [ ] Export and print behavior.
@@ -290,7 +290,7 @@ Goal: turn the component system into deployable starting points and an exception
 
 - [ ] CRM dashboard.
 - [ ] Administration dashboard.
-- [ ] Analytics dashboard.
+- [x] Analytics dashboard.
 - [ ] Billing dashboard.
 - [ ] Identity dashboard.
 - [ ] Settings module.

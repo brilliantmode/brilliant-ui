@@ -139,6 +139,11 @@ export const semanticColorTokens = [
   "border",
   "control-border",
   "ring",
+  "chart-1",
+  "chart-2",
+  "chart-3",
+  "chart-4",
+  "chart-5",
 ] as const;
 
 export type SemanticColorToken = (typeof semanticColorTokens)[number];
@@ -162,6 +167,11 @@ export const semanticColors = {
     border: primitiveColors.neutral[200],
     "control-border": "oklch(0.812 0.018 259.338)",
     ring: primitiveColors.brand[500],
+    "chart-1": primitiveColors.brand[600],
+    "chart-2": "oklch(0.62 0.15 230)",
+    "chart-3": "oklch(0.58 0.15 155)",
+    "chart-4": "oklch(0.72 0.16 75)",
+    "chart-5": "oklch(0.62 0.2 25)",
   },
   dark: {
     background: primitiveColors.neutral[950],
@@ -179,6 +189,11 @@ export const semanticColors = {
     border: "oklch(1 0 0 / 0.12)",
     "control-border": "oklch(1 0 0 / 0.18)",
     ring: primitiveColors.brand[400],
+    "chart-1": primitiveColors.brand[400],
+    "chart-2": "oklch(0.72 0.13 225)",
+    "chart-3": "oklch(0.7 0.14 155)",
+    "chart-4": "oklch(0.8 0.14 80)",
+    "chart-5": "oklch(0.72 0.17 25)",
   },
   highContrast: {
     background: primitiveColors.neutral[0],
@@ -196,6 +211,11 @@ export const semanticColors = {
     border: primitiveColors.neutral[1000],
     "control-border": primitiveColors.neutral[1000],
     ring: primitiveColors.neutral[1000],
+    "chart-1": primitiveColors.neutral[1000],
+    "chart-2": primitiveColors.neutral[800],
+    "chart-3": primitiveColors.neutral[600],
+    "chart-4": primitiveColors.neutral[400],
+    "chart-5": primitiveColors.neutral[200],
   },
 } as const satisfies Record<"light" | "dark" | "highContrast", SemanticColorScale>;
 

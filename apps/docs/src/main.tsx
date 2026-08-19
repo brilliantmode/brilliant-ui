@@ -10,6 +10,20 @@ import {
 } from "react";
 import { createRoot } from "react-dom/client";
 import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -17,6 +31,27 @@ import {
   CardHeader,
   CardTitle,
 } from "./components/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartState,
+  ChartTooltip,
+  ChartTooltipContent,
+  Sparkline,
+} from "./components/ui/chart";
+import {
+  DashboardActions,
+  DashboardDescription,
+  DashboardGrid,
+  DashboardHeader,
+  DashboardLayout,
+  DashboardSection,
+  DashboardSectionHeader,
+  DashboardSectionTitle,
+  DashboardTitle,
+} from "./components/ui/dashboard-layout";
 import {
   FileUpload,
   FileUploadDescription,
@@ -45,7 +80,18 @@ import {
   HeaderLink,
   HeaderNav,
 } from "./components/ui/header";
+import { Meter } from "./components/ui/meter";
 import { PhotoUpload } from "./components/ui/photo-upload";
+import {
+  Metric,
+  Stat,
+  StatDescription,
+  StatHeader,
+  StatLabel,
+  StatValue,
+  TrendIndicator,
+} from "./components/ui/stat";
+import { Status, StatusBar } from "./components/ui/status";
 import "./styles.css";
 
 type NavItem = readonly [label: string, href: string];
@@ -77,6 +123,16 @@ const navGroups = [
       ["Separator", "/components/separator"],
     ],
     label: "Display",
+  },
+  {
+    items: [
+      ["Chart", "/components/chart"],
+      ["Stat", "/components/stat"],
+      ["Status", "/components/status"],
+      ["Meter", "/components/meter"],
+      ["Dashboard Layout", "/components/dashboard-layout"],
+    ],
+    label: "Dashboard",
   },
   {
     items: [
@@ -484,6 +540,119 @@ export function BillingUsageBlock() {
       "A billing block with usage meter, renewal metadata, forecast status, and plan action.",
     id: "billing-usage",
     title: "Billing usage summary",
+  },
+  {
+    category: "Dashboard",
+    code: `import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
+import { DashboardGrid, DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@/components/ui/dashboard-layout";
+import { Stat, StatDescription, StatHeader, StatLabel, StatValue, TrendIndicator } from "@/components/ui/stat";
+
+const data = [
+  { day: "Mon", revenue: 18 }, { day: "Tue", revenue: 24 },
+  { day: "Wed", revenue: 21 }, { day: "Thu", revenue: 31 },
+  { day: "Fri", revenue: 37 }, { day: "Sat", revenue: 34 },
+  { day: "Sun", revenue: 44 },
+];
+const config = { revenue: { label: "Revenue", color: "var(--brilliant-chart-1)" } } satisfies ChartConfig;
+
+export function AnalyticsOverviewDashboard() {
+  return (
+    <DashboardLayout>
+      <DashboardGrid>
+        {[['Revenue', '$128.4K', '12.4%'], ['Customers', '24,892', '4.8%'], ['Conversion', '8.2%', '1.1%'], ['Churn', '1.8%', '0.3%']].map(([label, value, trend]) => (
+          <Stat key={label}><StatHeader><StatLabel>{label}</StatLabel><TrendIndicator direction={label === 'Churn' ? 'negative' : 'positive'} value={trend} /></StatHeader><StatValue>{value}</StatValue><StatDescription>Previous 30 days</StatDescription></Stat>
+        ))}
+      </DashboardGrid>
+      <DashboardSection>
+        <DashboardSectionHeader><DashboardSectionTitle>Revenue trend</DashboardSectionTitle><span className="text-xs text-muted-foreground">Last 7 days</span></DashboardSectionHeader>
+        <div className="rounded-lg border border-border bg-surface p-4">
+          <ChartContainer className="h-64" config={config} title="Seven day revenue trend">
+            <AreaChart accessibilityLayer data={data}><CartesianGrid vertical={false} /><XAxis dataKey="day" /><YAxis /><ChartTooltip content={<ChartTooltipContent />} /><Area dataKey="revenue" fill="var(--color-revenue)" fillOpacity={0.14} stroke="var(--color-revenue)" strokeWidth={2} /></AreaChart>
+          </ChartContainer>
+        </div>
+      </DashboardSection>
+    </DashboardLayout>
+  );
+}`,
+    description:
+      "A responsive analytics overview with KPI trends, semantic chart colors, and accessible tooltips.",
+    id: "analytics-overview",
+    title: "Analytics overview dashboard",
+  },
+  {
+    category: "Operations",
+    code: `import { DashboardGrid, DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@/components/ui/dashboard-layout";
+import { Meter } from "@/components/ui/meter";
+import { Stat, StatLabel, StatValue } from "@/components/ui/stat";
+import { Status, StatusBar } from "@/components/ui/status";
+
+const services = [
+  ["API gateway", "99.99%", "positive"],
+  ["Event pipeline", "99.94%", "warning"],
+  ["Billing sync", "98.72%", "critical"],
+] as const;
+
+export function SystemHealthDashboard() {
+  return (
+    <DashboardLayout>
+      <DashboardGrid>
+        <Stat><StatLabel>Uptime</StatLabel><StatValue>99.98%</StatValue></Stat>
+        <Stat><StatLabel>P95 latency</StatLabel><StatValue>184 ms</StatValue></Stat>
+        <Stat><StatLabel>Open incidents</StatLabel><StatValue>2</StatValue></Stat>
+        <Stat><StatLabel>Error rate</StatLabel><StatValue>0.08%</StatValue></Stat>
+      </DashboardGrid>
+      <DashboardSection>
+        <DashboardSectionHeader><DashboardSectionTitle>Service health</DashboardSectionTitle><Status pulse tone="positive">Monitoring live</Status></DashboardSectionHeader>
+        <div className="grid gap-4 rounded-lg border border-border bg-surface p-4">
+          <StatusBar items={[{ label: "Healthy", tone: "positive", value: 82 }, { label: "Degraded", tone: "warning", value: 12 }, { label: "Failed", tone: "critical", value: 6 }]} />
+          {services.map(([service, uptime, tone]) => <div className="flex items-center justify-between border-t border-border pt-3" key={service}><Status tone={tone}>{service}</Status><span className="font-mono text-xs tabular-nums">{uptime}</span></div>)}
+          <Meter label="Regional capacity" value={74} valueLabel="74%" />
+        </div>
+      </DashboardSection>
+    </DashboardLayout>
+  );
+}`,
+    description:
+      "An operations dashboard with live service states, uptime metrics, distribution, and capacity.",
+    id: "system-health",
+    title: "System health dashboard",
+  },
+  {
+    category: "Dashboard",
+    code: `import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
+import { DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@/components/ui/dashboard-layout";
+import { Meter } from "@/components/ui/meter";
+
+const data = [
+  { team: "Core", used: 82, available: 18 },
+  { team: "Growth", used: 64, available: 36 },
+  { team: "Data", used: 91, available: 9 },
+  { team: "Support", used: 48, available: 52 },
+];
+const config = {
+  used: { label: "Used", color: "var(--brilliant-chart-1)" },
+  available: { label: "Available", color: "var(--brilliant-chart-4)" },
+} satisfies ChartConfig;
+
+export function CapacityDashboard() {
+  return (
+    <DashboardLayout>
+      <DashboardSection>
+        <DashboardSectionHeader><DashboardSectionTitle>Capacity by team</DashboardSectionTitle><span className="text-xs text-muted-foreground">Current billing period</span></DashboardSectionHeader>
+        <div className="grid gap-5 rounded-lg border border-border bg-surface p-4 lg:grid-cols-[1.4fr_0.6fr]">
+          <ChartContainer className="h-64" config={config} title="Capacity used by team"><BarChart accessibilityLayer data={data}><CartesianGrid vertical={false} /><XAxis dataKey="team" /><YAxis /><ChartTooltip content={<ChartTooltipContent />} /><ChartLegend content={<ChartLegendContent />} /><Bar dataKey="used" fill="var(--color-used)" stackId="capacity" /><Bar dataKey="available" fill="var(--color-available)" stackId="capacity" /></BarChart></ChartContainer>
+          <div className="grid content-center gap-5"><Meter label="Storage" value={82} valueLabel="8.2 / 10 TB" tone="warning" /><Meter label="Events" value={64} valueLabel="6.4 / 10M" /><Meter label="Seats" value={91} valueLabel="91 / 100" tone="critical" /></div>
+        </div>
+      </DashboardSection>
+    </DashboardLayout>
+  );
+}`,
+    description:
+      "A capacity dashboard combining a stacked comparison chart with actionable quota meters.",
+    id: "capacity-dashboard",
+    title: "Capacity planning dashboard",
   },
 ] as const;
 
@@ -1783,6 +1952,153 @@ export function Example() {
     </OnboardingWizard>
   );
 }`,
+  chart: `import {
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+
+const data = [
+  { month: "Jan", desktop: 186, mobile: 80 },
+  { month: "Feb", desktop: 305, mobile: 200 },
+  { month: "Mar", desktop: 237, mobile: 120 },
+  { month: "Apr", desktop: 273, mobile: 190 },
+  { month: "May", desktop: 309, mobile: 230 },
+  { month: "Jun", desktop: 364, mobile: 280 },
+];
+
+const config = {
+  desktop: { color: "var(--brilliant-chart-1)", label: "Desktop" },
+  mobile: { color: "var(--brilliant-chart-2)", label: "Mobile" },
+} satisfies ChartConfig;
+
+export function Example() {
+  return (
+    <ChartContainer
+      className="h-72"
+      config={config}
+      description="Monthly desktop and mobile traffic from January through June."
+      title="Traffic overview"
+    >
+      <LineChart accessibilityLayer data={data} margin={{ left: 4, right: 12, top: 8 }}>
+        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+        <XAxis axisLine={false} dataKey="month" tickLine={false} tickMargin={10} />
+        <YAxis axisLine={false} tickLine={false} width={34} />
+        <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
+        <ChartLegend content={<ChartLegendContent />} />
+        <Line dataKey="desktop" dot={false} isAnimationActive="auto" stroke="var(--color-desktop)" strokeWidth={2} type="monotone" />
+        <Line dataKey="mobile" dot={false} isAnimationActive="auto" stroke="var(--color-mobile)" strokeWidth={2} type="monotone" />
+      </LineChart>
+    </ChartContainer>
+  );
+}`,
+  stat: `import {
+  Stat,
+  StatDescription,
+  StatHeader,
+  StatLabel,
+  StatValue,
+  TrendIndicator,
+} from "@/components/ui/stat";
+import { Sparkline } from "@/components/ui/chart";
+
+export function Example() {
+  return (
+    <Stat>
+      <StatHeader>
+        <StatLabel>Net revenue</StatLabel>
+        <TrendIndicator direction="positive" value="12.4%" />
+      </StatHeader>
+      <div className="flex items-end justify-between gap-3">
+        <StatValue>$128,430</StatValue>
+        <Sparkline data={[18, 24, 21, 29, 31, 37, 44]} label="Revenue trend" />
+      </div>
+      <StatDescription>Compared with the previous 30 days</StatDescription>
+    </Stat>
+  );
+}`,
+  status: `import { Status, StatusBar } from "@/components/ui/status";
+
+export function Example() {
+  return (
+    <div className="grid gap-5">
+      <div className="flex flex-wrap gap-4">
+        <Status pulse tone="positive">All systems operational</Status>
+        <Status tone="warning">Elevated latency</Status>
+        <Status tone="critical">Billing sync interrupted</Status>
+      </div>
+      <StatusBar
+        items={[
+          { label: "Healthy", tone: "positive", value: 82 },
+          { label: "Degraded", tone: "warning", value: 12 },
+          { label: "Failed", tone: "critical", value: 6 },
+        ]}
+      />
+    </div>
+  );
+}`,
+  meter: `import { Meter } from "@/components/ui/meter";
+import { useState } from "react";
+
+export function Example() {
+  const [usage, setUsage] = useState(64);
+  return (
+    <div className="grid gap-5">
+      <Meter
+        label="Monthly events"
+        max={100}
+        tone={usage > 85 ? "critical" : usage > 70 ? "warning" : "default"}
+        value={usage}
+        valueLabel={\`\${usage}%\`}
+      />
+      <input aria-label="Adjust usage" max={100} min={0} onChange={(event) => setUsage(event.currentTarget.valueAsNumber)} type="range" value={usage} />
+    </div>
+  );
+}`,
+  "dashboard-layout": `import {
+  DashboardActions,
+  DashboardDescription,
+  DashboardGrid,
+  DashboardHeader,
+  DashboardLayout,
+  DashboardSection,
+  DashboardSectionHeader,
+  DashboardSectionTitle,
+  DashboardTitle,
+} from "@/components/ui/dashboard-layout";
+import { Meter } from "@/components/ui/meter";
+import { Stat, StatLabel, StatValue } from "@/components/ui/stat";
+import { Status } from "@/components/ui/status";
+
+export function Example() {
+  return (
+    <DashboardLayout>
+      <DashboardHeader>
+        <div>
+          <DashboardTitle>Operations overview</DashboardTitle>
+          <DashboardDescription>Production workspace · updated moments ago</DashboardDescription>
+        </div>
+        <DashboardActions><button type="button">Export</button></DashboardActions>
+      </DashboardHeader>
+      <DashboardGrid>
+        {[['Revenue', '$128K'], ['Users', '24.8K'], ['Uptime', '99.99%'], ['Incidents', '2']].map(([label, value]) => (
+          <Stat key={label}><StatLabel>{label}</StatLabel><StatValue>{value}</StatValue></Stat>
+        ))}
+      </DashboardGrid>
+      <DashboardSection>
+        <DashboardSectionHeader>
+          <DashboardSectionTitle>Capacity</DashboardSectionTitle>
+          <Status tone="positive">Healthy</Status>
+        </DashboardSectionHeader>
+        <Meter label="Event capacity" value={68} valueLabel="6.8M / 10M" />
+      </DashboardSection>
+    </DashboardLayout>
+  );
+}`,
   "empty-state": `import {
   EmptyState,
   EmptyStateActions,
@@ -2461,6 +2777,178 @@ function OnboardingWizardInteractivePreview({ compact = false }: { compact?: boo
   );
 }
 
+function AnalyticsOverviewBlockPreview() {
+  const [range, setRange] = useState<"7d" | "30d">("30d");
+  const factor = range === "30d" ? 1 : 0.28;
+  const data = dashboardChartData.map((item) => ({
+    ...item,
+    revenue: Math.round(item.revenue * factor),
+  }));
+
+  return (
+    <DashboardLayout>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <DashboardTitle className="text-xl">Analytics overview</DashboardTitle>
+          <DashboardDescription>Revenue and acquisition performance</DashboardDescription>
+        </div>
+        <fieldset className="inline-flex rounded-[0.375rem] border border-border p-0.5">
+          <legend className="sr-only">Reporting range</legend>
+          {(["7d", "30d"] as const).map((option) => (
+            <button
+              aria-pressed={range === option}
+              className="rounded-[0.25rem] px-3 py-1.5 text-xs aria-pressed:bg-muted"
+              key={option}
+              onClick={() => setRange(option)}
+              type="button"
+            >
+              {option}
+            </button>
+          ))}
+        </fieldset>
+      </div>
+      <DashboardGrid>
+        {[
+          ["Revenue", range === "30d" ? "$128.4K" : "$35.9K", "12.4%"],
+          ["Customers", range === "30d" ? "24,892" : "6,970", "4.8%"],
+          ["Conversion", "8.2%", "1.1%"],
+          ["Churn", "1.8%", "0.3%"],
+        ].map(([label, value, trend]) => (
+          <Stat className="p-4" key={label}>
+            <StatHeader>
+              <StatLabel>{label}</StatLabel>
+              <TrendIndicator
+                direction={label === "Churn" ? "negative" : "positive"}
+                value={trend}
+              />
+            </StatHeader>
+            <StatValue className="text-xl">{value}</StatValue>
+          </Stat>
+        ))}
+      </DashboardGrid>
+      <div className="rounded-[0.5rem] border border-border bg-surface p-4">
+        <ChartContainer
+          className="h-64"
+          config={dashboardChartConfig}
+          description={`Revenue trend for the selected ${range} period.`}
+          title="Revenue trend"
+        >
+          <AreaChart accessibilityLayer data={data}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis axisLine={false} dataKey="month" tickLine={false} />
+            <YAxis axisLine={false} tickLine={false} width={30} />
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <Area
+              dataKey="revenue"
+              fill="var(--color-revenue)"
+              fillOpacity={0.14}
+              isAnimationActive="auto"
+              stroke="var(--color-revenue)"
+              strokeWidth={2}
+              type="monotone"
+            />
+          </AreaChart>
+        </ChartContainer>
+      </div>
+    </DashboardLayout>
+  );
+}
+
+function SystemHealthBlockPreview() {
+  return (
+    <DashboardLayout>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <DashboardTitle className="text-xl">System health</DashboardTitle>
+          <DashboardDescription>Production services · live telemetry</DashboardDescription>
+        </div>
+        <Status pulse tone="positive">
+          Monitoring live
+        </Status>
+      </div>
+      <DashboardGrid>
+        {[
+          ["Uptime", "99.98%"],
+          ["P95 latency", "184 ms"],
+          ["Open incidents", "2"],
+          ["Error rate", "0.08%"],
+        ].map(([label, value]) => (
+          <Stat className="p-4" key={label}>
+            <StatLabel>{label}</StatLabel>
+            <StatValue className="text-xl">{value}</StatValue>
+          </Stat>
+        ))}
+      </DashboardGrid>
+      <div className="grid gap-4 rounded-[0.5rem] border border-border bg-surface p-4">
+        <StatusBar
+          items={[
+            { label: "Healthy", tone: "positive", value: 82 },
+            { label: "Degraded", tone: "warning", value: 12 },
+            { label: "Failed", tone: "critical", value: 6 },
+          ]}
+        />
+        {[
+          ["API gateway", "99.99%", "positive"],
+          ["Event pipeline", "99.94%", "warning"],
+          ["Billing sync", "98.72%", "critical"],
+        ].map(([service, uptime, tone]) => (
+          <div
+            className="flex items-center justify-between border-t border-border pt-3"
+            key={service}
+          >
+            <Status tone={tone as "critical" | "positive" | "warning"}>{service}</Status>
+            <span className="font-mono text-xs tabular-nums">{uptime}</span>
+          </div>
+        ))}
+        <Meter label="Regional capacity" value={74} valueLabel="74%" />
+      </div>
+    </DashboardLayout>
+  );
+}
+
+function CapacityDashboardBlockPreview() {
+  const capacityData = [
+    { available: 18, team: "Core", used: 82 },
+    { available: 36, team: "Growth", used: 64 },
+    { available: 9, team: "Data", used: 91 },
+    { available: 52, team: "Support", used: 48 },
+  ];
+  const capacityConfig = {
+    available: { color: "var(--brilliant-chart-4)", label: "Available" },
+    used: { color: "var(--brilliant-chart-1)", label: "Used" },
+  } satisfies ChartConfig;
+
+  return (
+    <DashboardLayout>
+      <DashboardSectionHeader>
+        <div>
+          <DashboardTitle className="text-xl">Capacity planning</DashboardTitle>
+          <DashboardDescription>Current billing period by team</DashboardDescription>
+        </div>
+        <Status tone="warning">1 quota at risk</Status>
+      </DashboardSectionHeader>
+      <div className="grid gap-5 rounded-[0.5rem] border border-border bg-surface p-4 lg:grid-cols-[1.4fr_0.6fr]">
+        <ChartContainer className="h-64" config={capacityConfig} title="Capacity used by team">
+          <BarChart accessibilityLayer data={capacityData}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis axisLine={false} dataKey="team" tickLine={false} />
+            <YAxis axisLine={false} tickLine={false} width={30} />
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
+            <Bar dataKey="used" fill="var(--color-used)" stackId="capacity" />
+            <Bar dataKey="available" fill="var(--color-available)" stackId="capacity" />
+          </BarChart>
+        </ChartContainer>
+        <div className="grid content-center gap-5">
+          <Meter label="Storage" tone="warning" value={82} valueLabel="8.2 / 10 TB" />
+          <Meter label="Events" value={64} valueLabel="6.4 / 10M" />
+          <Meter label="Seats" tone="critical" value={91} valueLabel="91 / 100" />
+        </div>
+      </div>
+    </DashboardLayout>
+  );
+}
+
 function ProductBlockPreview({ id }: { id: (typeof productBlockExamples)[number]["id"] }) {
   if (id === "workspace-import") {
     return <OnboardingWizardInteractivePreview />;
@@ -2500,6 +2988,10 @@ function ProductBlockPreview({ id }: { id: (typeof productBlockExamples)[number]
       </div>
     );
   }
+
+  if (id === "analytics-overview") return <AnalyticsOverviewBlockPreview />;
+  if (id === "system-health") return <SystemHealthBlockPreview />;
+  if (id === "capacity-dashboard") return <CapacityDashboardBlockPreview />;
 
   return (
     <div className="rounded-[0.5rem] border border-border bg-surface p-5 shadow-md">
@@ -3744,7 +4236,309 @@ function CardExamplePreview({ example }: { example: keyof typeof cardExampleCode
   );
 }
 
+const dashboardChartData = [
+  { month: "Jan", desktop: 186, mobile: 80, revenue: 42 },
+  { month: "Feb", desktop: 305, mobile: 200, revenue: 58 },
+  { month: "Mar", desktop: 237, mobile: 120, revenue: 51 },
+  { month: "Apr", desktop: 273, mobile: 190, revenue: 67 },
+  { month: "May", desktop: 309, mobile: 230, revenue: 74 },
+  { month: "Jun", desktop: 364, mobile: 280, revenue: 86 },
+] as const;
+
+const dashboardChartConfig = {
+  desktop: { color: "var(--brilliant-chart-1)", label: "Desktop" },
+  mobile: { color: "var(--brilliant-chart-2)", label: "Mobile" },
+  revenue: { color: "var(--brilliant-chart-3)", label: "Revenue" },
+} satisfies ChartConfig;
+
+const chartKinds = ["line", "area", "bar", "donut"] as const;
+
+function ChartPreview() {
+  const [chartKind, setChartKind] = useState<(typeof chartKinds)[number]>("line");
+
+  return (
+    <div className="grid gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold">Traffic overview</p>
+          <p className="text-xs text-muted-foreground">Interactive Recharts composition</p>
+        </div>
+        <fieldset className="inline-flex rounded-[0.375rem] border border-border bg-surface p-0.5">
+          <legend className="sr-only">Chart type</legend>
+          {chartKinds.map((kind) => (
+            <button
+              aria-pressed={chartKind === kind}
+              className="rounded-[0.25rem] px-2.5 py-1.5 text-xs capitalize text-muted-foreground hover:text-foreground aria-pressed:bg-muted aria-pressed:text-foreground"
+              key={kind}
+              onClick={() => setChartKind(kind)}
+              type="button"
+            >
+              {kind}
+            </button>
+          ))}
+        </fieldset>
+      </div>
+
+      <ChartContainer
+        className="h-72 min-h-0"
+        config={dashboardChartConfig}
+        description="Monthly desktop and mobile traffic from January through June."
+        title={`${chartKind} traffic chart`}
+      >
+        {chartKind === "line" ? (
+          <LineChart
+            accessibilityLayer
+            data={dashboardChartData}
+            margin={{ left: 4, right: 12, top: 8 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis axisLine={false} dataKey="month" tickLine={false} tickMargin={10} />
+            <YAxis axisLine={false} tickLine={false} width={34} />
+            <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
+            <ChartLegend content={<ChartLegendContent />} />
+            <Line
+              dataKey="desktop"
+              dot={false}
+              isAnimationActive="auto"
+              stroke="var(--color-desktop)"
+              strokeWidth={2}
+              type="monotone"
+            />
+            <Line
+              dataKey="mobile"
+              dot={false}
+              isAnimationActive="auto"
+              stroke="var(--color-mobile)"
+              strokeWidth={2}
+              type="monotone"
+            />
+          </LineChart>
+        ) : chartKind === "area" ? (
+          <AreaChart
+            accessibilityLayer
+            data={dashboardChartData}
+            margin={{ left: 4, right: 12, top: 8 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis axisLine={false} dataKey="month" tickLine={false} tickMargin={10} />
+            <YAxis axisLine={false} tickLine={false} width={34} />
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
+            <Area
+              dataKey="desktop"
+              fill="var(--color-desktop)"
+              fillOpacity={0.16}
+              isAnimationActive="auto"
+              stroke="var(--color-desktop)"
+              strokeWidth={2}
+              type="monotone"
+            />
+            <Area
+              dataKey="mobile"
+              fill="var(--color-mobile)"
+              fillOpacity={0.1}
+              isAnimationActive="auto"
+              stroke="var(--color-mobile)"
+              strokeWidth={2}
+              type="monotone"
+            />
+          </AreaChart>
+        ) : chartKind === "bar" ? (
+          <BarChart
+            accessibilityLayer
+            data={dashboardChartData}
+            margin={{ left: 4, right: 12, top: 8 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis axisLine={false} dataKey="month" tickLine={false} tickMargin={10} />
+            <YAxis axisLine={false} tickLine={false} width={34} />
+            <ChartTooltip
+              content={<ChartTooltipContent />}
+              cursor={{ fill: "var(--brilliant-muted)", opacity: 0.45 }}
+            />
+            <ChartLegend content={<ChartLegendContent />} />
+            <Bar
+              dataKey="desktop"
+              fill="var(--color-desktop)"
+              isAnimationActive="auto"
+              radius={[3, 3, 0, 0]}
+            />
+            <Bar
+              dataKey="mobile"
+              fill="var(--color-mobile)"
+              isAnimationActive="auto"
+              radius={[3, 3, 0, 0]}
+            />
+          </BarChart>
+        ) : (
+          <PieChart accessibilityLayer>
+            <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+            <ChartLegend content={<ChartLegendContent />} />
+            <Pie
+              data={[
+                { name: "desktop", value: 1674 },
+                { name: "mobile", value: 1100 },
+                { name: "revenue", value: 378 },
+              ]}
+              dataKey="value"
+              innerRadius="48%"
+              isAnimationActive="auto"
+              nameKey="name"
+              outerRadius="72%"
+              paddingAngle={2}
+            >
+              <Cell fill="var(--color-desktop)" />
+              <Cell fill="var(--color-mobile)" />
+              <Cell fill="var(--color-revenue)" />
+            </Pie>
+          </PieChart>
+        )}
+      </ChartContainer>
+    </div>
+  );
+}
+
+function StatPreview() {
+  return (
+    <div className="grid gap-3 md:grid-cols-3">
+      {[
+        ["Net revenue", "$128,430", "12.4%", "positive", [18, 24, 21, 29, 31, 37, 44]],
+        ["Active users", "24,892", "4.8%", "positive", [28, 26, 31, 30, 36, 35, 39]],
+        ["Churn", "1.8%", "0.3%", "negative", [14, 15, 13, 12, 11, 10, 9]],
+      ].map(([label, value, trend, direction, data]) => (
+        <Stat key={String(label)}>
+          <StatHeader>
+            <StatLabel>{label}</StatLabel>
+            <TrendIndicator direction={direction as "negative" | "positive"} value={trend} />
+          </StatHeader>
+          <div className="flex items-end justify-between gap-3">
+            <StatValue>{value}</StatValue>
+            <Sparkline data={data as number[]} label={`${label} trend`} />
+          </div>
+          <StatDescription>Compared with the previous 30 days</StatDescription>
+        </Stat>
+      ))}
+    </div>
+  );
+}
+
+function StatusPreview() {
+  return (
+    <div className="grid gap-6 md:grid-cols-[0.8fr_1.2fr]">
+      <div className="grid content-start gap-3 rounded-[0.5rem] border border-border bg-surface p-4">
+        <Status pulse tone="positive">
+          All systems operational
+        </Status>
+        <Status tone="warning">Elevated queue latency</Status>
+        <Status tone="critical">Billing sync interrupted</Status>
+        <Status tone="neutral">Maintenance scheduled</Status>
+      </div>
+      <div className="rounded-[0.5rem] border border-border bg-surface p-4">
+        <p className="mb-4 text-sm font-semibold">Deployment distribution</p>
+        <StatusBar
+          items={[
+            { label: "Healthy", tone: "positive", value: 82 },
+            { label: "Degraded", tone: "warning", value: 12 },
+            { label: "Failed", tone: "critical", value: 6 },
+          ]}
+        />
+      </div>
+    </div>
+  );
+}
+
+function MeterPreview() {
+  const [usage, setUsage] = useState(64);
+  return (
+    <div className="grid max-w-2xl gap-5">
+      <Meter
+        label="Monthly events"
+        max={100}
+        tone={usage > 85 ? "critical" : usage > 70 ? "warning" : "default"}
+        value={usage}
+        valueLabel={`${usage}%`}
+      />
+      <label className="grid gap-2 text-xs text-muted-foreground">
+        Adjust usage
+        <input
+          className="accent-primary"
+          max={100}
+          min={0}
+          onChange={(event) => setUsage(event.currentTarget.valueAsNumber)}
+          type="range"
+          value={usage}
+        />
+      </label>
+    </div>
+  );
+}
+
+function DashboardLayoutPreview() {
+  return (
+    <DashboardLayout>
+      <DashboardHeader>
+        <div>
+          <DashboardTitle>Operations overview</DashboardTitle>
+          <DashboardDescription>Production workspace · updated moments ago</DashboardDescription>
+        </div>
+        <DashboardActions>
+          <button
+            className="h-8 rounded-[0.25rem] border border-border bg-surface px-3 text-xs font-medium"
+            type="button"
+          >
+            Last 30 days
+          </button>
+          <button
+            className="h-8 rounded-[0.25rem] bg-primary px-3 text-xs font-medium text-primary-foreground"
+            type="button"
+          >
+            Export
+          </button>
+        </DashboardActions>
+      </DashboardHeader>
+      <DashboardGrid>
+        {[
+          ["Revenue", "$128K"],
+          ["Users", "24.8K"],
+          ["Uptime", "99.99%"],
+          ["Incidents", "2"],
+        ].map(([label, value]) => (
+          <Stat className="p-4" key={label}>
+            <StatLabel>{label}</StatLabel>
+            <StatValue className="text-xl">{value}</StatValue>
+          </Stat>
+        ))}
+      </DashboardGrid>
+      <div className="grid gap-3 md:grid-cols-3">
+        <Metric label="Requests" value="8.4M" />
+        <Metric label="P95 latency" value="184 ms" />
+        <Metric label="Error rate" value="0.08%" />
+      </div>
+      <DashboardSection>
+        <DashboardSectionHeader>
+          <DashboardSectionTitle>Capacity</DashboardSectionTitle>
+          <Status tone="positive">Healthy</Status>
+        </DashboardSectionHeader>
+        <div className="rounded-[0.5rem] border border-border bg-surface p-4">
+          <Meter label="Event capacity" value={68} valueLabel="6.8M / 10M" />
+        </div>
+      </DashboardSection>
+      <div className="grid gap-3 md:grid-cols-3">
+        <ChartState state="loading" title="Loading dashboard data" />
+        <ChartState state="empty" title="No comparison data" />
+        <ChartState state="error" title="Chart unavailable" />
+      </div>
+    </DashboardLayout>
+  );
+}
+
 function ComponentMiniPreview({ name }: { name: string }) {
+  if (name === "chart") return <ChartPreview />;
+  if (name === "stat") return <StatPreview />;
+  if (name === "status") return <StatusPreview />;
+  if (name === "meter") return <MeterPreview />;
+  if (name === "dashboard-layout") return <DashboardLayoutPreview />;
+
   if (name === "header") {
     return <HeaderPreview />;
   }
@@ -5838,11 +6632,78 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Installation</h3>
                       <CodeBlock language="bash">{`npx brilliant-ui add ${item.name}`}</CodeBlock>
+                      {item.dependencies.length > 0 ? (
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Package dependencies: <code>{item.dependencies.join(", ")}</code>. The CLI
+                          installs missing dependencies with the package manager detected in your
+                          project.
+                        </p>
+                      ) : null}
                     </div>
 
                     <ExamplePanel code={usage}>
                       <ComponentMiniPreview name={item.name} />
                     </ExamplePanel>
+
+                    {item.name === "chart" ? (
+                      <div className="grid gap-8">
+                        <div className="space-y-3">
+                          <div>
+                            <h3 className="text-lg font-semibold">Supported compositions</h3>
+                            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                              Brilliant supplies the responsive container, semantic colors, tooltip,
+                              legend, sparkline, and states. Compose Recharts line, area, bar,
+                              stacked bar, and pie primitives directly inside it.
+                            </p>
+                          </div>
+                          <div className="overflow-auto rounded-lg border border-border">
+                            <table className="w-full border-collapse text-sm">
+                              <thead className="bg-muted text-left">
+                                <tr>
+                                  <th className="border-b border-border px-4 py-3 font-medium">
+                                    Composition
+                                  </th>
+                                  <th className="border-b border-border px-4 py-3 font-medium">
+                                    Best for
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {[
+                                  ["Line", "Trends and time series"],
+                                  ["Area", "Volume over time with restrained emphasis"],
+                                  ["Bar", "Category and period comparisons"],
+                                  ["Stacked bar", "Part-to-whole comparisons across categories"],
+                                  ["Donut / pie", "Small part-to-whole distributions"],
+                                  ["Sparkline", "Compact trend context inside stats and tables"],
+                                ].map(([composition, use]) => (
+                                  <tr
+                                    className="border-b border-border last:border-b-0"
+                                    key={composition}
+                                  >
+                                    <td className="px-4 py-3 font-medium">{composition}</td>
+                                    <td className="px-4 py-3 text-muted-foreground">{use}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <div>
+                            <h3 className="text-lg font-semibold">Loading, empty, and error</h3>
+                            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                              Use explicit states in the same chart footprint to avoid layout shift.
+                            </p>
+                          </div>
+                          <div className="grid gap-3 md:grid-cols-3">
+                            <ChartState className="min-h-40" state="loading" />
+                            <ChartState className="min-h-40" state="empty" />
+                            <ChartState className="min-h-40" state="error" />
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
 
                     {item.name === "photo" ? (
                       <div className="grid gap-8">
@@ -6517,6 +7378,18 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                         <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
                           {block.description}
                         </p>
+                        {block.id === "analytics-overview" ||
+                        block.id === "system-health" ||
+                        block.id === "capacity-dashboard" ? (
+                          <code className="mt-2 block text-xs text-muted-foreground">
+                            npx brilliant-ui add{" "}
+                            {block.id === "analytics-overview"
+                              ? "analytics-overview-dashboard"
+                              : block.id === "system-health"
+                                ? "system-health-dashboard"
+                                : "capacity-dashboard"}
+                          </code>
+                        ) : null}
                       </div>
                     </div>
                     <ExamplePanel code={block.code}>

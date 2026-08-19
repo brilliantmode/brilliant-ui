@@ -1,5 +1,7 @@
+import { execFile } from "node:child_process";
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { promisify } from "node:util";
 import { type BrilliantConfig, defaultConfig } from "@brilliant-ui/core";
 import { checksumContent, resolveRegistryDependencies } from "@brilliant-ui/registry";
 
@@ -7,6 +9,7 @@ const CONFIG_FILE = "brilliant-ui.json";
 const MANIFEST_FILE = ".brilliant-ui/manifest.json";
 const SHADCN_CONFIG_FILE = "components.json";
 const TOKEN_STYLES_IMPORT = '@import "@brilliant-ui/tokens/styles.css";';
+const execFileAsync = promisify(execFile);
 
 export interface CommandContext {
   readonly cwd: string;
@@ -144,6 +147,36 @@ function dependenciesOf(packageJson: PackageJson | undefined): Readonly<Record<s
   return { ...packageJson?.dependencies, ...packageJson?.devDependencies };
 }
 
+async function installDependencies(
+  dependencies: readonly string[],
+  context: CommandContext,
+): Promise<void> {
+  if (dependencies.length === 0) return;
+  const packageJsonPath = join(context.cwd, "package.json");
+  const packageJson = await readJsonFile<PackageJson>(packageJsonPath);
+  if (!packageJson) {
+    throw new Error("Cannot install package dependencies because package.json was not found.");
+  }
+
+  const existing = dependenciesOf(packageJson);
+  const missing = [...new Set(dependencies)].filter((dependency) => !existing[dependency]);
+  if (missing.length === 0) {
+    context.log(`Found dependencies: ${dependencies.join(", ")}`);
+    return;
+  }
+
+  const detected = await detectPackageManager(context.cwd);
+  const packageManager = detected === "unknown" ? "npm" : detected;
+  const args = packageManager === "npm" ? ["install", ...missing] : ["add", ...missing];
+  if (context.dryRun) {
+    context.log(`Would run ${packageManager} ${args.join(" ")}`);
+    return;
+  }
+
+  await execFileAsync(packageManager, args, { cwd: context.cwd });
+  context.log(`Installed dependencies with ${packageManager}: ${missing.join(", ")}`);
+}
+
 export async function detectProject(cwd: string): Promise<ProjectDetection> {
   const packageJson = await readJsonFile<PackageJson>(join(cwd, "package.json"));
   const dependencies = dependenciesOf(packageJson);
@@ -197,14 +230,20 @@ export async function addItems(names: readonly string[], context: CommandContext
   const config = await readConfig(context.cwd);
   const manifest = await readManifest(context.cwd);
   const installed = { ...manifest.items } as Record<string, readonly string[]>;
+  const items = resolveRegistryDependencies(names);
+  const dependencies = items.flatMap((item) => item.dependencies);
 
-  for (const item of resolveRegistryDependencies(names)) {
+  for (const item of items) {
     for (const file of item.files) {
       if (file.checksum && file.checksum !== checksumContent(file.content)) {
         throw new Error(`Checksum mismatch for registry item "${item.name}" file "${file.path}".`);
       }
     }
+  }
 
+  await installDependencies(dependencies, context);
+
+  for (const item of items) {
     const written: string[] = [];
     for (const file of item.files) {
       const relativePath = join(aliasRoot(config.aliases.components), file.target ?? file.path);
@@ -224,9 +263,6 @@ export async function addItems(names: readonly string[], context: CommandContext
       context.log(`${context.dryRun ? "Would add" : "Added"} ${relativePath}`);
     }
     installed[item.name] = written;
-    if (item.dependencies.length > 0) {
-      context.log(`Dependencies: ${item.dependencies.join(", ")}`);
-    }
   }
 
   await writeJsonForContext(
