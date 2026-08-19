@@ -205,7 +205,7 @@ export function Example() {
   skeleton: `import { Skeleton } from "@/components/ui/skeleton";
 
 export function Example() {
-  return <Skeleton className="h-4 w-48" />;
+  return <Skeleton size="title" variant="raised" />;
 }`,
 } as const;
 
@@ -482,10 +482,19 @@ function ComponentMiniPreview({ name }: { name: string }) {
 
   if (name === "skeleton") {
     return (
-      <div className="space-y-2">
-        <div className="h-4 w-2/3 rounded-[0.25rem] bg-muted" />
-        <div className="h-4 w-full rounded-[0.25rem] bg-muted" />
-        <div className="h-4 w-1/2 rounded-[0.25rem] bg-muted" />
+      <div className="grid gap-4 md:grid-cols-[2fr_1fr]">
+        <div className="space-y-3 rounded-[0.5rem] border border-border bg-surface p-4">
+          <div className="relative isolate h-6 w-2/3 overflow-hidden rounded-[0.25rem] bg-secondary after:absolute after:inset-0 after:-translate-x-full after:bg-[linear-gradient(90deg,transparent,oklch(1_0_0/0.38),transparent)] after:content-[''] motion-safe:after:animate-skeleton-shimmer motion-reduce:after:hidden" />
+          <div className="relative isolate h-4 w-full overflow-hidden rounded-[0.25rem] bg-muted after:absolute after:inset-0 after:-translate-x-full after:bg-[linear-gradient(90deg,transparent,oklch(1_0_0/0.38),transparent)] after:content-[''] motion-safe:after:animate-skeleton-shimmer motion-reduce:after:hidden" />
+          <div className="relative isolate h-4 w-1/2 overflow-hidden rounded-[0.25rem] bg-muted after:absolute after:inset-0 after:-translate-x-full after:bg-[linear-gradient(90deg,transparent,oklch(1_0_0/0.38),transparent)] after:content-[''] motion-safe:after:animate-skeleton-shimmer motion-reduce:after:hidden" />
+        </div>
+        <div className="flex items-center gap-3 rounded-[0.5rem] border border-border bg-surface p-4">
+          <div className="relative isolate size-10 overflow-hidden rounded-full bg-muted after:absolute after:inset-0 after:-translate-x-full after:bg-[linear-gradient(90deg,transparent,oklch(1_0_0/0.38),transparent)] after:content-[''] motion-safe:after:animate-skeleton-shimmer motion-reduce:after:hidden" />
+          <div className="space-y-2">
+            <div className="relative isolate h-4 w-28 overflow-hidden rounded-[0.25rem] bg-muted after:absolute after:inset-0 after:-translate-x-full after:bg-[linear-gradient(90deg,transparent,oklch(1_0_0/0.38),transparent)] after:content-[''] motion-safe:after:animate-skeleton-shimmer motion-reduce:after:hidden" />
+            <div className="relative isolate h-3 w-20 overflow-hidden rounded-[0.25rem] bg-muted after:absolute after:inset-0 after:-translate-x-full after:bg-[linear-gradient(90deg,transparent,oklch(1_0_0/0.38),transparent)] after:content-[''] motion-safe:after:animate-skeleton-shimmer motion-reduce:after:hidden" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -875,7 +884,8 @@ export function Example() {
                   {item.name === "card" ||
                   item.name === "text" ||
                   item.name === "checkbox" ||
-                  item.name === "separator" ? (
+                  item.name === "separator" ||
+                  item.name === "skeleton" ? (
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Variants</h3>
                       <div className="overflow-auto rounded-lg border border-border">
@@ -909,12 +919,21 @@ export function Example() {
                                       ["muted", "Subtle divider for dense grouped content."],
                                       ["primary", "Branded or active section divider."],
                                     ]
-                                  : [
-                                      ["default", "Normal UI copy."],
-                                      ["muted", "Secondary or supporting copy."],
-                                      ["glow", "Premium, active, or AI-ready emphasis."],
-                                      ["shimmer", "Generating, syncing, or live processing text."],
-                                    ]
+                                  : item.name === "skeleton"
+                                    ? [
+                                        ["surface", "Default loading placeholder."],
+                                        ["raised", "Slightly stronger placeholder hierarchy."],
+                                        ["primary", "Branded loading placeholder, used sparingly."],
+                                      ]
+                                    : [
+                                        ["default", "Normal UI copy."],
+                                        ["muted", "Secondary or supporting copy."],
+                                        ["glow", "Premium, active, or AI-ready emphasis."],
+                                        [
+                                          "shimmer",
+                                          "Generating, syncing, or live processing text.",
+                                        ],
+                                      ]
                             ).map(([variant, use]) => (
                               <tr className="border-b border-border last:border-b-0" key={variant}>
                                 <td className="px-4 py-3 font-mono text-xs">{variant}</td>
@@ -944,6 +963,11 @@ export function Example() {
                           default; set <code>decorative=&#123;false&#125;</code> when it carries
                           semantic structure.
                         </p>
+                      ) : item.name === "skeleton" ? (
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Use <code>variant=&quot;surface&quot;</code> for most placeholders. Keep
+                          skeletons close to the shape of the incoming content.
+                        </p>
                       ) : (
                         <p className="text-sm leading-6 text-muted-foreground">
                           Use <code>variant=&quot;shimmer&quot;</code> for short live/processing
@@ -953,6 +977,40 @@ export function Example() {
                           disabled for reduced-motion users.
                         </p>
                       )}
+                    </div>
+                  ) : null}
+
+                  {item.name === "skeleton" ? (
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-semibold">Sizes</h3>
+                      <div className="overflow-auto rounded-lg border border-border">
+                        <table className="w-full border-collapse text-sm">
+                          <thead className="bg-muted text-left">
+                            <tr>
+                              <th className="border-b border-border px-4 py-3 font-medium">Prop</th>
+                              <th className="border-b border-border px-4 py-3 font-medium">Use</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              ["text", "Single body text line."],
+                              ["title", "Heading or title line."],
+                              ["avatar", "User or object avatar."],
+                              ["thumbnail", "Media or preview panel."],
+                              ["card", "Large surface placeholder."],
+                            ].map(([size, use]) => (
+                              <tr className="border-b border-border last:border-b-0" key={size}>
+                                <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>
+                                <td className="px-4 py-3 text-muted-foreground">{use}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <p className="text-sm leading-6 text-muted-foreground">
+                        Set <code>shimmer=&#123;false&#125;</code> to use a calmer pulse animation
+                        instead of the default shimmer.
+                      </p>
                     </div>
                   ) : null}
 

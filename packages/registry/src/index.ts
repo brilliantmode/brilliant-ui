@@ -632,12 +632,42 @@ export function Separator({
 
 const skeletonSource = `import type { HTMLAttributes } from "react";
 
-export function Skeleton({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+const variants = {
+  surface: "bg-muted",
+  raised: "bg-secondary",
+  primary: "bg-primary/12",
+} as const;
+
+const sizes = {
+  text: "h-4 w-full rounded-[0.25rem]",
+  title: "h-6 w-2/3 rounded-[0.25rem]",
+  avatar: "size-10 rounded-full",
+  thumbnail: "aspect-video w-full rounded-[0.375rem]",
+  card: "h-28 w-full rounded-[0.5rem]",
+} as const;
+
+export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
+  shimmer?: boolean;
+  size?: keyof typeof sizes;
+  variant?: keyof typeof variants;
+}
+
+export function Skeleton({
+  className = "",
+  shimmer = true,
+  size = "text",
+  variant = "surface",
+  ...props
+}: SkeletonProps) {
   return (
     <div
       className={[
-        "rounded-[0.25rem] bg-muted",
-        "motion-safe:animate-pulse motion-reduce:animate-none",
+        "relative isolate overflow-hidden",
+        sizes[size],
+        variants[variant],
+        shimmer
+          ? "after:absolute after:inset-0 after:-translate-x-full after:bg-[linear-gradient(90deg,transparent,oklch(1_0_0/0.38),transparent)] after:content-[''] motion-safe:after:animate-skeleton-shimmer motion-reduce:after:hidden"
+          : "motion-safe:animate-pulse motion-reduce:animate-none",
         className,
       ].join(" ")}
       aria-hidden="true"
@@ -881,7 +911,7 @@ export const registry = [
   {
     name: "skeleton",
     title: "Skeleton",
-    description: "A loading placeholder with reduced-motion behavior.",
+    description: "A loading placeholder with shimmer, shape presets, and reduced-motion behavior.",
     kind: "component",
     dependencies: [],
     registryDependencies: [],
@@ -892,8 +922,13 @@ export const registry = [
       accessibility: [
         "Hidden from assistive technology.",
         "Pair with real loading state when needed.",
+        "Shimmer animation is disabled for reduced-motion users.",
       ],
-      usage: ["Match the shape of the incoming content."],
+      usage: [
+        "Use size text or title for copy placeholders.",
+        "Use size avatar, thumbnail, or card to match incoming layout.",
+        "Use variant raised or primary only when the loading surface needs stronger hierarchy.",
+      ],
       avoid: ["Do not show skeletons for very fast operations."],
     },
   },

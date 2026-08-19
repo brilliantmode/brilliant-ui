@@ -151,18 +151,30 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 
 ### Foundation components
 
-- [ ] Button and button group.
-- [ ] Input, textarea, and field primitives.
-- [ ] Checkbox, switch, radio group, and slider.
+- [ ] Button and button group. Button shipped; button group remains.
+- [ ] Input, textarea, and field primitives. Input, textarea, and label shipped; field primitives remain.
+- [ ] Checkbox, switch, radio group, and slider. Checkbox and switch shipped; radio group and slider remain.
 - [ ] Select and combobox.
 - [ ] Dialog, alert dialog, drawer, and sheet.
 - [ ] Popover, tooltip, hover card, and context menu.
-- [ ] Badge, avatar, separator, and aspect ratio.
+- [ ] Badge, avatar, separator, and aspect ratio. Badge and separator shipped; avatar and aspect ratio remain.
 - [ ] Tabs, accordion, collapsible, and carousel.
 - [ ] Breadcrumb, navigation menu, menubar, and pagination.
 - [ ] Toast and notification region.
-- [ ] Progress, spinner, skeleton, and empty state.
+- [ ] Progress, spinner, skeleton, and empty state. Skeleton shipped; progress, spinner, and empty state remain.
 - [ ] Calendar, date input, and command palette.
+
+### Near-term primitive backlog
+
+- [ ] Radio group with keyboard roving focus and form semantics.
+- [ ] Slider with range support, marks, disabled state, and keyboard control.
+- [ ] Progress and spinner with determinate, indeterminate, and reduced-motion states.
+- [ ] Avatar with fallback initials, image loading/error states, and status presence.
+- [ ] Tooltip and popover using Radix primitives.
+- [ ] Dialog and alert dialog using Radix primitives.
+- [ ] Select and combobox using Radix/command foundations.
+- [ ] Tabs and accordion with keyboard journeys documented.
+- [ ] Empty state with icon/title/description/action slots.
 
 ### Forms
 
