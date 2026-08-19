@@ -3405,6 +3405,45 @@ function HeaderPreview() {
   );
 }
 
+function HeaderAlignmentExamples() {
+  const alignments = [
+    ["start", "Left in left-to-right layouts", "justify-start"],
+    ["center", "Centered in the available header space", "justify-center"],
+    ["end", "Right in left-to-right layouts", "justify-end"],
+  ] as const;
+
+  return (
+    <div className="overflow-hidden rounded-lg border border-border">
+      {alignments.map(([alignment, description, alignmentClass]) => (
+        <div
+          className="grid gap-3 border-b border-border p-4 last:border-b-0 md:grid-cols-[15rem_minmax(0,1fr)] md:items-center"
+          key={alignment}
+        >
+          <div>
+            <code className="font-mono text-sm">align=&quot;{alignment}&quot;</code>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">{description}</p>
+          </div>
+          <div className="flex min-w-0 items-center gap-3 rounded-[0.375rem] border border-border bg-background p-2">
+            <span className="grid size-7 shrink-0 place-items-center rounded-[0.25rem] bg-primary text-xs font-semibold text-primary-foreground">
+              B
+            </span>
+            <div className={`flex min-w-0 flex-1 items-center gap-1 ${alignmentClass}`}>
+              {["Docs", "Components", "Blocks"].map((label) => (
+                <span
+                  className="rounded-[0.25rem] px-2 py-1 text-xs text-muted-foreground first:bg-muted first:text-foreground"
+                  key={label}
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function FooterPreview() {
   return (
     <footer className="w-full border-t border-border bg-background text-sm text-muted-foreground">
@@ -5906,6 +5945,19 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                             </ExamplePanel>
                           </div>
                         ))}
+                      </div>
+                    ) : null}
+
+                    {item.name === "header" ? (
+                      <div className="space-y-3">
+                        <div>
+                          <h3 className="text-lg font-semibold">Navigation alignment</h3>
+                          <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                            Set alignment on HeaderNav. Start and end use logical directions, so
+                            they adapt automatically to right-to-left layouts.
+                          </p>
+                        </div>
+                        <HeaderAlignmentExamples />
                       </div>
                     ) : null}
 
