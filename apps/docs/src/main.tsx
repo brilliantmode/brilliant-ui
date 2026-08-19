@@ -290,14 +290,25 @@ export function Example() {
     />
   );
 }`,
-  select: `import { Select } from "@/components/ui/select";
+  select: `import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function Example() {
   return (
     <Select defaultValue="owner">
-      <option value="owner">Owner</option>
-      <option value="admin">Admin</option>
-      <option value="member">Member</option>
+      <SelectTrigger aria-label="Workspace role">
+        <SelectValue placeholder="Choose role" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="owner">Owner</SelectItem>
+        <SelectItem value="admin">Admin</SelectItem>
+        <SelectItem value="member">Member</SelectItem>
+      </SelectContent>
     </Select>
   );
 }`,
@@ -568,6 +579,92 @@ function SwitchPreview() {
       </span>
       <span className="text-sm">{enabled ? "Enabled" : "Disabled"}</span>
     </label>
+  );
+}
+
+function SelectPreview() {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("Owner");
+  const options = ["Owner", "Admin", "Member"];
+
+  return (
+    <div className="grid max-w-sm gap-2">
+      <span className="text-sm font-medium" id="select-preview-label">
+        Workspace role
+      </span>
+      <div className="relative">
+        <button
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          aria-labelledby="select-preview-label"
+          className={[
+            "flex h-9 w-full items-center justify-between gap-2 rounded-[0.25rem] border-0 bg-background px-3 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)]",
+            "outline-none transition-[background-color,box-shadow] duration-[var(--brilliant-duration-fast)] hover:bg-muted/50 focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]",
+            open ? "shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]" : "",
+          ].join(" ")}
+          onClick={() => setOpen((current) => !current)}
+          type="button"
+        >
+          <span>{value}</span>
+          <svg
+            aria-hidden="true"
+            className={[
+              "size-4 shrink-0 text-muted-foreground transition-transform duration-[var(--brilliant-duration-fast)]",
+              open ? "rotate-180" : "",
+            ].join(" ")}
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 16 16"
+          >
+            <path d="m4 6 4 4 4-4" />
+          </svg>
+        </button>
+        {open ? (
+          <div
+            className="absolute z-20 mt-1 w-full overflow-hidden rounded-[0.375rem] border-hairline border-border bg-surface p-1 text-sm text-foreground shadow-md motion-safe:animate-enter motion-reduce:animate-none"
+            role="listbox"
+          >
+            {options.map((option) => (
+              <button
+                aria-selected={value === option}
+                className={[
+                  "relative flex w-full items-center rounded-[0.25rem] py-1.5 pr-8 pl-8 text-left outline-none transition-colors hover:bg-muted focus-visible:bg-muted",
+                  value === option ? "font-medium" : "",
+                ].join(" ")}
+                key={option}
+                onClick={() => {
+                  setValue(option);
+                  setOpen(false);
+                }}
+                role="option"
+                type="button"
+              >
+                <span className="absolute left-2 grid size-4 place-items-center text-primary">
+                  {value === option ? (
+                    <svg
+                      aria-hidden="true"
+                      className="size-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2.25"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M3.5 8.25 6.5 11l6-6" />
+                    </svg>
+                  ) : null}
+                </span>
+                {option}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
   );
 }
 
@@ -888,22 +985,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   }
 
   if (name === "select") {
-    return (
-      <div className="grid max-w-sm gap-2">
-        <label className="text-sm font-medium" htmlFor="select-preview-role">
-          Workspace role
-        </label>
-        <select
-          className="h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 pr-8 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] outline-none transition-shadow focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]"
-          defaultValue="owner"
-          id="select-preview-role"
-        >
-          <option value="owner">Owner</option>
-          <option value="admin">Admin</option>
-          <option value="member">Member</option>
-        </select>
-      </div>
-    );
+    return <SelectPreview />;
   }
 
   if (name === "combobox") {

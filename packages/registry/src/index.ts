@@ -1225,22 +1225,113 @@ export function Slider({ className = "", ...props }: SliderProps) {
 }
 `;
 
-const selectSource = `import type { SelectHTMLAttributes } from "react";
+const selectSource = `"use client";
 
-export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {}
+import * as SelectPrimitive from "@radix-ui/react-select";
+import type { ComponentPropsWithoutRef } from "react";
 
-export function Select({ className = "", ...props }: SelectProps) {
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export const Select = SelectPrimitive.Root;
+export const SelectGroup = SelectPrimitive.Group;
+export const SelectValue = SelectPrimitive.Value;
+
+export function SelectTrigger({
+  children,
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>) {
   return (
-    <select
-      className={[
-        "h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 pr-8 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)]",
-        "motion-safe:transition-[background-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
-        "focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+    <SelectPrimitive.Trigger
+      className={cx(
+        "flex h-9 w-full items-center justify-between gap-2 rounded-[0.25rem] border-0 bg-background px-3 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)]",
+        "data-[placeholder]:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+        "motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "hover:bg-muted/50 focus:outline-none focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)] data-[state=open]:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]",
         className,
-      ].join(" ")}
+      )}
+      {...props}
+    >
+      {children}
+      <SelectPrimitive.Icon asChild>
+        <svg aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 16 16">
+          <path d="m4 6 4 4 4-4" />
+        </svg>
+      </SelectPrimitive.Icon>
+    </SelectPrimitive.Trigger>
+  );
+}
+
+export function SelectContent({
+  className = "",
+  position = "popper",
+  ...props
+}: ComponentPropsWithoutRef<typeof SelectPrimitive.Content>) {
+  return (
+    <SelectPrimitive.Portal>
+      <SelectPrimitive.Content
+        className={cx(
+          "z-50 max-h-72 min-w-[8rem] overflow-hidden rounded-[0.375rem] border-hairline border-border bg-surface text-foreground shadow-md",
+          "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
+          "motion-safe:data-[state=open]:animate-enter motion-safe:data-[state=closed]:animate-exit motion-reduce:animate-none",
+          position === "popper" && "w-[var(--radix-select-trigger-width)]",
+          className,
+        )}
+        position={position}
+        {...props}
+      >
+        <SelectPrimitive.Viewport className="p-1">{props.children}</SelectPrimitive.Viewport>
+      </SelectPrimitive.Content>
+    </SelectPrimitive.Portal>
+  );
+}
+
+export function SelectLabel({
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof SelectPrimitive.Label>) {
+  return (
+    <SelectPrimitive.Label
+      className={cx("px-2 py-1.5 text-xs font-medium text-muted-foreground", className)}
       {...props}
     />
   );
+}
+
+export function SelectItem({
+  children,
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof SelectPrimitive.Item>) {
+  return (
+    <SelectPrimitive.Item
+      className={cx(
+        "relative flex cursor-default select-none items-center rounded-[0.25rem] py-1.5 pr-8 pl-8 text-sm outline-none",
+        "data-[highlighted]:bg-muted data-[highlighted]:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "motion-safe:transition-colors motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        className,
+      )}
+      {...props}
+    >
+      <span className="absolute left-2 flex size-4 items-center justify-center">
+        <SelectPrimitive.ItemIndicator>
+          <svg aria-hidden="true" className="size-4 text-primary" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.25" viewBox="0 0 16 16">
+            <path d="M3.5 8.25 6.5 11l6-6" />
+          </svg>
+        </SelectPrimitive.ItemIndicator>
+      </span>
+      <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    </SelectPrimitive.Item>
+  );
+}
+
+export function SelectSeparator({
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>) {
+  return <SelectPrimitive.Separator className={cx("-mx-1 my-1 h-px bg-border", className)} {...props} />;
 }
 `;
 
@@ -1979,17 +2070,25 @@ export const registry = [
   {
     name: "select",
     title: "Select",
-    description: "A native select control with Brilliant form styling.",
+    description: "A Radix-powered select with Brilliant trigger, dropdown, and item styling.",
     kind: "component",
-    dependencies: [],
+    dependencies: ["@radix-ui/react-select"],
     registryDependencies: [],
     files: [{ path: "select.tsx", content: selectSource, target: "ui/select.tsx" }],
     metadata: {
-      purpose: "Chooses one option from a compact native menu.",
-      slots: ["root", "option"],
-      accessibility: ["Uses a native select.", "Pair with a visible label."],
-      usage: ["Use for short known option lists.", "Prefer Combobox when users need search."],
-      avoid: ["Do not use for complex rich option content."],
+      purpose: "Chooses one option from a compact, fully styled dropdown menu.",
+      slots: ["root", "trigger", "value", "content", "viewport", "item", "indicator"],
+      accessibility: [
+        "Uses Radix Select for keyboard navigation and managed ARIA behavior.",
+        "Pair the trigger with a visible label or aria-label.",
+        "Items expose selected and highlighted states without relying on color alone.",
+      ],
+      usage: [
+        "Use for short known option lists.",
+        "Use SelectItem for every selectable option.",
+        "Prefer Combobox or Command when users need search.",
+      ],
+      avoid: ["Do not use for native mobile-only pickers where OS controls are required."],
     },
   },
   {
