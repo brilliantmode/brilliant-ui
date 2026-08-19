@@ -2393,7 +2393,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
 
 function DocsSidebarHeader() {
   return (
-    <div className="mb-6 space-y-4">
+    <div className="mb-5 space-y-3">
       <a className="flex items-center gap-3" href="#getting-started">
         <span className="grid size-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-sm font-semibold tracking-tight text-foreground shadow-sm">
           B
@@ -2408,7 +2408,7 @@ function DocsSidebarHeader() {
         </span>
       </a>
       <a
-        className="flex h-10 items-center gap-2 rounded-[0.375rem] border border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
+        className="flex h-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
         href="#components"
       >
         <span aria-hidden="true" className="text-base leading-none">
@@ -2428,13 +2428,13 @@ function NavGlyph({ active }: { active: boolean }) {
     <span
       aria-hidden="true"
       className={[
-        "mt-0.5 grid size-6 shrink-0 place-items-center rounded-[0.375rem] border transition-colors",
+        "mt-px grid size-5 shrink-0 place-items-center rounded-[0.3125rem] border transition-colors",
         active
           ? "border-primary/30 bg-primary/10 text-primary"
           : "border-border bg-background text-muted-foreground",
       ].join(" ")}
     >
-      <span className="size-2 rounded-[0.1875rem] border border-current" />
+      <span className="size-1.5 rounded-[0.1875rem] border border-current" />
     </span>
   );
 }
@@ -2449,17 +2449,17 @@ function DocsNavGroup({
   onNavigate: (() => void) | undefined;
 }) {
   return (
-    <section className="pb-6 last:pb-0">
-      <h2 className="mb-2 px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+    <section className="pb-4 last:pb-0">
+      <h2 className="mb-1.5 px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
         {group.label}
       </h2>
-      <ul className="space-y-1">
+      <ul className="space-y-0.5">
         {group.items.map(([label, href]) => (
           <li key={href}>
             <a
               aria-current={activeHref === href ? "location" : undefined}
               className={[
-                "group flex items-center gap-2.5 rounded-[0.5rem] px-2 py-2 text-sm leading-5 transition-colors",
+                "group flex items-center gap-2 rounded-[0.375rem] px-2 py-1.5 text-sm leading-5 transition-colors",
                 activeHref === href
                   ? "bg-muted font-medium text-foreground"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
