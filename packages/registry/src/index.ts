@@ -156,6 +156,39 @@ export function Button({
 }
 `;
 
+const buttonGroupSource = `import type { HTMLAttributes } from "react";
+
+const orientations = {
+  horizontal:
+    "flex-row [&>*:not(:first-child)]:-ml-px [&>*:not(:first-child)]:rounded-l-none [&>*:not(:last-child)]:rounded-r-none",
+  vertical:
+    "flex-col [&>*:not(:first-child)]:-mt-px [&>*:not(:first-child)]:rounded-t-none [&>*:not(:last-child)]:rounded-b-none",
+} as const;
+
+export interface ButtonGroupProps extends HTMLAttributes<HTMLDivElement> {
+  orientation?: keyof typeof orientations;
+}
+
+export function ButtonGroup({
+  className = "",
+  orientation = "horizontal",
+  ...props
+}: ButtonGroupProps) {
+  return (
+    <div
+      className={[
+        "inline-flex items-stretch [&>*]:relative [&>*]:z-0 [&>*:focus-visible]:z-10",
+        orientations[orientation],
+        className,
+      ].join(" ")}
+      data-orientation={orientation}
+      role="group"
+      {...props}
+    />
+  );
+}
+`;
+
 const badgeSource = `import type { HTMLAttributes } from "react";
 
 const variants = {
@@ -178,6 +211,28 @@ export function Badge({ className = "", variant = "neutral", ...props }: BadgePr
         variants[variant],
         className,
       ].join(" ")}
+      {...props}
+    />
+  );
+}
+`;
+
+const aspectRatioSource = `import type { CSSProperties, HTMLAttributes } from "react";
+
+export interface AspectRatioProps extends HTMLAttributes<HTMLDivElement> {
+  ratio?: number;
+}
+
+export function AspectRatio({
+  className = "",
+  ratio = 16 / 9,
+  style,
+  ...props
+}: AspectRatioProps) {
+  return (
+    <div
+      className={["relative overflow-hidden rounded-[0.5rem]", className].join(" ")}
+      style={{ aspectRatio: String(ratio), ...style } as CSSProperties}
       {...props}
     />
   );
@@ -1149,6 +1204,32 @@ export const registry = [
     },
   },
   {
+    name: "button-group",
+    title: "Button Group",
+    description: "A grouped action wrapper for related Brilliant buttons.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: ["button"],
+    files: [
+      { path: "button-group.tsx", content: buttonGroupSource, target: "ui/button-group.tsx" },
+    ],
+    metadata: {
+      purpose: "Groups related actions into one compact control cluster.",
+      slots: ["root", "button"],
+      accessibility: [
+        "Uses role group.",
+        "Add aria-label or aria-labelledby when the grouped actions need a name.",
+        "Keeps child button focus rings above adjacent controls.",
+      ],
+      usage: [
+        "Use for related actions of the same scope.",
+        "Keep groups small, usually two to four actions.",
+        "Use vertical orientation only in constrained side panels.",
+      ],
+      avoid: ["Do not group unrelated primary actions."],
+    },
+  },
+  {
     name: "badge",
     title: "Badge",
     description: "A compact status label for metadata, state, and categorization.",
@@ -1162,6 +1243,31 @@ export const registry = [
       accessibility: ["Uses readable text by default.", "Avoid color-only meaning."],
       usage: ["Use one or two words.", "Pair semantic color with clear copy."],
       avoid: ["Do not use for primary actions.", "Do not use long sentences."],
+    },
+  },
+  {
+    name: "aspect-ratio",
+    title: "Aspect Ratio",
+    description: "A ratio-preserving media wrapper for previews, thumbnails, and embeds.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [
+      { path: "aspect-ratio.tsx", content: aspectRatioSource, target: "ui/aspect-ratio.tsx" },
+    ],
+    metadata: {
+      purpose: "Keeps media and preview surfaces at a predictable aspect ratio.",
+      slots: ["root", "content"],
+      accessibility: [
+        "Preserves the semantics of children.",
+        "Images and embeds inside still need their own accessible names.",
+      ],
+      usage: [
+        "Use ratio={16 / 9} for previews and video.",
+        "Use ratio={1} for square thumbnails.",
+        "Put images, iframes, or preview surfaces inside the wrapper.",
+      ],
+      avoid: ["Do not crop meaningful content without an alternate way to access it."],
     },
   },
   {

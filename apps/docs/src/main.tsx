@@ -9,7 +9,9 @@ const navItems = [
   ["shadcn", "#shadcn"],
   ["Components", "#components"],
   ["Button", "#button"],
+  ["Button Group", "#button-group"],
   ["Badge", "#badge"],
+  ["Aspect Ratio", "#aspect-ratio"],
   ["Avatar", "#avatar"],
   ["Card", "#card"],
   ["Text", "#text"],
@@ -122,10 +124,31 @@ const premiumSystems = [
 ] as const;
 
 const usageByComponent = {
+  "button-group": `import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
+
+export function Example() {
+  return (
+    <ButtonGroup aria-label="View density">
+      <Button variant="secondary">Compact</Button>
+      <Button variant="outline">Comfortable</Button>
+      <Button variant="outline">Touch</Button>
+    </ButtonGroup>
+  );
+}`,
   badge: `import { Badge } from "@/components/ui/badge";
 
 export function Example() {
   return <Badge variant="primary">Live</Badge>;
+}`,
+  "aspect-ratio": `import { AspectRatio } from "@/components/ui/aspect-ratio";
+
+export function Example() {
+  return (
+    <AspectRatio ratio={16 / 9}>
+      <img alt="Dashboard preview" className="size-full object-cover" src="/preview.png" />
+    </AspectRatio>
+  );
 }`,
   avatar: `import {
   Avatar,
@@ -365,6 +388,29 @@ function SwitchPreview() {
 }
 
 function ComponentMiniPreview({ name }: { name: string }) {
+  if (name === "button-group") {
+    return (
+      <div className="inline-flex flex-row items-stretch [&>*]:relative [&>*]:z-0 [&>*:focus-visible]:z-10 [&>*:not(:first-child)]:-ml-px [&>*:not(:first-child)]:rounded-l-none [&>*:not(:last-child)]:rounded-r-none">
+        {[
+          ["Compact", "border border-border bg-surface text-foreground"],
+          ["Comfortable", "bg-primary text-primary-foreground"],
+          ["Touch", "border border-border bg-surface text-foreground"],
+        ].map(([label, className]) => (
+          <button
+            className={[
+              "h-9 rounded-[0.375rem] px-3.5 text-sm font-medium transition-[background-color,border-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] hover:-translate-y-px active:translate-y-0 active:scale-[0.99]",
+              className,
+            ].join(" ")}
+            key={label}
+            type="button"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
   if (name === "badge") {
     return (
       <div className="flex flex-wrap gap-2">
@@ -374,6 +420,23 @@ function ComponentMiniPreview({ name }: { name: string }) {
         <span className="rounded-[0.25rem] border border-border bg-muted px-2 py-1 text-xs font-medium">
           Enterprise
         </span>
+      </div>
+    );
+  }
+
+  if (name === "aspect-ratio") {
+    return (
+      <div className="max-w-md">
+        <div
+          className="relative overflow-hidden rounded-[0.5rem] bg-muted"
+          style={{ aspectRatio: "16/9" }}
+        >
+          <div className="absolute inset-0 grid place-items-center bg-[linear-gradient(135deg,var(--brilliant-primary)_0%,oklch(0.42_0.18_276)_100%)] text-primary-foreground">
+            <span className="rounded-[0.375rem] bg-background/15 px-2 py-1 text-xs font-medium backdrop-blur">
+              16:9 preview
+            </span>
+          </div>
+        </div>
       </div>
     );
   }

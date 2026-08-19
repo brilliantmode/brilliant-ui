@@ -151,13 +151,13 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 
 ### Foundation components
 
-- [ ] Button and button group. Button shipped; button group remains.
+- [x] Button and button group.
 - [ ] Input, textarea, and field primitives. Input, textarea, and label shipped; field primitives remain.
 - [ ] Checkbox, switch, radio group, and slider. Checkbox, switch, and radio group shipped; slider remains.
 - [ ] Select and combobox.
 - [ ] Dialog, alert dialog, drawer, and sheet.
 - [ ] Popover, tooltip, hover card, and context menu.
-- [ ] Badge, avatar, separator, and aspect ratio. Badge, avatar, and separator shipped; aspect ratio remains.
+- [x] Badge, avatar, separator, and aspect ratio.
 - [ ] Tabs, accordion, collapsible, and carousel.
 - [ ] Breadcrumb, navigation menu, menubar, and pagination.
 - [ ] Toast and notification region.
