@@ -6723,7 +6723,7 @@ function AppHeader({
     <Header
       behavior="elevate"
       border
-      className={`${shellTone === "contrast" ? "brand-surface" : ""} xl:col-span-2`}
+      className={shellTone === "contrast" ? "brand-surface" : ""}
       position="sticky"
       scrollThreshold={24}
       surface={shellTone === "contrast" ? "solid" : "translucent"}
@@ -6886,44 +6886,6 @@ function MobileDocsNav({
         />
       </aside>
     </div>
-  );
-}
-
-function StatusRail({ firstItemTitle }: { firstItemTitle: string }) {
-  return (
-    <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] border-l border-border px-6 py-6 xl:block">
-      <div className="space-y-5 text-sm">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-            Status
-          </p>
-          <dl className="mt-3 space-y-2">
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted-foreground">Complete</dt>
-              <dd className="font-medium">41</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted-foreground">Remaining</dt>
-              <dd className="font-medium">209</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted-foreground">Registry items</dt>
-              <dd className="font-medium">{registry.length}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted-foreground">Micro UX</dt>
-              <dd className="font-medium">built in</dd>
-            </div>
-          </dl>
-        </div>
-        <div className="rounded-lg border border-border bg-surface p-4">
-          <p className="font-medium">Current component</p>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            {firstItemTitle} is available from the @brilliant/ui package.
-          </p>
-        </div>
-      </div>
-    </aside>
   );
 }
 
@@ -7188,7 +7150,7 @@ function App() {
       />
 
       <div
-        className={`mx-auto grid max-w-screen-2xl motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "md:grid-cols-[72px_minmax(0,1fr)] xl:grid-cols-[72px_minmax(0,1fr)_280px]" : "md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]"}`}
+        className={`mx-auto grid max-w-screen-2xl motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "md:grid-cols-[72px_minmax(0,1fr)]" : "md:grid-cols-[280px_minmax(0,1fr)]"}`}
       >
         <aside
           className={`sticky top-0 hidden h-screen overflow-visible border-r border-border bg-background py-6 md:row-span-2 md:block motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${shellTone === "contrast" ? "brand-surface" : ""} ${sidebarCollapsed ? "px-3" : "px-6"}`}
@@ -8429,8 +8391,7 @@ import { animationPresets, microUx } from "@brilliant/ui/animations";`}</CodeBlo
           ) : null}
         </main>
 
-        <StatusRail firstItemTitle={selectedItem?.title ?? firstItem?.title ?? "None"} />
-        <div className="min-w-0 md:col-start-2 xl:col-span-2">
+        <div className="min-w-0 md:col-start-2">
           <AppFooter onNavigate={navigate} shellTone={shellTone} />
         </div>
       </div>
