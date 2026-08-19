@@ -88,6 +88,8 @@ describe("registry", () => {
     expect(source).toContain("[scrollbar-width:none] [&::-webkit-scrollbar]:hidden");
     expect(source).toContain("export function ApplicationShellSidebarFooter");
     expect(source).toContain("mt-auto shrink-0 border-t");
+    expect(source).toContain("export function ApplicationShellSidebarFooterActions");
+    expect(source).toContain("export function ApplicationShellSidebarFooterAction");
     expect(source).toContain("export function ApplicationShellProfileMenu");
     expect(source).toContain("group-open/profile:block");
     expect(source).toContain("export function ApplicationShellProfileTrigger");

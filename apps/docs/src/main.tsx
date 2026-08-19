@@ -1714,6 +1714,8 @@ export function Example() {
   ApplicationShellSidebar,
   ApplicationShellSidebarContent,
   ApplicationShellSidebarFooter,
+  ApplicationShellSidebarFooterAction,
+  ApplicationShellSidebarFooterActions,
   ApplicationShellSidebarHeader,
   ApplicationShellSidebarToggle,
   ApplicationShellProfile,
@@ -1736,49 +1738,57 @@ export function Example() {
           <ApplicationShellSidebarToggle />
         </ApplicationShellSidebarHeader>
         <ApplicationShellSidebarContent>
-        <ApplicationShellSearch href="/search">
-          <span aria-hidden="true">⌕</span>
-          <span className="flex-1">Search docs</span>
-          <kbd>/</kbd>
-        </ApplicationShellSearch>
+          <ApplicationShellSearch href="/search">
+            <span aria-hidden="true">⌕</span>
+            <span className="flex-1">Search docs</span>
+            <kbd>/</kbd>
+          </ApplicationShellSearch>
 
-        <ApplicationShellNav>
-          <ApplicationShellNavSection title="Main">
-            <ApplicationShellNavItem
-              className="font-medium text-foreground"
-              href="/contracts"
-              icon="□"
-            >
-              Contracts
-            </ApplicationShellNavItem>
-            <ApplicationShellNavItem href="/analysts" icon="□">
-              Analysts
-            </ApplicationShellNavItem>
-            <ApplicationShellNavItem href="/settings" icon="□">
-              Setting
-            </ApplicationShellNavItem>
-          </ApplicationShellNavSection>
+          <ApplicationShellNav>
+            <ApplicationShellNavSection title="Main">
+              <ApplicationShellNavItem
+                className="font-medium text-foreground"
+                href="/contracts"
+                icon="□"
+              >
+                Contracts
+              </ApplicationShellNavItem>
+              <ApplicationShellNavItem href="/analysts" icon="□">
+                Analysts
+              </ApplicationShellNavItem>
+              <ApplicationShellNavItem href="/settings" icon="□">
+                Setting
+              </ApplicationShellNavItem>
+            </ApplicationShellNavSection>
 
-          <ApplicationShellNavSection title="Inboxes">
-            <ApplicationShellNavGroupItem
-              description="(209) 555-0104"
-              href="/clients"
-              media={<ApplicationShellNavMedia tone="primary">C</ApplicationShellNavMedia>}
-            >
-              Clients
-            </ApplicationShellNavGroupItem>
-            <ApplicationShellNavGroupItem
-              description="(239) 555-0108"
-              href="/personal"
-              media={<ApplicationShellNavMedia tone="warning">P</ApplicationShellNavMedia>}
-            >
-              Personal
-            </ApplicationShellNavGroupItem>
-          </ApplicationShellNavSection>
-        </ApplicationShellNav>
+            <ApplicationShellNavSection title="Inboxes">
+              <ApplicationShellNavGroupItem
+                description="(209) 555-0104"
+                href="/clients"
+                media={<ApplicationShellNavMedia tone="primary">C</ApplicationShellNavMedia>}
+              >
+                Clients
+              </ApplicationShellNavGroupItem>
+              <ApplicationShellNavGroupItem
+                description="(239) 555-0108"
+                href="/personal"
+                media={<ApplicationShellNavMedia tone="warning">P</ApplicationShellNavMedia>}
+              >
+                Personal
+              </ApplicationShellNavGroupItem>
+            </ApplicationShellNavSection>
+          </ApplicationShellNav>
         </ApplicationShellSidebarContent>
 
         <ApplicationShellSidebarFooter>
+          <ApplicationShellSidebarFooterActions>
+            <ApplicationShellSidebarFooterAction icon="?">
+              Help and support
+            </ApplicationShellSidebarFooterAction>
+            <ApplicationShellSidebarFooterAction icon="◐" trailing="⌘ T">
+              Appearance
+            </ApplicationShellSidebarFooterAction>
+          </ApplicationShellSidebarFooterActions>
           <ApplicationShellProfile>
             <ApplicationShellProfileMenu>
               <ApplicationShellMenuSection title="Workspace">
@@ -5389,8 +5399,36 @@ function ComponentMiniPreview({ name }: { name: string }) {
               </div>
             </div>
             <div className="mt-auto shrink-0 border-t border-border bg-background pt-3">
+              <div className="grid gap-0.5 pb-3">
+                {[
+                  ["?", "Help and support", ""],
+                  ["◐", "Appearance", "⌘ T"],
+                ].map(([icon, label, trailing]) => (
+                  <button
+                    className={`flex h-8 items-center gap-2 rounded-[0.375rem] px-2 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground ${applicationShellCollapsed ? "justify-center" : ""}`}
+                    key={label}
+                    type="button"
+                  >
+                    <span className="grid size-5 shrink-0 place-items-center">{icon}</span>
+                    <span
+                      className={`min-w-0 overflow-hidden truncate opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40 flex-1"}`}
+                    >
+                      {label}
+                    </span>
+                    {trailing ? (
+                      <span
+                        className={`overflow-hidden whitespace-nowrap text-xs opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-10"}`}
+                      >
+                        {trailing}
+                      </span>
+                    ) : null}
+                  </button>
+                ))}
+              </div>
               <details className="group relative">
-                <div className="absolute inset-x-0 bottom-full z-20 mb-2 hidden overflow-hidden rounded-[0.5rem] border border-border bg-surface py-1 shadow-md group-open:block">
+                <div
+                  className={`absolute bottom-full z-20 mb-2 hidden overflow-hidden rounded-[0.5rem] border border-border bg-surface py-1 shadow-md group-open:block ${applicationShellCollapsed ? "left-0 w-60" : "inset-x-0"}`}
+                >
                   <div className="border-b border-border py-1">
                     <div className="px-4 pb-1 text-xs text-muted-foreground">Workspace</div>
                     {["Brilliant Labs", "Acme Studio"].map((item, index) => (
@@ -5980,28 +6018,174 @@ function DocsNavGroup({
   );
 }
 
+function DocsSidebarFooter({
+  collapsed,
+  onNavigate,
+  onSearchOpen,
+  onThemeToggle,
+  theme,
+}: {
+  collapsed: boolean;
+  onNavigate: NavigateHandler | undefined;
+  onSearchOpen: () => void;
+  onThemeToggle: () => void;
+  theme: "dark" | "light";
+}) {
+  return (
+    <div className="relative shrink-0 border-t border-border bg-background pt-3">
+      <div className="grid gap-0.5 pb-3">
+        <button
+          className={`flex h-8 items-center gap-2 rounded-[0.375rem] px-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${collapsed ? "justify-center" : ""}`}
+          onClick={onSearchOpen}
+          title={collapsed ? "Search documentation" : undefined}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="size-4 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeWidth="1.8"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="11" cy="11" r="6.5" />
+            <path d="m16 16 4 4" />
+          </svg>
+          <span
+            className={`min-w-0 overflow-hidden truncate opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${collapsed ? "max-w-0 opacity-0" : "max-w-[12rem] flex-1"}`}
+          >
+            Search documentation
+          </span>
+          <kbd
+            className={`overflow-hidden rounded-[0.25rem] bg-surface font-mono text-[0.625rem] opacity-100 motion-safe:transition-[max-width,opacity,padding,border-width] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${collapsed ? "max-w-0 border-0 p-0 opacity-0" : "max-w-12 border border-border px-1.5 py-0.5"}`}
+          >
+            ⌘ K
+          </kbd>
+        </button>
+        <button
+          className={`flex h-8 items-center gap-2 rounded-[0.375rem] px-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${collapsed ? "justify-center" : ""}`}
+          onClick={onThemeToggle}
+          title={collapsed ? `Use ${theme === "dark" ? "light" : "dark"} theme` : undefined}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="size-4 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.8"
+            viewBox="0 0 24 24"
+          >
+            {theme === "dark" ? (
+              <>
+                <circle cx="12" cy="12" r="3.5" />
+                <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+              </>
+            ) : (
+              <path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z" />
+            )}
+          </svg>
+          <span
+            className={`min-w-0 overflow-hidden truncate opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${collapsed ? "max-w-0 opacity-0" : "max-w-[12rem] flex-1"}`}
+          >
+            {theme === "dark" ? "Light appearance" : "Dark appearance"}
+          </span>
+        </button>
+      </div>
+
+      <details className="group/profile relative">
+        <div
+          className={`absolute bottom-full z-20 mb-2 hidden overflow-hidden rounded-[0.5rem] border border-border bg-surface py-1 shadow-md group-open/profile:block motion-safe:animate-enter motion-reduce:animate-none ${collapsed ? "left-0 w-60" : "inset-x-0"}`}
+        >
+          <div className="border-b border-border px-3 py-2">
+            <p className="text-xs font-medium text-foreground">Documentation workspace</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">Brilliant UI account</p>
+          </div>
+          <a
+            className="flex h-9 items-center px-3 text-sm text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
+            href="/foundations"
+            onClick={(event) => onNavigate?.(event, "/foundations")}
+          >
+            Foundation settings
+          </a>
+          <a
+            className="flex h-9 items-center px-3 text-sm text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
+            href="/cli"
+            onClick={(event) => onNavigate?.(event, "/cli")}
+          >
+            CLI and installation
+          </a>
+          <button
+            className="flex h-9 w-full items-center px-3 text-left text-sm text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
+            onClick={onThemeToggle}
+            type="button"
+          >
+            Switch appearance
+          </button>
+        </div>
+        <summary
+          className={`flex cursor-pointer list-none items-center gap-2 rounded-[0.5rem] px-2 py-2 text-left hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring [&::-webkit-details-marker]:hidden ${collapsed ? "justify-center" : ""}`}
+          title={collapsed ? "Open account menu" : undefined}
+        >
+          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+            BU
+          </span>
+          <span
+            className={`min-w-0 overflow-hidden opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${collapsed ? "max-w-0 opacity-0" : "max-w-[10rem] flex-1"}`}
+          >
+            <span className="block truncate text-sm font-medium text-foreground">Brilliant UI</span>
+            <span className="block truncate text-xs text-muted-foreground">Documentation</span>
+          </span>
+          <svg
+            aria-hidden="true"
+            className={`size-4 shrink-0 text-muted-foreground transition-transform group-open/profile:rotate-180 motion-reduce:transition-none ${collapsed ? "hidden" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.8"
+            viewBox="0 0 24 24"
+          >
+            <path d="m7 10 5 5 5-5" />
+          </svg>
+        </summary>
+      </details>
+    </div>
+  );
+}
+
 function DocsNav({
   activeRoute,
   collapsed = false,
   onCollapsedToggle,
   onNavigate,
   onSearchOpen,
+  onThemeToggle,
+  theme,
 }: {
   activeRoute: NavHref;
   collapsed?: boolean;
   onCollapsedToggle?: () => void;
   onNavigate?: NavigateHandler;
   onSearchOpen: () => void;
+  onThemeToggle: () => void;
+  theme: "dark" | "light";
 }) {
   return (
-    <nav aria-label="Documentation" className="text-sm">
+    <div className="flex h-full min-h-0 flex-col text-sm">
       <DocsSidebarHeader
         collapsed={collapsed}
         onNavigate={onNavigate}
         onSearchOpen={onSearchOpen}
         {...(onCollapsedToggle ? { onCollapsedToggle } : {})}
       />
-      <div>
+      <nav
+        aria-label="Documentation"
+        className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {navGroups.map((group) => (
           <DocsNavGroup
             activeRoute={activeRoute}
@@ -6011,8 +6195,15 @@ function DocsNav({
             onNavigate={onNavigate}
           />
         ))}
-      </div>
-    </nav>
+      </nav>
+      <DocsSidebarFooter
+        collapsed={collapsed}
+        onNavigate={onNavigate}
+        onSearchOpen={onSearchOpen}
+        onThemeToggle={onThemeToggle}
+        theme={theme}
+      />
+    </div>
   );
 }
 
@@ -6149,13 +6340,17 @@ function MobileDocsNav({
   onClose,
   onNavigate,
   onSearchOpen,
+  onThemeToggle,
   open,
+  theme,
 }: {
   activeRoute: NavHref;
   onClose: () => void;
   onNavigate: NavigateHandler;
   onSearchOpen: () => void;
+  onThemeToggle: () => void;
   open: boolean;
+  theme: "dark" | "light";
 }) {
   if (!open) {
     return null;
@@ -6172,27 +6367,24 @@ function MobileDocsNav({
       <aside
         aria-modal="true"
         aria-label="Documentation navigation"
-        className="relative h-full w-[min(21rem,calc(100vw-2rem))] overflow-y-auto border-r border-border bg-background px-5 py-5 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] [scrollbar-width:none] motion-safe:animate-enter motion-reduce:animate-none [&::-webkit-scrollbar]:hidden"
+        className="relative h-full w-[min(21rem,calc(100vw-2rem))] overflow-hidden border-r border-border bg-background px-5 py-5 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] motion-safe:animate-enter motion-reduce:animate-none"
         role="dialog"
       >
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <a
-            className="text-sm font-semibold tracking-tight"
-            href="/"
-            onClick={(event) => onNavigate(event, "/")}
-          >
-            Brilliant UI
-          </a>
-          <button
-            aria-label="Close documentation navigation"
-            className="inline-flex size-8 items-center justify-center rounded-[0.25rem] border border-border bg-surface text-sm hover:bg-muted"
-            onClick={onClose}
-            type="button"
-          >
-            ×
-          </button>
-        </div>
-        <DocsNav activeRoute={activeRoute} onNavigate={onNavigate} onSearchOpen={onSearchOpen} />
+        <button
+          aria-label="Close documentation navigation"
+          className="absolute right-5 top-5 z-10 inline-flex size-8 items-center justify-center rounded-[0.25rem] border border-border bg-surface text-sm hover:bg-muted"
+          onClick={onClose}
+          type="button"
+        >
+          ×
+        </button>
+        <DocsNav
+          activeRoute={activeRoute}
+          onNavigate={onNavigate}
+          onSearchOpen={onSearchOpen}
+          onThemeToggle={onThemeToggle}
+          theme={theme}
+        />
       </aside>
     </div>
   );
@@ -6452,7 +6644,9 @@ function App() {
         onClose={() => setMobileNavOpen(false)}
         onNavigate={navigate}
         onSearchOpen={openSearch}
+        onThemeToggle={toggleTheme}
         open={mobileNavOpen}
+        theme={theme}
       />
       <DocsSearchDialog
         onClose={() => setSearchOpen(false)}
@@ -6464,7 +6658,7 @@ function App() {
         className={`mx-auto grid max-w-screen-2xl motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "md:grid-cols-[72px_minmax(0,1fr)] xl:grid-cols-[72px_minmax(0,1fr)_280px]" : "md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]"}`}
       >
         <aside
-          className={`sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-y-auto border-r border-border py-6 [scrollbar-width:none] md:block [&::-webkit-scrollbar]:hidden motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "px-3" : "px-6"}`}
+          className={`sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-visible border-r border-border py-6 md:block motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "px-3" : "px-6"}`}
         >
           <DocsNav
             activeRoute={activeRoute}
@@ -6472,6 +6666,8 @@ function App() {
             onCollapsedToggle={() => setSidebarCollapsed((collapsed) => !collapsed)}
             onNavigate={navigate}
             onSearchOpen={openSearch}
+            onThemeToggle={toggleTheme}
+            theme={theme}
           />
         </aside>
 

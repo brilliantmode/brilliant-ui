@@ -3358,6 +3358,48 @@ export function ApplicationShellSidebarFooter({
   );
 }
 
+export function ApplicationShellSidebarFooterActions({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return <div className={cx("grid gap-0.5 pb-3", className)} {...props} />;
+}
+
+export function ApplicationShellSidebarFooterAction({
+  children,
+  className = "",
+  icon,
+  trailing,
+  type = "button",
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  icon?: ReactNode;
+  trailing?: ReactNode;
+}) {
+  return (
+    <button
+      className={cx(
+        "flex h-8 w-full items-center gap-2 rounded-[0.375rem] px-2 text-left text-sm text-muted-foreground md:group-data-[collapsed=true]/sidebar:justify-center",
+        "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.99]",
+        "motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        className,
+      )}
+      type={type}
+      {...props}
+    >
+      {icon ? <span className="grid size-5 shrink-0 place-items-center">{icon}</span> : null}
+      <span className="min-w-0 max-w-[12rem] flex-1 overflow-hidden truncate opacity-100 md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none">
+        {children}
+      </span>
+      {trailing ? (
+        <span className="max-w-8 shrink-0 overflow-hidden opacity-100 md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none">
+          {trailing}
+        </span>
+      ) : null}
+    </button>
+  );
+}
+
 export function ApplicationShellSearch({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
     <a
@@ -3616,7 +3658,7 @@ export function ApplicationShellProfileMenu({
   return (
     <div
       className={cx(
-        "absolute inset-x-0 bottom-full z-20 mb-2 hidden overflow-hidden rounded-[0.5rem] border-hairline border-border bg-surface py-1 shadow-md group-open/profile:block",
+        "absolute inset-x-0 bottom-full z-20 mb-2 hidden overflow-hidden rounded-[0.5rem] border-hairline border-border bg-surface py-1 shadow-md group-open/profile:block md:group-data-[collapsed=true]/sidebar:inset-x-auto md:group-data-[collapsed=true]/sidebar:left-0 md:group-data-[collapsed=true]/sidebar:w-60",
         "motion-safe:animate-enter motion-reduce:animate-none",
         className,
       )}
@@ -5030,6 +5072,8 @@ export const registry = [
         "sidebar-header",
         "sidebar-content",
         "sidebar-footer",
+        "sidebar-footer-actions",
+        "sidebar-footer-action",
         "brand",
         "search",
         "nav",
@@ -5067,6 +5111,7 @@ export const registry = [
         "Keep primary navigation in ApplicationShellSidebar.",
         "Use NavItem for simple destinations and NavGroupItem for inbox/account rows with secondary text.",
         "Wrap navigation in SidebarContent and place the profile control in SidebarFooter so it remains visible while navigation scrolls.",
+        "Use SidebarFooterActions for persistent utility actions such as help, notifications, appearance, or workspace settings.",
         "Use the built-in header, sidebar, and footer separators to communicate pane structure instead of styling a scrollbar as a divider.",
         "Compose Profile, ProfileMenu, and ProfileTrigger for account, workspace, settings, and sign-out actions.",
         "Use menu item icon for action glyphs and media for avatars/account bubbles.",
