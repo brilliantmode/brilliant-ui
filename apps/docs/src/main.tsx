@@ -245,6 +245,24 @@ export function Example() {
 export function Example() {
   return <Textarea placeholder="Add a launch note..." />;
 }`,
+  field: `import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+
+export function Example() {
+  return (
+    <Field>
+      <FieldLabel htmlFor="workspace-email">Workspace email</FieldLabel>
+      <Input id="workspace-email" placeholder="workspace@company.com" type="email" />
+      <FieldDescription>Used for billing and approvals.</FieldDescription>
+      <FieldError>{/* Validation message */}</FieldError>
+    </Field>
+  );
+}`,
   checkbox: `import { Checkbox } from "@/components/ui/checkbox";
 
 export function Example() {
@@ -259,6 +277,40 @@ export function Example() {
 
 export function Example() {
   return <Switch aria-label="Enable sync" defaultChecked />;
+}`,
+  slider: `import { Slider } from "@/components/ui/slider";
+
+export function Example() {
+  return (
+    <Slider
+      aria-label="Usage threshold"
+      defaultValue={64}
+      max={100}
+      min={0}
+    />
+  );
+}`,
+  select: `import { Select } from "@/components/ui/select";
+
+export function Example() {
+  return (
+    <Select defaultValue="owner">
+      <option value="owner">Owner</option>
+      <option value="admin">Admin</option>
+      <option value="member">Member</option>
+    </Select>
+  );
+}`,
+  combobox: `import { Combobox } from "@/components/ui/combobox";
+
+export function Example() {
+  return (
+    <Combobox listId="workspace-options" placeholder="Search workspace">
+      <option value="Acme" />
+      <option value="Brilliant" />
+      <option value="Unifabriq" />
+    </Combobox>
+  );
 }`,
   "radio-group": `import { RadioGroup, RadioItem } from "@/components/ui/radio-group";
 
@@ -290,6 +342,60 @@ export function Example() {
     </Alert>
   );
 }`,
+  dialog: `import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+export function Example() {
+  return (
+    <Dialog open>
+      <DialogHeader>
+        <DialogTitle>Invite teammate</DialogTitle>
+      </DialogHeader>
+      <DialogContent>{/* Form fields */}</DialogContent>
+      <DialogFooter>{/* Actions */}</DialogFooter>
+    </Dialog>
+  );
+}`,
+  tabs: `import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+
+export function Example() {
+  return (
+    <Tabs defaultValue="overview">
+      <TabsList>
+        <TabsTrigger active value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="usage">Usage</TabsTrigger>
+      </TabsList>
+      <TabsContent value="overview">Workspace overview</TabsContent>
+    </Tabs>
+  );
+}`,
+  accordion: `import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+export function Example() {
+  return (
+    <Accordion>
+      <AccordionItem open>
+        <AccordionTrigger>What ships with Brilliant?</AccordionTrigger>
+        <AccordionContent>Tokens, micro UX, and source components.</AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
+}`,
   separator: `import { Separator } from "@/components/ui/separator";
 
 export function Example() {
@@ -309,6 +415,32 @@ export function Example() {
 
 export function Example() {
   return <Spinner label="Saving settings" size="md" variant="default" />;
+}`,
+  calendar: `import { Calendar } from "@/components/ui/calendar";
+
+export function Example() {
+  return (
+    <Calendar>
+      <tbody>{/* Calendar rows */}</tbody>
+    </Calendar>
+  );
+}`,
+  command: `import {
+  Command,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+
+export function Example() {
+  return (
+    <Command>
+      <CommandInput placeholder="Search commands..." />
+      <CommandList>
+        <CommandItem>Invite teammate</CommandItem>
+      </CommandList>
+    </Command>
+  );
 }`,
   "empty-state": `import {
   EmptyState,
@@ -613,6 +745,23 @@ function ComponentMiniPreview({ name }: { name: string }) {
     );
   }
 
+  if (name === "field") {
+    return (
+      <div className="grid max-w-md gap-2">
+        <label className="text-sm font-medium leading-none" htmlFor="field-preview-email">
+          Workspace email
+        </label>
+        <input
+          className="h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 text-sm shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] outline-none transition-shadow focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)] focus-visible:ring-0"
+          defaultValue="workspace@company.com"
+          id="field-preview-email"
+          type="email"
+        />
+        <p className="text-xs leading-5 text-muted-foreground">Used for billing and approvals.</p>
+      </div>
+    );
+  }
+
   if (name === "checkbox") {
     return (
       <div className="grid gap-4 sm:grid-cols-3">
@@ -709,11 +858,213 @@ function ComponentMiniPreview({ name }: { name: string }) {
     );
   }
 
+  if (name === "slider") {
+    return (
+      <div className="grid max-w-md gap-3">
+        <div className="flex items-center justify-between text-sm">
+          <label className="font-medium" htmlFor="slider-preview-threshold">
+            Usage threshold
+          </label>
+          <span className="text-muted-foreground">64%</span>
+        </div>
+        <input
+          aria-label="Usage threshold"
+          className={[
+            "h-5 w-full cursor-pointer appearance-none bg-transparent accent-primary",
+            "[&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-muted",
+            "[&::-webkit-slider-thumb]:mt-[-7px] [&::-webkit-slider-thumb]:size-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-hairline [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:bg-background [&::-webkit-slider-thumb]:shadow-sm",
+            "[&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-muted",
+            "[&::-moz-range-thumb]:size-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-hairline [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:bg-background [&::-moz-range-thumb]:shadow-sm",
+            "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+          ].join(" ")}
+          defaultValue={64}
+          id="slider-preview-threshold"
+          max={100}
+          min={0}
+          type="range"
+        />
+      </div>
+    );
+  }
+
+  if (name === "select") {
+    return (
+      <div className="grid max-w-sm gap-2">
+        <label className="text-sm font-medium" htmlFor="select-preview-role">
+          Workspace role
+        </label>
+        <select
+          className="h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 pr-8 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] outline-none transition-shadow focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]"
+          defaultValue="owner"
+          id="select-preview-role"
+        >
+          <option value="owner">Owner</option>
+          <option value="admin">Admin</option>
+          <option value="member">Member</option>
+        </select>
+      </div>
+    );
+  }
+
+  if (name === "combobox") {
+    return (
+      <div className="grid max-w-sm gap-2">
+        <label className="text-sm font-medium" htmlFor="combobox-preview-workspace">
+          Search workspace
+        </label>
+        <input
+          className="h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] outline-none transition-shadow placeholder:text-muted-foreground focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]"
+          defaultValue="Acme"
+          id="combobox-preview-workspace"
+          list="combobox-preview-options"
+        />
+        <datalist id="combobox-preview-options">
+          <option value="Acme" />
+          <option value="Brilliant" />
+          <option value="Unifabriq" />
+        </datalist>
+      </div>
+    );
+  }
+
   if (name === "alert") {
     return (
       <div className="rounded-[0.375rem] border border-primary/25 bg-primary/10 p-3 text-sm">
         <p className="font-semibold">Sync complete</p>
         <p className="mt-1 text-xs text-muted-foreground">All records are current.</p>
+      </div>
+    );
+  }
+
+  if (name === "dialog") {
+    return (
+      <div className="mx-auto max-w-md rounded-[0.5rem] border-hairline border-border bg-surface shadow-md motion-safe:animate-enter motion-reduce:animate-none">
+        <div className="border-b border-border p-4">
+          <h3 className="text-base font-semibold tracking-tight">Invite teammate</h3>
+          <p className="mt-1 text-sm text-muted-foreground">Send access to this workspace.</p>
+        </div>
+        <div className="p-4">
+          <input
+            className="h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 text-sm shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] outline-none"
+            placeholder="teammate@company.com"
+          />
+        </div>
+        <div className="flex justify-end gap-2 border-t border-border p-4">
+          <button className="h-8 rounded-[0.25rem] px-3 text-xs hover:bg-muted" type="button">
+            Cancel
+          </button>
+          <button
+            className={`${buttonVariants[0][2]} h-8 rounded-[0.25rem] px-3 text-xs`}
+            type="button"
+          >
+            Send invite
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (name === "alert-dialog") {
+    return (
+      <div className="mx-auto max-w-md rounded-[0.5rem] border-hairline border-critical/30 bg-surface p-4 shadow-md motion-safe:animate-enter motion-reduce:animate-none">
+        <h3 className="text-base font-semibold tracking-tight">Delete API key?</h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          This immediately revokes access for connected services.
+        </p>
+        <div className="mt-4 flex justify-end gap-2">
+          <button className="h-8 rounded-[0.25rem] px-3 text-xs hover:bg-muted" type="button">
+            Cancel
+          </button>
+          <button
+            className="h-8 rounded-[0.25rem] bg-critical px-3 text-xs font-medium text-critical-foreground"
+            type="button"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (name === "drawer") {
+    return (
+      <div className="relative h-52 overflow-hidden rounded-[0.5rem] border border-border bg-muted/40">
+        <div className="absolute inset-x-6 bottom-0 rounded-t-[0.5rem] border-hairline border-border bg-surface p-4 shadow-md">
+          <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted-foreground/30" />
+          <h3 className="text-sm font-semibold">Usage filters</h3>
+          <p className="mt-1 text-xs text-muted-foreground">Bottom drawer for mobile workflows.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (name === "sheet") {
+    return (
+      <div className="relative h-52 overflow-hidden rounded-[0.5rem] border border-border bg-muted/40">
+        <div className="absolute top-0 right-0 h-full w-64 border-l border-border bg-surface p-4 shadow-md">
+          <h3 className="text-sm font-semibold">Workspace settings</h3>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            Side sheet for focused edits without leaving the page.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (name === "tooltip") {
+    return (
+      <div className="flex justify-center py-8">
+        <span className="relative inline-flex">
+          <button
+            className="h-9 rounded-[0.25rem] border border-border bg-surface px-3 text-sm font-medium"
+            type="button"
+          >
+            API key
+          </button>
+          <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 -translate-y-0.5 whitespace-nowrap rounded-[0.25rem] bg-foreground px-2 py-1 text-xs font-medium text-background shadow-sm">
+            Copied on click
+          </span>
+        </span>
+      </div>
+    );
+  }
+
+  if (name === "popover" || name === "hover-card") {
+    return (
+      <div className="flex items-start gap-3">
+        <button
+          className="h-9 rounded-[0.25rem] border border-border bg-surface px-3 text-sm font-medium"
+          type="button"
+        >
+          {name === "popover" ? "Open filters" : "Hover user"}
+        </button>
+        <div className="min-w-56 rounded-[0.5rem] border-hairline border-border bg-surface p-3 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none">
+          <p className="font-medium">{name === "popover" ? "Filters" : "Nirvana R"}</p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            {name === "popover"
+              ? "Status, owner, and date controls."
+              : "Workspace owner · active now."}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (name === "context-menu") {
+    return (
+      <div className="relative max-w-sm rounded-[0.5rem] border border-dashed border-border bg-muted/30 p-4 text-sm">
+        Right-click target
+        <div className="absolute top-10 left-8 min-w-44 rounded-[0.5rem] border-hairline border-border bg-surface p-1 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none">
+          {["Open", "Rename", "Archive"].map((item) => (
+            <button
+              className="block w-full rounded-[0.25rem] px-2 py-1.5 text-left hover:bg-muted"
+              key={item}
+              type="button"
+            >
+              {item}
+            </button>
+          ))}
+        </div>
       </div>
     );
   }
@@ -724,6 +1075,231 @@ function ComponentMiniPreview({ name }: { name: string }) {
         <p>Account</p>
         <div className="h-[0.5px] w-full bg-primary" />
         <p className="text-muted-foreground">Billing</p>
+      </div>
+    );
+  }
+
+  if (name === "tabs") {
+    return (
+      <div className="grid gap-3">
+        <div className="inline-flex w-fit rounded-[0.375rem] bg-muted p-1" role="tablist">
+          {["Overview", "Usage", "Billing"].map((tab, index) => (
+            <button
+              aria-selected={index === 0}
+              className={[
+                "rounded-[0.25rem] px-3 py-1.5 text-sm font-medium",
+                index === 0 ? "bg-surface text-foreground shadow-sm" : "text-muted-foreground",
+              ].join(" ")}
+              key={tab}
+              role="tab"
+              type="button"
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+        <div className="rounded-[0.5rem] border border-border bg-surface p-4 text-sm">
+          Workspace usage is trending 12% below the forecast.
+        </div>
+      </div>
+    );
+  }
+
+  if (name === "accordion" || name === "collapsible") {
+    return (
+      <div className="divide-y divide-border rounded-[0.5rem] border-hairline border-border">
+        <details className="group" open>
+          <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium hover:bg-muted">
+            {name === "accordion" ? "What ships with Brilliant?" : "Advanced settings"}
+          </summary>
+          <div className="px-4 pb-4 text-sm leading-6 text-muted-foreground motion-safe:animate-enter motion-reduce:animate-none">
+            Built-in tokens, micro UX, and app-owned shadcn-compatible source.
+          </div>
+        </details>
+      </div>
+    );
+  }
+
+  if (name === "carousel") {
+    return (
+      <div className="flex snap-x gap-3 overflow-x-auto scroll-smooth">
+        {["Usage", "Billing", "Members"].map((item) => (
+          <div
+            className="min-w-56 snap-start rounded-[0.5rem] border-hairline border-border bg-surface p-4"
+            key={item}
+          >
+            <p className="text-sm font-semibold">{item}</p>
+            <p className="mt-1 text-xs text-muted-foreground">Product-ready panel</p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (name === "breadcrumb") {
+    return (
+      <nav aria-label="Breadcrumb">
+        <ol className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
+          {["Workspace", "Settings", "API keys"].map((item, index) => (
+            <li className="inline-flex items-center gap-1" key={item}>
+              <span className={index === 2 ? "font-medium text-foreground" : ""}>{item}</span>
+              {index < 2 ? <span aria-hidden="true">/</span> : null}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    );
+  }
+
+  if (name === "navigation-menu") {
+    return (
+      <nav className="flex flex-wrap items-center gap-1">
+        {["Dashboard", "Usage", "Settings"].map((item, index) => (
+          <a
+            className={[
+              "rounded-[0.25rem] px-3 py-2 text-sm",
+              index === 0 ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted",
+            ].join(" ")}
+            href="#components"
+            key={item}
+          >
+            {item}
+          </a>
+        ))}
+      </nav>
+    );
+  }
+
+  if (name === "menubar") {
+    return (
+      <div
+        className="flex w-fit items-center gap-1 rounded-[0.375rem] border-hairline border-border bg-surface p-1"
+        role="menubar"
+      >
+        {["File", "Edit", "View"].map((item) => (
+          <button
+            className="rounded-[0.25rem] px-3 py-1.5 text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            key={item}
+            role="menuitem"
+            type="button"
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  if (name === "pagination") {
+    return (
+      <nav aria-label="Pagination">
+        <ul className="flex items-center gap-1">
+          {["‹", "1", "2", "3", "›"].map((item, index) => (
+            <li key={`${item}-${index}`}>
+              <a
+                aria-current={item === "2" ? "page" : undefined}
+                className="inline-flex size-9 items-center justify-center rounded-[0.25rem] text-sm hover:bg-muted aria-current:bg-primary aria-current:text-primary-foreground"
+                href="#components"
+              >
+                {item}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    );
+  }
+
+  if (name === "toast") {
+    return (
+      <div className="max-w-sm rounded-[0.5rem] border-hairline border-border bg-surface p-4 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none">
+        <p className="font-semibold">Settings saved</p>
+        <p className="mt-1 text-xs text-muted-foreground">Workspace policy updated.</p>
+      </div>
+    );
+  }
+
+  if (name === "calendar") {
+    return (
+      <table className="w-full max-w-xs border-collapse text-center text-sm">
+        <caption className="mb-3 text-left font-medium">August 2026</caption>
+        <thead className="text-xs text-muted-foreground">
+          <tr>
+            {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
+              <th className="p-1 font-medium" key={day}>
+                {day}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            ["", "", "", "", "", "1", "2"],
+            ["3", "4", "5", "6", "7", "8", "9"],
+            ["10", "11", "12", "13", "14", "15", "16"],
+            ["17", "18", "19", "20", "21", "22", "23"],
+          ].map((week) => (
+            <tr key={week.join("-")}>
+              {week.map((day, index) => (
+                <td className="p-1" key={`${day || "empty"}-${index}`}>
+                  {day ? (
+                    <button
+                      className={[
+                        "size-8 rounded-[0.25rem] text-sm hover:bg-muted",
+                        day === "19" ? "bg-primary text-primary-foreground hover:bg-primary" : "",
+                      ].join(" ")}
+                      type="button"
+                    >
+                      {day}
+                    </button>
+                  ) : null}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+
+  if (name === "date-input") {
+    return (
+      <div className="grid max-w-sm gap-2">
+        <label className="text-sm font-medium" htmlFor="date-input-preview">
+          Renewal date
+        </label>
+        <input
+          className="h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 text-sm shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] outline-none focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]"
+          defaultValue="2026-08-19"
+          id="date-input-preview"
+          type="date"
+        />
+      </div>
+    );
+  }
+
+  if (name === "command") {
+    return (
+      <div className="max-w-md overflow-hidden rounded-[0.5rem] border-hairline border-border bg-surface shadow-sm">
+        <input
+          className="h-10 w-full border-b border-border bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground"
+          placeholder="Search commands..."
+        />
+        <div className="max-h-72 overflow-auto p-1" role="listbox">
+          {["Invite teammate", "Create API key", "Open audit log"].map((item, index) => (
+            <div
+              className={[
+                "rounded-[0.25rem] px-2 py-1.5 text-sm hover:bg-muted",
+                index === 0 ? "bg-muted" : "",
+              ].join(" ")}
+              key={item}
+              role="option"
+              tabIndex={0}
+            >
+              {item}
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -847,9 +1423,9 @@ function ComponentMiniPreview({ name }: { name: string }) {
   }
 
   return (
-    <PreviewButton className={`${buttonVariants[0][2]} h-9 px-3.5 text-sm`}>
-      Save changes
-    </PreviewButton>
+    <div className="rounded-[0.5rem] border border-dashed border-border bg-muted/30 p-4 text-sm text-muted-foreground">
+      Preview pending for this registry item.
+    </div>
   );
 }
 
