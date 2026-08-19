@@ -498,13 +498,19 @@ export function Example() {
   PhotoCaption,
   PhotoFallback,
   PhotoImage,
+  PhotoTint,
 } from "@/components/ui/photo";
 
 export function Example() {
   return (
     <Photo ratio={16 / 10} radius="md" variant="surface">
       <PhotoFallback>Workspace preview unavailable</PhotoFallback>
-      <PhotoImage alt="Sunlit concrete atrium" src="/images/photo-architecture.jpg" />
+      <PhotoImage
+        alt="Sunlit concrete atrium"
+        filter="soft"
+        src="/images/photo-architecture.jpg"
+      />
+      <PhotoTint color="var(--brilliant-primary)" opacity={0.12} />
       <PhotoCaption>Sunlit concrete atrium</PhotoCaption>
     </Photo>
   );
@@ -1526,6 +1532,27 @@ export function CropExample() {
       </Photo>
       <Photo crop="circle">
         <PhotoImage alt="Circular atrium crop" src="/images/photo-architecture.jpg" />
+      </Photo>
+    </div>
+  );
+}`,
+  filters: `import { Photo, PhotoImage, PhotoTint } from "@/components/ui/photo";
+
+export function FilterExample() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <Photo ratio={4 / 3}>
+        <PhotoImage alt="Original atrium" src="/images/photo-architecture.jpg" />
+      </Photo>
+      <Photo ratio={4 / 3}>
+        <PhotoImage alt="Monochrome atrium" filter="mono" src="/images/photo-architecture.jpg" />
+      </Photo>
+      <Photo ratio={4 / 3}>
+        <PhotoImage alt="Warm atrium" filter="warm" src="/images/photo-architecture.jpg" />
+      </Photo>
+      <Photo ratio={4 / 3}>
+        <PhotoImage alt="Indigo tinted atrium" filter="soft" src="/images/photo-architecture.jpg" />
+        <PhotoTint color="var(--brilliant-primary)" opacity={0.28} />
       </Photo>
     </div>
   );
@@ -2822,20 +2849,26 @@ function PhotoPreviewFigure({
   caption,
   crop = "rectangle",
   fallback = false,
+  filter = "none",
   fit = "cover",
   ratio,
   radius = "md",
   src,
+  tintColor,
+  tintOpacity = 0.28,
   variant = "surface",
 }: {
   alt: string;
   caption?: string;
   crop?: "circle" | "rectangle" | "square";
   fallback?: boolean;
+  filter?: "cool" | "mono" | "none" | "soft" | "vivid" | "warm";
   fit?: "contain" | "cover";
   ratio: string;
   radius?: "full" | "lg" | "md" | "sm";
   src?: string;
+  tintColor?: string;
+  tintOpacity?: number;
   variant?: "elevated" | "ghost" | "surface";
 }) {
   const variantClass = {
@@ -2850,6 +2883,14 @@ function PhotoPreviewFigure({
     md: "rounded-[0.5rem]",
     sm: "rounded-[0.25rem]",
   }[radius];
+  const filterStyle = {
+    cool: "saturate(0.9) hue-rotate(8deg) contrast(1.02)",
+    mono: "grayscale(1) contrast(1.05)",
+    none: "none",
+    soft: "saturate(0.82) contrast(0.94) brightness(1.04)",
+    vivid: "saturate(1.22) contrast(1.06)",
+    warm: "sepia(0.2) saturate(1.1) hue-rotate(-8deg)",
+  }[filter];
 
   return (
     <figure
@@ -2869,6 +2910,14 @@ function PhotoPreviewFigure({
           alt={alt}
           className={`absolute inset-0 size-full ${fit === "contain" ? "object-contain" : "object-cover"} transition-transform duration-[var(--brilliant-duration-normal)] group-hover:scale-[1.015] motion-reduce:transition-none`}
           src={src}
+          style={{ filter: filterStyle }}
+        />
+      ) : null}
+      {tintColor ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{ backgroundColor: tintColor, mixBlendMode: "color", opacity: tintOpacity }}
         />
       ) : null}
       {caption ? (
@@ -2919,6 +2968,32 @@ function PhotoExamplePreview({ example }: { example: keyof typeof photoExampleCo
               src={photoArchitectureImage}
             />
             <code className="text-center text-xs text-muted-foreground">{`crop="${crop}"`}</code>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (example === "filters") {
+    return (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {(
+          [
+            ["none", "Original", undefined],
+            ["mono", "Mono", undefined],
+            ["warm", "Warm", undefined],
+            ["soft", "Indigo tint", "var(--brilliant-primary)"],
+          ] as const
+        ).map(([filter, label, tintColor]) => (
+          <div className="grid gap-2" key={label}>
+            <PhotoPreviewFigure
+              alt={`${label} atrium`}
+              filter={filter}
+              ratio="4/3"
+              src={photoArchitectureImage}
+              {...(tintColor ? { tintColor } : {})}
+            />
+            <span className="text-center text-xs font-medium text-muted-foreground">{label}</span>
           </div>
         ))}
       </div>
@@ -3042,6 +3117,11 @@ function ComponentMiniPreview({ name }: { name: string }) {
             alt="Sunlit concrete atrium"
             className="absolute inset-0 size-full object-cover transition-transform duration-[var(--brilliant-duration-normal)] group-hover:scale-[1.015] motion-reduce:transition-none"
             src={photoArchitectureImage}
+            style={{ filter: "saturate(0.82) contrast(0.94) brightness(1.04)" }}
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-primary opacity-[0.12] mix-blend-color"
           />
           <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent px-3 pt-8 pb-3 text-xs font-medium text-background">
             Sunlit concrete atrium
@@ -4940,6 +5020,11 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                               "Use rectangle for flexible media and square or circle for fixed 1:1 crops.",
                             ],
                             [
+                              "filters",
+                              "Filters and tints",
+                              "Apply repeatable image treatments or layer a custom color using blend modes.",
+                            ],
+                            [
                               "ratios",
                               "Aspect ratios and captions",
                               "Reserve the final media geometry before the image loads.",
@@ -5115,7 +5200,8 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                             for fixed 1:1 crops. Use <code>ratio</code> for rectangles,{" "}
                             <code>radius</code> to match the surrounding surface, and{" "}
                             <code>fit=&quot;contain&quot;</code> when cropping would hide meaningful
-                            detail.
+                            detail. Use <code>filter</code> for presets and <code>PhotoTint</code>{" "}
+                            for custom color treatment.
                           </p>
                         ) : item.name === "separator" ? (
                           <p className="text-sm leading-6 text-muted-foreground">
@@ -5356,7 +5442,7 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                             : item.name === "text"
                               ? "Glow adds a token-colored premium aura. Shimmer animates a tokenized gradient across the glyphs and falls back to static text for reduced-motion users."
                               : item.name === "photo"
-                                ? "Photo reserves layout space with ratio, fades loaded images in from a subtle blur, and keeps fallback/caption layers semantic. Motion is disabled for reduced-motion users."
+                                ? "Photo reserves layout space with ratio, fades loaded images in from a subtle blur, and smoothly transitions filter and tint changes. Fallback and caption layers remain semantic, and motion is disabled for reduced-motion users."
                                 : item.name === "switch"
                                   ? "The thumb uses a spring-timed snap, stretches slightly on press, and the active track gains a subtle inset highlight. Motion is disabled for reduced-motion users."
                                   : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}

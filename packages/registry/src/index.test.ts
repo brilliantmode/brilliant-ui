@@ -24,7 +24,7 @@ describe("registry", () => {
     expect(findRegistryItem("missing")).toBeUndefined();
   });
 
-  it("ships enforced square and circle photo crops", () => {
+  it("ships photo crop and treatment APIs", () => {
     const photoSource = findRegistryItem("photo")?.files[0]?.content;
 
     expect(photoSource).toContain("crop?: keyof typeof crops");
@@ -32,6 +32,8 @@ describe("registry", () => {
       'crop === "rectangle" ? (style?.aspectRatio ?? String(ratio)) : "1"',
     );
     expect(photoSource).toContain('circle: "rounded-full"');
+    expect(photoSource).toContain("filter?: keyof typeof filters");
+    expect(photoSource).toContain("export function PhotoTint");
   });
 
   it("keeps avatar images circular without clipping presence status", () => {

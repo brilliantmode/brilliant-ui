@@ -271,6 +271,15 @@ const crops = {
   circle: "rounded-full",
 } as const;
 
+const filters = {
+  none: "none",
+  mono: "grayscale(1) contrast(1.05)",
+  soft: "saturate(0.82) contrast(0.94) brightness(1.04)",
+  vivid: "saturate(1.22) contrast(1.06)",
+  warm: "sepia(0.2) saturate(1.1) hue-rotate(-8deg)",
+  cool: "saturate(0.9) hue-rotate(8deg) contrast(1.02)",
+} as const;
+
 export interface PhotoProps extends HTMLAttributes<HTMLFigureElement> {
   crop?: keyof typeof crops;
   ratio?: number | string;
@@ -311,15 +320,18 @@ export function Photo({
 }
 
 export interface PhotoImageProps extends ImgHTMLAttributes<HTMLImageElement> {
+  filter?: keyof typeof filters;
   fit?: keyof typeof fits;
 }
 
 export function PhotoImage({
   alt,
   className = "",
+  filter = "none",
   fit = "cover",
   onError,
   onLoad,
+  style,
   ...props
 }: PhotoImageProps) {
   const [loaded, setLoaded] = useState(false);
@@ -343,6 +355,43 @@ export function PhotoImage({
       onLoad={(event) => {
         setLoaded(true);
         onLoad?.(event);
+      }}
+      style={{
+        ...style,
+        filter: filter === "none" ? style?.filter : filters[filter],
+      }}
+      data-filter={filter}
+      {...props}
+    />
+  );
+}
+
+export interface PhotoTintProps extends HTMLAttributes<HTMLSpanElement> {
+  blendMode?: CSSProperties["mixBlendMode"];
+  color?: string;
+  opacity?: number;
+}
+
+export function PhotoTint({
+  blendMode = "color",
+  className = "",
+  color = "var(--brilliant-primary)",
+  opacity = 0.22,
+  style,
+  ...props
+}: PhotoTintProps) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cx(
+        "pointer-events-none absolute inset-0 transition-[background-color,opacity] duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none",
+        className,
+      )}
+      style={{
+        ...style,
+        backgroundColor: color,
+        mixBlendMode: blendMode,
+        opacity,
       }}
       {...props}
     />
@@ -3303,7 +3352,7 @@ export const registry = [
     files: [{ path: "photo.tsx", content: photoSource, target: "ui/photo.tsx" }],
     metadata: {
       purpose: "Renders product imagery, thumbnails, avatars-at-scale, and media previews.",
-      slots: ["root", "image", "fallback", "caption"],
+      slots: ["root", "image", "tint", "fallback", "caption"],
       accessibility: [
         "PhotoImage requires meaningful alt text unless the image is decorative.",
         "PhotoFallback remains visible when the image fails to load.",
@@ -3312,6 +3361,8 @@ export const registry = [
       usage: [
         "Use ratio to reserve space and prevent layout shift.",
         "Use crop square or circle for fixed 1:1 crops; circle overrides radius.",
+        "Use PhotoImage filter presets for repeatable image treatment.",
+        "Use PhotoTint for tokenized or custom color overlays.",
         "Use variant surface for ordinary media cards.",
         "Use radius to align image corners with surrounding surfaces.",
         "Use PhotoCaption only when the caption describes the image, not as decoration.",
