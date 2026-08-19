@@ -2394,22 +2394,25 @@ function ComponentMiniPreview({ name }: { name: string }) {
 function DocsNav({ activeHref, onNavigate }: { activeHref: NavHref; onNavigate?: () => void }) {
   return (
     <nav aria-label="Documentation" className="text-sm">
-      <p className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+      <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
         Docs
       </p>
       {navGroups.map((group) => (
-        <section className="mb-5 last:mb-0" key={group.label}>
-          <h2 className="mb-1.5 px-2 text-[0.68rem] font-medium uppercase tracking-[0.16em] text-muted-foreground/80">
+        <section
+          className="mb-4 rounded-[0.375rem] border border-border/70 bg-surface/55 p-2 last:mb-0"
+          key={group.label}
+        >
+          <h2 className="mb-2 border-b border-border/70 px-1 pb-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             {group.label}
           </h2>
-          <div className="space-y-0.5">
+          <div className="relative space-y-0.5 before:absolute before:bottom-1 before:left-1 before:top-1 before:w-px before:bg-border/80">
             {group.items.map(([label, href]) => (
               <a
                 aria-current={activeHref === href ? "location" : undefined}
                 className={[
-                  "block rounded-[0.25rem] px-2.5 py-1.5 transition-colors",
+                  "relative block rounded-[0.25rem] py-1.5 pl-4 pr-2 transition-colors",
                   activeHref === href
-                    ? "bg-primary/10 text-foreground"
+                    ? "bg-primary/10 font-medium text-foreground before:absolute before:bottom-1 before:left-1 before:top-1 before:w-px before:bg-primary"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 ].join(" ")}
                 href={href}
