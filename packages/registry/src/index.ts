@@ -2613,6 +2613,7 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
+  DetailsHTMLAttributes,
   HTMLAttributes,
   ReactNode,
 } from "react";
@@ -3093,6 +3094,53 @@ export function ApplicationShellHeader({ className = "", ...props }: HTMLAttribu
   );
 }
 
+export function ApplicationShellHeaderContent({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return <div className={cx("min-w-0 flex-1", className)} {...props} />;
+}
+
+export function ApplicationShellHeaderTitle({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLHeadingElement>) {
+  return <h1 className={cx("truncate text-sm font-semibold", className)} {...props} />;
+}
+
+export function ApplicationShellHeaderDescription({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={cx("truncate text-xs text-muted-foreground", className)} {...props} />;
+}
+
+export function ApplicationShellHeaderActions({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return <div className={cx("ml-auto flex shrink-0 items-center gap-1.5", className)} {...props} />;
+}
+
+export function ApplicationShellHeaderAction({
+  className = "",
+  type = "button",
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      className={cx(
+        "relative inline-flex size-9 items-center justify-center rounded-[0.25rem] text-sm text-muted-foreground",
+        "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97]",
+        "motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        className,
+      )}
+      type={type}
+      {...props}
+    />
+  );
+}
+
 export function ApplicationShellMobileTrigger({
   children = "☰",
   className = "",
@@ -3158,6 +3206,30 @@ export function ApplicationShellBrand({ className = "", ...props }: AnchorHTMLAt
         "mb-5 flex items-center gap-3 rounded-[0.375rem] text-foreground outline-none focus-visible:ring-1 focus-visible:ring-ring",
         className,
       )}
+      {...props}
+    />
+  );
+}
+
+export function ApplicationShellSidebarContent({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cx("min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1", className)}
+      {...props}
+    />
+  );
+}
+
+export function ApplicationShellSidebarFooter({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cx("mt-auto shrink-0 border-t border-border bg-background pt-3", className)}
       {...props}
     />
   );
@@ -3404,6 +3476,69 @@ export function ApplicationShellAccountSwitcher({
       )}
       {...props}
     />
+  );
+}
+
+export function ApplicationShellProfile({
+  className = "",
+  ...props
+}: DetailsHTMLAttributes<HTMLDetailsElement>) {
+  return <details className={cx("group/profile relative", className)} {...props} />;
+}
+
+export function ApplicationShellProfileMenu({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cx(
+        "absolute inset-x-0 bottom-full z-20 mb-2 hidden overflow-hidden rounded-[0.5rem] border-hairline border-border bg-surface py-1 shadow-md group-open/profile:block",
+        "motion-safe:animate-enter motion-reduce:animate-none",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function ApplicationShellProfileTrigger({
+  children,
+  className = "",
+  description,
+  media,
+  trailing,
+  ...props
+}: HTMLAttributes<HTMLElement> & {
+  description?: ReactNode;
+  media?: ReactNode;
+  trailing?: ReactNode;
+}) {
+  return (
+    <summary
+      className={cx(
+        "flex w-full cursor-pointer list-none items-center gap-3 rounded-[0.5rem] px-2 py-2 text-left text-foreground",
+        "hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.995]",
+        "motion-safe:transition-[background-color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        className,
+      )}
+      {...props}
+    >
+      {media}
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-sm font-medium">{children}</span>
+        {description ? (
+          <span className="mt-0.5 block truncate text-xs leading-5 text-muted-foreground">
+            {description}
+          </span>
+        ) : null}
+      </span>
+      {trailing ? (
+        <span className="shrink-0 text-muted-foreground transition-transform group-open/profile:rotate-180 motion-reduce:transition-none">
+          {trailing}
+        </span>
+      ) : null}
+    </summary>
   );
 }
 
@@ -4717,7 +4852,7 @@ export const registry = [
     name: "application-shell",
     title: "Application Shell",
     description:
-      "A responsive app frame with header, mobile sidebar, navigation, main, and footer slots.",
+      "A responsive app frame with structured header actions, mobile navigation, and a pinned sidebar profile footer.",
     kind: "layout",
     dependencies: [],
     registryDependencies: [],
@@ -4734,8 +4869,15 @@ export const registry = [
       slots: [
         "root",
         "header",
+        "header-content",
+        "header-title",
+        "header-description",
+        "header-actions",
+        "header-action",
         "mobile-trigger",
         "sidebar",
+        "sidebar-content",
+        "sidebar-footer",
         "brand",
         "search",
         "nav",
@@ -4749,6 +4891,9 @@ export const registry = [
         "menu-item-media",
         "account-switcher",
         "account-item",
+        "profile",
+        "profile-menu",
+        "profile-trigger",
         "main",
         "footer",
       ],
@@ -4757,14 +4902,17 @@ export const registry = [
         "Mobile navigation closes with Escape and backdrop click.",
         "Active navigation items expose aria-current.",
         "The mobile trigger is a native button with visible focus.",
+        "Header actions use native buttons and require an accessible name when icon-only.",
+        "The profile menu uses native details and summary disclosure semantics.",
       ],
       usage: [
         "Use as the top-level frame for authenticated product screens.",
         "Keep primary navigation in ApplicationShellSidebar.",
         "Use NavItem for simple destinations and NavGroupItem for inbox/account rows with secondary text.",
-        "Use Menu and AccountSwitcher slots for user/account controls inside the sidebar.",
+        "Wrap navigation in SidebarContent and place the profile control in SidebarFooter so it remains visible while navigation scrolls.",
+        "Compose Profile, ProfileMenu, and ProfileTrigger for account, workspace, settings, and sign-out actions.",
         "Use menu item icon for action glyphs and media for avatars/account bubbles.",
-        "Use ApplicationShellHeader for page actions and the mobile trigger.",
+        "Compose HeaderContent, HeaderTitle, HeaderDescription, HeaderActions, and HeaderAction for page context and global actions.",
         "Use ApplicationShellMain for route/page content.",
       ],
       avoid: [

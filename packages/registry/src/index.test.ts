@@ -68,6 +68,21 @@ describe("registry", () => {
     expect(footerSource).toContain("export function FooterBottom");
   });
 
+  it("ships an application shell with pinned profile and structured header actions", () => {
+    const item = findRegistryItem("application-shell");
+    const source = item?.files[0]?.content;
+
+    expect(item?.kind).toBe("layout");
+    expect(source).toContain("export function ApplicationShellSidebarContent");
+    expect(source).toContain("export function ApplicationShellSidebarFooter");
+    expect(source).toContain("mt-auto shrink-0 border-t");
+    expect(source).toContain("export function ApplicationShellProfileMenu");
+    expect(source).toContain("group-open/profile:block");
+    expect(source).toContain("export function ApplicationShellProfileTrigger");
+    expect(source).toContain("export function ApplicationShellHeaderActions");
+    expect(source).toContain("export function ApplicationShellHeaderAction");
+  });
+
   it("ships a functional native file upload", () => {
     const item = findRegistryItem("file-upload");
     const source = item?.files[0]?.content;
