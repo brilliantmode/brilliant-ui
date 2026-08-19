@@ -387,10 +387,13 @@ export function Example() {
   return (
     <Tabs defaultValue="overview">
       <TabsList>
-        <TabsTrigger active value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="usage">Usage</TabsTrigger>
+        <TabsTrigger value="billing">Billing</TabsTrigger>
       </TabsList>
       <TabsContent value="overview">Workspace overview</TabsContent>
+      <TabsContent value="usage">Usage is trending below forecast.</TabsContent>
+      <TabsContent value="billing">Renewal closes August 30.</TabsContent>
     </Tabs>
   );
 }`,
@@ -849,6 +852,47 @@ function CarouselPreview() {
         >
           <span aria-hidden="true">›</span>
         </button>
+      </div>
+    </div>
+  );
+}
+
+function TabsPreview() {
+  const tabs = [
+    ["overview", "Overview", "Workspace health, owner, and recent activity."],
+    ["usage", "Usage", "Usage is trending 12% below the forecast."],
+    ["billing", "Billing", "Renewal closes August 30 with 48 active seats."],
+  ] as const;
+  const [activeTab, setActiveTab] = useState<(typeof tabs)[number][0]>("overview");
+  const activeContent = tabs.find(([value]) => value === activeTab)?.[2];
+
+  return (
+    <div className="grid gap-3">
+      <div className="inline-flex w-fit rounded-[0.375rem] bg-muted p-1" role="tablist">
+        {tabs.map(([value, label]) => (
+          <button
+            aria-selected={activeTab === value}
+            className={[
+              "rounded-[0.25rem] px-3 py-1.5 text-sm font-medium outline-none transition-[background-color,color,box-shadow,transform]",
+              "hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.98]",
+              activeTab === value
+                ? "bg-surface text-foreground shadow-sm"
+                : "text-muted-foreground",
+            ].join(" ")}
+            key={value}
+            onClick={() => setActiveTab(value)}
+            role="tab"
+            type="button"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <div
+        className="rounded-[0.5rem] border-hairline border-border bg-surface p-4 text-sm motion-safe:animate-enter motion-reduce:animate-none"
+        role="tabpanel"
+      >
+        {activeContent}
       </div>
     </div>
   );
@@ -1331,29 +1375,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   }
 
   if (name === "tabs") {
-    return (
-      <div className="grid gap-3">
-        <div className="inline-flex w-fit rounded-[0.375rem] bg-muted p-1" role="tablist">
-          {["Overview", "Usage", "Billing"].map((tab, index) => (
-            <button
-              aria-selected={index === 0}
-              className={[
-                "rounded-[0.25rem] px-3 py-1.5 text-sm font-medium",
-                index === 0 ? "bg-surface text-foreground shadow-sm" : "text-muted-foreground",
-              ].join(" ")}
-              key={tab}
-              role="tab"
-              type="button"
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-        <div className="rounded-[0.5rem] border border-border bg-surface p-4 text-sm">
-          Workspace usage is trending 12% below the forecast.
-        </div>
-      </div>
-    );
+    return <TabsPreview />;
   }
 
   if (name === "accordion" || name === "collapsible") {

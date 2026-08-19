@@ -1713,36 +1713,62 @@ export function ContextMenu({ children, className = "", ...props }: ContextMenuP
 }
 `;
 
-const tabsSource = `import { useState } from "react";
-import type { HTMLAttributes, ReactNode } from "react";
+const tabsSource = `"use client";
 
-export interface TabsProps extends HTMLAttributes<HTMLDivElement> {
-  defaultValue: string;
+import * as TabsPrimitive from "@radix-ui/react-tabs";
+import type { ComponentPropsWithoutRef } from "react";
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
 }
 
-export function Tabs({ className = "", defaultValue, ...props }: TabsProps) {
-  return <div className={["grid gap-3", className].join(" ")} data-default-value={defaultValue} {...props} />;
+export const Tabs = TabsPrimitive.Root;
+
+export function TabsList({
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof TabsPrimitive.List>) {
+  return (
+    <TabsPrimitive.List
+      className={cx("inline-flex w-fit rounded-[0.375rem] bg-muted p-1", className)}
+      {...props}
+    />
+  );
 }
 
-export function TabsList({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={["inline-flex rounded-[0.375rem] bg-muted p-1", className].join(" ")} role="tablist" {...props} />;
+export function TabsTrigger({
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>) {
+  return (
+    <TabsPrimitive.Trigger
+      className={cx(
+        "rounded-[0.25rem] px-3 py-1.5 text-sm font-medium text-muted-foreground outline-none",
+        "data-[state=active]:bg-surface data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+        "hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring",
+        "motion-safe:transition-[background-color,color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "active:scale-[0.98]",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
-export interface TabsTriggerProps extends HTMLAttributes<HTMLButtonElement> {
-  active?: boolean;
-  value: string;
-}
-
-export function TabsTrigger({ active = false, className = "", value, ...props }: TabsTriggerProps) {
-  return <button aria-selected={active} className={["rounded-[0.25rem] px-3 py-1.5 text-sm font-medium motion-safe:transition-colors motion-reduce:transition-none", active ? "bg-surface text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground", className].join(" ")} role="tab" type="button" {...props} />;
-}
-
-export interface TabsContentProps extends HTMLAttributes<HTMLDivElement> {
-  value: string;
-}
-
-export function TabsContent({ className = "", value, ...props }: TabsContentProps) {
-  return <div className={["motion-safe:animate-enter motion-reduce:animate-none", className].join(" ")} data-value={value} role="tabpanel" {...props} />;
+export function TabsContent({
+  className = "",
+  ...props
+}: ComponentPropsWithoutRef<typeof TabsPrimitive.Content>) {
+  return (
+    <TabsPrimitive.Content
+      className={cx(
+        "rounded-[0.5rem] border-hairline border-border bg-surface p-4 text-sm outline-none",
+        "focus-visible:ring-1 focus-visible:ring-ring motion-safe:data-[state=active]:animate-enter motion-reduce:animate-none",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 `;
 
@@ -2703,16 +2729,24 @@ export const registry = [
   {
     name: "tabs",
     title: "Tabs",
-    description: "A tab composition primitive for switching related panels.",
+    description: "A Radix-powered tab primitive for switching related panels.",
     kind: "component",
-    dependencies: [],
+    dependencies: ["@radix-ui/react-tabs"],
     registryDependencies: [],
     files: [{ path: "tabs.tsx", content: tabsSource, target: "ui/tabs.tsx" }],
     metadata: {
       purpose: "Switches between related content panels.",
       slots: ["root", "list", "trigger", "content"],
-      accessibility: ["Uses tablist, tab, and tabpanel roles.", "Manage active state in app code."],
-      usage: ["Use for peer sections of one context.", "Keep tab labels short."],
+      accessibility: [
+        "Uses Radix Tabs for tablist, tab, tabpanel, roving focus, and keyboard behavior.",
+        "Use matching value props on triggers and content panels.",
+        "Focus states are visible for keyboard users.",
+      ],
+      usage: [
+        "Use for peer sections of one context.",
+        "Keep tab labels short.",
+        "Use defaultValue for uncontrolled tabs or value/onValueChange for controlled tabs.",
+      ],
       avoid: ["Do not use tabs as primary page navigation."],
     },
   },
