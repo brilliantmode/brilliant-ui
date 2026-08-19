@@ -195,10 +195,10 @@ export function HeaderNav({ align = "start", className = "", ...props }: HeaderN
     <nav
       aria-label="Primary navigation"
       className={cx(
-        "absolute inset-x-0 top-full grid gap-1 bg-background p-3 shadow-md max-md:border-b max-md:border-border",
+        "absolute inset-x-0 top-full grid gap-1 max-md:border-b max-md:border-border max-md:bg-background max-md:p-3 max-md:shadow-md",
         "motion-safe:origin-top motion-safe:transition-[opacity,transform,visibility] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         menuOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0",
-        "md:static md:ml-0 md:flex md:visible md:translate-y-0 md:items-center md:bg-transparent md:p-0 md:opacity-100 md:shadow-none",
+        "md:static md:ml-0 md:flex md:visible md:translate-y-0 md:items-center md:opacity-100",
         navAlignments[align],
         className,
       )}
