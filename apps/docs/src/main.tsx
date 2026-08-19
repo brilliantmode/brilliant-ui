@@ -13,17 +13,33 @@ const navItems = [
 ] as const;
 
 const buttonVariants = [
-  ["Default", "Save changes", "bg-primary text-primary-foreground"],
-  ["Secondary", "Secondary", "bg-secondary text-secondary-foreground"],
-  ["Outline", "Outline", "border border-border bg-background"],
+  [
+    "Default",
+    "Save changes",
+    "border border-foreground bg-foreground text-background shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-background/30 before:content-[''] hover:-translate-y-0.5 hover:shadow-md active:translate-y-0",
+  ],
+  [
+    "Secondary",
+    "Secondary",
+    "border border-border bg-surface text-foreground shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-background/80 before:content-[''] hover:-translate-y-0.5 hover:bg-muted active:translate-y-0",
+  ],
+  [
+    "Outline",
+    "Outline",
+    "border border-border bg-background text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-border)] hover:border-foreground hover:bg-muted",
+  ],
   ["Ghost", "Ghost", "hover:bg-muted"],
-  ["Critical", "Delete", "bg-critical text-critical-foreground"],
+  [
+    "Critical",
+    "Delete",
+    "border border-critical bg-critical text-critical-foreground shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-critical-foreground/30 before:content-[''] hover:-translate-y-0.5 active:translate-y-0",
+  ],
 ] as const;
 
 const buttonSizes = [
   ["Small", "h-8 px-3 text-xs"],
-  ["Default", "h-9 px-4 text-sm"],
-  ["Large", "h-10 px-5 text-sm"],
+  ["Default", "h-9 px-3.5 text-sm"],
+  ["Large", "h-10 px-[1.125rem] text-sm"],
   ["Icon", "size-9 px-0 text-sm"],
 ] as const;
 
@@ -86,8 +102,8 @@ function PreviewButton({ children, className }: { children: ReactNode; className
   return (
     <button
       className={[
-        "inline-flex shrink-0 items-center justify-center gap-2 rounded-md font-medium",
-        "transition-[color,background-color,border-color,opacity] duration-150",
+        "relative isolate inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden rounded-lg font-medium",
+        "transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-150",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         "disabled:pointer-events-none disabled:opacity-50",
         className,
@@ -231,7 +247,7 @@ export function Example() {
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">Preview</h3>
               <div className="rounded-lg border border-border bg-background p-6">
-                <PreviewButton className="h-9 bg-primary px-4 text-sm text-primary-foreground">
+                <PreviewButton className={`${buttonVariants[0][2]} h-9 px-3.5 text-sm`}>
                   Save changes
                 </PreviewButton>
               </div>
@@ -242,7 +258,7 @@ export function Example() {
               <div className="rounded-lg border border-border bg-background p-6">
                 <div className="flex flex-wrap gap-3">
                   {buttonVariants.map(([label, text, className]) => (
-                    <PreviewButton className={`h-9 px-4 text-sm ${className}`} key={label}>
+                    <PreviewButton className={`h-9 px-3.5 text-sm ${className}`} key={label}>
                       {text}
                     </PreviewButton>
                   ))}
@@ -255,10 +271,7 @@ export function Example() {
               <div className="rounded-lg border border-border bg-background p-6">
                 <div className="flex flex-wrap items-center gap-3">
                   {buttonSizes.map(([label, className]) => (
-                    <PreviewButton
-                      className={`bg-primary text-primary-foreground ${className}`}
-                      key={label}
-                    >
+                    <PreviewButton className={`${buttonVariants[0][2]} ${className}`} key={label}>
                       {label === "Icon" ? "I" : label}
                     </PreviewButton>
                   ))}

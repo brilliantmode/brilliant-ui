@@ -107,18 +107,22 @@ export const registryItemSchema = {
 const buttonSource = `import type { ButtonHTMLAttributes } from "react";
 
 const variants = {
-  primary: "bg-primary text-primary-foreground hover:opacity-90",
-  secondary: "bg-secondary text-secondary-foreground hover:opacity-80",
-  outline: "border border-border bg-transparent text-foreground hover:bg-muted",
+  primary:
+    "border border-foreground bg-foreground text-background shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-background/30 before:content-[''] hover:-translate-y-0.5 hover:shadow-md active:translate-y-0",
+  secondary:
+    "border border-border bg-surface text-foreground shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-background/80 before:content-[''] hover:-translate-y-0.5 hover:bg-muted active:translate-y-0",
+  outline:
+    "border border-border bg-background text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-border)] hover:border-foreground hover:bg-muted",
   ghost: "text-foreground hover:bg-muted",
-  critical: "bg-critical text-critical-foreground hover:opacity-90",
+  critical:
+    "border border-critical bg-critical text-critical-foreground shadow-sm before:absolute before:inset-x-3 before:top-1 before:h-px before:bg-critical-foreground/30 before:content-[''] hover:-translate-y-0.5 active:translate-y-0",
 } as const;
 
 const sizes = {
   sm: "h-8 px-3 text-xs",
-  md: "h-9 px-4 text-sm",
-  lg: "h-10 px-5 text-sm",
-  icon: "size-9",
+  md: "h-9 px-3.5 text-sm",
+  lg: "h-10 px-[1.125rem] text-sm",
+  icon: "size-9 px-0",
 } as const;
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -136,8 +140,8 @@ export function Button({
   return (
     <button
       className={[
-        "inline-flex shrink-0 items-center justify-center gap-2 rounded-md font-medium",
-        "transition-[color,background-color,border-color,opacity] duration-150",
+        "relative isolate inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden rounded-lg font-medium",
+        "transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-150",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         "focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
