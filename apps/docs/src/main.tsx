@@ -316,11 +316,15 @@ export function Example() {
 
 export function Example() {
   return (
-    <Combobox listId="workspace-options" placeholder="Search workspace">
-      <option value="Acme" />
-      <option value="Brilliant" />
-      <option value="Unifabriq" />
-    </Combobox>
+    <Combobox
+      aria-label="Search workspace"
+      options={[
+        { label: "Acme", value: "Acme" },
+        { label: "Brilliant", value: "Brilliant" },
+        { label: "Unifabriq", value: "Unifabriq" },
+      ]}
+      placeholder="Search workspace"
+    />
   );
 }`,
   "radio-group": `import { RadioGroup, RadioItem } from "@/components/ui/radio-group";
@@ -668,6 +672,98 @@ function SelectPreview() {
   );
 }
 
+function ComboboxPreview() {
+  const [open, setOpen] = useState(true);
+  const [value, setValue] = useState("Acme");
+  const options = ["Acme", "Brilliant", "Unifabriq"];
+  const filteredOptions = options.filter((option) =>
+    option.toLowerCase().includes(value.trim().toLowerCase()),
+  );
+
+  return (
+    <div className="grid max-w-sm gap-2">
+      <label className="text-sm font-medium" htmlFor="combobox-preview-workspace">
+        Search workspace
+      </label>
+      <div className="relative">
+        <input
+          aria-autocomplete="list"
+          aria-controls="combobox-preview-listbox"
+          aria-expanded={open}
+          className="h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 pr-9 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] outline-none transition-shadow placeholder:text-muted-foreground focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]"
+          id="combobox-preview-workspace"
+          onChange={(event) => {
+            setValue(event.currentTarget.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          placeholder="Search workspace"
+          role="combobox"
+          value={value}
+        />
+        <svg
+          aria-hidden="true"
+          className="-translate-y-1/2 pointer-events-none absolute top-1/2 right-3 size-4 text-muted-foreground"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          viewBox="0 0 16 16"
+        >
+          <path d="m4 6 4 4 4-4" />
+        </svg>
+        {open ? (
+          <div
+            className="absolute z-20 mt-1 max-h-64 w-full overflow-auto rounded-[0.375rem] border-hairline border-border bg-surface p-1 text-sm text-foreground shadow-md motion-safe:animate-enter motion-reduce:animate-none"
+            id="combobox-preview-listbox"
+            role="listbox"
+          >
+            {filteredOptions.length ? (
+              filteredOptions.map((option, index) => (
+                <button
+                  aria-selected={option === value}
+                  className={[
+                    "relative flex w-full items-center rounded-[0.25rem] py-1.5 pr-3 pl-8 text-left outline-none transition-colors hover:bg-muted focus-visible:bg-muted",
+                    index === 0 ? "bg-muted" : "",
+                  ].join(" ")}
+                  key={option}
+                  onClick={() => {
+                    setValue(option);
+                    setOpen(false);
+                  }}
+                  role="option"
+                  type="button"
+                >
+                  <span className="absolute left-2 grid size-4 place-items-center text-primary">
+                    {option === value ? (
+                      <svg
+                        aria-hidden="true"
+                        className="size-4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2.25"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M3.5 8.25 6.5 11l6-6" />
+                      </svg>
+                    ) : null}
+                  </span>
+                  {option}
+                </button>
+              ))
+            ) : (
+              <div className="px-2 py-2 text-sm text-muted-foreground">No results found.</div>
+            )}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "button-group") {
     return (
@@ -989,24 +1085,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   }
 
   if (name === "combobox") {
-    return (
-      <div className="grid max-w-sm gap-2">
-        <label className="text-sm font-medium" htmlFor="combobox-preview-workspace">
-          Search workspace
-        </label>
-        <input
-          className="h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] outline-none transition-shadow placeholder:text-muted-foreground focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]"
-          defaultValue="Acme"
-          id="combobox-preview-workspace"
-          list="combobox-preview-options"
-        />
-        <datalist id="combobox-preview-options">
-          <option value="Acme" />
-          <option value="Brilliant" />
-          <option value="Unifabriq" />
-        </datalist>
-      </div>
-    );
+    return <ComboboxPreview />;
   }
 
   if (name === "alert") {

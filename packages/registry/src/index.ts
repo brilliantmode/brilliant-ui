@@ -1335,29 +1335,187 @@ export function SelectSeparator({
 }
 `;
 
-const comboboxSource = `import type { InputHTMLAttributes, ReactNode } from "react";
+const comboboxSource = `"use client";
 
-export interface ComboboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "list"> {
-  children?: ReactNode;
-  listId: string;
+import { useId, useMemo, useState } from "react";
+import type { InputHTMLAttributes, KeyboardEvent } from "react";
+
+export interface ComboboxOption {
+  disabled?: boolean;
+  label: string;
+  value: string;
 }
 
-export function Combobox({ children, className = "", listId, ...props }: ComboboxProps) {
+export interface ComboboxProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "defaultValue" | "list" | "onChange" | "value"> {
+  defaultValue?: string;
+  emptyMessage?: string;
+  onValueChange?: (value: string) => void;
+  options: readonly ComboboxOption[];
+  value?: string;
+}
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export function Combobox({
+  className = "",
+  defaultValue = "",
+  emptyMessage = "No results found.",
+  id,
+  onBlur,
+  onFocus,
+  onKeyDown,
+  onValueChange,
+  options,
+  placeholder = "Search...",
+  value,
+  ...props
+}: ComboboxProps) {
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
+  const listboxId = \`\${inputId}-listbox\`;
+  const [internalValue, setInternalValue] = useState(defaultValue);
+  const [open, setOpen] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(0);
+  const inputValue = value ?? internalValue;
+
+  const filteredOptions = useMemo(() => {
+    const query = inputValue.trim().toLowerCase();
+    if (!query) return options;
+    return options.filter((option) =>
+      \`\${option.label} \${option.value}\`.toLowerCase().includes(query),
+    );
+  }, [inputValue, options]);
+
+  const selectableOptions = filteredOptions.filter((option) => !option.disabled);
+  const activeOption = selectableOptions[Math.min(highlightedIndex, selectableOptions.length - 1)];
+
+  function updateValue(nextValue: string) {
+    setInternalValue(nextValue);
+    onValueChange?.(nextValue);
+  }
+
+  function commitOption(option: ComboboxOption) {
+    if (option.disabled) return;
+    updateValue(option.value);
+    setOpen(false);
+    setHighlightedIndex(0);
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    onKeyDown?.(event);
+    if (event.defaultPrevented) return;
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setOpen(true);
+      setHighlightedIndex((current) =>
+        selectableOptions.length ? Math.min(current + 1, selectableOptions.length - 1) : 0,
+      );
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setOpen(true);
+      setHighlightedIndex((current) => Math.max(current - 1, 0));
+    }
+
+    if (event.key === "Enter" && open && activeOption) {
+      event.preventDefault();
+      commitOption(activeOption);
+    }
+
+    if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
   return (
-    <>
+    <div className="relative">
       <input
-        className={[
-          "h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)]",
+        aria-activedescendant={open && activeOption ? \`\${listboxId}-\${activeOption.value}\` : undefined}
+        aria-autocomplete="list"
+        aria-controls={listboxId}
+        aria-expanded={open}
+        className={cx(
+          "h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 pr-9 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)]",
           "placeholder:text-muted-foreground motion-safe:transition-[background-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
           "focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)] focus-visible:outline-none",
           className,
-        ].join(" ")}
-        list={listId}
+        )}
+        id={inputId}
+        onBlur={(event) => {
+          onBlur?.(event);
+          window.setTimeout(() => setOpen(false), 120);
+        }}
+        onChange={(event) => {
+          updateValue(event.currentTarget.value);
+          setOpen(true);
+          setHighlightedIndex(0);
+        }}
+        onFocus={(event) => {
+          onFocus?.(event);
+          setOpen(true);
+        }}
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
         role="combobox"
+        value={inputValue}
         {...props}
       />
-      <datalist id={listId}>{children}</datalist>
-    </>
+      <svg aria-hidden="true" className="-translate-y-1/2 pointer-events-none absolute top-1/2 right-3 size-4 text-muted-foreground" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 16 16">
+        <path d="m4 6 4 4 4-4" />
+      </svg>
+      {open ? (
+        <div
+          className="absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-[0.375rem] border-hairline border-border bg-surface p-1 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none"
+          id={listboxId}
+          role="listbox"
+        >
+          {filteredOptions.length ? (
+            filteredOptions.map((option) => {
+              const selected = option.value === inputValue;
+              const highlighted = activeOption?.value === option.value;
+              return (
+                <button
+                  aria-selected={selected}
+                  className={cx(
+                    "relative flex w-full items-center rounded-[0.25rem] py-1.5 pr-3 pl-8 text-left outline-none",
+                    "motion-safe:transition-colors motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+                    highlighted && "bg-muted text-foreground",
+                    option.disabled && "pointer-events-none opacity-50",
+                  )}
+                  disabled={option.disabled}
+                  id={\`\${listboxId}-\${option.value}\`}
+                  key={option.value}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onMouseEnter={() => {
+                    const nextIndex = selectableOptions.findIndex((item) => item.value === option.value);
+                    if (nextIndex >= 0) setHighlightedIndex(nextIndex);
+                  }}
+                  onClick={() => commitOption(option)}
+                  role="option"
+                  type="button"
+                >
+                  <span className="absolute left-2 grid size-4 place-items-center text-primary">
+                    {selected ? (
+                      <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.25" viewBox="0 0 16 16">
+                        <path d="M3.5 8.25 6.5 11l6-6" />
+                      </svg>
+                    ) : null}
+                  </span>
+                  {option.label}
+                </button>
+              );
+            })
+          ) : (
+            <div className="px-2 py-2 text-sm text-muted-foreground">{emptyMessage}</div>
+          )}
+        </div>
+      ) : null}
+    </div>
   );
 }
 `;
@@ -2094,17 +2252,27 @@ export const registry = [
   {
     name: "combobox",
     title: "Combobox",
-    description: "A datalist-backed combobox for lightweight searchable choices.",
+    description: "A styled searchable listbox combobox with Brilliant micro UX.",
     kind: "component",
     dependencies: [],
     registryDependencies: [],
     files: [{ path: "combobox.tsx", content: comboboxSource, target: "ui/combobox.tsx" }],
     metadata: {
       purpose: "Lets users type or choose from suggested options.",
-      slots: ["input", "option-list", "option"],
-      accessibility: ["Uses native input and datalist behavior.", "Pair with a visible label."],
-      usage: ["Use for lightweight suggestions.", "Use Command for richer command palettes."],
-      avoid: ["Do not use for complex async filtering without a managed listbox."],
+      slots: ["root", "input", "listbox", "option", "indicator", "empty"],
+      accessibility: [
+        "Uses combobox and listbox roles with active descendant state.",
+        "Pair with a visible label or aria-label.",
+        "Supports keyboard open, close, arrow navigation, and enter selection.",
+      ],
+      usage: [
+        "Use for searchable suggestions and short-to-medium option lists.",
+        "Pass options as value/label objects.",
+        "Use Command for richer command palettes or grouped actions.",
+      ],
+      avoid: [
+        "Do not use for very large async datasets without virtualization or server filtering.",
+      ],
     },
   },
   {
