@@ -3039,8 +3039,10 @@ import type {
 
 interface ApplicationShellContextValue {
   closeMobileNav: () => void;
+  collapsed: boolean;
   mobileNavOpen: boolean;
   openMobileNav: () => void;
+  toggleSidebar: () => void;
 }
 
 const ApplicationShellContext = createContext<ApplicationShellContextValue | null>(null);
@@ -3058,16 +3060,24 @@ function useApplicationShell() {
 }
 
 export interface ApplicationShellProps extends HTMLAttributes<HTMLDivElement> {
+  collapsed?: boolean;
+  defaultCollapsed?: boolean;
   defaultMobileNavOpen?: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
 }
 
 export function ApplicationShell({
   children,
   className = "",
+  collapsed: controlledCollapsed,
+  defaultCollapsed = false,
   defaultMobileNavOpen = false,
+  onCollapsedChange,
   ...props
 }: ApplicationShellProps) {
+  const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed);
   const [mobileNavOpen, setMobileNavOpen] = useState(defaultMobileNavOpen);
+  const collapsed = controlledCollapsed ?? internalCollapsed;
 
   useEffect(() => {
     if (!mobileNavOpen) return;
@@ -3083,19 +3093,29 @@ export function ApplicationShell({
   const value = useMemo<ApplicationShellContextValue>(
     () => ({
       closeMobileNav: () => setMobileNavOpen(false),
+      collapsed,
       mobileNavOpen,
       openMobileNav: () => setMobileNavOpen(true),
+      toggleSidebar: () => {
+        const nextCollapsed = !collapsed;
+        if (controlledCollapsed === undefined) setInternalCollapsed(nextCollapsed);
+        onCollapsedChange?.(nextCollapsed);
+      },
     }),
-    [mobileNavOpen],
+    [collapsed, controlledCollapsed, mobileNavOpen, onCollapsedChange],
   );
 
   return (
     <ApplicationShellContext.Provider value={value}>
       <div
         className={cx(
-          "min-h-screen bg-background text-foreground md:grid md:grid-cols-[17.5rem_minmax(0,1fr)]",
+          "min-h-screen bg-background text-foreground md:grid motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none",
+          collapsed
+            ? "md:grid-cols-[4.5rem_minmax(0,1fr)]"
+            : "md:grid-cols-[17.5rem_minmax(0,1fr)]",
           className,
         )}
+        data-collapsed={collapsed}
         {...props}
       >
         {children}
@@ -3208,8 +3228,38 @@ export function ApplicationShellMobileTrigger({
   );
 }
 
+export function ApplicationShellSidebarToggle({
+  children,
+  className = "",
+  type = "button",
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement>) {
+  const { collapsed, toggleSidebar } = useApplicationShell();
+
+  return (
+    <button
+      aria-expanded={!collapsed}
+      aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+      className={cx(
+        "hidden size-9 shrink-0 items-center justify-center rounded-[0.25rem] text-muted-foreground md:inline-flex",
+        "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97]",
+        "motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        className,
+      )}
+      {...props}
+      onClick={(event) => {
+        props.onClick?.(event);
+        if (!event.defaultPrevented) toggleSidebar();
+      }}
+      type={type}
+    >
+      {children ?? <span aria-hidden="true">{collapsed ? "›" : "‹"}</span>}
+    </button>
+  );
+}
+
 export function ApplicationShellSidebar({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
-  const { closeMobileNav, mobileNavOpen } = useApplicationShell();
+  const { closeMobileNav, collapsed, mobileNavOpen } = useApplicationShell();
 
   return (
     <>
@@ -3226,11 +3276,13 @@ export function ApplicationShellSidebar({ className = "", ...props }: HTMLAttrib
       <aside
         aria-label="Application navigation"
         className={cx(
-          "fixed inset-y-0 left-0 z-50 flex w-[min(17.5rem,calc(100vw-2rem))] flex-col overflow-hidden border-r border-border bg-background px-4 py-4 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] md:sticky md:top-0 md:z-auto md:h-screen md:w-auto md:translate-x-0 md:shadow-none",
-          "motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          "group/sidebar fixed inset-y-0 left-0 z-50 flex w-[min(17.5rem,calc(100vw-2rem))] flex-col overflow-hidden border-r border-border bg-background px-4 py-4 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] md:sticky md:top-0 md:z-auto md:h-screen md:w-auto md:translate-x-0 md:shadow-none",
+          "motion-safe:transition-[transform,padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          collapsed && "md:px-2",
           mobileNavOpen ? "translate-x-0" : "-translate-x-full",
           className,
         )}
+        data-collapsed={collapsed}
         {...props}
       />
     </>
@@ -3241,7 +3293,7 @@ export function ApplicationShellBrand({ className = "", ...props }: AnchorHTMLAt
   return (
     <a
       className={cx(
-        "-mx-4 mb-4 flex items-center gap-3 border-b border-border px-4 pb-4 text-foreground outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring",
+        "-mx-4 mb-4 flex items-center gap-3 border-b border-border px-4 pb-4 text-foreground outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring md:group-data-[collapsed=true]/sidebar:justify-center md:group-data-[collapsed=true]/sidebar:[&>span]:hidden",
         className,
       )}
       {...props}
@@ -3280,7 +3332,7 @@ export function ApplicationShellSearch({ className = "", ...props }: AnchorHTMLA
   return (
     <a
       className={cx(
-        "mb-5 flex h-9 items-center gap-2 rounded-[0.375rem] border-hairline border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm",
+        "mb-5 flex h-9 items-center gap-2 rounded-[0.375rem] border-hairline border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm md:group-data-[collapsed=true]/sidebar:justify-center md:group-data-[collapsed=true]/sidebar:px-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:hidden md:group-data-[collapsed=true]/sidebar:[&>span:not(:first-child)]:hidden",
         "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         className,
       )}
@@ -3301,7 +3353,7 @@ export function ApplicationShellNavSection({
 }: HTMLAttributes<HTMLDivElement> & { title: string }) {
   return (
     <section className={cx("grid gap-1", className)} {...props}>
-      <h2 className="px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+      <h2 className="px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground md:group-data-[collapsed=true]/sidebar:sr-only">
         {title}
       </h2>
       <div className="grid gap-0.5">{children}</div>
@@ -3326,7 +3378,7 @@ export function ApplicationShellNavItem({
     <a
       aria-current={active ? "page" : undefined}
       className={cx(
-        "group flex items-center gap-2 rounded-[0.375rem] px-2 py-1.5 leading-5 transition-colors",
+        "group flex items-center gap-2 rounded-[0.375rem] px-2 py-1.5 leading-5 transition-colors md:group-data-[collapsed=true]/sidebar:justify-center",
         active
           ? "bg-muted font-medium text-foreground"
           : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -3351,7 +3403,7 @@ export function ApplicationShellNavItem({
           {icon}
         </span>
       ) : null}
-      <span className="min-w-0 truncate">{children}</span>
+      <span className="min-w-0 truncate md:group-data-[collapsed=true]/sidebar:hidden">{children}</span>
     </a>
   );
 }
@@ -3411,7 +3463,7 @@ export function ApplicationShellNavGroupItem({
     <a
       aria-current={active ? "page" : undefined}
       className={cx(
-        "group flex items-center gap-3 rounded-[0.5rem] px-2 py-2 transition-colors",
+        "group flex items-center gap-3 rounded-[0.5rem] px-2 py-2 transition-colors md:group-data-[collapsed=true]/sidebar:justify-center",
         active
           ? "bg-muted text-foreground"
           : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -3424,7 +3476,7 @@ export function ApplicationShellNavGroupItem({
       }}
     >
       {media}
-      <span className="min-w-0 flex-1">
+      <span className="min-w-0 flex-1 md:group-data-[collapsed=true]/sidebar:hidden">
         <span className="block truncate text-sm font-medium text-foreground">{children}</span>
         {description ? (
           <span className="mt-0.5 block truncate text-sm leading-5 text-muted-foreground">
@@ -3432,7 +3484,7 @@ export function ApplicationShellNavGroupItem({
           </span>
         ) : null}
       </span>
-      {trailing ? <span className="shrink-0 text-muted-foreground">{trailing}</span> : null}
+      {trailing ? <span className="shrink-0 text-muted-foreground md:group-data-[collapsed=true]/sidebar:hidden">{trailing}</span> : null}
     </a>
   );
 }
@@ -3558,7 +3610,7 @@ export function ApplicationShellProfileTrigger({
   return (
     <summary
       className={cx(
-        "flex w-full cursor-pointer list-none items-center gap-3 rounded-[0.5rem] px-2 py-2 text-left text-foreground",
+        "flex w-full cursor-pointer list-none items-center gap-3 rounded-[0.5rem] px-2 py-2 text-left text-foreground md:group-data-[collapsed=true]/sidebar:justify-center",
         "hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.995]",
         "motion-safe:transition-[background-color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         className,
@@ -3566,7 +3618,7 @@ export function ApplicationShellProfileTrigger({
       {...props}
     >
       {media}
-      <span className="min-w-0 flex-1">
+      <span className="min-w-0 flex-1 md:group-data-[collapsed=true]/sidebar:hidden">
         <span className="block truncate text-sm font-medium">{children}</span>
         {description ? (
           <span className="mt-0.5 block truncate text-xs leading-5 text-muted-foreground">
@@ -3575,7 +3627,7 @@ export function ApplicationShellProfileTrigger({
         ) : null}
       </span>
       {trailing ? (
-        <span className="shrink-0 text-muted-foreground transition-transform group-open/profile:rotate-180 motion-reduce:transition-none">
+        <span className="shrink-0 text-muted-foreground transition-transform group-open/profile:rotate-180 motion-reduce:transition-none md:group-data-[collapsed=true]/sidebar:hidden">
           {trailing}
         </span>
       ) : null}
@@ -4943,6 +4995,7 @@ export const registry = [
         "header-actions",
         "header-action",
         "mobile-trigger",
+        "sidebar-toggle",
         "sidebar",
         "sidebar-content",
         "sidebar-footer",
@@ -4970,6 +5023,7 @@ export const registry = [
         "Mobile navigation closes with Escape and backdrop click.",
         "Active navigation items expose aria-current.",
         "The mobile trigger is a native button with visible focus.",
+        "The desktop sidebar toggle exposes its expanded state and an action-specific accessible name.",
         "Header actions use native buttons and require an accessible name when icon-only.",
         "HeaderBrand is a native link; decorative logo images should use an empty alt when the adjacent brand name supplies the accessible text.",
         "The profile menu uses native details and summary disclosure semantics.",
@@ -4977,6 +5031,8 @@ export const registry = [
       ],
       usage: [
         "Use as the top-level frame for authenticated product screens.",
+        "Use ApplicationShellSidebarToggle for desktop collapse and expand behavior; mobile navigation remains controlled by ApplicationShellMobileTrigger.",
+        "Use collapsed and onCollapsedChange when sidebar state must be controlled or persisted by the application.",
         "Keep primary navigation in ApplicationShellSidebar.",
         "Use NavItem for simple destinations and NavGroupItem for inbox/account rows with secondary text.",
         "Wrap navigation in SidebarContent and place the profile control in SidebarFooter so it remains visible while navigation scrolls.",

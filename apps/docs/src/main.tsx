@@ -1714,6 +1714,7 @@ export function Example() {
   ApplicationShellSidebar,
   ApplicationShellSidebarContent,
   ApplicationShellSidebarFooter,
+  ApplicationShellSidebarToggle,
   ApplicationShellProfile,
   ApplicationShellProfileMenu,
   ApplicationShellProfileTrigger,
@@ -1800,6 +1801,7 @@ export function Example() {
       <div className="min-w-0">
         <ApplicationShellHeader>
           <ApplicationShellMobileTrigger />
+          <ApplicationShellSidebarToggle />
           <ApplicationShellHeaderBrand href="/">
             <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
             <span className="hidden sm:inline">Brilliant</span>
@@ -4505,6 +4507,8 @@ function DashboardLayoutPreview() {
 }
 
 function ComponentMiniPreview({ name }: { name: string }) {
+  const [applicationShellCollapsed, setApplicationShellCollapsed] = useState(false);
+
   if (name === "chart") return <ChartPreview />;
   if (name === "stat") return <StatPreview />;
   if (name === "status") return <StatusPreview />;
@@ -5254,26 +5258,38 @@ function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "application-shell") {
     return (
       <div className="overflow-hidden rounded-[0.5rem] border border-border bg-background shadow-sm">
-        <div className="grid min-h-[32rem] md:grid-cols-[17.5rem_minmax(0,1fr)]">
-          <aside className="flex h-[32rem] flex-col overflow-hidden border-b border-border bg-background p-4 md:border-b-0 md:border-r">
+        <div
+          className={`grid min-h-[32rem] transition-[grid-template-columns] duration-200 ${applicationShellCollapsed ? "md:grid-cols-[4.5rem_minmax(0,1fr)]" : "md:grid-cols-[17.5rem_minmax(0,1fr)]"}`}
+        >
+          <aside
+            className={`flex h-[32rem] flex-col overflow-hidden border-b border-border bg-background transition-[padding] duration-200 md:border-b-0 md:border-r ${applicationShellCollapsed ? "p-2" : "p-4"}`}
+          >
             <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div className="-mx-4 mb-4 flex items-center gap-3 border-b border-border px-4 pb-4">
+              <div
+                className={`mb-4 flex items-center gap-3 border-b border-border pb-4 ${applicationShellCollapsed ? "justify-center" : "-mx-4 px-4"}`}
+              >
                 <img alt="" className="size-9" src="/images/brilliant-mark.svg" />
-                <div>
+                <div className={applicationShellCollapsed ? "hidden" : ""}>
                   <div className="text-sm font-semibold tracking-tight">Brilliant</div>
                   <div className="text-xs text-muted-foreground">Component system</div>
                 </div>
               </div>
-              <div className="mb-4 flex h-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm">
+              <div
+                className={`mb-4 flex h-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface text-sm text-muted-foreground shadow-sm ${applicationShellCollapsed ? "justify-center px-0" : "px-3"}`}
+              >
                 <span aria-hidden="true">⌕</span>
-                <span className="flex-1">Search docs</span>
-                <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[0.65rem]">
+                <span className={applicationShellCollapsed ? "hidden" : "flex-1"}>Search docs</span>
+                <kbd
+                  className={`rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[0.65rem] ${applicationShellCollapsed ? "hidden" : ""}`}
+                >
                   /
                 </kbd>
               </div>
               <div className="grid gap-4">
                 <section className="grid gap-1">
-                  <h4 className="px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  <h4
+                    className={`px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground ${applicationShellCollapsed ? "sr-only" : ""}`}
+                  >
                     Main
                   </h4>
                   <div className="grid gap-0.5">
@@ -5281,6 +5297,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                       <div
                         className={[
                           "flex items-center gap-3 rounded-[0.375rem] px-2 py-1.5 text-sm",
+                          applicationShellCollapsed ? "justify-center" : "",
                           index === 0 ? "font-medium text-foreground" : "text-muted-foreground",
                         ].join(" ")}
                         key={item}
@@ -5288,13 +5305,15 @@ function ComponentMiniPreview({ name }: { name: string }) {
                         <span className="grid size-5 place-items-center rounded-[0.3125rem] border border-border bg-background text-[0.55rem]">
                           □
                         </span>
-                        {item}
+                        <span className={applicationShellCollapsed ? "hidden" : ""}>{item}</span>
                       </div>
                     ))}
                   </div>
                 </section>
                 <section className="grid gap-1.5">
-                  <h4 className="px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  <h4
+                    className={`px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground ${applicationShellCollapsed ? "sr-only" : ""}`}
+                  >
                     Inboxes
                   </h4>
                   {(
@@ -5303,7 +5322,10 @@ function ComponentMiniPreview({ name }: { name: string }) {
                       ["Personal", "(239) 555-0108", "bg-amber-500/10 text-amber-700"],
                     ] satisfies Array<[string, string, string]>
                   ).map(([title, description, tone]) => (
-                    <div className="flex items-center gap-3 rounded-[0.5rem] px-2 py-2" key={title}>
+                    <div
+                      className={`flex items-center gap-3 rounded-[0.5rem] px-2 py-2 ${applicationShellCollapsed ? "justify-center" : ""}`}
+                      key={title}
+                    >
                       <span
                         className={[
                           "grid size-10 place-items-center rounded-full border border-border text-sm font-semibold",
@@ -5312,7 +5334,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                       >
                         {title.slice(0, 1)}
                       </span>
-                      <span className="min-w-0">
+                      <span className={applicationShellCollapsed ? "hidden" : "min-w-0"}>
                         <span className="block truncate text-sm font-medium text-foreground">
                           {title}
                         </span>
@@ -5354,18 +5376,22 @@ function ComponentMiniPreview({ name }: { name: string }) {
                     </button>
                   ))}
                 </div>
-                <summary className="flex cursor-pointer list-none items-center gap-3 rounded-[0.5rem] px-2 py-2 hover:bg-muted">
+                <summary
+                  className={`flex cursor-pointer list-none items-center gap-3 rounded-[0.5rem] px-2 py-2 hover:bg-muted ${applicationShellCollapsed ? "justify-center" : ""}`}
+                >
                   <span className="relative grid size-10 place-items-center rounded-full bg-muted text-sm">
                     DR
                     <span className="absolute right-0 bottom-0 size-2.5 rounded-full border border-background bg-emerald-500" />
                   </span>
-                  <span className="min-w-0 flex-1">
+                  <span className={applicationShellCollapsed ? "hidden" : "min-w-0 flex-1"}>
                     <span className="block truncate text-sm font-medium">Dianne Russell</span>
                     <span className="block truncate text-xs text-muted-foreground">
                       dianne@brilliant.dev
                     </span>
                   </span>
-                  <span className="text-muted-foreground transition-transform group-open:rotate-180">
+                  <span
+                    className={`text-muted-foreground transition-transform group-open:rotate-180 ${applicationShellCollapsed ? "hidden" : ""}`}
+                  >
                     ⌃
                   </span>
                 </summary>
@@ -5374,6 +5400,15 @@ function ComponentMiniPreview({ name }: { name: string }) {
           </aside>
           <div className="min-w-0">
             <header className="flex h-14 items-center gap-3 border-b border-border px-4">
+              <button
+                aria-expanded={!applicationShellCollapsed}
+                aria-label={applicationShellCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                className="hidden size-9 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground md:grid"
+                onClick={() => setApplicationShellCollapsed((collapsed) => !collapsed)}
+                type="button"
+              >
+                <span aria-hidden="true">{applicationShellCollapsed ? "›" : "‹"}</span>
+              </button>
               <a className="inline-flex items-center gap-2 text-sm font-semibold" href="/">
                 <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
                 <span className="hidden lg:inline">Brilliant</span>
