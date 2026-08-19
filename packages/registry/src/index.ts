@@ -143,8 +143,8 @@ export function Button({
       className={[
         "relative isolate inline-flex shrink-0 appearance-none items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em]",
         "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-        "focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+        "focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
         sizes[size],
         className,
@@ -237,10 +237,10 @@ export function Input({ className = "", type = "text", ...props }: InputProps) {
   return (
     <input
       className={[
-        "flex h-9 w-full rounded-[0.25rem] border-hairline border-border bg-background px-3 text-sm text-foreground shadow-sm",
+        "flex h-9 w-full rounded-[0.25rem] border-hairline border-border bg-background px-3 text-sm text-foreground",
         "placeholder:text-muted-foreground",
         "motion-safe:transition-[border-color,box-shadow,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0",
         "disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-critical aria-invalid:ring-critical",
         className,
       ].join(" ")}
@@ -277,10 +277,10 @@ export function Textarea({ className = "", ...props }: TextareaProps) {
   return (
     <textarea
       className={[
-        "flex min-h-24 w-full rounded-[0.25rem] border-hairline border-border bg-background px-3 py-2 text-sm text-foreground shadow-sm",
+        "flex min-h-24 w-full rounded-[0.25rem] border-hairline border-border bg-background px-3 py-2 text-sm text-foreground",
         "placeholder:text-muted-foreground",
         "motion-safe:transition-[border-color,box-shadow,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0",
         "disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-critical aria-invalid:ring-critical",
         className,
       ].join(" ")}
@@ -301,7 +301,7 @@ export function Checkbox({ className = "", ...props }: CheckboxProps) {
         "peer size-4 appearance-none rounded-[0.1875rem] border-hairline border-border bg-background shadow-sm",
         "checked:border-primary checked:bg-primary",
         "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
-        "checked:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "checked:scale-[0.96] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       ].join(" ")}
@@ -325,7 +325,7 @@ export function Switch({ className = "", ...props }: SwitchProps) {
         "checked:bg-primary checked:before:translate-x-4",
         "motion-safe:transition-[background-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         "motion-safe:before:transition-transform motion-safe:before:duration-[var(--brilliant-duration-fast)]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       ].join(" ")}

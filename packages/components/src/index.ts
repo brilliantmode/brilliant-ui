@@ -26,7 +26,7 @@ export type ComponentState = (typeof componentStates)[number];
 
 export const stateClasses = {
   focusRing:
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+    "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0",
   disabled:
     "disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
   loading: "data-[loading=true]:cursor-wait data-[loading=true]:opacity-70",

@@ -229,7 +229,7 @@ function PreviewButton({ children, className }: { children: ReactNode; className
       className={[
         "relative isolate inline-flex shrink-0 appearance-none items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em]",
         "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0",
         "disabled:pointer-events-none disabled:opacity-50",
         className,
       ].join(" ")}
@@ -282,7 +282,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "input") {
     return (
       <input
-        className="h-9 w-full rounded-[0.25rem] border border-border bg-background px-3 text-sm shadow-sm"
+        className="h-9 w-full rounded-[0.25rem] border border-border bg-background px-3 text-sm"
         placeholder="workspace@company.com"
       />
     );
@@ -306,7 +306,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "textarea") {
     return (
       <textarea
-        className="min-h-20 w-full resize-none rounded-[0.25rem] border border-border bg-background px-3 py-2 text-sm shadow-sm"
+        className="min-h-20 w-full resize-none rounded-[0.25rem] border border-border bg-background px-3 py-2 text-sm"
         placeholder="Add a launch note..."
       />
     );
