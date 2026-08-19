@@ -379,16 +379,13 @@ function ComponentMiniPreview({ name }: { name: string }) {
 
   if (name === "checkbox") {
     return (
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3">
         {[
           ["Checked", "Require approval", "checked"],
           ["Empty", "Optional export", "empty"],
           ["Mixed", "3 of 8 selected", "mixed"],
         ].map(([label, copy, state]) => (
-          <label
-            className="group flex items-center gap-4 rounded-[0.5rem] border border-border bg-surface p-4 text-sm shadow-sm transition-[border-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] hover:-translate-y-px hover:border-primary/25 hover:shadow-md"
-            key={label}
-          >
+          <label className="flex items-center gap-4 text-sm" key={label}>
             <span className="relative inline-grid size-6 shrink-0 place-items-center">
               <input
                 aria-label={label}
@@ -428,7 +425,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
               </span>
             </span>
             <span>
-              <span className="block font-semibold tracking-[-0.01em]">{label}</span>
+              <span className="block font-medium tracking-[-0.01em]">{label}</span>
               <span className="mt-0.5 block text-xs text-muted-foreground">{copy}</span>
             </span>
           </label>
