@@ -33,14 +33,14 @@
   --brilliant-surface-raised: oklch(1 0 0);
   --brilliant-muted: oklch(0.967 0.003 264.542);
   --brilliant-muted-foreground: oklch(0.446 0.03 256.802);
-  --brilliant-primary: oklch(0.546 0.245 262.881);
+  --brilliant-primary: oklch(0.54 0.23 276);
   --brilliant-primary-foreground: oklch(1 0 0);
   --brilliant-secondary: oklch(0.928 0.006 264.531);
   --brilliant-secondary-foreground: oklch(0.278 0.033 256.848);
   --brilliant-critical: oklch(0.577 0.245 27.325);
   --brilliant-critical-foreground: oklch(0.985 0 0);
   --brilliant-border: oklch(0.872 0.01 258.338);
-  --brilliant-ring: oklch(0.623 0.214 259.815);
+  --brilliant-ring: oklch(0.61 0.22 276);
   --brilliant-radius: 0.625rem;
   --brilliant-font-sans:
     "Instrument Sans Variable", "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
@@ -109,14 +109,14 @@ body {
   --brilliant-surface-raised: oklch(0.21 0.034 264.665);
   --brilliant-muted: oklch(0.278 0.033 256.848);
   --brilliant-muted-foreground: oklch(0.707 0.022 261.325);
-  --brilliant-primary: oklch(0.707 0.165 254.624);
+  --brilliant-primary: oklch(0.69 0.18 276);
   --brilliant-primary-foreground: oklch(0.13 0.028 261.692);
   --brilliant-secondary: oklch(0.278 0.033 256.848);
   --brilliant-secondary-foreground: oklch(0.967 0.003 264.542);
   --brilliant-critical: oklch(0.704 0.191 22.216);
   --brilliant-critical-foreground: oklch(0.13 0.028 261.692);
   --brilliant-border: oklch(1 0 0 / 0.12);
-  --brilliant-ring: oklch(0.707 0.165 254.624);
+  --brilliant-ring: oklch(0.69 0.18 276);
   --brilliant-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.24);
   --brilliant-shadow-md: 0 6px 18px oklch(0 0 0 / 0.32);
 }

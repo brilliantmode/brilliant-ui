@@ -108,7 +108,7 @@ const buttonSource = `import type { ButtonHTMLAttributes } from "react";
 
 const variants = {
   primary:
-    "border border-foreground bg-foreground text-background shadow-sm hover:-translate-y-px hover:bg-foreground/92 hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-foreground/88 active:shadow-sm",
+    "border border-primary bg-primary text-primary-foreground shadow-sm hover:-translate-y-px hover:bg-primary/92 hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-primary/88 active:shadow-sm",
   secondary:
     "border border-border bg-surface text-foreground shadow-sm hover:-translate-y-px hover:border-foreground/40 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-secondary active:shadow-sm",
   outline:
