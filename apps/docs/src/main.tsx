@@ -1770,7 +1770,7 @@ function CodeBlock({
   return (
     <pre
       className={[
-        "overflow-auto rounded-lg border border-border bg-code p-4 font-mono text-sm leading-6 text-code-foreground shadow-sm",
+        "max-w-full overflow-auto rounded-lg border border-border bg-code p-4 font-mono text-sm leading-6 text-code-foreground shadow-sm",
         className,
       ].join(" ")}
     >
@@ -1811,8 +1811,8 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
   };
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between gap-3">
+    <div className="min-w-0 max-w-full space-y-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-lg font-semibold">Example</h3>
         <div
           aria-label="Example view"
@@ -1838,11 +1838,13 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
           ))}
         </div>
       </div>
-      <div role="tabpanel">
+      <div className="min-w-0 max-w-full" role="tabpanel">
         {activeTab === "preview" ? (
-          <div className="rounded-lg border border-border bg-background p-6">{children}</div>
+          <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-background p-6">
+            {children}
+          </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-border bg-code shadow-sm">
+          <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-code shadow-sm">
             <div className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-2">
               <span className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.14em] text-code-comment">
                 TSX
@@ -4193,7 +4195,10 @@ function App() {
           <DocsNav activeRoute={activeRoute} onNavigate={navigate} />
         </aside>
 
-        <div className="min-w-0 px-4 py-10 md:px-8 lg:px-10" id="content">
+        <div
+          className="min-w-0 max-w-full overflow-hidden px-4 py-10 md:px-8 lg:px-10"
+          id="content"
+        >
           {showHome ? (
             <>
               <section className="mx-auto max-w-4xl pb-14" id="getting-started">
