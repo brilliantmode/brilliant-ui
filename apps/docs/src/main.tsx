@@ -223,7 +223,7 @@ export function Example() {
   return (
     <ButtonGroup aria-label="View density">
       <Button variant="secondary">Compact</Button>
-      <Button variant="outline">Comfortable</Button>
+      <Button variant="primary">Comfortable</Button>
       <Button variant="outline">Touch</Button>
     </ButtonGroup>
   );
@@ -231,14 +231,23 @@ export function Example() {
   badge: `import { Badge } from "@/components/ui/badge";
 
 export function Example() {
-  return <Badge variant="primary">Live</Badge>;
+  return (
+    <div className="flex flex-wrap gap-2">
+      <Badge variant="primary">Live</Badge>
+      <Badge variant="muted">Enterprise</Badge>
+    </div>
+  );
 }`,
   "aspect-ratio": `import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 export function Example() {
   return (
     <AspectRatio ratio={16 / 9}>
-      <img alt="Dashboard preview" className="size-full object-cover" src="/preview.png" />
+      <div className="grid size-full place-items-center bg-primary text-primary-foreground">
+        <span className="rounded-md bg-background/15 px-2 py-1 text-xs font-medium">
+          16:9 preview
+        </span>
+      </div>
     </AspectRatio>
   );
 }`,
@@ -251,11 +260,14 @@ export function Example() {
 
 export function Example() {
   return (
-    <Avatar size="md">
-      <AvatarFallback>NR</AvatarFallback>
-      <AvatarImage alt="Nirvana" src="/avatars/nirvana.png" />
-      <AvatarStatus status="online" />
-    </Avatar>
+    <div className="flex items-end gap-4">
+      {["sm", "md", "lg", "xl"].map((size) => (
+        <Avatar key={size} size={size}>
+          <AvatarFallback>{size === "sm" ? "NR" : size === "md" ? "BU" : size === "lg" ? "AI" : "UF"}</AvatarFallback>
+          <AvatarStatus status="online" />
+        </Avatar>
+      ))}
+    </div>
   );
 }`,
   card: `import {
@@ -271,33 +283,63 @@ export function Example() {
   const [isProcessing] = useState(true);
 
   return (
-    <Card beam={isProcessing} interactive variant="elevated">
-      <CardHeader>
-        <CardTitle>Usage</CardTitle>
-        <CardDescription>Current billing period</CardDescription>
-      </CardHeader>
-      <CardContent>2.4M events</CardContent>
-    </Card>
+    <div className="grid gap-3 md:grid-cols-4">
+      <Card interactive variant="surface">
+        <CardHeader>
+          <CardTitle>Surface</CardTitle>
+          <CardDescription>Neutral group</CardDescription>
+        </CardHeader>
+      </Card>
+      <Card interactive variant="elevated">
+        <CardHeader>
+          <CardTitle>Elevated</CardTitle>
+          <CardDescription>Dashboard metric</CardDescription>
+        </CardHeader>
+      </Card>
+      <Card interactive variant="accent">
+        <CardHeader>
+          <CardTitle>Accent</CardTitle>
+          <CardDescription>Selected state</CardDescription>
+        </CardHeader>
+      </Card>
+      <Card beam={isProcessing} interactive variant="beam">
+        <CardHeader>
+          <CardTitle>Beam</CardTitle>
+          <CardDescription>Live premium state</CardDescription>
+        </CardHeader>
+      </Card>
+    </div>
   );
 }`,
   text: `import { Text } from "@/components/ui/text";
 
 export function Example() {
   return (
-    <Text as="span" shimmerColor="white" size="lg" variant="shimmer">
-      Generating workspace insights
-    </Text>
+    <div className="grid gap-4 md:grid-cols-2">
+      <Text size="lg" variant="default">Revenue intelligence</Text>
+      <Text size="lg" variant="muted">Updated 2 minutes ago</Text>
+      <Text size="lg" variant="glow">AI ready</Text>
+      <Text shimmerColor="white" size="lg" variant="shimmer">
+        Generating workspace insights
+      </Text>
+    </div>
   );
 }`,
   input: `import { Input } from "@/components/ui/input";
 
 export function Example() {
-  return <Input placeholder="workspace@company.com" type="email" />;
+  return <Input name="brilliant-input-preview" placeholder="Acme workspace" />;
 }`,
-  label: `import { Label } from "@/components/ui/label";
+  label: `import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function Example() {
-  return <Label htmlFor="workspace">Workspace name</Label>;
+  return (
+    <div className="space-y-2">
+      <Label htmlFor="workspace">Workspace name</Label>
+      <Input defaultValue="Acme" id="workspace" />
+    </div>
+  );
 }`,
   textarea: `import { Textarea } from "@/components/ui/textarea";
 
@@ -307,7 +349,6 @@ export function Example() {
   field: `import {
   Field,
   FieldDescription,
-  FieldError,
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -316,9 +357,8 @@ export function Example() {
   return (
     <Field>
       <FieldLabel htmlFor="workspace-email">Workspace email</FieldLabel>
-      <Input id="workspace-email" placeholder="workspace@company.com" type="email" />
+      <Input id="workspace-email" defaultValue="workspace@company.com" type="email" />
       <FieldDescription>Used for billing and approvals.</FieldDescription>
-      <FieldError>{/* Validation message */}</FieldError>
     </Field>
   );
 }`,
@@ -326,16 +366,40 @@ export function Example() {
 
 export function Example() {
   return (
-    <label className="flex items-center gap-3">
-      <Checkbox defaultChecked size="lg" />
-      <span>Require approval</span>
-    </label>
+    <div className="grid gap-4 sm:grid-cols-3">
+      <label className="flex items-center gap-4">
+        <Checkbox defaultChecked size="lg" />
+        <span>
+          <span className="block font-medium">Checked</span>
+          <span className="block text-xs text-muted-foreground">Require approval</span>
+        </span>
+      </label>
+      <label className="flex items-center gap-4">
+        <Checkbox size="lg" />
+        <span>
+          <span className="block font-medium">Empty</span>
+          <span className="block text-xs text-muted-foreground">Optional export</span>
+        </span>
+      </label>
+      <label className="flex items-center gap-4">
+        <Checkbox checked="indeterminate" size="lg" />
+        <span>
+          <span className="block font-medium">Mixed</span>
+          <span className="block text-xs text-muted-foreground">3 of 8 selected</span>
+        </span>
+      </label>
+    </div>
   );
 }`,
   switch: `import { Switch } from "@/components/ui/switch";
 
 export function Example() {
-  return <Switch aria-label="Enable sync" defaultChecked />;
+  return (
+    <label className="flex items-center gap-3">
+      <Switch aria-label="Enable sync" defaultChecked />
+      <span>Enabled</span>
+    </label>
+  );
 }`,
   slider: `import { Slider } from "@/components/ui/slider";
 
@@ -390,14 +454,16 @@ export function Example() {
 
 export function Example() {
   return (
-    <RadioGroup aria-label="Billing plan" size="md">
-      <RadioItem defaultChecked label="Pro" name="plan" value="pro" />
+    <RadioGroup aria-label="Billing plan" defaultValue="pro" size="md">
+      <RadioItem
+        description="Usage, members, and API controls"
+        label="Pro"
+        value="pro"
+      />
       <RadioItem
         description="SAML, SCIM, audit logs"
         label="Enterprise"
-        name="plan"
         value="enterprise"
-        variant="default"
       />
     </RadioGroup>
   );
