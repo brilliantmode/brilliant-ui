@@ -74,6 +74,9 @@ describe("registry", () => {
 
     expect(item?.kind).toBe("layout");
     expect(source).toContain("export function ApplicationShellSidebarContent");
+    expect(source).toContain("flex-col overflow-hidden border-r border-border");
+    expect(source).toContain("border-b border-border px-4 pb-4");
+    expect(source).toContain("[scrollbar-width:none] [&::-webkit-scrollbar]:hidden");
     expect(source).toContain("export function ApplicationShellSidebarFooter");
     expect(source).toContain("mt-auto shrink-0 border-t");
     expect(source).toContain("export function ApplicationShellProfileMenu");

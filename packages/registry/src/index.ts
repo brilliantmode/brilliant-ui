@@ -3222,7 +3222,7 @@ export function ApplicationShellSidebar({ className = "", ...props }: HTMLAttrib
       <aside
         aria-label="Application navigation"
         className={cx(
-          "fixed inset-y-0 left-0 z-50 flex w-[min(17.5rem,calc(100vw-2rem))] flex-col overflow-y-auto border-r border-border bg-background px-4 py-4 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] md:sticky md:top-0 md:z-auto md:h-screen md:w-auto md:translate-x-0 md:shadow-none",
+          "fixed inset-y-0 left-0 z-50 flex w-[min(17.5rem,calc(100vw-2rem))] flex-col overflow-hidden border-r border-border bg-background px-4 py-4 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] md:sticky md:top-0 md:z-auto md:h-screen md:w-auto md:translate-x-0 md:shadow-none",
           "motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
           mobileNavOpen ? "translate-x-0" : "-translate-x-full",
           className,
@@ -3237,7 +3237,7 @@ export function ApplicationShellBrand({ className = "", ...props }: AnchorHTMLAt
   return (
     <a
       className={cx(
-        "mb-5 flex items-center gap-3 rounded-[0.375rem] text-foreground outline-none focus-visible:ring-1 focus-visible:ring-ring",
+        "-mx-4 mb-4 flex items-center gap-3 border-b border-border px-4 pb-4 text-foreground outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring",
         className,
       )}
       {...props}
@@ -3251,7 +3251,10 @@ export function ApplicationShellSidebarContent({
 }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cx("min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1", className)}
+      className={cx(
+        "min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        className,
+      )}
       {...props}
     />
   );
@@ -4965,12 +4968,14 @@ export const registry = [
         "Header actions use native buttons and require an accessible name when icon-only.",
         "HeaderBrand is a native link; decorative logo images should use an empty alt when the adjacent brand name supplies the accessible text.",
         "The profile menu uses native details and summary disclosure semantics.",
+        "Scrollable sidebar content keeps native scrolling while suppressing the visual scrollbar; keyboard, wheel, and touch scrolling remain available.",
       ],
       usage: [
         "Use as the top-level frame for authenticated product screens.",
         "Keep primary navigation in ApplicationShellSidebar.",
         "Use NavItem for simple destinations and NavGroupItem for inbox/account rows with secondary text.",
         "Wrap navigation in SidebarContent and place the profile control in SidebarFooter so it remains visible while navigation scrolls.",
+        "Use the built-in header, sidebar, and footer separators to communicate pane structure instead of styling a scrollbar as a divider.",
         "Compose Profile, ProfileMenu, and ProfileTrigger for account, workspace, settings, and sign-out actions.",
         "Use menu item icon for action glyphs and media for avatars/account bubbles.",
         "Compose HeaderContent, HeaderTitle, HeaderDescription, HeaderActions, and HeaderAction for page context and global actions.",

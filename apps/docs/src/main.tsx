@@ -5283,9 +5283,9 @@ function ComponentMiniPreview({ name }: { name: string }) {
     return (
       <div className="overflow-hidden rounded-[0.5rem] border border-border bg-background shadow-sm">
         <div className="grid min-h-[32rem] md:grid-cols-[17.5rem_minmax(0,1fr)]">
-          <aside className="flex h-[32rem] flex-col border-b border-border bg-background p-4 md:border-b-0 md:border-r">
-            <div className="min-h-0 flex-1 overflow-y-auto pr-1">
-              <div className="mb-4 flex items-center gap-3">
+          <aside className="flex h-[32rem] flex-col overflow-hidden border-b border-border bg-background p-4 md:border-b-0 md:border-r">
+            <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="-mx-4 mb-4 flex items-center gap-3 border-b border-border px-4 pb-4">
                 <img alt="" className="size-9" src="/images/brilliant-mark.svg" />
                 <div>
                   <div className="text-sm font-semibold tracking-tight">Brilliant</div>
@@ -6069,7 +6069,7 @@ function MobileDocsNav({
       <aside
         aria-modal="true"
         aria-label="Documentation navigation"
-        className="relative h-full w-[min(21rem,calc(100vw-2rem))] overflow-y-auto border-r border-border bg-background px-5 py-5 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] motion-safe:animate-enter motion-reduce:animate-none"
+        className="relative h-full w-[min(21rem,calc(100vw-2rem))] overflow-y-auto border-r border-border bg-background px-5 py-5 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] [scrollbar-width:none] motion-safe:animate-enter motion-reduce:animate-none [&::-webkit-scrollbar]:hidden"
         role="dialog"
       >
         <div className="mb-5 flex items-center justify-between gap-3">
@@ -6351,7 +6351,7 @@ function App() {
       />
 
       <main className="mx-auto grid max-w-screen-2xl md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]">
-        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-y-auto border-r border-border px-6 py-6 md:block">
+        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] overflow-y-auto border-r border-border px-6 py-6 [scrollbar-width:none] md:block [&::-webkit-scrollbar]:hidden">
           <DocsNav activeRoute={activeRoute} onNavigate={navigate} onSearchOpen={openSearch} />
         </aside>
 
