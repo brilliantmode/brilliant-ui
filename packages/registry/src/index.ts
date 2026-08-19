@@ -3094,6 +3094,22 @@ export function ApplicationShellHeader({ className = "", ...props }: HTMLAttribu
   );
 }
 
+export function ApplicationShellHeaderBrand({
+  className = "",
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  return (
+    <a
+      className={cx(
+        "inline-flex shrink-0 items-center gap-2 rounded-[0.375rem] text-sm font-semibold text-foreground",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
 export function ApplicationShellHeaderContent({
   className = "",
   ...props
@@ -4869,6 +4885,7 @@ export const registry = [
       slots: [
         "root",
         "header",
+        "header-brand",
         "header-content",
         "header-title",
         "header-description",
@@ -4903,6 +4920,7 @@ export const registry = [
         "Active navigation items expose aria-current.",
         "The mobile trigger is a native button with visible focus.",
         "Header actions use native buttons and require an accessible name when icon-only.",
+        "HeaderBrand is a native link; decorative logo images should use an empty alt when the adjacent brand name supplies the accessible text.",
         "The profile menu uses native details and summary disclosure semantics.",
       ],
       usage: [
@@ -4913,6 +4931,7 @@ export const registry = [
         "Compose Profile, ProfileMenu, and ProfileTrigger for account, workspace, settings, and sign-out actions.",
         "Use menu item icon for action glyphs and media for avatars/account bubbles.",
         "Compose HeaderContent, HeaderTitle, HeaderDescription, HeaderActions, and HeaderAction for page context and global actions.",
+        "Use HeaderBrand for a logo image, inline SVG mark, or brand name; hide either the sidebar or header copy responsively when duplication is unnecessary.",
         "Use ApplicationShellMain for route/page content.",
       ],
       avoid: [

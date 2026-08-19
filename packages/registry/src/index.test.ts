@@ -81,6 +81,7 @@ describe("registry", () => {
     expect(source).toContain("export function ApplicationShellProfileTrigger");
     expect(source).toContain("export function ApplicationShellHeaderActions");
     expect(source).toContain("export function ApplicationShellHeaderAction");
+    expect(source).toContain("export function ApplicationShellHeaderBrand");
   });
 
   it("ships a functional native file upload", () => {

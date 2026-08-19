@@ -1526,6 +1526,7 @@ export function Example() {
   ApplicationShellHeader,
   ApplicationShellHeaderAction,
   ApplicationShellHeaderActions,
+  ApplicationShellHeaderBrand,
   ApplicationShellHeaderContent,
   ApplicationShellHeaderDescription,
   ApplicationShellHeaderTitle,
@@ -1553,7 +1554,7 @@ export function Example() {
       <ApplicationShellSidebar>
         <ApplicationShellSidebarContent>
         <ApplicationShellBrand href="/">
-          <ApplicationShellNavMedia>B</ApplicationShellNavMedia>
+          <img alt="" className="size-9" src="/images/brilliant-mark.svg" />
           <span>
             <span className="block text-sm font-semibold">Brilliant</span>
             <span className="block text-xs text-muted-foreground">Component system</span>
@@ -1628,6 +1629,10 @@ export function Example() {
       <div className="min-w-0">
         <ApplicationShellHeader>
           <ApplicationShellMobileTrigger />
+          <ApplicationShellHeaderBrand href="/">
+            <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
+            <span className="hidden sm:inline">Brilliant</span>
+          </ApplicationShellHeaderBrand>
           <ApplicationShellHeaderContent>
             <ApplicationShellHeaderTitle>Dashboard</ApplicationShellHeaderTitle>
             <ApplicationShellHeaderDescription>Live workspace overview</ApplicationShellHeaderDescription>
@@ -4443,9 +4448,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
           <aside className="flex h-[32rem] flex-col border-b border-border bg-background p-4 md:border-b-0 md:border-r">
             <div className="min-h-0 flex-1 overflow-y-auto pr-1">
               <div className="mb-4 flex items-center gap-3">
-                <div className="grid size-9 place-items-center rounded-full border border-border bg-surface text-sm font-semibold">
-                  B
-                </div>
+                <img alt="" className="size-9" src="/images/brilliant-mark.svg" />
                 <div>
                   <div className="text-sm font-semibold tracking-tight">Brilliant</div>
                   <div className="text-xs text-muted-foreground">Component system</div>
@@ -4561,6 +4564,10 @@ function ComponentMiniPreview({ name }: { name: string }) {
           </aside>
           <div className="min-w-0">
             <header className="flex h-14 items-center gap-3 border-b border-border px-4">
+              <a className="inline-flex items-center gap-2 text-sm font-semibold" href="/">
+                <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
+                <span className="hidden lg:inline">Brilliant</span>
+              </a>
               <div className="min-w-0 flex-1">
                 <div className="text-sm font-semibold">Dashboard</div>
                 <div className="text-xs text-muted-foreground">Live workspace overview</div>
