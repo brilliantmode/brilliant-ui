@@ -34,6 +34,15 @@ describe("registry", () => {
     expect(photoSource).toContain('circle: "rounded-full"');
   });
 
+  it("keeps avatar images circular without clipping presence status", () => {
+    const avatarSource = findRegistryItem("avatar")?.files[0]?.content;
+
+    expect(avatarSource).toContain("size-full rounded-full object-cover");
+    expect(avatarSource).not.toContain(
+      "items-center justify-center overflow-hidden rounded-full bg-muted",
+    );
+  });
+
   it("defines a versioned JSON schema", () => {
     expect(registryItemSchema.properties.kind.enum).toBe(registryKinds);
     expect(registryItemSchema.required).toContain("registryDependencies");

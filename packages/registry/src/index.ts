@@ -421,7 +421,7 @@ export function Avatar({ className = "", size = "md", ...props }: AvatarProps) {
   return (
     <div
       className={[
-        "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted text-muted-foreground shadow-[inset_0_0_0_0.5px_var(--brilliant-control-border)]",
+        "relative inline-flex shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground shadow-[inset_0_0_0_0.5px_var(--brilliant-control-border)]",
         "motion-safe:transition-[box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         sizes[size].root,
         className,
@@ -442,7 +442,7 @@ export function AvatarImage({ className = "", onError, ...props }: AvatarImagePr
   return (
     <img
       className={[
-        "absolute inset-0 size-full object-cover motion-safe:animate-enter motion-reduce:animate-none",
+        "absolute inset-0 size-full rounded-full object-cover motion-safe:animate-enter motion-reduce:animate-none",
         className,
       ].join(" ")}
       onError={(event) => {
@@ -460,7 +460,7 @@ export function AvatarFallback({ className = "", ...props }: AvatarFallbackProps
   return (
     <span
       className={[
-        "grid size-full place-items-center font-medium uppercase tracking-[-0.01em]",
+        "grid size-full place-items-center overflow-hidden rounded-full font-medium uppercase tracking-[-0.01em]",
         className,
       ].join(" ")}
       {...props}

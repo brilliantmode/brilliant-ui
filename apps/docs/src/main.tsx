@@ -519,10 +519,14 @@ export function Example() {
 export function Example() {
   return (
     <div className="flex items-end gap-4">
-      {["sm", "md", "lg", "xl"].map((size) => (
+      {(["sm", "md", "lg", "xl"] as const).map((size) => (
         <Avatar key={size} size={size}>
-          <AvatarFallback>{size === "sm" ? "NR" : size === "md" ? "BU" : size === "lg" ? "AI" : "UF"}</AvatarFallback>
-          <AvatarStatus status="online" />
+          <AvatarImage
+            alt="Alex Rivera"
+            src="/images/avatar-product-designer.jpg"
+          />
+          <AvatarFallback>AR</AvatarFallback>
+          <AvatarStatus size={size} status="online" />
         </Avatar>
       ))}
     </div>
@@ -3063,19 +3067,26 @@ function ComponentMiniPreview({ name }: { name: string }) {
     return (
       <div className="flex items-end gap-4">
         {[
-          ["sm", "NR", "size-7 text-xs", "size-2"],
-          ["md", "BU", "size-9 text-sm", "size-2.5"],
-          ["lg", "AI", "size-11 text-base", "size-3"],
-          ["xl", "UF", "size-14 text-lg", "size-3.5"],
-        ].map(([label, initials, rootSize, statusSize]) => (
+          ["sm", "size-7 text-xs", "size-2"],
+          ["md", "size-9 text-sm", "size-2.5"],
+          ["lg", "size-11 text-base", "size-3"],
+          ["xl", "size-14 text-lg", "size-3.5"],
+        ].map(([label, rootSize, statusSize]) => (
           <div
             className={[
-              "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted font-medium uppercase text-muted-foreground shadow-[inset_0_0_0_0.5px_var(--brilliant-control-border)]",
+              "relative inline-flex shrink-0 items-center justify-center rounded-full bg-muted font-medium uppercase text-muted-foreground shadow-[inset_0_0_0_0.5px_var(--brilliant-control-border)]",
               rootSize,
             ].join(" ")}
             key={label}
           >
-            {initials}
+            <span className="grid size-full place-items-center overflow-hidden rounded-full">
+              AR
+            </span>
+            <img
+              alt="Alex Rivera"
+              className="absolute inset-0 size-full rounded-full object-cover motion-safe:animate-enter motion-reduce:animate-none"
+              src="/images/avatar-product-designer.jpg"
+            />
             <span
               aria-label="online"
               className={[
