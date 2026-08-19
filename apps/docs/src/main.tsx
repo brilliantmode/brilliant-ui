@@ -18,15 +18,39 @@ const navItems = [
   ["Input", "#input"],
   ["Label", "#label"],
   ["Textarea", "#textarea"],
+  ["Field", "#field"],
   ["Checkbox", "#checkbox"],
   ["Switch", "#switch"],
   ["Radio Group", "#radio-group"],
+  ["Slider", "#slider"],
+  ["Select", "#select"],
+  ["Combobox", "#combobox"],
   ["Alert", "#alert"],
+  ["Dialog", "#dialog"],
+  ["Alert Dialog", "#alert-dialog"],
+  ["Drawer", "#drawer"],
+  ["Sheet", "#sheet"],
+  ["Tooltip", "#tooltip"],
+  ["Popover", "#popover"],
+  ["Hover Card", "#hover-card"],
+  ["Context Menu", "#context-menu"],
   ["Separator", "#separator"],
   ["Skeleton", "#skeleton"],
   ["Progress", "#progress"],
   ["Spinner", "#spinner"],
   ["Empty State", "#empty-state"],
+  ["Tabs", "#tabs"],
+  ["Accordion", "#accordion"],
+  ["Collapsible", "#collapsible"],
+  ["Carousel", "#carousel"],
+  ["Breadcrumb", "#breadcrumb"],
+  ["Navigation Menu", "#navigation-menu"],
+  ["Menubar", "#menubar"],
+  ["Pagination", "#pagination"],
+  ["Toast", "#toast"],
+  ["Calendar", "#calendar"],
+  ["Date Input", "#date-input"],
+  ["Command", "#command"],
   ["Foundations", "#foundations"],
   ["Blocks", "#blocks"],
   ["Theming", "#theming"],
@@ -307,6 +331,25 @@ export function Example() {
   );
 }`,
 } as const;
+
+function componentExportName(name: string) {
+  return name
+    .split("-")
+    .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+    .join("");
+}
+
+function usageForComponent(name: string) {
+  const explicit = usageByComponent[name as keyof typeof usageByComponent];
+  if (explicit) return explicit;
+
+  const exportName = componentExportName(name);
+  return `import { ${exportName} } from "@/components/ui/${name}";
+
+export function Example() {
+  return <${exportName}>Example</${exportName}>;
+}`;
+}
 
 function Badge({ children, tone = "muted" }: { children: ReactNode; tone?: "muted" | "ready" }) {
   return (
@@ -1158,7 +1201,7 @@ export function Example() {
           {registry
             .filter((item) => item.name !== "button")
             .map((item) => {
-              const usage = usageByComponent[item.name as keyof typeof usageByComponent];
+              const usage = usageForComponent(item.name);
 
               return (
                 <section className="mx-auto max-w-4xl space-y-6 pb-14" key={item.name}>

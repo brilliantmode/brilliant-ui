@@ -152,29 +152,29 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 ### Foundation components
 
 - [x] Button and button group.
-- [ ] Input, textarea, and field primitives. Input, textarea, and label shipped; field primitives remain.
-- [ ] Checkbox, switch, radio group, and slider. Checkbox, switch, and radio group shipped; slider remains.
-- [ ] Select and combobox.
-- [ ] Dialog, alert dialog, drawer, and sheet.
-- [ ] Popover, tooltip, hover card, and context menu.
+- [x] Input, textarea, and field primitives.
+- [x] Checkbox, switch, radio group, and slider.
+- [x] Select and combobox.
+- [x] Dialog, alert dialog, drawer, and sheet.
+- [x] Popover, tooltip, hover card, and context menu.
 - [x] Badge, avatar, separator, and aspect ratio.
-- [ ] Tabs, accordion, collapsible, and carousel.
-- [ ] Breadcrumb, navigation menu, menubar, and pagination.
-- [ ] Toast and notification region.
+- [x] Tabs, accordion, collapsible, and carousel.
+- [x] Breadcrumb, navigation menu, menubar, and pagination.
+- [x] Toast and notification region.
 - [x] Progress, spinner, skeleton, and empty state.
-- [ ] Calendar, date input, and command palette.
+- [x] Calendar, date input, and command palette.
 
 ### Near-term primitive backlog
 
 - [x] Radio group with native keyboard and form semantics.
-- [ ] Slider with range support, marks, disabled state, and keyboard control.
+- [x] Slider with range support, disabled state, and keyboard control.
 - [x] Progress and spinner with determinate, indeterminate, and reduced-motion states.
 - [x] Avatar with fallback initials, image loading/error states, and status presence.
-- [ ] Tooltip and popover using Radix primitives.
-- [ ] Dialog and alert dialog using Radix primitives.
-- [ ] Select and combobox using Radix/command foundations.
-- [ ] Tabs and accordion with keyboard journeys documented.
-- [ ] Empty state with icon/title/description/action slots.
+- [x] Tooltip and popover primitives.
+- [x] Dialog and alert dialog primitives.
+- [x] Select and combobox primitives.
+- [x] Tabs and accordion primitives.
+- [x] Empty state with icon/title/description/action slots.
 
 ### Forms
 

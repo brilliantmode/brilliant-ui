@@ -1177,6 +1177,470 @@ export function Spinner({
 }
 `;
 
+const fieldSource = `import type { HTMLAttributes } from "react";
+
+export interface FieldProps extends HTMLAttributes<HTMLDivElement> {}
+
+export function Field({ className = "", ...props }: FieldProps) {
+  return <div className={["grid gap-2", className].join(" ")} {...props} />;
+}
+
+export function FieldLabel({ className = "", ...props }: HTMLAttributes<HTMLLabelElement>) {
+  return <label className={["text-sm font-medium leading-none", className].join(" ")} {...props} />;
+}
+
+export function FieldDescription({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={["text-sm leading-5 text-muted-foreground", className].join(" ")} {...props} />;
+}
+
+export function FieldError({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={["text-sm leading-5 text-critical motion-safe:animate-enter motion-reduce:animate-none", className].join(" ")} role="alert" {...props} />;
+}
+
+export function FieldGroup({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["grid gap-4", className].join(" ")} {...props} />;
+}
+`;
+
+const sliderSource = `import type { InputHTMLAttributes } from "react";
+
+export interface SliderProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {}
+
+export function Slider({ className = "", ...props }: SliderProps) {
+  return (
+    <input
+      className={[
+        "h-5 w-full cursor-pointer appearance-none bg-transparent accent-primary disabled:cursor-not-allowed disabled:opacity-50",
+        "[&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-muted",
+        "[&::-webkit-slider-thumb]:mt-[-7px] [&::-webkit-slider-thumb]:size-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-hairline [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:bg-background [&::-webkit-slider-thumb]:shadow-sm",
+        "[&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-muted",
+        "[&::-moz-range-thumb]:size-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-hairline [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:bg-background [&::-moz-range-thumb]:shadow-sm",
+        "motion-safe:transition-opacity motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+        className,
+      ].join(" ")}
+      type="range"
+      {...props}
+    />
+  );
+}
+`;
+
+const selectSource = `import type { SelectHTMLAttributes } from "react";
+
+export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {}
+
+export function Select({ className = "", ...props }: SelectProps) {
+  return (
+    <select
+      className={[
+        "h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 pr-8 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)]",
+        "motion-safe:transition-[background-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      ].join(" ")}
+      {...props}
+    />
+  );
+}
+`;
+
+const comboboxSource = `import type { InputHTMLAttributes, ReactNode } from "react";
+
+export interface ComboboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "list"> {
+  children?: ReactNode;
+  listId: string;
+}
+
+export function Combobox({ children, className = "", listId, ...props }: ComboboxProps) {
+  return (
+    <>
+      <input
+        className={[
+          "h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)]",
+          "placeholder:text-muted-foreground motion-safe:transition-[background-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+          "focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)] focus-visible:outline-none",
+          className,
+        ].join(" ")}
+        list={listId}
+        role="combobox"
+        {...props}
+      />
+      <datalist id={listId}>{children}</datalist>
+    </>
+  );
+}
+`;
+
+const dialogSource = `import type { DialogHTMLAttributes, HTMLAttributes } from "react";
+
+export interface DialogProps extends DialogHTMLAttributes<HTMLDialogElement> {}
+
+export function Dialog({ className = "", ...props }: DialogProps) {
+  return (
+    <dialog
+      className={[
+        "m-auto w-[min(32rem,calc(100vw-2rem))] rounded-[0.5rem] border-hairline border-border bg-surface p-0 text-foreground shadow-md backdrop:bg-foreground/30 open:motion-safe:animate-enter open:motion-reduce:animate-none",
+        className,
+      ].join(" ")}
+      {...props}
+    />
+  );
+}
+
+export function DialogHeader({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["border-b border-border p-4", className].join(" ")} {...props} />;
+}
+
+export function DialogTitle({ className = "", ...props }: HTMLAttributes<HTMLHeadingElement>) {
+  return <h2 className={["text-lg font-semibold tracking-tight", className].join(" ")} {...props} />;
+}
+
+export function DialogDescription({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={["mt-1 text-sm leading-6 text-muted-foreground", className].join(" ")} {...props} />;
+}
+
+export function DialogContent({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["p-4", className].join(" ")} {...props} />;
+}
+
+export function DialogFooter({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["flex justify-end gap-2 border-t border-border p-4", className].join(" ")} {...props} />;
+}
+`;
+
+const alertDialogSource = `import type { DialogHTMLAttributes, HTMLAttributes } from "react";
+
+export interface AlertDialogProps extends DialogHTMLAttributes<HTMLDialogElement> {}
+
+export function AlertDialog({ className = "", ...props }: AlertDialogProps) {
+  return (
+    <dialog
+      className={[
+        "m-auto w-[min(30rem,calc(100vw-2rem))] rounded-[0.5rem] border-hairline border-critical/25 bg-surface p-0 text-foreground shadow-md backdrop:bg-foreground/30 open:motion-safe:animate-enter open:motion-reduce:animate-none",
+        className,
+      ].join(" ")}
+      {...props}
+    />
+  );
+}
+
+export function AlertDialogHeader({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["border-b border-border p-4", className].join(" ")} {...props} />;
+}
+
+export function AlertDialogTitle({ className = "", ...props }: HTMLAttributes<HTMLHeadingElement>) {
+  return <h2 className={["text-lg font-semibold tracking-tight", className].join(" ")} {...props} />;
+}
+
+export function AlertDialogDescription({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={["mt-1 text-sm leading-6 text-muted-foreground", className].join(" ")} {...props} />;
+}
+
+export function AlertDialogContent({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["p-4", className].join(" ")} {...props} />;
+}
+
+export function AlertDialogFooter({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["flex justify-end gap-2 border-t border-border p-4", className].join(" ")} {...props} />;
+}
+`;
+
+const sheetSource = `import type { DialogHTMLAttributes, HTMLAttributes } from "react";
+
+const sides = {
+  right: "ml-auto mr-0 h-dvh max-h-none w-[min(28rem,100vw)]",
+  left: "mr-auto ml-0 h-dvh max-h-none w-[min(28rem,100vw)]",
+  top: "mt-0 mb-auto w-full max-w-none",
+  bottom: "mt-auto mb-0 w-full max-w-none",
+} as const;
+
+export interface SheetProps extends DialogHTMLAttributes<HTMLDialogElement> {
+  side?: keyof typeof sides;
+}
+
+export function Sheet({ className = "", side = "right", ...props }: SheetProps) {
+  return (
+    <dialog
+      className={[
+        "border-hairline border-border bg-surface p-0 text-foreground shadow-md backdrop:bg-foreground/30 open:motion-safe:animate-enter open:motion-reduce:animate-none",
+        sides[side],
+        className,
+      ].join(" ")}
+      data-side={side}
+      {...props}
+    />
+  );
+}
+
+export function SheetHeader({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["border-b border-border p-4", className].join(" ")} {...props} />;
+}
+
+export function SheetTitle({ className = "", ...props }: HTMLAttributes<HTMLHeadingElement>) {
+  return <h2 className={["text-lg font-semibold tracking-tight", className].join(" ")} {...props} />;
+}
+
+export function SheetDescription({ className = "", ...props }: HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={["mt-1 text-sm leading-6 text-muted-foreground", className].join(" ")} {...props} />;
+}
+
+export function SheetContent({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["p-4", className].join(" ")} {...props} />;
+}
+`;
+
+const drawerSource = sheetSource
+  .replaceAll("Sheet", "Drawer")
+  .replaceAll("sheet", "drawer")
+  .replace('side = "right"', 'side = "bottom"');
+
+const tooltipSource = `import type { HTMLAttributes, ReactNode } from "react";
+
+export interface TooltipProps extends HTMLAttributes<HTMLSpanElement> {
+  content: ReactNode;
+}
+
+export function Tooltip({ children, className = "", content, ...props }: TooltipProps) {
+  return (
+    <span className={["group/tooltip relative inline-flex", className].join(" ")} {...props}>
+      {children}
+      <span className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-[0.25rem] bg-foreground px-2 py-1 text-xs font-medium text-background opacity-0 shadow-sm motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none group-hover/tooltip:-translate-y-0.5 group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100">
+        {content}
+      </span>
+    </span>
+  );
+}
+`;
+
+const popoverSource = `import type { DetailsHTMLAttributes, HTMLAttributes } from "react";
+
+export interface PopoverProps extends DetailsHTMLAttributes<HTMLDetailsElement> {}
+
+export function Popover({ className = "", ...props }: PopoverProps) {
+  return <details className={["relative inline-block", className].join(" ")} {...props} />;
+}
+
+export function PopoverTrigger({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  return <summary className={["list-none cursor-pointer", className].join(" ")} {...props} />;
+}
+
+export function PopoverContent({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["absolute z-50 mt-2 min-w-56 rounded-[0.5rem] border-hairline border-border bg-surface p-3 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none", className].join(" ")} {...props} />;
+}
+`;
+
+const hoverCardSource = popoverSource
+  .replaceAll("Popover", "HoverCard")
+  .replaceAll("popover", "hover-card");
+
+const contextMenuSource = `import { useState } from "react";
+import type { HTMLAttributes } from "react";
+
+export interface ContextMenuProps extends HTMLAttributes<HTMLDivElement> {}
+
+export function ContextMenu({ children, className = "", ...props }: ContextMenuProps) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className={["relative", className].join(" ")}
+      onContextMenu={(event) => {
+        event.preventDefault();
+        setOpen(true);
+      }}
+      {...props}
+    >
+      {children}
+      {open ? (
+        <div className="absolute z-50 mt-2 min-w-44 rounded-[0.5rem] border-hairline border-border bg-surface p-1 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none" role="menu">
+          <button className="block w-full rounded-[0.25rem] px-2 py-1.5 text-left hover:bg-muted" onClick={() => setOpen(false)} type="button">Open</button>
+          <button className="block w-full rounded-[0.25rem] px-2 py-1.5 text-left hover:bg-muted" onClick={() => setOpen(false)} type="button">Rename</button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+`;
+
+const tabsSource = `import { useState } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
+
+export interface TabsProps extends HTMLAttributes<HTMLDivElement> {
+  defaultValue: string;
+}
+
+export function Tabs({ className = "", defaultValue, ...props }: TabsProps) {
+  return <div className={["grid gap-3", className].join(" ")} data-default-value={defaultValue} {...props} />;
+}
+
+export function TabsList({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["inline-flex rounded-[0.375rem] bg-muted p-1", className].join(" ")} role="tablist" {...props} />;
+}
+
+export interface TabsTriggerProps extends HTMLAttributes<HTMLButtonElement> {
+  active?: boolean;
+  value: string;
+}
+
+export function TabsTrigger({ active = false, className = "", value, ...props }: TabsTriggerProps) {
+  return <button aria-selected={active} className={["rounded-[0.25rem] px-3 py-1.5 text-sm font-medium motion-safe:transition-colors motion-reduce:transition-none", active ? "bg-surface text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground", className].join(" ")} role="tab" type="button" {...props} />;
+}
+
+export interface TabsContentProps extends HTMLAttributes<HTMLDivElement> {
+  value: string;
+}
+
+export function TabsContent({ className = "", value, ...props }: TabsContentProps) {
+  return <div className={["motion-safe:animate-enter motion-reduce:animate-none", className].join(" ")} data-value={value} role="tabpanel" {...props} />;
+}
+`;
+
+const accordionSource = `import type { DetailsHTMLAttributes, HTMLAttributes } from "react";
+
+export interface AccordionProps extends HTMLAttributes<HTMLDivElement> {}
+
+export function Accordion({ className = "", ...props }: AccordionProps) {
+  return <div className={["divide-y divide-border rounded-[0.5rem] border-hairline border-border", className].join(" ")} {...props} />;
+}
+
+export function AccordionItem({ className = "", ...props }: DetailsHTMLAttributes<HTMLDetailsElement>) {
+  return <details className={["group", className].join(" ")} {...props} />;
+}
+
+export function AccordionTrigger({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  return <summary className={["cursor-pointer list-none px-4 py-3 text-sm font-medium hover:bg-muted", className].join(" ")} {...props} />;
+}
+
+export function AccordionContent({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["px-4 pb-4 text-sm leading-6 text-muted-foreground motion-safe:animate-enter motion-reduce:animate-none", className].join(" ")} {...props} />;
+}
+`;
+
+const collapsibleSource = accordionSource
+  .replaceAll("Accordion", "Collapsible")
+  .replaceAll("accordion", "collapsible");
+
+const carouselSource = `import type { HTMLAttributes } from "react";
+
+export function Carousel({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["flex snap-x gap-3 overflow-x-auto scroll-smooth", className].join(" ")} {...props} />;
+}
+
+export function CarouselItem({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["min-w-64 snap-start rounded-[0.5rem] border-hairline border-border bg-surface p-4", className].join(" ")} {...props} />;
+}
+`;
+
+const breadcrumbSource = `import type { HTMLAttributes } from "react";
+
+export function Breadcrumb({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  return <nav aria-label="Breadcrumb" className={className} {...props} />;
+}
+
+export function BreadcrumbList({ className = "", ...props }: HTMLAttributes<HTMLOListElement>) {
+  return <ol className={["flex flex-wrap items-center gap-1 text-sm text-muted-foreground", className].join(" ")} {...props} />;
+}
+
+export function BreadcrumbItem({ className = "", ...props }: HTMLAttributes<HTMLLIElement>) {
+  return <li className={["inline-flex items-center gap-1", className].join(" ")} {...props} />;
+}
+
+export function BreadcrumbSeparator({ className = "", ...props }: HTMLAttributes<HTMLSpanElement>) {
+  return <span aria-hidden="true" className={["text-muted-foreground/70", className].join(" ")} {...props}>/</span>;
+}
+`;
+
+const navigationMenuSource = `import type { HTMLAttributes } from "react";
+
+export function NavigationMenu({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  return <nav className={["flex items-center gap-1", className].join(" ")} {...props} />;
+}
+
+export function NavigationMenuLink({ className = "", ...props }: HTMLAttributes<HTMLAnchorElement>) {
+  return <a className={["rounded-[0.25rem] px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground", className].join(" ")} {...props} />;
+}
+`;
+
+const menubarSource = `import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
+
+export function Menubar({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["flex items-center gap-1 rounded-[0.375rem] border-hairline border-border bg-surface p-1", className].join(" ")} role="menubar" {...props} />;
+}
+
+export function MenubarItem({ className = "", type = "button", ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
+  return <button className={["rounded-[0.25rem] px-3 py-1.5 text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring", className].join(" ")} role="menuitem" type={type} {...props} />;
+}
+`;
+
+const paginationSource = `import type { HTMLAttributes } from "react";
+
+export function Pagination({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  return <nav aria-label="Pagination" className={className} {...props} />;
+}
+
+export function PaginationList({ className = "", ...props }: HTMLAttributes<HTMLUListElement>) {
+  return <ul className={["flex items-center gap-1", className].join(" ")} {...props} />;
+}
+
+export function PaginationItem({ className = "", ...props }: HTMLAttributes<HTMLLIElement>) {
+  return <li className={className} {...props} />;
+}
+
+export function PaginationLink({ className = "", ...props }: HTMLAttributes<HTMLAnchorElement>) {
+  return <a className={["inline-flex size-9 items-center justify-center rounded-[0.25rem] text-sm hover:bg-muted aria-current:bg-primary aria-current:text-primary-foreground", className].join(" ")} {...props} />;
+}
+`;
+
+const toastSource = `import type { HTMLAttributes } from "react";
+
+export function ToastRegion({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div aria-live="polite" className={["fixed right-4 bottom-4 z-50 grid gap-2", className].join(" ")} role="region" {...props} />;
+}
+
+export function Toast({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["w-80 rounded-[0.5rem] border-hairline border-border bg-surface p-4 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none", className].join(" ")} role="status" {...props} />;
+}
+`;
+
+const calendarSource = `import type { TableHTMLAttributes } from "react";
+
+export interface CalendarProps extends TableHTMLAttributes<HTMLTableElement> {}
+
+export function Calendar({ className = "", ...props }: CalendarProps) {
+  return <table className={["w-full border-collapse text-center text-sm", className].join(" ")} {...props} />;
+}
+`;
+
+const dateInputSource = `import type { InputHTMLAttributes } from "react";
+
+export interface DateInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {}
+
+export function DateInput({ className = "", ...props }: DateInputProps) {
+  return <input className={["h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 text-sm shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)] focus-visible:outline-none", className].join(" ")} type="date" {...props} />;
+}
+`;
+
+const commandSource = `import type { HTMLAttributes, InputHTMLAttributes } from "react";
+
+export function Command({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["overflow-hidden rounded-[0.5rem] border-hairline border-border bg-surface shadow-sm", className].join(" ")} {...props} />;
+}
+
+export function CommandInput({ className = "", ...props }: InputHTMLAttributes<HTMLInputElement>) {
+  return <input className={["h-10 w-full border-b border-border bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground", className].join(" ")} {...props} />;
+}
+
+export function CommandList({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["max-h-72 overflow-auto p-1", className].join(" ")} role="listbox" {...props} />;
+}
+
+export function CommandItem({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={["rounded-[0.25rem] px-2 py-1.5 text-sm hover:bg-muted", className].join(" ")} role="option" {...props} />;
+}
+`;
+
 export const registry = [
   {
     name: "button",
@@ -1402,6 +1866,26 @@ export const registry = [
     },
   },
   {
+    name: "field",
+    title: "Field",
+    description: "Form field composition for label, help text, and error states.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "field.tsx", content: fieldSource, target: "ui/field.tsx" }],
+    metadata: {
+      purpose: "Composes labels, controls, descriptions, and validation messages.",
+      slots: ["root", "label", "description", "error", "group"],
+      accessibility: [
+        "Use htmlFor on FieldLabel to connect it to the control.",
+        "Use aria-describedby to connect descriptions and errors.",
+        "FieldError uses role alert.",
+      ],
+      usage: ["Use for every non-trivial form control.", "Keep error copy specific."],
+      avoid: ["Do not rely on placeholder text as the only label."],
+    },
+  },
+  {
     name: "checkbox",
     title: "Checkbox",
     description: "A native checkbox with tokenized states and press micro UX.",
@@ -1470,6 +1954,61 @@ export const registry = [
     },
   },
   {
+    name: "slider",
+    title: "Slider",
+    description: "A native range control with Brilliant focus and thumb styling.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "slider.tsx", content: sliderSource, target: "ui/slider.tsx" }],
+    metadata: {
+      purpose: "Adjusts a numeric value within a bounded range.",
+      slots: ["root", "track", "thumb"],
+      accessibility: [
+        "Uses a native range input.",
+        "Provide aria-label or a connected label.",
+        "Keyboard behavior is handled by the browser.",
+      ],
+      usage: [
+        "Use for continuous values.",
+        "Use visible min/max/value text when precision matters.",
+      ],
+      avoid: ["Do not use for exact numeric entry without an input fallback."],
+    },
+  },
+  {
+    name: "select",
+    title: "Select",
+    description: "A native select control with Brilliant form styling.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "select.tsx", content: selectSource, target: "ui/select.tsx" }],
+    metadata: {
+      purpose: "Chooses one option from a compact native menu.",
+      slots: ["root", "option"],
+      accessibility: ["Uses a native select.", "Pair with a visible label."],
+      usage: ["Use for short known option lists.", "Prefer Combobox when users need search."],
+      avoid: ["Do not use for complex rich option content."],
+    },
+  },
+  {
+    name: "combobox",
+    title: "Combobox",
+    description: "A datalist-backed combobox for lightweight searchable choices.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "combobox.tsx", content: comboboxSource, target: "ui/combobox.tsx" }],
+    metadata: {
+      purpose: "Lets users type or choose from suggested options.",
+      slots: ["input", "option-list", "option"],
+      accessibility: ["Uses native input and datalist behavior.", "Pair with a visible label."],
+      usage: ["Use for lightweight suggestions.", "Use Command for richer command palettes."],
+      avoid: ["Do not use for complex async filtering without a managed listbox."],
+    },
+  },
+  {
     name: "alert",
     title: "Alert",
     description: "A semantic message surface for status, guidance, and errors.",
@@ -1483,6 +2022,144 @@ export const registry = [
       accessibility: ["Uses role status by default.", "Use clear text, not color alone."],
       usage: ["Use near the related task or form region."],
       avoid: ["Do not overuse persistent alerts."],
+    },
+  },
+  {
+    name: "dialog",
+    title: "Dialog",
+    description: "A native modal surface with header, content, and footer slots.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "dialog.tsx", content: dialogSource, target: "ui/dialog.tsx" }],
+    metadata: {
+      purpose: "Shows focused content or tasks above the page.",
+      slots: ["root", "header", "title", "description", "content", "footer"],
+      accessibility: ["Uses native dialog semantics.", "Use showModal() and provide a title."],
+      usage: ["Use for focused tasks.", "Keep actions in the footer."],
+      avoid: ["Do not put long multi-page flows in one dialog."],
+    },
+  },
+  {
+    name: "alert-dialog",
+    title: "Alert Dialog",
+    description: "A confirmation dialog for destructive or high-risk decisions.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [
+      { path: "alert-dialog.tsx", content: alertDialogSource, target: "ui/alert-dialog.tsx" },
+    ],
+    metadata: {
+      purpose: "Confirms destructive, irreversible, or high-risk actions.",
+      slots: ["root", "header", "title", "description", "content", "footer"],
+      accessibility: ["Uses native dialog semantics.", "Use clear confirm and cancel actions."],
+      usage: ["Use for destructive confirmation.", "Make consequences explicit."],
+      avoid: ["Do not use for ordinary informational messages."],
+    },
+  },
+  {
+    name: "drawer",
+    title: "Drawer",
+    description: "A native dialog-based drawer for bottom or side panels.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "drawer.tsx", content: drawerSource, target: "ui/drawer.tsx" }],
+    metadata: {
+      purpose: "Shows contextual panels without leaving the page.",
+      slots: ["root", "header", "title", "description", "content"],
+      accessibility: ["Uses native dialog semantics.", "Provide a title."],
+      usage: ["Use for mobile panels and contextual editors."],
+      avoid: ["Do not hide primary page navigation in nested drawers."],
+    },
+  },
+  {
+    name: "sheet",
+    title: "Sheet",
+    description: "A side-panel primitive for settings, filters, and secondary workflows.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "sheet.tsx", content: sheetSource, target: "ui/sheet.tsx" }],
+    metadata: {
+      purpose: "Shows secondary workflows in a side or edge panel.",
+      slots: ["root", "header", "title", "description", "content"],
+      accessibility: ["Uses native dialog semantics.", "Provide a title."],
+      usage: ["Use for filters, settings, and object details."],
+      avoid: ["Do not use sheets for global blocking confirmations."],
+    },
+  },
+  {
+    name: "tooltip",
+    title: "Tooltip",
+    description: "A small hover/focus hint for controls and terse UI.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "tooltip.tsx", content: tooltipSource, target: "ui/tooltip.tsx" }],
+    metadata: {
+      purpose: "Adds short non-essential helper text.",
+      slots: ["root", "trigger", "content"],
+      accessibility: ["Visible on hover and focus-within.", "Keep content short."],
+      usage: ["Use for icon buttons and terse controls."],
+      avoid: ["Do not hide required instructions only in a tooltip."],
+    },
+  },
+  {
+    name: "popover",
+    title: "Popover",
+    description: "A lightweight disclosure popover for compact contextual content.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "popover.tsx", content: popoverSource, target: "ui/popover.tsx" }],
+    metadata: {
+      purpose: "Reveals compact contextual content.",
+      slots: ["root", "trigger", "content"],
+      accessibility: ["Uses native details/summary disclosure behavior."],
+      usage: ["Use for compact filters, quick settings, and small menus."],
+      avoid: ["Do not use for destructive confirmation."],
+    },
+  },
+  {
+    name: "hover-card",
+    title: "Hover Card",
+    description: "A hover/focus card for richer previews.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "hover-card.tsx", content: hoverCardSource, target: "ui/hover-card.tsx" }],
+    metadata: {
+      purpose: "Shows a richer preview for an object or person.",
+      slots: ["root", "trigger", "content"],
+      accessibility: [
+        "Use only for supplemental information.",
+        "Do not require hover-only content.",
+      ],
+      usage: ["Use for user, team, or object previews."],
+      avoid: ["Do not hide required actions inside hover cards."],
+    },
+  },
+  {
+    name: "context-menu",
+    title: "Context Menu",
+    description: "A right-click contextual action menu.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [
+      { path: "context-menu.tsx", content: contextMenuSource, target: "ui/context-menu.tsx" },
+    ],
+    metadata: {
+      purpose: "Provides contextual actions for an object or region.",
+      slots: ["root", "menu", "item"],
+      accessibility: [
+        "Expose critical actions elsewhere too.",
+        "Keyboard-managed menu can be upgraded with Radix.",
+      ],
+      usage: ["Use for secondary object actions."],
+      avoid: ["Do not make context menu the only way to complete a key task."],
     },
   },
   {
@@ -1604,6 +2281,213 @@ export const registry = [
         "Use ghost inside already bordered parent surfaces.",
       ],
       avoid: ["Do not use empty states as marketing panels inside component docs."],
+    },
+  },
+  {
+    name: "tabs",
+    title: "Tabs",
+    description: "A tab composition primitive for switching related panels.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "tabs.tsx", content: tabsSource, target: "ui/tabs.tsx" }],
+    metadata: {
+      purpose: "Switches between related content panels.",
+      slots: ["root", "list", "trigger", "content"],
+      accessibility: ["Uses tablist, tab, and tabpanel roles.", "Manage active state in app code."],
+      usage: ["Use for peer sections of one context.", "Keep tab labels short."],
+      avoid: ["Do not use tabs as primary page navigation."],
+    },
+  },
+  {
+    name: "accordion",
+    title: "Accordion",
+    description: "A details-based accordion for stacked disclosure sections.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "accordion.tsx", content: accordionSource, target: "ui/accordion.tsx" }],
+    metadata: {
+      purpose: "Shows and hides stacked sections.",
+      slots: ["root", "item", "trigger", "content"],
+      accessibility: ["Uses native details/summary disclosure behavior."],
+      usage: ["Use for FAQs, settings groups, and optional detail sections."],
+      avoid: ["Do not hide required form fields in collapsed sections by default."],
+    },
+  },
+  {
+    name: "collapsible",
+    title: "Collapsible",
+    description: "A single disclosure primitive for optional content.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "collapsible.tsx", content: collapsibleSource, target: "ui/collapsible.tsx" }],
+    metadata: {
+      purpose: "Shows or hides one content region.",
+      slots: ["root", "trigger", "content"],
+      accessibility: ["Uses native details/summary disclosure behavior."],
+      usage: ["Use for optional controls and advanced sections."],
+      avoid: ["Do not hide critical information by default."],
+    },
+  },
+  {
+    name: "carousel",
+    title: "Carousel",
+    description: "A horizontal scroll-snap carousel primitive.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "carousel.tsx", content: carouselSource, target: "ui/carousel.tsx" }],
+    metadata: {
+      purpose: "Displays a small sequence of cards or previews.",
+      slots: ["root", "item"],
+      accessibility: ["Uses native scrolling.", "Do not auto-advance content."],
+      usage: ["Use for optional preview collections."],
+      avoid: ["Do not hide essential content in carousels."],
+    },
+  },
+  {
+    name: "breadcrumb",
+    title: "Breadcrumb",
+    description: "A semantic breadcrumb navigation primitive.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "breadcrumb.tsx", content: breadcrumbSource, target: "ui/breadcrumb.tsx" }],
+    metadata: {
+      purpose: "Shows the current location in a hierarchy.",
+      slots: ["root", "list", "item", "separator"],
+      accessibility: ["Uses nav with aria-label Breadcrumb."],
+      usage: ["Use for nested apps and object hierarchies."],
+      avoid: ["Do not use as the only navigation."],
+    },
+  },
+  {
+    name: "navigation-menu",
+    title: "Navigation Menu",
+    description: "A simple semantic navigation menu primitive.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [
+      {
+        path: "navigation-menu.tsx",
+        content: navigationMenuSource,
+        target: "ui/navigation-menu.tsx",
+      },
+    ],
+    metadata: {
+      purpose: "Groups primary or secondary navigation links.",
+      slots: ["root", "link"],
+      accessibility: ["Uses nav semantics.", "Links remain real anchors."],
+      usage: ["Use for top bars and side sections."],
+      avoid: ["Do not use buttons for navigation destinations."],
+    },
+  },
+  {
+    name: "menubar",
+    title: "Menubar",
+    description: "A compact command menubar primitive.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "menubar.tsx", content: menubarSource, target: "ui/menubar.tsx" }],
+    metadata: {
+      purpose: "Groups app-level commands.",
+      slots: ["root", "item"],
+      accessibility: ["Uses menubar and menuitem roles."],
+      usage: ["Use for dense app command surfaces."],
+      avoid: ["Do not use menubars for ordinary page links."],
+    },
+  },
+  {
+    name: "pagination",
+    title: "Pagination",
+    description: "A semantic pagination navigation primitive.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "pagination.tsx", content: paginationSource, target: "ui/pagination.tsx" }],
+    metadata: {
+      purpose: "Navigates paged collections.",
+      slots: ["root", "list", "item", "link"],
+      accessibility: [
+        "Uses nav with aria-label Pagination.",
+        "Use aria-current on the current page.",
+      ],
+      usage: ["Use for paged tables and lists."],
+      avoid: ["Do not use pagination for tiny collections."],
+    },
+  },
+  {
+    name: "toast",
+    title: "Toast",
+    description: "A toast region and toast surface for transient status messages.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "toast.tsx", content: toastSource, target: "ui/toast.tsx" }],
+    metadata: {
+      purpose: "Shows transient non-blocking feedback.",
+      slots: ["region", "toast"],
+      accessibility: [
+        "ToastRegion uses aria-live polite.",
+        "Do not rely on toast for critical decisions.",
+      ],
+      usage: ["Use for save, sync, and background task feedback."],
+      avoid: ["Do not use toast as the only error recovery path."],
+    },
+  },
+  {
+    name: "calendar",
+    title: "Calendar",
+    description: "A table foundation for calendar/date-picker composition.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "calendar.tsx", content: calendarSource, target: "ui/calendar.tsx" }],
+    metadata: {
+      purpose: "Provides a semantic calendar table foundation.",
+      slots: ["root", "caption", "row", "cell"],
+      accessibility: ["Use table headings for weekdays.", "Use buttons for selectable dates."],
+      usage: ["Use as a low-level date picker foundation."],
+      avoid: ["Do not use a static calendar for freeform date entry."],
+    },
+  },
+  {
+    name: "date-input",
+    title: "Date Input",
+    description: "A native date input with Brilliant form styling.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "date-input.tsx", content: dateInputSource, target: "ui/date-input.tsx" }],
+    metadata: {
+      purpose: "Collects a date using native platform controls.",
+      slots: ["root"],
+      accessibility: ["Uses native date input.", "Pair with a visible label."],
+      usage: ["Use for straightforward date entry."],
+      avoid: ["Do not use when users need date ranges or complex calendar constraints."],
+    },
+  },
+  {
+    name: "command",
+    title: "Command",
+    description: "A command palette/listbox foundation.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "command.tsx", content: commandSource, target: "ui/command.tsx" }],
+    metadata: {
+      purpose: "Builds command palettes and searchable action lists.",
+      slots: ["root", "input", "list", "item"],
+      accessibility: [
+        "Uses listbox and option roles.",
+        "Manage filtering and active state in app code.",
+      ],
+      usage: ["Use for command palettes, jump menus, and searchable actions."],
+      avoid: ["Do not use without keyboard behavior for complex command centers."],
     },
   },
 ] as const satisfies readonly RegistryItem[];
