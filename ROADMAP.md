@@ -161,14 +161,14 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 - [ ] Tabs, accordion, collapsible, and carousel.
 - [ ] Breadcrumb, navigation menu, menubar, and pagination.
 - [ ] Toast and notification region.
-- [ ] Progress, spinner, skeleton, and empty state. Skeleton shipped; progress, spinner, and empty state remain.
+- [ ] Progress, spinner, skeleton, and empty state. Progress, spinner, and skeleton shipped; empty state remains.
 - [ ] Calendar, date input, and command palette.
 
 ### Near-term primitive backlog
 
 - [x] Radio group with native keyboard and form semantics.
 - [ ] Slider with range support, marks, disabled state, and keyboard control.
-- [ ] Progress and spinner with determinate, indeterminate, and reduced-motion states.
+- [x] Progress and spinner with determinate, indeterminate, and reduced-motion states.
 - [ ] Avatar with fallback initials, image loading/error states, and status presence.
 - [ ] Tooltip and popover using Radix primitives.
 - [ ] Dialog and alert dialog using Radix primitives.

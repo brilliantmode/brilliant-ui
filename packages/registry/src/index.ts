@@ -756,6 +756,75 @@ export function Separator({
 }
 `;
 
+const progressSource = `import type { CSSProperties, HTMLAttributes } from "react";
+
+const variants = {
+  default: "bg-primary",
+  critical: "bg-critical",
+} as const;
+
+const sizes = {
+  sm: "h-1",
+  md: "h-1.5",
+  lg: "h-2",
+} as const;
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
+export interface ProgressProps extends HTMLAttributes<HTMLDivElement> {
+  indeterminate?: boolean;
+  max?: number;
+  size?: keyof typeof sizes;
+  value?: number;
+  variant?: keyof typeof variants;
+}
+
+export function Progress({
+  className = "",
+  indeterminate = false,
+  max = 100,
+  size = "md",
+  style,
+  value = 0,
+  variant = "default",
+  ...props
+}: ProgressProps) {
+  const safeMax = max > 0 ? max : 100;
+  const percentage = clamp((value / safeMax) * 100, 0, 100);
+  const barStyle: CSSProperties = indeterminate
+    ? {}
+    : { transform: \`scaleX(\${percentage / 100})\` };
+
+  return (
+    <div
+      aria-valuemax={indeterminate ? undefined : safeMax}
+      aria-valuemin={indeterminate ? undefined : 0}
+      aria-valuenow={indeterminate ? undefined : Math.round(percentage)}
+      className={[
+        "relative isolate w-full overflow-hidden rounded-full bg-muted",
+        sizes[size],
+        className,
+      ].join(" ")}
+      role="progressbar"
+      style={style}
+      {...props}
+    >
+      <div
+        className={[
+          "h-full rounded-full origin-left will-change-transform",
+          "motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          indeterminate ? "w-1/3 motion-safe:animate-progress-indeterminate motion-reduce:w-full" : "w-full",
+          variants[variant],
+        ].join(" ")}
+        style={barStyle}
+      />
+    </div>
+  );
+}
+`;
+
 const skeletonSource = `import type { HTMLAttributes } from "react";
 
 const variants = {
@@ -799,6 +868,69 @@ export function Skeleton({
       aria-hidden="true"
       {...props}
     />
+  );
+}
+`;
+
+const spinnerSource = `import type { HTMLAttributes } from "react";
+
+const variants = {
+  default: "text-primary",
+  muted: "text-muted-foreground",
+  critical: "text-critical",
+} as const;
+
+const sizes = {
+  sm: "size-4",
+  md: "size-5",
+  lg: "size-6",
+} as const;
+
+export interface SpinnerProps extends HTMLAttributes<HTMLSpanElement> {
+  label?: string;
+  size?: keyof typeof sizes;
+  variant?: keyof typeof variants;
+}
+
+export function Spinner({
+  className = "",
+  label = "Loading",
+  size = "md",
+  variant = "default",
+  ...props
+}: SpinnerProps) {
+  return (
+    <span
+      className={["inline-flex items-center justify-center", variants[variant], className].join(" ")}
+      role="status"
+      {...props}
+    >
+      <svg
+        aria-hidden="true"
+        className={[
+          "motion-safe:animate-spinner motion-reduce:animate-none",
+          sizes[size],
+        ].join(" ")}
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-20"
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="currentColor"
+          strokeWidth="3"
+        />
+        <path
+          d="M21 12a9 9 0 0 0-9-9"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="3"
+        />
+      </svg>
+      <span className="sr-only">{label}</span>
+    </span>
   );
 }
 `;
@@ -1082,6 +1214,55 @@ export const registry = [
         "Use variant raised or primary only when the loading surface needs stronger hierarchy.",
       ],
       avoid: ["Do not show skeletons for very fast operations."],
+    },
+  },
+  {
+    name: "progress",
+    title: "Progress",
+    description: "A determinate or indeterminate progress indicator with tokenized motion.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "progress.tsx", content: progressSource, target: "ui/progress.tsx" }],
+    metadata: {
+      purpose: "Shows task completion or ongoing work.",
+      slots: ["root", "indicator"],
+      accessibility: [
+        "Uses role progressbar.",
+        "Sets aria-valuenow only for determinate progress.",
+        "Provide aria-label or connect visible text with aria-labelledby.",
+        "Indeterminate motion is disabled for reduced-motion users.",
+      ],
+      usage: [
+        "Use value and max for known progress.",
+        "Use indeterminate when progress cannot be measured.",
+        "Keep critical progress for risky, blocking, or destructive flows.",
+      ],
+      avoid: ["Do not show fake percentages when progress is unknown."],
+    },
+  },
+  {
+    name: "spinner",
+    title: "Spinner",
+    description: "A compact loading status primitive with accessible status text.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "spinner.tsx", content: spinnerSource, target: "ui/spinner.tsx" }],
+    metadata: {
+      purpose: "Indicates short, local loading work.",
+      slots: ["root", "icon", "label"],
+      accessibility: [
+        "Uses role status.",
+        "Includes screen-reader-only loading text by default.",
+        "Animation is disabled for reduced-motion users.",
+      ],
+      usage: [
+        "Use inside buttons, table cells, and compact loading regions.",
+        "Set label to describe the loading operation for assistive technology.",
+        "Use muted when the spinner is secondary to nearby loading copy.",
+      ],
+      avoid: ["Do not use for long-running work without descriptive progress text."],
     },
   },
 ] as const satisfies readonly RegistryItem[];

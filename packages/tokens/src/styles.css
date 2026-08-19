@@ -24,7 +24,10 @@
   --shadow-sm: var(--brilliant-shadow-sm);
   --shadow-md: var(--brilliant-shadow-md);
   --animate-border-beam: brilliant-border-beam 3.8s linear infinite;
+  --animate-progress-indeterminate: brilliant-progress-indeterminate 1.2s
+    var(--brilliant-ease-standard) infinite;
   --animate-skeleton-shimmer: brilliant-text-shimmer 1.8s linear infinite;
+  --animate-spinner: brilliant-spin 760ms linear infinite;
   --animate-text-shimmer: brilliant-text-shimmer 2.8s linear infinite;
   --animate-enter: brilliant-enter var(--brilliant-duration-normal) var(--brilliant-ease-enter);
   --animate-exit: brilliant-exit var(--brilliant-duration-fast) var(--brilliant-ease-exit);
@@ -204,6 +207,21 @@ body {
 }
 
 @keyframes brilliant-border-beam {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes brilliant-progress-indeterminate {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(260%);
+  }
+}
+
+@keyframes brilliant-spin {
   to {
     transform: rotate(1turn);
   }

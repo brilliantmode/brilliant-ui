@@ -21,6 +21,8 @@ const navItems = [
   ["Alert", "#alert"],
   ["Separator", "#separator"],
   ["Skeleton", "#skeleton"],
+  ["Progress", "#progress"],
+  ["Spinner", "#spinner"],
   ["Foundations", "#foundations"],
   ["Blocks", "#blocks"],
   ["Theming", "#theming"],
@@ -223,6 +225,16 @@ export function Example() {
 
 export function Example() {
   return <Skeleton size="title" variant="raised" />;
+}`,
+  progress: `import { Progress } from "@/components/ui/progress";
+
+export function Example() {
+  return <Progress aria-label="Sync progress" value={64} />;
+}`,
+  spinner: `import { Spinner } from "@/components/ui/spinner";
+
+export function Example() {
+  return <Spinner label="Saving settings" size="md" variant="default" />;
 }`,
 } as const;
 
@@ -547,6 +559,80 @@ function ComponentMiniPreview({ name }: { name: string }) {
             <div className="relative isolate h-3 w-20 overflow-hidden rounded-[0.25rem] bg-muted after:absolute after:inset-0 after:-translate-x-full after:bg-[linear-gradient(90deg,transparent,oklch(1_0_0/0.38),transparent)] after:content-[''] motion-safe:after:animate-skeleton-shimmer motion-reduce:after:hidden" />
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (name === "progress") {
+    return (
+      <div className="grid gap-5">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="font-medium">Syncing records</span>
+            <span className="text-muted-foreground">64%</span>
+          </div>
+          <div
+            aria-label="Sync progress"
+            aria-valuemax={100}
+            aria-valuemin={0}
+            aria-valuenow={64}
+            className="relative isolate h-1.5 w-full overflow-hidden rounded-full bg-muted"
+            role="progressbar"
+          >
+            <div className="h-full w-full origin-left scale-x-[0.64] rounded-full bg-primary transition-transform duration-[var(--brilliant-duration-normal)]" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <div className="text-sm font-medium">Preparing export</div>
+          <div
+            aria-label="Preparing export"
+            className="relative isolate h-1.5 w-full overflow-hidden rounded-full bg-muted"
+            role="progressbar"
+          >
+            <div className="h-full w-1/3 rounded-full bg-primary motion-safe:animate-progress-indeterminate motion-reduce:w-full motion-reduce:animate-none" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (name === "spinner") {
+    return (
+      <div className="flex items-center gap-5">
+        {[
+          ["sm", "size-4", "text-muted-foreground"],
+          ["md", "size-5", "text-primary"],
+          ["lg", "size-6", "text-critical"],
+        ].map(([label, size, color]) => (
+          <span className="inline-flex items-center gap-2 text-sm" key={label}>
+            <span className={["inline-flex items-center justify-center", color].join(" ")}>
+              <svg
+                aria-hidden="true"
+                className={["motion-safe:animate-spinner motion-reduce:animate-none", size].join(
+                  " ",
+                )}
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-20"
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                />
+                <path
+                  d="M21 12a9 9 0 0 0-9-9"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth="3"
+                />
+              </svg>
+            </span>
+            <span>{label}</span>
+          </span>
+        ))}
       </div>
     );
   }
@@ -938,7 +1024,9 @@ export function Example() {
                   item.name === "checkbox" ||
                   item.name === "radio-group" ||
                   item.name === "separator" ||
-                  item.name === "skeleton" ? (
+                  item.name === "skeleton" ||
+                  item.name === "progress" ||
+                  item.name === "spinner" ? (
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Variants</h3>
                       <div className="overflow-auto rounded-lg border border-border">
@@ -977,24 +1065,38 @@ export function Example() {
                                         ["muted", "Subtle divider for dense grouped content."],
                                         ["primary", "Branded or active section divider."],
                                       ]
-                                    : item.name === "skeleton"
+                                    : item.name === "progress"
                                       ? [
-                                          ["surface", "Default loading placeholder."],
-                                          ["raised", "Slightly stronger placeholder hierarchy."],
-                                          [
-                                            "primary",
-                                            "Branded loading placeholder, used sparingly.",
-                                          ],
+                                          ["default", "Normal progress indication."],
+                                          ["critical", "Risky, blocking, or destructive flows."],
                                         ]
-                                      : [
-                                          ["default", "Normal UI copy."],
-                                          ["muted", "Secondary or supporting copy."],
-                                          ["glow", "Premium, active, or AI-ready emphasis."],
-                                          [
-                                            "shimmer",
-                                            "Generating, syncing, or live processing text.",
-                                          ],
-                                        ]
+                                      : item.name === "spinner"
+                                        ? [
+                                            ["default", "Primary local loading indicator."],
+                                            ["muted", "Secondary loading next to text."],
+                                            ["critical", "Loading tied to risky/error recovery."],
+                                          ]
+                                        : item.name === "skeleton"
+                                          ? [
+                                              ["surface", "Default loading placeholder."],
+                                              [
+                                                "raised",
+                                                "Slightly stronger placeholder hierarchy.",
+                                              ],
+                                              [
+                                                "primary",
+                                                "Branded loading placeholder, used sparingly.",
+                                              ],
+                                            ]
+                                          : [
+                                              ["default", "Normal UI copy."],
+                                              ["muted", "Secondary or supporting copy."],
+                                              ["glow", "Premium, active, or AI-ready emphasis."],
+                                              [
+                                                "shimmer",
+                                                "Generating, syncing, or live processing text.",
+                                              ],
+                                            ]
                             ).map(([variant, use]) => (
                               <tr className="border-b border-border last:border-b-0" key={variant}>
                                 <td className="px-4 py-3 font-mono text-xs">{variant}</td>
@@ -1034,6 +1136,16 @@ export function Example() {
                         <p className="text-sm leading-6 text-muted-foreground">
                           Use <code>variant=&quot;surface&quot;</code> for most placeholders. Keep
                           skeletons close to the shape of the incoming content.
+                        </p>
+                      ) : item.name === "progress" ? (
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Use <code>indeterminate</code> when real progress is unknown. Use{" "}
+                          <code>value</code> and <code>max</code> only for measured progress.
+                        </p>
+                      ) : item.name === "spinner" ? (
+                        <p className="text-sm leading-6 text-muted-foreground">
+                          Use <code>label</code> to describe the loading operation for screen reader
+                          users. Prefer <code>variant=&quot;muted&quot;</code> beside visible copy.
                         </p>
                       ) : (
                         <p className="text-sm leading-6 text-muted-foreground">
@@ -1081,7 +1193,10 @@ export function Example() {
                     </div>
                   ) : null}
 
-                  {item.name === "checkbox" || item.name === "radio-group" ? (
+                  {item.name === "checkbox" ||
+                  item.name === "radio-group" ||
+                  item.name === "progress" ||
+                  item.name === "spinner" ? (
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Sizes</h3>
                       <div className="overflow-auto rounded-lg border border-border">
@@ -1099,14 +1214,26 @@ export function Example() {
                                   ["md", "Default form rows and preference groups."],
                                   ["lg", "Prominent plan, permission, or approval choices."],
                                 ]
-                              : [
-                                  ["sm", "Dense tables and compact filter menus."],
-                                  ["md", "Default form rows and settings lists."],
-                                  [
-                                    "lg",
-                                    "Prominent settings rows, approvals, and touch-friendly UI.",
-                                  ],
-                                ]
+                              : item.name === "progress"
+                                ? [
+                                    ["sm", "Subtle inline or table-level progress."],
+                                    ["md", "Default task progress."],
+                                    ["lg", "Prominent page or modal progress."],
+                                  ]
+                                : item.name === "spinner"
+                                  ? [
+                                      ["sm", "Inline button and table-cell loading."],
+                                      ["md", "Default compact loading status."],
+                                      ["lg", "Prominent empty-state or page-region loading."],
+                                    ]
+                                  : [
+                                      ["sm", "Dense tables and compact filter menus."],
+                                      ["md", "Default form rows and settings lists."],
+                                      [
+                                        "lg",
+                                        "Prominent settings rows, approvals, and touch-friendly UI.",
+                                      ],
+                                    ]
                             ).map(([size, use]) => (
                               <tr className="border-b border-border last:border-b-0" key={size}>
                                 <td className="px-4 py-3 font-mono text-xs">{`size="${size}"`}</td>
