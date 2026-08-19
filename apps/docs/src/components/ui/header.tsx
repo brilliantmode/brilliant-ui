@@ -169,7 +169,7 @@ export function HeaderBrand({ className = "", ...props }: AnchorHTMLAttributes<H
   return (
     <a
       className={cx(
-        "inline-flex shrink-0 items-center gap-2 rounded-[0.25rem] font-semibold tracking-[-0.015em] outline-none md:border-r md:border-border md:pr-5",
+        "inline-flex shrink-0 items-center gap-2 rounded-[0.25rem] font-semibold tracking-[-0.015em] outline-none md:mr-3",
         "focus-visible:ring-1 focus-visible:ring-ring",
         className,
       )}
@@ -188,7 +188,7 @@ export function HeaderNav({ className = "", ...props }: HTMLAttributes<HTMLEleme
         "absolute inset-x-0 top-full grid gap-1 border-b border-border bg-background p-3 shadow-md",
         "motion-safe:origin-top motion-safe:transition-[opacity,transform,visibility] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         menuOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0",
-        "md:static md:ml-1 md:flex md:visible md:translate-y-0 md:items-center md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:shadow-none",
+        "md:static md:ml-0 md:flex md:visible md:translate-y-0 md:items-center md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:shadow-none",
         className,
       )}
       data-state={menuOpen ? "open" : "closed"}
