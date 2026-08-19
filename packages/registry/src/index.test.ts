@@ -55,6 +55,12 @@ describe("registry", () => {
     expect(headerSource).toContain('sticky: "sticky top-0"');
     expect(headerSource).toContain('static: "relative"');
     expect(headerSource).toContain('fixed: "fixed inset-x-0 top-0"');
+    expect(headerSource).toContain('solid: "bg-background"');
+    expect(headerSource).toContain('translucent: "bg-background/80 backdrop-blur"');
+    expect(headerSource).toContain('transparent: "bg-transparent"');
+    expect(headerSource).toContain('surface = "translucent"');
+    expect(headerSource).toContain('surface === "solid"');
+    expect(headerSource).toContain("data-surface={surface}");
     expect(headerSource).toContain("data-[scrolled=true]:bg-background/95");
     expect(headerSource).toContain('behavior === "reveal"');
     expect(headerSource).toContain("data-scroll-direction={scrollState.direction}");

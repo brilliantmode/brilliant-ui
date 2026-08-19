@@ -1,5 +1,6 @@
 import { registry } from "@brilliant-ui/registry";
 import {
+  type CSSProperties,
   type MouseEvent,
   type ReactNode,
   StrictMode,
@@ -96,10 +97,69 @@ import { Status, StatusBar } from "./components/ui/status";
 import "./styles.css";
 
 type NavItem = readonly [label: string, href: string];
+type PresetBrandTheme = "blue" | "emerald" | "indigo" | "rose" | "violet";
+type BrandTheme = "custom" | PresetBrandTheme;
+type ShellTone = "contrast" | "neutral";
 type NavGroup = {
   label: string;
   items: readonly NavItem[];
 };
+
+const brandThemes = [
+  {
+    color: "oklch(0.54 0.23 276)",
+    darkPrimary: "oklch(0.69 0.18 276)",
+    hex: "#554cf4",
+    label: "Indigo",
+    primary: "oklch(0.54 0.23 276)",
+    ring: "oklch(0.61 0.22 276)",
+    value: "indigo",
+  },
+  {
+    color: "oklch(0.55 0.24 302)",
+    darkPrimary: "oklch(0.72 0.17 302)",
+    hex: "#8b4ce8",
+    label: "Violet",
+    primary: "oklch(0.55 0.24 302)",
+    ring: "oklch(0.62 0.21 302)",
+    value: "violet",
+  },
+  {
+    color: "oklch(0.55 0.2 252)",
+    darkPrimary: "oklch(0.70 0.15 252)",
+    hex: "#2674d9",
+    label: "Blue",
+    primary: "oklch(0.55 0.2 252)",
+    ring: "oklch(0.63 0.18 252)",
+    value: "blue",
+  },
+  {
+    color: "oklch(0.54 0.17 158)",
+    darkPrimary: "oklch(0.72 0.15 158)",
+    hex: "#16835b",
+    label: "Emerald",
+    primary: "oklch(0.54 0.17 158)",
+    ring: "oklch(0.62 0.16 158)",
+    value: "emerald",
+  },
+  {
+    color: "oklch(0.57 0.22 12)",
+    darkPrimary: "oklch(0.72 0.18 12)",
+    hex: "#c7355d",
+    label: "Rose",
+    primary: "oklch(0.57 0.22 12)",
+    ring: "oklch(0.64 0.2 12)",
+    value: "rose",
+  },
+] as const satisfies ReadonlyArray<{
+  color: string;
+  darkPrimary: string;
+  hex: string;
+  label: string;
+  primary: string;
+  ring: string;
+  value: PresetBrandTheme;
+}>;
 
 const navGroups = [
   {
@@ -204,7 +264,7 @@ const navGroups = [
       ["Onboarding Wizard", "/components/onboarding-wizard"],
       ["Foundations", "/foundations"],
       ["Blocks", "/blocks"],
-      ["Theming", "/theming"],
+      ["Theme Builder", "/theming"],
       ["CLI", "/cli"],
     ],
     label: "System",
@@ -1623,6 +1683,7 @@ export function Example() {
       behavior="elevate"
       position="sticky"
       scrollThreshold={24}
+      surface="solid"
     >
       <HeaderContainer>
         <HeaderBrand href="/">
@@ -3849,7 +3910,7 @@ function PhotoExamplePreview({ example }: { example: keyof typeof photoExampleCo
 
 function HeaderPreview() {
   return (
-    <Header behavior="none" className="bg-background/95" position="static">
+    <Header behavior="none" position="static" surface="solid">
       <HeaderContainer>
         <HeaderBrand href="#header-preview">
           <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
@@ -6224,28 +6285,448 @@ function isTopNavActive(activeRoute: NavHref, topHref: (typeof topNavItems)[numb
   return pathname === topHref;
 }
 
+function readableTextColor(hex: string) {
+  const value = hex.replace("#", "");
+  if (!/^[0-9a-f]{6}$/i.test(value)) return "#ffffff";
+
+  const channels = [0, 2, 4].map((offset) => {
+    const channel = Number.parseInt(value.slice(offset, offset + 2), 16) / 255;
+    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+  });
+  const luminance =
+    0.2126 * (channels[0] ?? 0) + 0.7152 * (channels[1] ?? 0) + 0.0722 * (channels[2] ?? 0);
+
+  return luminance > 0.42 ? "#111827" : "#ffffff";
+}
+
+function BrandThemePicker({
+  brandTheme,
+  customColor,
+  expanded = false,
+  onBrandThemeChange,
+  onShellToneChange,
+  shellTone,
+}: {
+  brandTheme: BrandTheme;
+  customColor: string;
+  expanded?: boolean;
+  onBrandThemeChange: (theme: BrandTheme) => void;
+  onShellToneChange?: (tone: ShellTone) => void;
+  shellTone?: ShellTone;
+}) {
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+  const selectedTheme = brandThemes.find((theme) => theme.value === brandTheme) ?? {
+    color: customColor,
+    label: "Custom",
+  };
+
+  if (expanded) {
+    return (
+      <fieldset aria-label="Brand color" className="grid min-w-0 gap-3 sm:grid-cols-5">
+        {brandThemes.map((theme) => (
+          <button
+            aria-pressed={brandTheme === theme.value}
+            className="group flex min-w-0 items-center gap-3 rounded-[0.5rem] border border-border bg-surface p-3 text-left shadow-sm outline-none transition-[border-color,background-color,transform] hover:bg-muted focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.99] data-[selected=true]:border-primary data-[selected=true]:bg-primary/5 motion-reduce:transition-none"
+            data-selected={brandTheme === theme.value}
+            key={theme.value}
+            onClick={() => onBrandThemeChange(theme.value)}
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              className="size-5 shrink-0 rounded-full shadow-[inset_0_0_0_0.5px_oklch(0_0_0/0.15)]"
+              style={{ backgroundColor: theme.color }}
+            />
+            <span className="truncate text-sm font-medium">{theme.label}</span>
+          </button>
+        ))}
+      </fieldset>
+    );
+  }
+
+  return (
+    <details className="group/brand relative" ref={detailsRef}>
+      <summary
+        aria-label={`Theme: ${selectedTheme.label}, ${shellTone ?? "neutral"} surfaces`}
+        className="inline-grid size-9 cursor-pointer list-none place-items-center rounded-[0.375rem] border border-border bg-surface shadow-sm outline-none hover:bg-muted focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97] [&::-webkit-details-marker]:hidden"
+        title={`Theme: ${selectedTheme.label}, ${shellTone ?? "neutral"} surfaces`}
+      >
+        <span
+          aria-hidden="true"
+          className="size-4 rounded-full shadow-[inset_0_0_0_0.5px_oklch(0_0_0/0.18)]"
+          style={{ backgroundColor: selectedTheme.color }}
+        />
+      </summary>
+      <div className="absolute right-0 top-full z-40 mt-2 w-52 rounded-[0.5rem] border border-border bg-surface p-2 shadow-md motion-safe:animate-enter motion-reduce:animate-none">
+        <p className="px-2 pb-2 pt-1 text-xs font-semibold text-foreground">Brand color</p>
+        <div className="grid gap-0.5">
+          {brandThemes.map((theme) => (
+            <button
+              aria-pressed={brandTheme === theme.value}
+              className="flex h-9 items-center gap-2.5 rounded-[0.375rem] px-2 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-1 focus-visible:ring-ring"
+              key={theme.value}
+              onClick={() => {
+                onBrandThemeChange(theme.value);
+                if (detailsRef.current) {
+                  detailsRef.current.open = false;
+                }
+              }}
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className="size-4 rounded-full shadow-[inset_0_0_0_0.5px_oklch(0_0_0/0.18)]"
+                style={{ backgroundColor: theme.color }}
+              />
+              <span className="flex-1">{theme.label}</span>
+              {brandTheme === theme.value ? (
+                <span aria-hidden="true" className="text-primary">
+                  ✓
+                </span>
+              ) : null}
+            </button>
+          ))}
+          <button
+            aria-pressed={brandTheme === "custom"}
+            className="flex h-9 items-center gap-2.5 rounded-[0.375rem] px-2 text-left text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-1 focus-visible:ring-ring"
+            onClick={() => {
+              onBrandThemeChange("custom");
+              if (detailsRef.current) {
+                detailsRef.current.open = false;
+              }
+            }}
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              className="size-4 rounded-full shadow-[inset_0_0_0_0.5px_oklch(0_0_0/0.18)]"
+              style={{ backgroundColor: customColor }}
+            />
+            <span className="flex-1">Custom</span>
+            {brandTheme === "custom" ? (
+              <span aria-hidden="true" className="text-primary">
+                ✓
+              </span>
+            ) : null}
+          </button>
+        </div>
+        {onShellToneChange && shellTone ? (
+          <fieldset className="mt-2 border-t border-border px-1 pt-2">
+            <legend className="sr-only">Shell surfaces</legend>
+            <p className="mb-2 px-1 text-xs font-semibold text-foreground">Shell surfaces</p>
+            <div className="grid grid-cols-2 rounded-[0.375rem] bg-muted p-0.5">
+              {(["neutral", "contrast"] as const).map((tone) => (
+                <button
+                  aria-pressed={shellTone === tone}
+                  className="h-7 rounded-[0.25rem] text-xs capitalize text-muted-foreground data-[selected=true]:bg-surface data-[selected=true]:font-medium data-[selected=true]:text-foreground data-[selected=true]:shadow-sm"
+                  data-selected={shellTone === tone}
+                  key={tone}
+                  onClick={() => onShellToneChange(tone)}
+                  type="button"
+                >
+                  {tone}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        ) : null}
+      </div>
+    </details>
+  );
+}
+
+function ThemeBuilder({
+  brandTheme,
+  customColor,
+  onBrandThemeChange,
+  onCustomColorChange,
+  onShellToneChange,
+  onThemeChange,
+  shellTone,
+  theme,
+}: {
+  brandTheme: BrandTheme;
+  customColor: string;
+  onBrandThemeChange: (theme: BrandTheme) => void;
+  onCustomColorChange: (color: string) => void;
+  onShellToneChange: (tone: ShellTone) => void;
+  onThemeChange: (theme: "dark" | "light") => void;
+  shellTone: ShellTone;
+  theme: "dark" | "light";
+}) {
+  const preset = brandThemes.find((item) => item.value === brandTheme);
+  const primary =
+    brandTheme === "custom" ? customColor : (preset?.primary ?? brandThemes[0].primary);
+  const darkPrimary =
+    brandTheme === "custom" ? customColor : (preset?.darkPrimary ?? brandThemes[0].darkPrimary);
+  const onPrimary = brandTheme === "custom" ? readableTextColor(customColor) : "#ffffff";
+  const builderStyle = {
+    "--brilliant-brand-on-seed": readableTextColor(customColor),
+    "--brilliant-brand-seed": customColor,
+  } as CSSProperties;
+  const generatedCss = [
+    `[data-brand="${brandTheme}"] {`,
+    `  --brilliant-primary: ${primary};`,
+    `  --brilliant-primary-foreground: ${onPrimary};`,
+    "  --brilliant-ring: color-mix(in oklch, var(--brilliant-primary) 78%, white);",
+    "  --brilliant-chart-1: var(--brilliant-primary);",
+    "  --brilliant-chart-2: color-mix(in oklch longer hue, var(--brilliant-primary) 72%, oklch(0.68 0.16 205));",
+    "}",
+    "",
+    `[data-theme="dark"][data-brand="${brandTheme}"] {`,
+    `  --brilliant-primary: ${darkPrimary};`,
+    `  --brilliant-primary-foreground: ${onPrimary};`,
+    "}",
+    ...(shellTone === "contrast"
+      ? [
+          "",
+          ".brand-surface {",
+          "  --brilliant-background: color-mix(in oklch, var(--brilliant-primary) 22%, oklch(0.16 0.025 264));",
+          "  --brilliant-foreground: oklch(0.985 0.004 264);",
+          "  --brilliant-muted-foreground: oklch(0.84 0.025 264);",
+          "  --brilliant-border: oklch(1 0 0 / 0.14);",
+          "}",
+        ]
+      : []),
+  ].join("\n");
+
+  return (
+    <div className="space-y-6" style={builderStyle}>
+      <div className="grid gap-5 rounded-lg border border-border bg-surface p-5 lg:grid-cols-[minmax(0,1fr)_19rem]">
+        <div className="space-y-5">
+          <div>
+            <h3 className="font-semibold">Brand palette</h3>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+              Start with a calibrated preset or provide the product’s seed color.
+            </p>
+          </div>
+          <BrandThemePicker
+            brandTheme={brandTheme}
+            customColor={customColor}
+            expanded
+            onBrandThemeChange={onBrandThemeChange}
+          />
+          <div className="grid gap-2 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-center">
+            <label
+              className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-[0.375rem] border border-border bg-background px-3 text-sm font-medium shadow-sm"
+              htmlFor="brand-seed-color"
+            >
+              <input
+                className="size-5 cursor-pointer appearance-none overflow-hidden rounded-full border-0 bg-transparent p-0 [&::-moz-color-swatch]:border-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-0"
+                id="brand-seed-color"
+                onChange={(event) => {
+                  onCustomColorChange(event.target.value);
+                  onBrandThemeChange("custom");
+                }}
+                type="color"
+                value={customColor}
+              />
+              Custom color
+            </label>
+            <input
+              aria-label="Custom brand color in hexadecimal"
+              className="h-10 min-w-0 rounded-[0.375rem] border-0 bg-background px-3 font-mono text-sm uppercase shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] outline-none focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]"
+              defaultValue={customColor}
+              maxLength={7}
+              onBlur={(event) => {
+                if (!/^#[0-9a-f]{6}$/i.test(event.currentTarget.value)) {
+                  event.currentTarget.value = customColor;
+                }
+              }}
+              onChange={(event) => {
+                const value = event.target.value;
+                if (/^#[0-9a-f]{6}$/i.test(value)) {
+                  onCustomColorChange(value);
+                  onBrandThemeChange("custom");
+                }
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="grid content-start gap-5 border-t border-border pt-5 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+          <fieldset>
+            <legend className="mb-2 text-sm font-medium">Appearance</legend>
+            <div className="grid grid-cols-2 rounded-[0.5rem] border border-border bg-background p-1">
+              {(["light", "dark"] as const).map((value) => (
+                <button
+                  aria-pressed={theme === value}
+                  className="h-8 rounded-[0.375rem] text-sm capitalize text-muted-foreground data-[selected=true]:bg-surface data-[selected=true]:font-medium data-[selected=true]:text-foreground data-[selected=true]:shadow-sm"
+                  data-selected={theme === value}
+                  key={value}
+                  onClick={() => onThemeChange(value)}
+                  type="button"
+                >
+                  {value}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend className="mb-2 text-sm font-medium">Shell surfaces</legend>
+            <div className="grid grid-cols-2 rounded-[0.5rem] border border-border bg-background p-1">
+              {(
+                [
+                  [false, "Neutral"],
+                  [true, "Contrast"],
+                ] as const
+              ).map(([value, label]) => (
+                <button
+                  aria-pressed={(shellTone === "contrast") === value}
+                  className="h-8 rounded-[0.375rem] text-sm text-muted-foreground data-[selected=true]:bg-surface data-[selected=true]:font-medium data-[selected=true]:text-foreground data-[selected=true]:shadow-sm"
+                  data-selected={(shellTone === "contrast") === value}
+                  key={label}
+                  onClick={() => onShellToneChange(value ? "contrast" : "neutral")}
+                  type="button"
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <div
+        className="overflow-hidden rounded-lg border border-border bg-background shadow-sm"
+        data-brand={brandTheme}
+        data-theme={theme}
+        style={builderStyle}
+      >
+        <div className="grid min-h-[32rem] grid-cols-[12rem_minmax(0,1fr)] grid-rows-[3.5rem_minmax(0,1fr)_auto]">
+          <aside
+            className="theme-builder-preview row-span-3 border-r border-border bg-background p-4 text-foreground"
+            data-shell={shellTone}
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="grid size-8 place-items-center rounded-[0.375rem] bg-primary text-sm font-semibold text-primary-foreground">
+                B
+              </span>
+              <span className="text-sm font-semibold">Brilliant</span>
+            </div>
+            <p className="mb-2 mt-8 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Workspace
+            </p>
+            <nav className="grid gap-1 text-sm">
+              <span className="rounded-[0.375rem] bg-muted px-3 py-2 font-medium text-foreground">
+                Overview
+              </span>
+              <span className="px-3 py-2 text-muted-foreground">Customers</span>
+              <span className="px-3 py-2 text-muted-foreground">Billing</span>
+            </nav>
+            <div className="mt-8 border-t border-border pt-4 text-xs text-muted-foreground">
+              Acme workspace
+            </div>
+          </aside>
+          <header
+            className="theme-builder-preview flex items-center justify-between border-b border-border bg-background px-5 text-foreground"
+            data-shell={shellTone}
+          >
+            <div>
+              <p className="text-sm font-semibold">Overview</p>
+              <p className="text-xs text-muted-foreground">Live product workspace</p>
+            </div>
+            <button
+              className="h-8 rounded-[0.25rem] bg-primary px-3 text-xs font-medium text-primary-foreground"
+              type="button"
+            >
+              New report
+            </button>
+          </header>
+          <main className="min-w-0 bg-background p-5 text-foreground">
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[
+                ["Revenue", "$84.2K"],
+                ["Accounts", "1,284"],
+                ["Activation", "68%"],
+              ].map(([label, value]) => (
+                <article
+                  className="rounded-[0.5rem] border border-border bg-surface p-4"
+                  key={label}
+                >
+                  <p className="text-xs text-muted-foreground">{label}</p>
+                  <p className="mt-2 text-xl font-semibold">{value}</p>
+                </article>
+              ))}
+            </div>
+            <article className="mt-3 rounded-[0.5rem] border border-border bg-surface p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold">Portfolio activity</p>
+                  <p className="text-xs text-muted-foreground">Semantic chart series</p>
+                </div>
+                <Badge tone="ready">Live</Badge>
+              </div>
+              <div
+                aria-label="Example bar chart"
+                className="mt-8 flex h-28 items-end gap-2"
+                role="img"
+              >
+                {[44, 72, 55, 88, 64, 96, 78].map((height, index) => (
+                  <span
+                    className={
+                      index % 3 === 0
+                        ? "flex-1 rounded-t-[0.2rem] bg-chart-2"
+                        : "flex-1 rounded-t-[0.2rem] bg-primary"
+                    }
+                    key={height + index}
+                    style={{ height: `${height.toString()}%` }}
+                  />
+                ))}
+              </div>
+            </article>
+          </main>
+          <footer
+            className="theme-builder-preview flex items-center justify-between border-t border-border bg-background px-5 py-3 text-xs text-muted-foreground"
+            data-shell={shellTone}
+          >
+            <span>Acme Operations</span>
+            <span>System operational</span>
+          </footer>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <h3 className="font-semibold">Generated theme CSS</h3>
+        <CodeBlock language="css">{generatedCss}</CodeBlock>
+      </div>
+    </div>
+  );
+}
+
 function AppHeader({
   activeRoute,
+  brandTheme,
+  customColor,
+  onBrandThemeChange,
   onMenuClick,
   onNavigate,
   onSearchOpen,
+  onShellToneChange,
   onThemeToggle,
+  shellTone,
   theme,
 }: {
   activeRoute: NavHref;
+  brandTheme: BrandTheme;
+  customColor: string;
+  onBrandThemeChange: (theme: BrandTheme) => void;
   onMenuClick: () => void;
   onNavigate: NavigateHandler;
   onSearchOpen: () => void;
+  onShellToneChange: (tone: ShellTone) => void;
   onThemeToggle: () => void;
+  shellTone: ShellTone;
   theme: "dark" | "light";
 }) {
   return (
     <Header
       behavior="elevate"
       border
-      className="xl:col-span-2"
+      className={`${shellTone === "contrast" ? "brand-surface" : ""} xl:col-span-2`}
       position="sticky"
       scrollThreshold={24}
+      surface={shellTone === "contrast" ? "solid" : "translucent"}
     >
       <HeaderContainer>
         <button
@@ -6304,6 +6785,13 @@ function AppHeader({
               ⌘K
             </kbd>
           </button>
+          <BrandThemePicker
+            brandTheme={brandTheme}
+            customColor={customColor}
+            onBrandThemeChange={onBrandThemeChange}
+            onShellToneChange={onShellToneChange}
+            shellTone={shellTone}
+          />
           <button
             aria-label={`Use ${theme === "dark" ? "light" : "dark"} theme`}
             className="inline-grid size-9 place-items-center rounded-[0.375rem] border border-border bg-surface text-muted-foreground shadow-sm outline-none hover:bg-muted hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97] motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none"
@@ -6351,6 +6839,7 @@ function MobileDocsNav({
   onSearchOpen,
   onThemeToggle,
   open,
+  shellTone,
   theme,
 }: {
   activeRoute: NavHref;
@@ -6359,6 +6848,7 @@ function MobileDocsNav({
   onSearchOpen: () => void;
   onThemeToggle: () => void;
   open: boolean;
+  shellTone: ShellTone;
   theme: "dark" | "light";
 }) {
   if (!open) {
@@ -6376,7 +6866,7 @@ function MobileDocsNav({
       <aside
         aria-modal="true"
         aria-label="Documentation navigation"
-        className="relative h-full w-[min(21rem,calc(100vw-2rem))] overflow-hidden border-r border-border bg-background px-5 py-5 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] motion-safe:animate-enter motion-reduce:animate-none"
+        className={`relative h-full w-[min(21rem,calc(100vw-2rem))] overflow-hidden border-r border-border bg-background px-5 py-5 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] motion-safe:animate-enter motion-reduce:animate-none ${shellTone === "contrast" ? "brand-surface" : ""}`}
         role="dialog"
       >
         <button
@@ -6437,9 +6927,18 @@ function StatusRail({ firstItemTitle }: { firstItemTitle: string }) {
   );
 }
 
-function AppFooter({ onNavigate }: { onNavigate: NavigateHandler }) {
+function AppFooter({
+  onNavigate,
+  shellTone,
+}: {
+  onNavigate: NavigateHandler;
+  shellTone: ShellTone;
+}) {
   return (
-    <Footer variant="muted">
+    <Footer
+      className={shellTone === "contrast" ? "brand-surface" : ""}
+      variant={shellTone === "contrast" ? "surface" : "muted"}
+    >
       <FooterContainer className="py-8 md:py-8">
         <FooterMain>
           <div>
@@ -6467,7 +6966,7 @@ function AppFooter({ onNavigate }: { onNavigate: NavigateHandler }) {
                 Foundations
               </FooterLink>
               <FooterLink href="/theming" onClick={(event) => onNavigate(event, "/theming")}>
-                Theming
+                Theme Builder
               </FooterLink>
             </FooterGroup>
             <FooterGroup title="Resources">
@@ -6492,6 +6991,18 @@ function AppFooter({ onNavigate }: { onNavigate: NavigateHandler }) {
 function App() {
   const firstItem = registry[0];
   const [activeRoute, setActiveRoute] = useState<NavHref>(() => getRoute());
+  const [brandTheme, setBrandTheme] = useState<BrandTheme>(() => {
+    const storedTheme = window.localStorage.getItem("brilliant-brand-theme");
+    return storedTheme === "custom" || brandThemes.some((theme) => theme.value === storedTheme)
+      ? (storedTheme as BrandTheme)
+      : "indigo";
+  });
+  const [customColor, setCustomColor] = useState(
+    () => window.localStorage.getItem("brilliant-custom-color") ?? "#554cf4",
+  );
+  const [shellTone, setShellTone] = useState<ShellTone>(() =>
+    window.localStorage.getItem("brilliant-shell-tone") === "contrast" ? "contrast" : "neutral",
+  );
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(
     () => window.localStorage.getItem("brilliant-docs-sidebar-collapsed") === "true",
@@ -6584,8 +7095,24 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
+    document.documentElement.dataset.brand = brandTheme;
+    document.documentElement.style.setProperty("--brilliant-brand-seed", customColor);
+    document.documentElement.style.setProperty(
+      "--brilliant-brand-on-seed",
+      readableTextColor(customColor),
+    );
+    window.localStorage.setItem("brilliant-brand-theme", brandTheme);
+    window.localStorage.setItem("brilliant-custom-color", customColor);
+  }, [brandTheme, customColor]);
+
+  useEffect(() => {
     window.localStorage.setItem("brilliant-docs-sidebar-collapsed", String(sidebarCollapsed));
   }, [sidebarCollapsed]);
+
+  useEffect(() => {
+    document.documentElement.dataset.shellTone = shellTone;
+    window.localStorage.setItem("brilliant-shell-tone", shellTone);
+  }, [shellTone]);
 
   useEffect(() => {
     const handleSearchShortcut = (event: KeyboardEvent) => {
@@ -6647,6 +7174,7 @@ function App() {
         onSearchOpen={openSearch}
         onThemeToggle={toggleTheme}
         open={mobileNavOpen}
+        shellTone={shellTone}
         theme={theme}
       />
       <DocsSearchDialog
@@ -6659,7 +7187,7 @@ function App() {
         className={`mx-auto grid max-w-screen-2xl motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "md:grid-cols-[72px_minmax(0,1fr)] xl:grid-cols-[72px_minmax(0,1fr)_280px]" : "md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_280px]"}`}
       >
         <aside
-          className={`sticky top-0 hidden h-screen overflow-visible border-r border-border py-6 md:row-span-2 md:block motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "px-3" : "px-6"}`}
+          className={`sticky top-0 hidden h-screen overflow-visible border-r border-border bg-background py-6 md:row-span-2 md:block motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${shellTone === "contrast" ? "brand-surface" : ""} ${sidebarCollapsed ? "px-3" : "px-6"}`}
         >
           <DocsNav
             activeRoute={activeRoute}
@@ -6674,10 +7202,15 @@ function App() {
 
         <AppHeader
           activeRoute={activeRoute}
+          brandTheme={brandTheme}
+          customColor={customColor}
+          onBrandThemeChange={setBrandTheme}
           onMenuClick={() => setMobileNavOpen(true)}
           onNavigate={navigate}
           onSearchOpen={openSearch}
+          onShellToneChange={setShellTone}
           onThemeToggle={toggleTheme}
+          shellTone={shellTone}
           theme={theme}
         />
         <main
@@ -7163,7 +7696,7 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                       <div className="space-y-3">
                         <h3 className="text-lg font-semibold">
                           {item.name === "header"
-                            ? "Positioning, border, and scroll behavior"
+                            ? "Surface, positioning, border, and scroll behavior"
                             : "Variants"}
                         </h3>
                         <div className="overflow-auto rounded-lg border border-border">
@@ -7181,6 +7714,18 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                             <tbody>
                               {(item.name === "header"
                                 ? [
+                                    [
+                                      'surface="solid"',
+                                      "Opaque surface for application shells and matched sidebars.",
+                                    ],
+                                    [
+                                      'surface="translucent"',
+                                      "Blurred surface that becomes more opaque after scrolling. This is the default.",
+                                    ],
+                                    [
+                                      'surface="transparent"',
+                                      "Transparent at the top and more opaque after scrolling when behavior is enabled.",
+                                    ],
                                     [
                                       'position="sticky"',
                                       "Stays at the viewport top while content scrolls.",
@@ -7363,13 +7908,15 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
                             <code>position=&quot;sticky&quot;</code> is the default. Use{" "}
                             <code>position=&quot;static&quot;</code> for a non-sticky header. Fixed
                             headers overlay content, so the application must reserve matching top
-                            space. Style <code>data-scrolled</code>,{" "}
-                            <code>data-scroll-direction</code>, and <code>data-visibility</code> to
-                            change colors, transparency, borders, or density. Use{" "}
-                            <code>onScrollStateChange</code> when scroll state needs to swap
-                            rendered content such as a logo or action. For a fully custom color
-                            treatment, set <code>behavior=&quot;none&quot;</code> and style{" "}
-                            <code>data-[scrolled=true]:bg-primary</code> plus{" "}
+                            space. Choose <code>surface=&quot;solid&quot;</code> for application
+                            shells, <code>surface=&quot;translucent&quot;</code> for blur, or{" "}
+                            <code>surface=&quot;transparent&quot;</code> for overlay treatments.
+                            Style <code>data-scrolled</code>, <code>data-scroll-direction</code>,
+                            and <code>data-visibility</code> to change colors, transparency,
+                            borders, or density. Use <code>onScrollStateChange</code> when scroll
+                            state needs to swap rendered content such as a logo or action. For a
+                            fully custom color treatment, set <code>behavior=&quot;none&quot;</code>{" "}
+                            and style <code>data-[scrolled=true]:bg-primary</code> plus{" "}
                             <code>data-[scrolled=true]:text-primary-foreground</code>. Mobile
                             navigation, Escape handling, reduced-motion behavior, and the animated
                             menu icon are built in.
@@ -7753,30 +8300,21 @@ npx brilliant-ui add button dialog dropdown-menu`}</MiniTerminal>
           {showTheming ? (
             <section className="mx-auto max-w-4xl space-y-6 pb-14">
               <SectionHeading
-                description="The default indigo is only a starting point; production apps can own their brand."
+                description="Build a semantic product palette, test light and dark appearances, and decide where contrast surfaces belong."
                 id="theming"
               >
-                Brand theming
+                Theme Builder
               </SectionHeading>
-              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
-                <CodeBlock language="css">{`:root {
-  --brilliant-primary: oklch(0.54 0.23 276);
-  --brilliant-primary-foreground: oklch(1 0 0);
-  --brilliant-ring: oklch(0.61 0.22 276);
-}
-
-[data-brand="acme"] {
-  --brilliant-primary: oklch(0.62 0.18 145);
-  --brilliant-ring: oklch(0.62 0.18 145);
-}`}</CodeBlock>
-                <div className="rounded-lg border border-border bg-surface p-5">
-                  <p className="font-semibold">What changes?</p>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    Buttons, focus rings, badges, charts, blocks, and future components inherit
-                    semantic tokens instead of hardcoded colors.
-                  </p>
-                </div>
-              </div>
+              <ThemeBuilder
+                brandTheme={brandTheme}
+                customColor={customColor}
+                onBrandThemeChange={setBrandTheme}
+                onCustomColorChange={setCustomColor}
+                onShellToneChange={setShellTone}
+                onThemeChange={setTheme}
+                shellTone={shellTone}
+                theme={theme}
+              />
             </section>
           ) : null}
 
@@ -7821,7 +8359,7 @@ find "$TMP_DEMO" -maxdepth 4 -type f | sort`}</CodeBlock>
 
         <StatusRail firstItemTitle={selectedItem?.title ?? firstItem?.title ?? "None"} />
       </div>
-      <AppFooter onNavigate={navigate} />
+      <AppFooter onNavigate={navigate} shellTone={shellTone} />
     </div>
   );
 }

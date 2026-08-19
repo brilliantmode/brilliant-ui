@@ -11,9 +11,15 @@ const positions = {
 
 const behaviors = {
   none: "",
-  elevate: "data-[scrolled=true]:bg-background/95 data-[scrolled=true]:shadow-sm",
+  elevate: "data-[scrolled=true]:shadow-sm",
   reveal:
-    "data-[scrolled=true]:bg-background/95 data-[scrolled=true]:shadow-sm data-[visibility=hidden]:-translate-y-full data-[visibility=visible]:translate-y-0",
+    "data-[scrolled=true]:shadow-sm data-[visibility=hidden]:-translate-y-full data-[visibility=visible]:translate-y-0",
+} as const;
+
+const surfaces = {
+  solid: "bg-background",
+  translucent: "bg-background/80 backdrop-blur",
+  transparent: "bg-transparent",
 } as const;
 
 const navAlignments = {
@@ -53,6 +59,7 @@ export interface HeaderProps extends HTMLAttributes<HTMLElement> {
   onScrollStateChange?: (state: HeaderScrollState) => void;
   position?: keyof typeof positions;
   scrollThreshold?: number;
+  surface?: keyof typeof surfaces;
 }
 
 export function Header({
@@ -64,6 +71,7 @@ export function Header({
   onScrollStateChange,
   position = "sticky",
   scrollThreshold = 16,
+  surface = "translucent",
   ...props
 }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(defaultMenuOpen);
@@ -73,6 +81,10 @@ export function Header({
     visibility: "visible",
   });
   const scrollStateRef = useRef(scrollState);
+  const scrolledSurface =
+    behavior === "none" || surface === "solid"
+      ? ""
+      : "data-[scrolled=true]:bg-background/95 data-[scrolled=true]:backdrop-blur";
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -141,10 +153,12 @@ export function Header({
     <HeaderContext.Provider value={value}>
       <header
         className={cx(
-          "z-40 w-full bg-background/80 text-foreground backdrop-blur",
+          "z-40 w-full text-foreground",
           "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transform-none motion-reduce:transition-none",
           border && "border-b border-border",
           positions[position],
+          surfaces[surface],
+          scrolledSurface,
           behaviors[behavior],
           className,
         )}
@@ -153,6 +167,7 @@ export function Header({
         data-position={position}
         data-scroll-direction={scrollState.direction}
         data-scrolled={scrollState.scrolled}
+        data-surface={surface}
         data-visibility={scrollState.visibility}
         {...props}
       >
