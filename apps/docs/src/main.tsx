@@ -411,6 +411,36 @@ export function Example() {
     </Accordion>
   );
 }`,
+  carousel: `import {
+  Carousel,
+  CarouselDots,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  CarouselTrack,
+  CarouselViewport,
+} from "@/components/ui/carousel";
+
+const slides = ["Usage", "Billing", "Members"];
+
+export function Example() {
+  return (
+    <Carousel itemCount={slides.length}>
+      <CarouselViewport>
+        <CarouselTrack>
+          {slides.map((slide) => (
+            <CarouselItem key={slide}>{slide}</CarouselItem>
+          ))}
+        </CarouselTrack>
+      </CarouselViewport>
+      <div className="flex items-center justify-between">
+        <CarouselPrevious />
+        <CarouselDots />
+        <CarouselNext />
+      </div>
+    </Carousel>
+  );
+}`,
   separator: `import { Separator } from "@/components/ui/separator";
 
 export function Example() {
@@ -759,6 +789,66 @@ function ComboboxPreview() {
             )}
           </div>
         ) : null}
+      </div>
+    </div>
+  );
+}
+
+function CarouselPreview() {
+  const slides = [
+    ["Usage", "2.4M events", "Tracking 12% below forecast"],
+    ["Billing", "$18.4K", "Renewal closes August 30"],
+    ["Members", "48 seats", "6 pending invites"],
+  ] as const;
+  const [index, setIndex] = useState(0);
+
+  return (
+    <div className="grid gap-3">
+      <div className="overflow-hidden rounded-[0.5rem] border-hairline border-border bg-surface">
+        <div
+          className="flex transition-transform duration-[var(--brilliant-duration-normal)] ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none"
+          style={{ transform: `translate3d(-${index * 100}%, 0, 0)` }}
+        >
+          {slides.map(([title, value, description]) => (
+            <div className="min-w-0 shrink-0 grow-0 basis-full p-5" key={title}>
+              <p className="text-sm font-medium text-muted-foreground">{title}</p>
+              <p className="mt-2 text-2xl font-semibold tracking-tight">{value}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <button
+          aria-label="Previous slide"
+          className="inline-flex size-8 items-center justify-center rounded-[0.25rem] border-hairline border-border bg-surface text-sm shadow-sm transition-[background-color,box-shadow,transform] hover:-translate-y-px hover:bg-muted active:translate-y-0 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40"
+          disabled={index === 0}
+          onClick={() => setIndex((current) => Math.max(current - 1, 0))}
+          type="button"
+        >
+          <span aria-hidden="true">‹</span>
+        </button>
+        <div className="flex items-center justify-center gap-1.5">
+          {slides.map(([title], dotIndex) => (
+            <button
+              aria-current={index === dotIndex ? "true" : undefined}
+              aria-label={`Go to ${title} slide`}
+              className="size-1.5 rounded-full bg-muted-foreground/35 transition-[background-color,transform] aria-current:scale-125 aria-current:bg-primary"
+              key={title}
+              onClick={() => setIndex(dotIndex)}
+              type="button"
+            />
+          ))}
+        </div>
+        <button
+          aria-label="Next slide"
+          className="inline-flex size-8 items-center justify-center rounded-[0.25rem] border-hairline border-border bg-surface text-sm shadow-sm transition-[background-color,box-shadow,transform] hover:-translate-y-px hover:bg-muted active:translate-y-0 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40"
+          disabled={index === slides.length - 1}
+          onClick={() => setIndex((current) => Math.min(current + 1, slides.length - 1))}
+          type="button"
+        >
+          <span aria-hidden="true">›</span>
+        </button>
       </div>
     </div>
   );
@@ -1282,19 +1372,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   }
 
   if (name === "carousel") {
-    return (
-      <div className="flex snap-x gap-3 overflow-x-auto scroll-smooth">
-        {["Usage", "Billing", "Members"].map((item) => (
-          <div
-            className="min-w-56 snap-start rounded-[0.5rem] border-hairline border-border bg-surface p-4"
-            key={item}
-          >
-            <p className="text-sm font-semibold">{item}</p>
-            <p className="mt-1 text-xs text-muted-foreground">Product-ready panel</p>
-          </div>
-        ))}
-      </div>
-    );
+    return <CarouselPreview />;
   }
 
   if (name === "breadcrumb") {

@@ -1771,14 +1771,164 @@ const collapsibleSource = accordionSource
   .replaceAll("Accordion", "Collapsible")
   .replaceAll("accordion", "collapsible");
 
-const carouselSource = `import type { HTMLAttributes } from "react";
+const carouselSource = `"use client";
 
-export function Carousel({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={["flex snap-x gap-3 overflow-x-auto scroll-smooth", className].join(" ")} {...props} />;
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
+
+interface CarouselContextValue {
+  count: number;
+  index: number;
+  next: () => void;
+  previous: () => void;
+  setIndex: (index: number) => void;
+}
+
+const CarouselContext = createContext<CarouselContextValue | null>(null);
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+function useCarousel() {
+  const context = useContext(CarouselContext);
+  if (!context) throw new Error("Carousel parts must be rendered inside <Carousel>.");
+  return context;
+}
+
+export interface CarouselProps extends HTMLAttributes<HTMLDivElement> {
+  defaultIndex?: number;
+  itemCount: number;
+}
+
+export function Carousel({
+  children,
+  className = "",
+  defaultIndex = 0,
+  itemCount,
+  ...props
+}: CarouselProps) {
+  const [index, setIndexState] = useState(defaultIndex);
+  const count = Math.max(itemCount, 1);
+
+  const value = useMemo<CarouselContextValue>(() => {
+    const clamp = (nextIndex: number) => Math.min(Math.max(nextIndex, 0), count - 1);
+    return {
+      count,
+      index,
+      next: () => setIndexState((current) => clamp(current + 1)),
+      previous: () => setIndexState((current) => clamp(current - 1)),
+      setIndex: (nextIndex) => setIndexState(clamp(nextIndex)),
+    };
+  }, [count, index]);
+
+  return (
+    <CarouselContext.Provider value={value}>
+      <div className={cx("relative grid gap-3", className)} data-index={index} {...props}>
+        {children}
+      </div>
+    </CarouselContext.Provider>
+  );
+}
+
+export function CarouselViewport({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cx("overflow-hidden rounded-[0.5rem] border-hairline border-border bg-surface", className)}
+      {...props}
+    />
+  );
+}
+
+export function CarouselTrack({ className = "", style, ...props }: HTMLAttributes<HTMLDivElement>) {
+  const { index } = useCarousel();
+  return (
+    <div
+      className={cx(
+        "flex motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+        className,
+      )}
+      style={{ transform: \`translate3d(-\${index * 100}%, 0, 0)\`, ...style }}
+      {...props}
+    />
+  );
 }
 
 export function CarouselItem({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={["min-w-64 snap-start rounded-[0.5rem] border-hairline border-border bg-surface p-4", className].join(" ")} {...props} />;
+  return <div className={cx("min-w-0 shrink-0 grow-0 basis-full p-4", className)} {...props} />;
+}
+
+export function CarouselPrevious({
+  className = "",
+  type = "button",
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement>) {
+  const { index, previous } = useCarousel();
+  return (
+    <button
+      aria-label="Previous slide"
+      className={cx(
+        "inline-flex size-8 items-center justify-center rounded-[0.25rem] border-hairline border-border bg-surface text-sm shadow-sm",
+        "motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "hover:-translate-y-px hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:translate-y-0 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40",
+        className,
+      )}
+      disabled={index === 0}
+      onClick={previous}
+      type={type}
+      {...props}
+    >
+      <span aria-hidden="true">‹</span>
+    </button>
+  );
+}
+
+export function CarouselNext({
+  className = "",
+  type = "button",
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement>) {
+  const { count, index, next } = useCarousel();
+  return (
+    <button
+      aria-label="Next slide"
+      className={cx(
+        "inline-flex size-8 items-center justify-center rounded-[0.25rem] border-hairline border-border bg-surface text-sm shadow-sm",
+        "motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "hover:-translate-y-px hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:translate-y-0 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40",
+        className,
+      )}
+      disabled={index === count - 1}
+      onClick={next}
+      type={type}
+      {...props}
+    >
+      <span aria-hidden="true">›</span>
+    </button>
+  );
+}
+
+export function CarouselDots({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  const { count, index, setIndex } = useCarousel();
+  return (
+    <div className={cx("flex items-center justify-center gap-1.5", className)} {...props}>
+      {Array.from({ length: count }).map((_, dotIndex) => (
+        <button
+          aria-label={\`Go to slide \${dotIndex + 1}\`}
+          aria-current={index === dotIndex ? "true" : undefined}
+          className="size-1.5 rounded-full bg-muted-foreground/35 transition-[background-color,transform] aria-current:scale-125 aria-current:bg-primary"
+          key={dotIndex}
+          onClick={() => setIndex(dotIndex)}
+          type="button"
+        />
+      ))}
+    </div>
+  );
 }
 `;
 
@@ -2601,16 +2751,24 @@ export const registry = [
   {
     name: "carousel",
     title: "Carousel",
-    description: "A horizontal scroll-snap carousel primitive.",
+    description: "A controlled carousel primitive with viewport, track, items, controls, and dots.",
     kind: "component",
     dependencies: [],
     registryDependencies: [],
     files: [{ path: "carousel.tsx", content: carouselSource, target: "ui/carousel.tsx" }],
     metadata: {
-      purpose: "Displays a small sequence of cards or previews.",
-      slots: ["root", "item"],
-      accessibility: ["Uses native scrolling.", "Do not auto-advance content."],
-      usage: ["Use for optional preview collections."],
+      purpose: "Displays a small sequence of cards or previews with explicit navigation controls.",
+      slots: ["root", "viewport", "track", "item", "previous", "next", "dots"],
+      accessibility: [
+        "Navigation controls have accessible labels.",
+        "Disabled controls communicate start and end positions.",
+        "Do not auto-advance content.",
+      ],
+      usage: [
+        "Use itemCount to wire control state.",
+        "Use CarouselViewport, CarouselTrack, and CarouselItem for the slide structure.",
+        "Use dots for short carousels where position matters.",
+      ],
       avoid: ["Do not hide essential content in carousels."],
     },
   },
