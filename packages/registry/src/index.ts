@@ -237,10 +237,10 @@ export function Input({ className = "", type = "text", ...props }: InputProps) {
   return (
     <input
       className={[
-        "flex h-9 w-full rounded-[0.25rem] border-hairline border-border bg-background px-3 text-sm text-foreground",
+        "flex h-9 w-full rounded-[0.25rem] border-[1px] border-control-border bg-background px-3 text-sm text-foreground",
         "placeholder:text-muted-foreground",
         "appearance-none motion-safe:transition-[border-color,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
-        "focus-visible:border-primary/60 focus-visible:outline-none focus-visible:ring-0",
+        "focus-visible:border-primary/70 focus-visible:outline-none focus-visible:ring-0",
         "disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-critical aria-invalid:ring-critical",
         className,
       ].join(" ")}
@@ -277,10 +277,10 @@ export function Textarea({ className = "", ...props }: TextareaProps) {
   return (
     <textarea
       className={[
-        "flex min-h-24 w-full rounded-[0.25rem] border-hairline border-border bg-background px-3 py-2 text-sm text-foreground",
+        "flex min-h-24 w-full rounded-[0.25rem] border-[1px] border-control-border bg-background px-3 py-2 text-sm text-foreground",
         "placeholder:text-muted-foreground",
         "appearance-none motion-safe:transition-[border-color,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
-        "focus-visible:border-primary/60 focus-visible:outline-none focus-visible:ring-0",
+        "focus-visible:border-primary/70 focus-visible:outline-none focus-visible:ring-0",
         "disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-critical aria-invalid:ring-critical",
         className,
       ].join(" ")}

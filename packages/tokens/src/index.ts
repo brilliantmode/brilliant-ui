@@ -137,6 +137,7 @@ export const semanticColorTokens = [
   "critical",
   "critical-foreground",
   "border",
+  "control-border",
   "ring",
 ] as const;
 
@@ -159,6 +160,7 @@ export const semanticColors = {
     critical: "oklch(0.577 0.245 27.325)",
     "critical-foreground": "oklch(0.985 0 0)",
     border: primitiveColors.neutral[200],
+    "control-border": "oklch(0.812 0.018 259.338)",
     ring: primitiveColors.brand[500],
   },
   dark: {
@@ -175,6 +177,7 @@ export const semanticColors = {
     critical: "oklch(0.704 0.191 22.216)",
     "critical-foreground": primitiveColors.neutral[950],
     border: "oklch(1 0 0 / 0.12)",
+    "control-border": "oklch(1 0 0 / 0.18)",
     ring: primitiveColors.brand[400],
   },
   highContrast: {
@@ -191,6 +194,7 @@ export const semanticColors = {
     critical: "oklch(0.42 0.22 27)",
     "critical-foreground": primitiveColors.neutral[0],
     border: primitiveColors.neutral[1000],
+    "control-border": primitiveColors.neutral[1000],
     ring: primitiveColors.neutral[1000],
   },
 } as const satisfies Record<"light" | "dark" | "highContrast", SemanticColorScale>;

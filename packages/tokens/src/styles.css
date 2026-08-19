@@ -12,6 +12,7 @@
   --color-critical: var(--brilliant-critical);
   --color-critical-foreground: var(--brilliant-critical-foreground);
   --color-border: var(--brilliant-border);
+  --color-control-border: var(--brilliant-control-border);
   --color-ring: var(--brilliant-ring);
   --border-width-hairline: var(--brilliant-border-width-hairline);
   --radius-sm: calc(var(--brilliant-radius) - 0.25rem);
@@ -41,6 +42,7 @@
   --brilliant-critical: oklch(0.577 0.245 27.325);
   --brilliant-critical-foreground: oklch(0.985 0 0);
   --brilliant-border: oklch(0.928 0.006 264.531);
+  --brilliant-control-border: oklch(0.812 0.018 259.338);
   --brilliant-border-width-hairline: 0.5px;
   --brilliant-ring: oklch(0.61 0.22 276);
   --brilliant-radius: 0.625rem;
@@ -116,6 +118,7 @@ body {
   --brilliant-critical: oklch(0.704 0.191 22.216);
   --brilliant-critical-foreground: oklch(0.13 0.028 261.692);
   --brilliant-border: oklch(1 0 0 / 0.12);
+  --brilliant-control-border: oklch(1 0 0 / 0.18);
   --brilliant-border-width-hairline: 0.5px;
   --brilliant-ring: oklch(0.69 0.18 276);
   --brilliant-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.24);
@@ -136,6 +139,7 @@ body {
   --brilliant-critical: oklch(0.42 0.22 27);
   --brilliant-critical-foreground: oklch(1 0 0);
   --brilliant-border: oklch(0 0 0);
+  --brilliant-control-border: oklch(0 0 0);
   --brilliant-border-width-hairline: 1px;
   --brilliant-ring: oklch(0 0 0);
 }
@@ -167,6 +171,7 @@ body {
     --brilliant-critical: Mark;
     --brilliant-critical-foreground: MarkText;
     --brilliant-border: CanvasText;
+    --brilliant-control-border: CanvasText;
     --brilliant-ring: Highlight;
   }
 }

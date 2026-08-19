@@ -282,7 +282,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "input") {
     return (
       <input
-        className="h-9 w-full appearance-none rounded-[0.25rem] border border-border bg-background px-3 text-sm outline-none transition-colors focus-visible:border-primary/60 focus-visible:ring-0"
+        className="h-9 w-full appearance-none rounded-[0.25rem] border-[1px] border-control-border bg-background px-3 text-sm outline-none transition-colors focus-visible:border-primary/70 focus-visible:ring-0"
         autoComplete="off"
         name="brilliant-input-preview"
         placeholder="Acme workspace"
@@ -297,7 +297,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
           Workspace name
         </label>
         <input
-          className="h-9 w-full appearance-none rounded-[0.25rem] border border-border bg-background px-3 text-sm outline-none transition-colors focus-visible:border-primary/60 focus-visible:ring-0"
+          className="h-9 w-full appearance-none rounded-[0.25rem] border-[1px] border-control-border bg-background px-3 text-sm outline-none transition-colors focus-visible:border-primary/70 focus-visible:ring-0"
           defaultValue="Acme"
           id="label-preview-workspace"
         />
@@ -308,7 +308,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "textarea") {
     return (
       <textarea
-        className="min-h-20 w-full resize-none appearance-none rounded-[0.25rem] border border-border bg-background px-3 py-2 text-sm outline-none transition-colors focus-visible:border-primary/60 focus-visible:ring-0"
+        className="min-h-20 w-full resize-none appearance-none rounded-[0.25rem] border-[1px] border-control-border bg-background px-3 py-2 text-sm outline-none transition-colors focus-visible:border-primary/70 focus-visible:ring-0"
         placeholder="Add a launch note..."
       />
     );
