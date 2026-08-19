@@ -2771,12 +2771,14 @@ export function ApplicationShellMenuItem({
   children,
   className = "",
   icon,
+  media,
   trailing,
   type = "button",
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   active?: boolean;
   icon?: ReactNode;
+  media?: ReactNode;
   trailing?: ReactNode;
 }) {
   return (
@@ -2790,6 +2792,7 @@ export function ApplicationShellMenuItem({
       type={type}
       {...props}
     >
+      {media ? <span className="shrink-0">{media}</span> : null}
       {icon ? <span className="grid size-5 shrink-0 place-items-center text-muted-foreground">{icon}</span> : null}
       <span className="min-w-0 flex-1 truncate">{children}</span>
       {trailing ? <span className="shrink-0 text-muted-foreground">{trailing}</span> : null}
@@ -3785,6 +3788,7 @@ export const registry = [
         "menu",
         "menu-section",
         "menu-item",
+        "menu-item-media",
         "account-switcher",
         "account-item",
         "main",
@@ -3801,6 +3805,7 @@ export const registry = [
         "Keep primary navigation in ApplicationShellSidebar.",
         "Use NavItem for simple destinations and NavGroupItem for inbox/account rows with secondary text.",
         "Use Menu and AccountSwitcher slots for user/account controls inside the sidebar.",
+        "Use menu item icon for action glyphs and media for avatars/account bubbles.",
         "Use ApplicationShellHeader for page actions and the mobile trigger.",
         "Use ApplicationShellMain for route/page content.",
       ],

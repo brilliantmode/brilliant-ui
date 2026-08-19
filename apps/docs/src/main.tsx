@@ -1059,13 +1059,13 @@ export function Example() {
 
           <ApplicationShellMenuSection title="Accounts">
             <ApplicationShellMenuItem
-              icon={<ApplicationShellNavMedia className="size-6 text-xs">D</ApplicationShellNavMedia>}
+              media={<ApplicationShellNavMedia className="size-6 text-xs">D</ApplicationShellNavMedia>}
               trailing="✓"
             >
               Dianne Russell
             </ApplicationShellMenuItem>
             <ApplicationShellMenuItem
-              icon={<ApplicationShellNavMedia className="size-6 text-xs">A</ApplicationShellNavMedia>}
+              media={<ApplicationShellNavMedia className="size-6 text-xs">A</ApplicationShellNavMedia>}
             >
               AG Studio
             </ApplicationShellMenuItem>
@@ -1407,23 +1407,43 @@ function CodeBlock({ children, language = "tsx" }: { children: string; language?
 }
 
 function ExamplePanel({ children, code }: { children: ReactNode; code: string }) {
-  const [showCode, setShowCode] = useState(false);
+  const [activeTab, setActiveTab] = useState<"code" | "preview">("preview");
 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-lg font-semibold">Preview</h3>
-        <button
-          aria-expanded={showCode}
-          className="inline-flex h-8 items-center rounded-[0.25rem] border border-border bg-surface px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          onClick={() => setShowCode((current) => !current)}
-          type="button"
+        <h3 className="text-lg font-semibold">Example</h3>
+        <div
+          aria-label="Example view"
+          className="inline-flex rounded-[0.375rem] border border-border bg-surface p-0.5"
+          role="tablist"
         >
-          {showCode ? "Hide code" : "View code"}
-        </button>
+          {(["preview", "code"] as const).map((tab) => (
+            <button
+              aria-selected={activeTab === tab}
+              className={[
+                "h-7 rounded-[0.25rem] px-3 text-xs font-medium capitalize transition-colors",
+                activeTab === tab
+                  ? "bg-muted text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              ].join(" ")}
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              role="tab"
+              type="button"
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
       </div>
-      <div className="rounded-lg border border-border bg-background p-6">{children}</div>
-      {showCode ? <CodeBlock>{code}</CodeBlock> : null}
+      <div role="tabpanel">
+        {activeTab === "preview" ? (
+          <div className="rounded-lg border border-border bg-background p-6">{children}</div>
+        ) : (
+          <CodeBlock>{code}</CodeBlock>
+        )}
+      </div>
     </div>
   );
 }
