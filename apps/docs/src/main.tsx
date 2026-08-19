@@ -231,7 +231,8 @@ const blockGroups = [
 const productBlockExamples = [
   {
     category: "Activation",
-    code: `import {
+    code: `import { useState } from "react";
+import {
   OnboardingWizard,
   OnboardingWizardActions,
   OnboardingWizardContent,
@@ -243,19 +244,57 @@ const productBlockExamples = [
 } from "@/components/ui/onboarding-wizard";
 import { Button } from "@/components/ui/button";
 
+const steps = [
+  {
+    title: "Workspace",
+    description: "Name and team defaults",
+    heading: "Create workspace",
+    body: "Confirm the workspace name, region, and default team settings.",
+  },
+  {
+    title: "Import data",
+    description: "Bring in existing customers",
+    heading: "Import customer records",
+    body: "Connect Salesforce or upload a CSV. Nothing is written until fields are mapped.",
+  },
+  {
+    title: "Invite team",
+    description: "Add operators and reviewers",
+    heading: "Invite team members",
+    body: "Send invites now or copy a secure invite link for later.",
+  },
+] as const;
+
+const importMethods = [
+  ["Connect Salesforce", "Sync accounts and owners."],
+  ["Upload CSV", "Review columns before import."],
+] as const;
+
 export function WorkspaceImportBlock() {
+  const [activeStep, setActiveStep] = useState(1);
+  const [method, setMethod] = useState<(typeof importMethods)[number][0]>("Connect Salesforce");
+  const currentStep = steps[activeStep];
+  const progress = Math.round(((activeStep + 1) / steps.length) * 100);
+
   return (
     <OnboardingWizard variant="split">
       <div>
         <div className="border-b border-border p-5">
           <h2 className="text-lg font-semibold">Launch workspace</h2>
           <p className="text-sm text-muted-foreground">Complete the setup checklist.</p>
-          <OnboardingWizardProgress value={42} />
+          <OnboardingWizardProgress value={progress} />
         </div>
         <OnboardingWizardStepList>
-          <OnboardingWizardStep index={1} state="complete" title="Workspace" />
-          <OnboardingWizardStep index={2} state="current" title="Import data" />
-          <OnboardingWizardStep index={3} state="upcoming" title="Invite team" />
+          {steps.map((step, index) => (
+            <OnboardingWizardStep
+              description={step.description}
+              index={index + 1}
+              key={step.title}
+              onClick={() => setActiveStep(index)}
+              state={index < activeStep ? "complete" : index === activeStep ? "current" : "upcoming"}
+              title={step.title}
+            />
+          ))}
         </OnboardingWizardStepList>
       </div>
 
@@ -263,25 +302,40 @@ export function WorkspaceImportBlock() {
         <OnboardingWizardContent>
           <OnboardingWizardMeta>Recommended next step</OnboardingWizardMeta>
           <div>
-            <h3 className="text-lg font-semibold">Import customer records</h3>
+            <h3 className="text-lg font-semibold">{currentStep.heading}</h3>
             <p className="text-sm text-muted-foreground">
-              Connect Salesforce or upload a CSV. Nothing is written until fields are mapped.
+              {currentStep.body}
             </p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <button className="rounded-lg border border-border p-4 text-left">
-              <span className="block font-medium">Connect Salesforce</span>
-              <span className="text-sm text-muted-foreground">Sync accounts and owners.</span>
-            </button>
-            <button className="rounded-lg border border-border p-4 text-left">
-              <span className="block font-medium">Upload CSV</span>
-              <span className="text-sm text-muted-foreground">Review columns before import.</span>
-            </button>
-          </div>
+          {activeStep === 1 ? (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {importMethods.map(([title, description]) => (
+                <button
+                  aria-pressed={method === title}
+                  className="rounded-lg border border-border p-4 text-left data-[selected=true]:border-primary data-[selected=true]:bg-primary/5"
+                  data-selected={method === title}
+                  key={title}
+                  onClick={() => setMethod(title)}
+                  type="button"
+                >
+                  <span className="block font-medium">{title}</span>
+                  <span className="text-sm text-muted-foreground">{description}</span>
+                </button>
+              ))}
+            </div>
+          ) : null}
         </OnboardingWizardContent>
         <OnboardingWizardActions>
-          <Button variant="ghost">Back</Button>
-          <Button>Continue</Button>
+          <Button
+            disabled={activeStep === 0}
+            onClick={() => setActiveStep((step) => Math.max(0, step - 1))}
+            variant="ghost"
+          >
+            Back
+          </Button>
+          <Button onClick={() => setActiveStep((step) => Math.min(steps.length - 1, step + 1))}>
+            {activeStep === steps.length - 1 ? "Finish" : "Continue"}
+          </Button>
         </OnboardingWizardActions>
       </OnboardingWizardPanel>
     </OnboardingWizard>
@@ -1288,7 +1342,8 @@ export function Example() {
     </ApplicationShell>
   );
 }`,
-  "onboarding-wizard": `import {
+  "onboarding-wizard": `import { useState } from "react";
+import {
   OnboardingWizard,
   OnboardingWizardActions,
   OnboardingWizardContent,
@@ -1303,12 +1358,31 @@ export function Example() {
 } from "@/components/ui/onboarding-wizard";
 
 const steps = [
-  ["Workspace", "Name and team defaults", "complete"],
-  ["Import", "Bring in existing data", "current"],
-  ["Invite", "Add operators and reviewers", "upcoming"],
+  {
+    title: "Workspace",
+    description: "Name and team defaults",
+    heading: "Create workspace",
+    body: "Confirm the workspace name, region, and default team settings.",
+  },
+  {
+    title: "Import",
+    description: "Bring in existing data",
+    heading: "Import customer data",
+    body: "Connect a source or upload a CSV. You can map fields before anything is written.",
+  },
+  {
+    title: "Invite",
+    description: "Add operators and reviewers",
+    heading: "Invite team",
+    body: "Invite operators and reviewers, or skip this until launch.",
+  },
 ] as const;
 
 export function Example() {
+  const [activeStep, setActiveStep] = useState(1);
+  const currentStep = steps[activeStep];
+  const progress = Math.round(((activeStep + 1) / steps.length) * 100);
+
   return (
     <OnboardingWizard variant="split">
       <div>
@@ -1317,17 +1391,18 @@ export function Example() {
           <OnboardingWizardDescription>
             Configure the basics before your team starts using Brilliant.
           </OnboardingWizardDescription>
-          <OnboardingWizardProgress value={42} />
+          <OnboardingWizardProgress value={progress} />
         </OnboardingWizardHeader>
 
         <OnboardingWizardStepList>
-          {steps.map(([title, description, state], index) => (
+          {steps.map((step, index) => (
             <OnboardingWizardStep
-              description={description}
+              description={step.description}
               index={index + 1}
-              key={title}
-              state={state}
-              title={title}
+              key={step.title}
+              onClick={() => setActiveStep(index)}
+              state={index < activeStep ? "complete" : index === activeStep ? "current" : "upcoming"}
+              title={step.title}
             />
           ))}
         </OnboardingWizardStepList>
@@ -1335,14 +1410,15 @@ export function Example() {
 
       <OnboardingWizardPanel>
         <OnboardingWizardContent>
-          <OnboardingWizardMeta>Step 2 of 3</OnboardingWizardMeta>
+          <OnboardingWizardMeta>Step {activeStep + 1} of {steps.length}</OnboardingWizardMeta>
           <div>
-            <OnboardingWizardTitle>Import customer data</OnboardingWizardTitle>
+            <OnboardingWizardTitle>{currentStep.heading}</OnboardingWizardTitle>
             <OnboardingWizardDescription>
-              Connect a source or upload a CSV. You can map fields before anything is written.
+              {currentStep.body}
             </OnboardingWizardDescription>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          {activeStep === 1 ? (
+            <div className="grid gap-3 sm:grid-cols-2">
             <button className="rounded-lg border border-border bg-background p-4 text-left">
               <span className="block font-medium">Connect Salesforce</span>
               <span className="mt-1 block text-sm text-muted-foreground">
@@ -1356,12 +1432,24 @@ export function Example() {
               </span>
             </button>
           </div>
+          ) : null}
         </OnboardingWizardContent>
 
         <OnboardingWizardActions>
-          <button className="text-sm font-medium text-muted-foreground">Back</button>
-          <button className="rounded bg-primary px-3 py-2 text-sm font-medium text-primary-foreground">
-            Continue
+          <button
+            className="text-sm font-medium text-muted-foreground disabled:opacity-50"
+            disabled={activeStep === 0}
+            onClick={() => setActiveStep((step) => Math.max(0, step - 1))}
+            type="button"
+          >
+            Back
+          </button>
+          <button
+            className="rounded bg-primary px-3 py-2 text-sm font-medium text-primary-foreground"
+            onClick={() => setActiveStep((step) => Math.min(steps.length - 1, step + 1))}
+            type="button"
+          >
+            {activeStep === steps.length - 1 ? "Finish" : "Continue"}
           </button>
         </OnboardingWizardActions>
       </OnboardingWizardPanel>
@@ -1783,74 +1871,121 @@ function ExamplePanel({ children, code }: { children: ReactNode; code: string })
   );
 }
 
-function ProductBlockPreview({ id }: { id: (typeof productBlockExamples)[number]["id"] }) {
-  if (id === "workspace-import") {
-    return (
-      <div className="overflow-hidden rounded-[0.75rem] border border-border bg-surface shadow-sm">
-        <div className="grid md:grid-cols-[17rem_minmax(0,1fr)]">
-          <div>
-            <div className="border-b border-border p-5">
-              <h3 className="text-lg font-semibold tracking-tight">Launch workspace</h3>
-              <p className="mt-1 text-sm text-muted-foreground">Complete the setup checklist.</p>
-              <div className="mt-4 grid gap-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-medium text-muted-foreground">Onboarding progress</span>
-                  <span className="font-medium">42%</span>
-                </div>
-                <div className="h-1.5 rounded-full bg-muted">
-                  <div className="h-full w-[42%] rounded-full bg-primary" />
-                </div>
+const onboardingPreviewSteps = [
+  {
+    body: "Confirm the workspace name, region, and default team settings.",
+    description: "Name and team defaults",
+    heading: "Create workspace",
+    title: "Workspace",
+  },
+  {
+    body: "Connect Salesforce or upload a CSV. Nothing is written until fields are mapped.",
+    description: "Bring in existing customers",
+    heading: "Import customer records",
+    title: "Import data",
+  },
+  {
+    body: "Send invites now or copy a secure invite link for later.",
+    description: "Add operators and reviewers",
+    heading: "Invite team members",
+    title: "Invite team",
+  },
+] as const;
+
+const onboardingPreviewMethods = [
+  ["Connect Salesforce", "Sync accounts and owners."],
+  ["Upload CSV", "Review columns before import."],
+] as const;
+
+function OnboardingWizardInteractivePreview({ compact = false }: { compact?: boolean }) {
+  const [activeStep, setActiveStep] = useState(1);
+  const [method, setMethod] =
+    useState<(typeof onboardingPreviewMethods)[number][0]>("Connect Salesforce");
+  const currentStep = onboardingPreviewSteps[activeStep] ?? onboardingPreviewSteps[0];
+  const progress = Math.round(((activeStep + 1) / onboardingPreviewSteps.length) * 100);
+
+  return (
+    <div className="overflow-hidden rounded-[0.75rem] border border-border bg-surface shadow-sm">
+      <div className={compact ? "grid" : "grid md:grid-cols-[17rem_minmax(0,1fr)]"}>
+        <div>
+          <div className="border-b border-border p-5">
+            <h3 className="text-lg font-semibold tracking-tight">Launch workspace</h3>
+            <p className="mt-1 text-sm text-muted-foreground">Complete the setup checklist.</p>
+            <div className="mt-4 grid gap-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-medium text-muted-foreground">Onboarding progress</span>
+                <span className="font-medium">{progress}%</span>
+              </div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                <div
+                  className="h-full origin-left rounded-full bg-primary transition-transform duration-[var(--brilliant-duration-normal)] ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none"
+                  style={{ transform: `scaleX(${progress / 100})` }}
+                />
               </div>
             </div>
-            <ol className="grid gap-2 border-b border-border p-4 md:border-r md:border-b-0">
-              {[
-                ["Workspace", "complete"],
-                ["Import data", "current"],
-                ["Invite team", "upcoming"],
-              ].map(([title, state], index) => (
-                <li className="list-none" key={title}>
+          </div>
+          <ol className="grid gap-2 border-b border-border p-4 md:border-r md:border-b-0">
+            {onboardingPreviewSteps.map((step, index) => {
+              const state =
+                index < activeStep ? "complete" : index === activeStep ? "current" : "upcoming";
+
+              return (
+                <li className="list-none" key={step.title}>
                   <button
+                    aria-current={state === "current" ? "step" : undefined}
                     className={[
-                      "flex w-full items-center gap-3 rounded-[0.5rem] px-3 py-2.5 text-left text-sm",
-                      state === "current" ? "bg-muted font-medium" : "text-muted-foreground",
+                      "flex w-full items-start gap-3 rounded-[0.5rem] px-3 py-2.5 text-left text-sm transition-[background-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] hover:bg-muted active:scale-[0.99] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+                      state === "current"
+                        ? "bg-muted font-medium shadow-[inset_0_0_0_0.5px_var(--brilliant-control-border)]"
+                        : "text-muted-foreground",
                     ].join(" ")}
+                    onClick={() => setActiveStep(index)}
                     type="button"
                   >
                     <span
                       className={[
-                        "grid size-6 place-items-center rounded-full border text-xs font-semibold",
+                        "mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border text-xs font-semibold transition-colors",
                         state === "complete"
                           ? "border-primary/30 bg-primary/10 text-primary"
                           : state === "current"
-                            ? "border-primary bg-primary text-primary-foreground"
+                            ? "border-primary bg-primary text-primary-foreground shadow-sm"
                             : "border-border bg-background",
                       ].join(" ")}
                     >
                       {state === "complete" ? "✓" : index + 1}
                     </span>
-                    {title}
+                    <span>
+                      <span className="block text-foreground">{step.title}</span>
+                      <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
+                        {step.description}
+                      </span>
+                    </span>
                   </button>
                 </li>
-              ))}
-            </ol>
-          </div>
-          <section className="grid min-h-72 content-between gap-6 p-5">
-            <div className="grid gap-4">
-              <Badge tone="ready">Recommended next step</Badge>
-              <div>
-                <h3 className="text-lg font-semibold">Import customer records</h3>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                  Connect Salesforce or upload a CSV. Nothing is written until fields are mapped.
-                </p>
-              </div>
+              );
+            })}
+          </ol>
+        </div>
+        <section className="grid min-h-72 content-between gap-6 p-5">
+          <div className="grid gap-4">
+            <Badge tone="ready">
+              Step {activeStep + 1} of {onboardingPreviewSteps.length}
+            </Badge>
+            <div>
+              <h3 className="text-lg font-semibold">{currentStep.heading}</h3>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">{currentStep.body}</p>
+            </div>
+            {activeStep === 1 ? (
               <div className="grid gap-3 sm:grid-cols-2">
-                {[
-                  ["Connect Salesforce", "Sync accounts and owners."],
-                  ["Upload CSV", "Review columns before import."],
-                ].map(([title, description]) => (
+                {onboardingPreviewMethods.map(([title, description]) => (
                   <button
-                    className="rounded-[0.5rem] border border-border bg-background p-4 text-left transition-[border-color,box-shadow,transform] hover:-translate-y-px hover:border-primary/35 hover:shadow-sm"
+                    aria-pressed={method === title}
+                    className={[
+                      "rounded-[0.5rem] border bg-background p-4 text-left transition-[background-color,border-color,box-shadow,transform] hover:-translate-y-px hover:border-primary/35 hover:shadow-sm active:translate-y-0 active:scale-[0.99]",
+                      method === title ? "border-primary bg-primary/5 shadow-sm" : "border-border",
+                    ].join(" ")}
                     key={title}
+                    onClick={() => setMethod(title)}
                     type="button"
                   >
                     <span className="block text-sm font-medium">{title}</span>
@@ -1858,22 +1993,36 @@ function ProductBlockPreview({ id }: { id: (typeof productBlockExamples)[number]
                   </button>
                 ))}
               </div>
-            </div>
-            <div className="flex items-center justify-between border-t border-border pt-4">
-              <button className="text-sm font-medium text-muted-foreground" type="button">
-                Back
-              </button>
-              <button
-                className={`${buttonVariants[0][2]} h-9 rounded-[0.25rem] px-3.5 text-sm font-medium`}
-                type="button"
-              >
-                Continue
-              </button>
-            </div>
-          </section>
-        </div>
+            ) : null}
+          </div>
+          <div className="flex items-center justify-between border-t border-border pt-4">
+            <button
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45"
+              disabled={activeStep === 0}
+              onClick={() => setActiveStep((step) => Math.max(0, step - 1))}
+              type="button"
+            >
+              Back
+            </button>
+            <button
+              className={`${buttonVariants[0][2]} h-9 rounded-[0.25rem] px-3.5 text-sm font-medium`}
+              onClick={() =>
+                setActiveStep((step) => Math.min(onboardingPreviewSteps.length - 1, step + 1))
+              }
+              type="button"
+            >
+              {activeStep === onboardingPreviewSteps.length - 1 ? "Finish" : "Continue"}
+            </button>
+          </div>
+        </section>
       </div>
-    );
+    </div>
+  );
+}
+
+function ProductBlockPreview({ id }: { id: (typeof productBlockExamples)[number]["id"] }) {
+  if (id === "workspace-import") {
+    return <OnboardingWizardInteractivePreview />;
   }
 
   if (id === "api-keys") {
@@ -3371,111 +3520,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   }
 
   if (name === "onboarding-wizard") {
-    const steps = [
-      ["Workspace", "Name and team defaults", "complete"],
-      ["Import", "Bring in existing data", "current"],
-      ["Invite", "Add operators and reviewers", "upcoming"],
-    ] as const;
-
-    return (
-      <div className="overflow-hidden rounded-[0.75rem] border border-border bg-surface shadow-sm motion-safe:animate-enter motion-reduce:animate-none">
-        <div className="grid md:grid-cols-[18rem_minmax(0,1fr)]">
-          <div>
-            <div className="border-b border-border bg-background/70 px-5 py-4">
-              <h3 className="text-lg font-semibold tracking-tight">Launch workspace</h3>
-              <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                Configure the basics before your team starts using Brilliant.
-              </p>
-              <div className="mt-4 grid gap-2">
-                <div className="flex items-center justify-between gap-3 text-xs">
-                  <span className="font-medium text-muted-foreground">Onboarding progress</span>
-                  <span className="font-medium text-foreground">42%</span>
-                </div>
-                <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                  <div className="h-full w-[42%] rounded-full bg-primary transition-[width] duration-[var(--brilliant-duration-normal)]" />
-                </div>
-              </div>
-            </div>
-            <ol className="grid gap-2 border-b border-border p-4 md:border-r md:border-b-0">
-              {steps.map(([title, description, state], index) => (
-                <li className="list-none" key={title}>
-                  <button
-                    aria-current={state === "current" ? "step" : undefined}
-                    className={[
-                      "group flex w-full items-start gap-3 rounded-[0.5rem] px-3 py-2.5 text-left transition-[background-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] hover:bg-muted active:scale-[0.99]",
-                      state === "current"
-                        ? "bg-muted shadow-[inset_0_0_0_0.5px_var(--brilliant-control-border)]"
-                        : "",
-                    ].join(" ")}
-                    type="button"
-                  >
-                    <span
-                      className={[
-                        "mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border text-xs font-semibold",
-                        state === "complete"
-                          ? "border-primary/30 bg-primary/10 text-primary"
-                          : state === "current"
-                            ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                            : "border-border bg-background text-muted-foreground",
-                      ].join(" ")}
-                    >
-                      {state === "complete" ? "✓" : index + 1}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-medium text-foreground">{title}</span>
-                      <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">
-                        {description}
-                      </span>
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          <section className="grid min-h-80 content-between gap-6 p-5">
-            <div className="grid gap-4">
-              <div className="inline-flex w-fit items-center rounded-[0.375rem] bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-                Step 2 of 3
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold tracking-tight">Import customer data</h3>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                  Connect a source or upload a CSV. You can map fields before anything is written.
-                </p>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {[
-                  ["Connect Salesforce", "Sync accounts and owners."],
-                  ["Upload CSV", "Review columns before import."],
-                ].map(([title, description]) => (
-                  <button
-                    className="rounded-[0.5rem] border border-border bg-background p-4 text-left transition-[border-color,box-shadow,transform] hover:-translate-y-px hover:border-primary/35 hover:shadow-sm active:translate-y-0 active:scale-[0.99]"
-                    key={title}
-                    type="button"
-                  >
-                    <span className="block text-sm font-medium">{title}</span>
-                    <span className="mt-1 block text-sm text-muted-foreground">{description}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-              <button className="text-sm font-medium text-muted-foreground" type="button">
-                Back
-              </button>
-              <button
-                className={`${buttonVariants[0][2]} h-9 rounded-[0.25rem] px-3.5 text-sm font-medium`}
-                type="button"
-              >
-                Continue
-              </button>
-            </div>
-          </section>
-        </div>
-      </div>
-    );
+    return <OnboardingWizardInteractivePreview />;
   }
 
   if (name === "skeleton") {
