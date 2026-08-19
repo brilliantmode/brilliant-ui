@@ -5277,44 +5277,44 @@ function ComponentMiniPreview({ name }: { name: string }) {
           <aside
             className={`flex h-[32rem] flex-col overflow-hidden border-b border-border bg-background md:border-b-0 md:border-r motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${applicationShellCollapsed ? "p-2" : "p-4"}`}
           >
-            <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div
+              className={`mb-4 flex shrink-0 items-center gap-3 border-b border-border pb-4 ${applicationShellCollapsed ? "justify-center" : "-mx-4 px-4"}`}
+            >
+              <img
+                alt=""
+                className={`size-9 shrink-0 opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-9"}`}
+                src="/images/brilliant-mark.svg"
+              />
               <div
-                className={`mb-4 flex items-center gap-3 border-b border-border pb-4 ${applicationShellCollapsed ? "justify-center" : "-mx-4 px-4"}`}
+                className={`overflow-hidden whitespace-nowrap opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
               >
-                <img
-                  alt=""
-                  className={`size-9 shrink-0 opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-9"}`}
-                  src="/images/brilliant-mark.svg"
-                />
-                <div
-                  className={`overflow-hidden whitespace-nowrap opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
-                >
-                  <div className="text-sm font-semibold tracking-tight">Brilliant</div>
-                  <div className="text-xs text-muted-foreground">Component system</div>
-                </div>
-                <button
-                  aria-expanded={!applicationShellCollapsed}
-                  aria-label={applicationShellCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-                  className={`grid size-9 shrink-0 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground ${applicationShellCollapsed ? "" : "ml-auto"}`}
-                  onClick={() => setApplicationShellCollapsed((collapsed) => !collapsed)}
-                  type="button"
-                >
-                  <svg
-                    aria-hidden="true"
-                    className="size-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.8"
-                    viewBox="0 0 24 24"
-                  >
-                    <rect height="16" rx="2" width="18" x="3" y="4" />
-                    <path d="M9 4v16" />
-                    <path d={applicationShellCollapsed ? "m13 9 3 3-3 3" : "m16 9-3 3 3 3"} />
-                  </svg>
-                </button>
+                <div className="text-sm font-semibold tracking-tight">Brilliant</div>
+                <div className="text-xs text-muted-foreground">Component system</div>
               </div>
+              <button
+                aria-expanded={!applicationShellCollapsed}
+                aria-label={applicationShellCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                className={`grid size-9 shrink-0 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground ${applicationShellCollapsed ? "" : "ml-auto"}`}
+                onClick={() => setApplicationShellCollapsed((collapsed) => !collapsed)}
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="size-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.8"
+                  viewBox="0 0 24 24"
+                >
+                  <rect height="16" rx="2" width="18" x="3" y="4" />
+                  <path d="M9 4v16" />
+                  <path d={applicationShellCollapsed ? "m13 9 3 3-3 3" : "m16 9-3 3 3 3"} />
+                </svg>
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <div
                 className={`mb-4 flex h-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface text-sm text-muted-foreground shadow-sm ${applicationShellCollapsed ? "justify-center px-0" : "px-3"}`}
               >
