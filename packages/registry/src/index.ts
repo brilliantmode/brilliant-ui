@@ -108,15 +108,15 @@ const buttonSource = `import type { ButtonHTMLAttributes } from "react";
 
 const variants = {
   primary:
-    "border border-foreground bg-foreground text-background shadow-sm hover:bg-foreground/92 active:bg-foreground/88",
+    "border border-foreground bg-foreground text-background shadow-sm hover:-translate-y-px hover:bg-foreground/92 hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-foreground/88 active:shadow-sm",
   secondary:
-    "border border-border bg-surface text-foreground shadow-sm hover:border-foreground/40 hover:bg-muted active:bg-secondary",
+    "border border-border bg-surface text-foreground shadow-sm hover:-translate-y-px hover:border-foreground/40 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-secondary active:shadow-sm",
   outline:
-    "border border-border bg-background text-foreground hover:border-foreground/50 hover:bg-muted active:bg-secondary",
+    "border border-border bg-background text-foreground hover:border-foreground/50 hover:bg-muted active:scale-[0.99] active:bg-secondary",
   ghost:
-    "border border-transparent text-foreground hover:bg-muted active:bg-secondary",
+    "border border-transparent text-foreground hover:bg-muted active:scale-[0.99] active:bg-secondary",
   critical:
-    "border border-critical bg-critical text-critical-foreground shadow-sm hover:bg-critical/92 active:bg-critical/88",
+    "border border-critical bg-critical text-critical-foreground shadow-sm hover:-translate-y-px hover:bg-critical/92 hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-critical/88 active:shadow-sm",
 } as const;
 
 const sizes = {
@@ -142,7 +142,7 @@ export function Button({
     <button
       className={[
         "relative isolate inline-flex shrink-0 items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em]",
-        "motion-safe:transition-[color,background-color,border-color,box-shadow,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+        "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         "focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
         variants[variant],

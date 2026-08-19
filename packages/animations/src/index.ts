@@ -78,7 +78,9 @@ export type AnimationPreset = keyof typeof animationPresets;
 export const microUxClasses = {
   base: "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
   press: "active:translate-y-px active:scale-[0.985]",
+  pressSoft: "active:scale-[0.99]",
   lift: "hover:-translate-y-0.5 hover:shadow-md active:translate-y-0",
+  liftSoft: "hover:-translate-y-px active:translate-y-0",
   reveal:
     "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
   focus:

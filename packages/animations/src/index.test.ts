@@ -26,7 +26,7 @@ describe("animation presets", () => {
     expect(microDurations.quick).toBe("120ms");
     expect(microEasings.spring).toContain("linear(");
     expect(microUxClasses.press).toContain("active:scale");
-    expect(microUx("base", "lift")).toContain("hover:-translate-y-0.5");
+    expect(microUx("base", "liftSoft")).toContain("hover:-translate-y-px");
   });
 
   it("collapses motion duration for reduced-motion fallbacks", () => {
