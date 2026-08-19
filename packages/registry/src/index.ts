@@ -239,8 +239,8 @@ export function Input({ className = "", type = "text", ...props }: InputProps) {
       className={[
         "flex h-9 w-full rounded-[0.25rem] border-hairline border-border bg-background px-3 text-sm text-foreground",
         "placeholder:text-muted-foreground",
-        "motion-safe:transition-[border-color,box-shadow,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
-        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0",
+        "appearance-none motion-safe:transition-[border-color,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "focus-visible:border-primary/60 focus-visible:outline-none focus-visible:ring-0",
         "disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-critical aria-invalid:ring-critical",
         className,
       ].join(" ")}
@@ -279,8 +279,8 @@ export function Textarea({ className = "", ...props }: TextareaProps) {
       className={[
         "flex min-h-24 w-full rounded-[0.25rem] border-hairline border-border bg-background px-3 py-2 text-sm text-foreground",
         "placeholder:text-muted-foreground",
-        "motion-safe:transition-[border-color,box-shadow,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
-        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0",
+        "appearance-none motion-safe:transition-[border-color,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        "focus-visible:border-primary/60 focus-visible:outline-none focus-visible:ring-0",
         "disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-critical aria-invalid:ring-critical",
         className,
       ].join(" ")}
