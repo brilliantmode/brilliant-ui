@@ -134,7 +134,7 @@ export function Example() {
   const [isProcessing] = useState(true);
 
   return (
-    <Card beam={isProcessing} interactive>
+    <Card beam={isProcessing} interactive variant="elevated">
       <CardHeader>
         <CardTitle>Usage</CardTitle>
         <CardDescription>Current billing period</CardDescription>
