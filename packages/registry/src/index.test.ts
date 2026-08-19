@@ -61,6 +61,8 @@ describe("registry", () => {
     expect(headerSource).toContain("onScrollStateChange?.(nextState)");
     expect(headerSource).toContain("export function HeaderMobileTrigger");
     expect(headerSource).toContain('event.key === "Escape"');
+    expect(headerSource).toContain("max-md:border-b max-md:border-border");
+    expect(headerSource).not.toContain("gap-1 border-b border-border bg-background p-3 shadow-md");
 
     expect(footer?.kind).toBe("layout");
     expect(footerSource).toContain("export function FooterNav");
