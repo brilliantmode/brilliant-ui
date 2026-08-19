@@ -1001,17 +1001,36 @@ export function Example() {
   return (
     <ApplicationShell>
       <ApplicationShellSidebar>
-        <ApplicationShellBrand href="/">Brilliant</ApplicationShellBrand>
+        <ApplicationShellBrand href="/">
+          <ApplicationShellNavMedia>B</ApplicationShellNavMedia>
+          <span>
+            <span className="block text-sm font-semibold">Brilliant</span>
+            <span className="block text-xs text-muted-foreground">Component system</span>
+          </span>
+        </ApplicationShellBrand>
         <ApplicationShellSearch href="/search">
-          Search docs <kbd>/</kbd>
+          <span aria-hidden="true">⌕</span>
+          <span className="flex-1">Search docs</span>
+          <kbd>/</kbd>
         </ApplicationShellSearch>
+
         <ApplicationShellNav>
           <ApplicationShellNavSection title="Main">
-            <ApplicationShellNavItem active href="/dashboard">
-              Dashboard
+            <ApplicationShellNavItem
+              className="font-medium text-foreground"
+              href="/contracts"
+              icon="□"
+            >
+              Contracts
             </ApplicationShellNavItem>
-            <ApplicationShellNavItem href="/settings">Settings</ApplicationShellNavItem>
+            <ApplicationShellNavItem href="/analysts" icon="□">
+              Analysts
+            </ApplicationShellNavItem>
+            <ApplicationShellNavItem href="/settings" icon="□">
+              Setting
+            </ApplicationShellNavItem>
           </ApplicationShellNavSection>
+
           <ApplicationShellNavSection title="Inboxes">
             <ApplicationShellNavGroupItem
               description="(209) 555-0104"
@@ -1020,20 +1039,43 @@ export function Example() {
             >
               Clients
             </ApplicationShellNavGroupItem>
+            <ApplicationShellNavGroupItem
+              description="(239) 555-0108"
+              href="/personal"
+              media={<ApplicationShellNavMedia tone="warning">P</ApplicationShellNavMedia>}
+            >
+              Personal
+            </ApplicationShellNavGroupItem>
           </ApplicationShellNavSection>
         </ApplicationShellNav>
+
         <ApplicationShellMenu>
-          <ApplicationShellMenuItem icon="◐">Set yourself as away</ApplicationShellMenuItem>
-          <ApplicationShellMenuItem active icon="🔕">Pause notifications</ApplicationShellMenuItem>
+          <ApplicationShellMenuItem icon="☾">Set yourself as away</ApplicationShellMenuItem>
+          <ApplicationShellMenuItem active icon="○" trailing="⌁">
+            Pause notifications
+          </ApplicationShellMenuItem>
+          <ApplicationShellMenuItem icon="○">Help</ApplicationShellMenuItem>
+          <ApplicationShellMenuItem icon="○">Profile Settings</ApplicationShellMenuItem>
+
           <ApplicationShellMenuSection title="Accounts">
-            <ApplicationShellMenuItem trailing="✓">Dianne Russell</ApplicationShellMenuItem>
-            <ApplicationShellMenuItem>AG Studio</ApplicationShellMenuItem>
+            <ApplicationShellMenuItem
+              icon={<ApplicationShellNavMedia className="size-6 text-xs">D</ApplicationShellNavMedia>}
+              trailing="✓"
+            >
+              Dianne Russell
+            </ApplicationShellMenuItem>
+            <ApplicationShellMenuItem
+              icon={<ApplicationShellNavMedia className="size-6 text-xs">A</ApplicationShellNavMedia>}
+            >
+              AG Studio
+            </ApplicationShellMenuItem>
           </ApplicationShellMenuSection>
         </ApplicationShellMenu>
+
         <ApplicationShellAccountSwitcher>
           <ApplicationShellAccountItem
             description="russel@hey.com"
-            media={<ApplicationShellNavMedia>D</ApplicationShellNavMedia>}
+            media={<ApplicationShellNavMedia>DR</ApplicationShellNavMedia>}
             trailing="⌄"
           >
             Dianne Russell
@@ -1044,9 +1086,30 @@ export function Example() {
       <div className="min-w-0">
         <ApplicationShellHeader>
           <ApplicationShellMobileTrigger />
-          <h1 className="text-sm font-semibold">Dashboard</h1>
+          <div>
+            <h1 className="text-sm font-semibold">Dashboard</h1>
+            <p className="text-xs text-muted-foreground">Live workspace overview</p>
+          </div>
+          <button className="ml-auto rounded bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground">
+            New report
+          </button>
         </ApplicationShellHeader>
-        <ApplicationShellMain>Route content goes here.</ApplicationShellMain>
+        <ApplicationShellMain>
+          <div className="grid gap-4">
+            <div className="grid gap-4 sm:grid-cols-3">
+              {["Usage", "Members", "Revenue"].map((item) => (
+                <div className="rounded-lg border border-border bg-surface p-4" key={item}>
+                  <div className="text-sm font-medium">{item}</div>
+                  <div className="mt-1 text-2xl font-semibold tracking-tight">24K</div>
+                </div>
+              ))}
+            </div>
+            <div className="rounded-lg border border-border bg-surface p-4">
+              <div className="h-3 w-1/3 rounded bg-muted" />
+              <div className="mt-3 h-3 w-2/3 rounded bg-muted" />
+            </div>
+          </div>
+        </ApplicationShellMain>
       </div>
     </ApplicationShell>
   );
