@@ -108,15 +108,15 @@ const buttonSource = `import type { ButtonHTMLAttributes } from "react";
 
 const variants = {
   primary:
-    "border border-foreground bg-foreground text-background shadow-[3px_3px_0_var(--brilliant-border)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_var(--brilliant-border)] active:translate-x-0 active:translate-y-0 active:shadow-[1px_1px_0_var(--brilliant-border)]",
+    "border border-foreground bg-foreground text-background shadow-[inset_0_1px_0_oklch(1_0_0_/_0.18),0_1px_2px_oklch(0_0_0_/_0.08)] hover:-translate-y-px hover:shadow-[inset_0_1px_0_oklch(1_0_0_/_0.22),0_3px_8px_oklch(0_0_0_/_0.10)] active:translate-y-0 active:shadow-[inset_0_1px_2px_oklch(0_0_0_/_0.16)]",
   secondary:
-    "border border-foreground bg-surface text-foreground shadow-[3px_3px_0_var(--brilliant-border)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:bg-muted hover:shadow-[5px_5px_0_var(--brilliant-border)] active:translate-x-0 active:translate-y-0 active:shadow-[1px_1px_0_var(--brilliant-border)]",
+    "border border-border bg-surface text-foreground shadow-[inset_0_1px_0_oklch(1_0_0_/_0.72),0_1px_2px_oklch(0_0_0_/_0.05)] hover:-translate-y-px hover:border-foreground/70 hover:bg-muted hover:shadow-[inset_0_1px_0_oklch(1_0_0_/_0.84),0_3px_8px_oklch(0_0_0_/_0.08)] active:translate-y-0 active:shadow-[inset_0_1px_2px_oklch(0_0_0_/_0.10)]",
   outline:
-    "border border-foreground bg-background text-foreground shadow-[2px_2px_0_var(--brilliant-border)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:bg-muted hover:shadow-[4px_4px_0_var(--brilliant-border)] active:translate-x-0 active:translate-y-0 active:shadow-none",
+    "border border-border bg-background text-foreground shadow-[inset_0_0_0_1px_oklch(1_0_0_/_0.42)] hover:-translate-y-px hover:border-foreground/70 hover:bg-muted active:translate-y-0 active:shadow-[inset_0_1px_2px_oklch(0_0_0_/_0.08)]",
   ghost:
-    "border border-transparent text-foreground hover:border-border hover:bg-muted active:translate-y-px",
+    "border border-transparent text-foreground hover:bg-muted active:translate-y-px",
   critical:
-    "border border-critical bg-critical text-critical-foreground shadow-[3px_3px_0_var(--brilliant-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_var(--brilliant-foreground)] active:translate-x-0 active:translate-y-0 active:shadow-[1px_1px_0_var(--brilliant-foreground)]",
+    "border border-critical bg-critical text-critical-foreground shadow-[inset_0_1px_0_oklch(1_0_0_/_0.18),0_1px_2px_oklch(0_0_0_/_0.08)] hover:-translate-y-px hover:shadow-[inset_0_1px_0_oklch(1_0_0_/_0.22),0_3px_8px_oklch(0_0_0_/_0.10)] active:translate-y-0 active:shadow-[inset_0_1px_2px_oklch(0_0_0_/_0.16)]",
 } as const;
 
 const sizes = {
