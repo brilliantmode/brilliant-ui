@@ -113,7 +113,7 @@ export const registryItemSchema = {
   },
 } as const;
 
-const buttonSource = `import type { ButtonHTMLAttributes } from "react";
+const buttonSource = `import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 const variants = {
   primary:
@@ -140,17 +140,23 @@ const sizes = {
   sm: "h-8 px-3 text-xs",
   md: "h-9 px-3.5 text-sm",
   lg: "h-10 px-[1.125rem] text-sm",
-  kiosk: "h-14 px-6 text-base",
+  kiosk: "h-14 px-6 text-xl",
   icon: "size-9 px-0",
 } as const;
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: keyof typeof variants;
+  loading?: boolean;
+  loadingLabel?: ReactNode;
   size?: keyof typeof sizes;
+  variant?: keyof typeof variants;
 }
 
 export function Button({
+  children,
   className = "",
+  disabled,
+  loading = false,
+  loadingLabel = "Loading",
   size = "md",
   type = "button",
   variant = "primary",
@@ -158,6 +164,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
+      aria-busy={loading || undefined}
       className={[
         "relative isolate inline-flex shrink-0 appearance-none items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em]",
         "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
@@ -167,9 +174,40 @@ export function Button({
         sizes[size],
         className,
       ].join(" ")}
+      disabled={disabled || loading}
       type={type}
       {...props}
-    />
+    >
+      {loading ? (
+        <>
+          <svg
+            aria-hidden="true"
+            className="size-[1em] shrink-0 motion-safe:animate-spin motion-reduce:animate-none"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              strokeWidth="3"
+            />
+            <path
+              className="opacity-80"
+              d="M21 12a9 9 0 0 0-9-9"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeWidth="3"
+            />
+          </svg>
+          {loadingLabel}
+        </>
+      ) : (
+        children
+      )}
+    </button>
   );
 }
 `;
@@ -1404,6 +1442,21 @@ const fileUploadSource =
 const photoUploadSource =
   '// biome-ignore-all lint/style/useTemplate: Concatenation keeps this copied source safe to serialize in the registry.\n\n"use client";\n\nimport type { HTMLAttributes } from "react";\nimport { useEffect, useState } from "react";\nimport {\n  FileUpload,\n  FileUploadDescription,\n  FileUploadDropzone,\n  FileUploadError,\n  FileUploadIcon,\n  FileUploadTitle,\n  FileUploadTrigger,\n} from "./file-upload";\nimport { Photo, PhotoFallback, PhotoImage } from "./photo";\n\nexport interface PhotoUploadProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {\n  accept?: string;\n  alt?: string;\n  capture?: "environment" | "user";\n  crop?: "circle" | "rectangle" | "square";\n  defaultFile?: File | null;\n  disabled?: boolean;\n  file?: File | null;\n  maxSize?: number;\n  onFileChange?: (file: File | null) => void;\n  onRemove?: () => void;\n  progress?: number;\n  ratio?: number | string;\n  src?: string;\n}\n\nexport function PhotoUpload({\n  accept = "image/jpeg,image/png,image/webp",\n  alt = "Selected photo preview",\n  capture,\n  className = "",\n  crop = "square",\n  defaultFile = null,\n  disabled = false,\n  file: controlledFile,\n  maxSize = 5 * 1024 * 1024,\n  onFileChange,\n  onRemove,\n  progress,\n  ratio = 4 / 3,\n  src,\n  ...props\n}: PhotoUploadProps) {\n  const [internalFile, setInternalFile] = useState<File | null>(defaultFile);\n  const [previewUrl, setPreviewUrl] = useState<string | null>(null);\n  const [sourceRemoved, setSourceRemoved] = useState(false);\n  const file = controlledFile === undefined ? internalFile : controlledFile;\n\n  useEffect(() => {\n    if (!file) {\n      setPreviewUrl(null);\n      return;\n    }\n\n    const nextUrl = URL.createObjectURL(file);\n    setPreviewUrl(nextUrl);\n    return () => URL.revokeObjectURL(nextUrl);\n  }, [file]);\n\n  useEffect(() => {\n    setSourceRemoved(false);\n  }, [src]);\n\n  const commitFile = (nextFile: File | null) => {\n    if (controlledFile === undefined) setInternalFile(nextFile);\n    setSourceRemoved(nextFile === null);\n    onFileChange?.(nextFile);\n  };\n\n  const removePhoto = () => {\n    commitFile(null);\n    onRemove?.();\n  };\n\n  const displaySrc = previewUrl ?? (sourceRemoved ? undefined : src);\n  const hasProgress = typeof progress === "number";\n  const clampedProgress = hasProgress ? Math.min(100, Math.max(0, progress)) : 0;\n\n  return (\n    <FileUpload\n      accept={accept}\n      className={className}\n      disabled={disabled}\n      files={file ? [file] : []}\n      maxFiles={1}\n      maxSize={maxSize}\n      onFilesChange={(files) => commitFile(files[0] ?? null)}\n      {...(capture ? { capture } : {})}\n      {...props}\n    >\n      {displaySrc ? (\n        <Photo\n          className="group w-full"\n          crop={crop}\n          radius={crop === "circle" ? "full" : "md"}\n          ratio={ratio}\n          variant="surface"\n        >\n          <PhotoFallback>Photo preview unavailable</PhotoFallback>\n          <PhotoImage alt={alt} src={displaySrc} />\n          <span\n            aria-hidden="true"\n            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/55 via-transparent to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 motion-safe:transition-opacity motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none"\n          />\n          <div className="absolute inset-x-3 bottom-3 grid gap-2">\n            <div className="flex translate-y-1 items-center justify-end gap-2 opacity-100 motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-focus-within:translate-y-0 sm:group-focus-within:opacity-100 motion-reduce:transform-none motion-reduce:transition-none">\n              <FileUploadTrigger className="border-transparent bg-background/92 shadow-sm backdrop-blur hover:bg-background">\n                Replace\n              </FileUploadTrigger>\n              <button\n                className="inline-flex h-8 items-center justify-center rounded-[0.25rem] bg-background/92 px-3 text-xs font-medium text-critical shadow-sm backdrop-blur hover:bg-background active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"\n                disabled={disabled}\n                onClick={removePhoto}\n                type="button"\n              >\n                Remove\n              </button>\n            </div>\n            {hasProgress ? (\n              <span\n                aria-label="Photo upload progress"\n                aria-valuemax={100}\n                aria-valuemin={0}\n                aria-valuenow={clampedProgress}\n                className="h-1 overflow-hidden rounded-full bg-background/35 backdrop-blur"\n                role="progressbar"\n              >\n                <span\n                  className="block h-full rounded-full bg-primary motion-safe:transition-[width] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none"\n                  style={{ width: clampedProgress + "%" }}\n                />\n              </span>\n            ) : null}\n          </div>\n        </Photo>\n      ) : (\n        <FileUploadDropzone className="min-h-56">\n          <span>\n            <FileUploadIcon>\n              <svg\n                aria-hidden="true"\n                className="size-5"\n                fill="none"\n                stroke="currentColor"\n                strokeLinecap="round"\n                strokeLinejoin="round"\n                strokeWidth="1.75"\n                viewBox="0 0 24 24"\n              >\n                <path d="M4 8.5h3l1.5-2h7l1.5 2h3v9.5H4V8.5Z" />\n                <circle cx="12" cy="13" r="3" />\n              </svg>\n            </FileUploadIcon>\n            <FileUploadTitle>Drop a photo here or click to browse</FileUploadTitle>\n            <FileUploadDescription>JPEG, PNG, or WebP up to 5 MB.</FileUploadDescription>\n          </span>\n        </FileUploadDropzone>\n      )}\n      <FileUploadError />\n    </FileUpload>\n  );\n}\n';
 
+const photoUploadSourcePatched = photoUploadSource
+  .replace(
+    "  const [sourceRemoved, setSourceRemoved] = useState(false);\n",
+    "  const [removedSource, setRemovedSource] = useState<string | undefined>();\n",
+  )
+  .replace("  useEffect(() => {\n    setSourceRemoved(false);\n  }, [src]);\n\n", "")
+  .replace(
+    "    setSourceRemoved(nextFile === null);",
+    "    setRemovedSource(nextFile === null ? src : undefined);",
+  )
+  .replace(
+    "  const displaySrc = previewUrl ?? (sourceRemoved ? undefined : src);",
+    "  const displaySrc = previewUrl ?? (removedSource === src ? undefined : src);",
+  );
+
 const fieldSource = `import type { HTMLAttributes, LabelHTMLAttributes } from "react";
 
 export interface FieldProps extends HTMLAttributes<HTMLDivElement> {}
@@ -2166,7 +2219,9 @@ const collapsibleSource = accordionSource
   .replaceAll("Accordion", "Collapsible")
   .replaceAll("accordion", "collapsible");
 
-const carouselSource = `"use client";
+const carouselSource = `// biome-ignore-all lint/suspicious/noArrayIndexKey: Carousel dots are positional controls for a fixed slide order.
+
+"use client";
 
 import {
   createContext,
@@ -2174,7 +2229,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
 
 interface CarouselContextValue {
   count: number;
@@ -3089,7 +3144,7 @@ interface ApplicationShellContextValue {
   variant: ApplicationShellVariant;
 }
 
-export type ApplicationShellVariant = "integrated" | "portal";
+export type ApplicationShellVariant = "integrated" | "portal" | "kiosk";
 
 const ApplicationShellContext = createContext<ApplicationShellContextValue | null>(null);
 
@@ -3158,13 +3213,16 @@ export function ApplicationShell({
     <ApplicationShellContext.Provider value={value}>
       <div
         className={cx(
-          "min-h-screen text-foreground md:grid motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
-          variant === "portal"
-            ? "bg-muted/30 md:grid-rows-[4rem_minmax(0,1fr)] md:gap-x-6 md:px-6 lg:gap-x-8 lg:px-8"
-            : "bg-background",
-          collapsed
-            ? "md:grid-cols-[4.5rem_minmax(0,1fr)]"
-            : "md:grid-cols-[17.5rem_minmax(0,1fr)]",
+          "text-foreground motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          variant === "kiosk"
+            ? "min-h-dvh bg-background"
+            : variant === "portal"
+            ? "min-h-screen bg-muted/30 md:grid md:grid-rows-[4rem_minmax(0,1fr)] md:gap-x-6 md:px-6 lg:gap-x-8 lg:px-8"
+            : "min-h-screen bg-background md:grid",
+          variant !== "kiosk" &&
+            (collapsed
+              ? "md:grid-cols-[4.5rem_minmax(0,1fr)]"
+              : "md:grid-cols-[17.5rem_minmax(0,1fr)]"),
           className,
         )}
         data-collapsed={collapsed}
@@ -3186,7 +3244,8 @@ export function ApplicationShellTopbar({
   return (
     <header
       className={cx(
-        "sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/82",
+        "sticky top-0 z-40 flex items-center gap-3 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/82",
+        variant === "kiosk" ? "h-20 px-5 sm:px-8" : "h-16 px-4",
         variant === "portal" && "md:col-span-2 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8",
         className,
       )}
@@ -3199,7 +3258,22 @@ export function ApplicationShellContent({
   className = "",
   ...props
 }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cx("min-w-0", className)} {...props} />;
+  const { variant } = useApplicationShell();
+
+  return (
+    <div
+      className={cx(
+        "flex min-w-0 flex-col",
+        variant === "kiosk"
+          ? "min-h-[calc(100dvh-5rem)] bg-muted/20"
+          : variant === "portal"
+            ? "min-h-[calc(100vh-4rem)]"
+            : "min-h-screen",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 export function ApplicationShellHeader({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
@@ -3208,7 +3282,9 @@ export function ApplicationShellHeader({ className = "", ...props }: HTMLAttribu
   return (
     <header
       className={cx(
-        variant === "portal"
+        variant === "kiosk"
+          ? "relative z-30 flex items-start gap-4 border-0 bg-transparent px-5 py-8 sm:px-8 sm:py-10"
+          : variant === "portal"
           ? "relative z-30 flex min-h-36 items-start gap-3 border-0 bg-transparent px-4 py-8 md:px-0 md:py-10"
           : "sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/82 md:px-6",
         className,
@@ -3250,7 +3326,9 @@ export function ApplicationShellHeaderTitle({
   return (
     <h1
       className={cx(
-        variant === "portal"
+        variant === "kiosk"
+          ? "text-3xl font-semibold tracking-[-0.025em] sm:text-4xl"
+          : variant === "portal"
           ? "text-2xl font-semibold tracking-[-0.02em] sm:text-3xl"
           : "truncate text-sm font-semibold",
         className,
@@ -3269,7 +3347,9 @@ export function ApplicationShellHeaderDescription({
   return (
     <p
       className={cx(
-        variant === "portal"
+        variant === "kiosk"
+          ? "mt-3 max-w-3xl text-base leading-7 text-muted-foreground sm:text-lg"
+          : variant === "portal"
           ? "mt-2 max-w-3xl text-sm leading-6 text-muted-foreground sm:text-base"
           : "truncate text-xs text-muted-foreground",
         className,
@@ -3381,6 +3461,8 @@ export function ApplicationShellSidebarToggle({
 
 export function ApplicationShellSidebar({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
   const { closeMobileNav, collapsed, mobileNavOpen, variant } = useApplicationShell();
+
+  if (variant === "kiosk") return null;
 
   return (
     <>
@@ -3865,7 +3947,11 @@ export function ApplicationShellMain({ className = "", ...props }: HTMLAttribute
   return (
     <main
       className={cx(
-        variant === "portal" ? "min-w-0 px-4 pb-8 md:px-0" : "min-w-0 px-4 py-6 md:px-8 lg:px-10",
+        variant === "kiosk"
+          ? "flex min-w-0 flex-1 items-center justify-center px-5 py-8 sm:px-8 sm:py-10"
+          : variant === "portal"
+            ? "min-w-0 px-4 pb-8 md:px-0"
+            : "min-w-0 px-4 py-6 md:px-8 lg:px-10",
         className,
       )}
       {...props}
@@ -3874,10 +3960,16 @@ export function ApplicationShellMain({ className = "", ...props }: HTMLAttribute
 }
 
 export function ApplicationShellFooter({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  const { variant } = useApplicationShell();
+
   return (
     <footer
       className={cx(
-        "mt-auto border-t border-border pt-4 text-sm text-muted-foreground",
+        variant === "kiosk"
+          ? "sticky bottom-0 z-30 mt-auto border-t border-border bg-background/95 px-5 py-4 text-sm text-muted-foreground backdrop-blur supports-[backdrop-filter]:bg-background/88 sm:px-8"
+          : variant === "portal"
+            ? "mt-auto border-t border-border px-4 py-4 text-sm text-muted-foreground md:px-0"
+            : "mt-auto border-t border-border px-4 py-4 text-sm text-muted-foreground md:px-8 lg:px-10",
         className,
       )}
       {...props}
@@ -3894,6 +3986,17 @@ const statSource =
 
 const statusSource =
   'import type { HTMLAttributes, ReactNode } from "react";\n\nfunction cx(...classes: Array<string | false | null | undefined>) {\n  return classes.filter(Boolean).join(" ");\n}\n\nconst tones = {\n  neutral: "bg-muted-foreground",\n  positive: "bg-primary",\n  warning: "bg-amber-500",\n  critical: "bg-critical",\n} as const;\n\nexport function Status({\n  children,\n  className = "",\n  pulse = false,\n  tone = "neutral",\n  ...props\n}: HTMLAttributes<HTMLSpanElement> & {\n  pulse?: boolean;\n  tone?: keyof typeof tones;\n}) {\n  return (\n    <span className={cx("inline-flex items-center gap-2 text-sm", className)} {...props}>\n      <span className="relative flex size-2" aria-hidden="true">\n        {pulse ? (\n          <span\n            className={cx(\n              "absolute inline-flex size-full rounded-full opacity-40 motion-safe:animate-ping motion-reduce:animate-none",\n              tones[tone],\n            )}\n          />\n        ) : null}\n        <span className={cx("relative inline-flex size-2 rounded-full", tones[tone])} />\n      </span>\n      {children}\n    </span>\n  );\n}\n\nexport interface StatusBarItem {\n  label: ReactNode;\n  tone?: keyof typeof tones;\n  value: number;\n}\n\nexport function StatusBar({\n  "aria-label": ariaLabel = "Status distribution",\n  className = "",\n  items,\n  ...props\n}: Omit<HTMLAttributes<HTMLDivElement>, "children"> & {\n  items: readonly StatusBarItem[];\n}) {\n  const total = items.reduce((sum, item) => sum + Math.max(0, item.value), 0) || 1;\n\n  return (\n    <div className={cx("grid gap-2", className)} {...props}>\n      <div\n        aria-label={ariaLabel}\n        className="flex h-2 w-full overflow-hidden rounded-full bg-muted"\n        role="img"\n      >\n        {items.map((item, index) => (\n          <span\n            className={cx(\n              "h-full origin-left motion-safe:animate-enter motion-reduce:animate-none",\n              tones[item.tone ?? "neutral"],\n            )}\n            key={index}\n            style={{ width: ((Math.max(0, item.value) / total) * 100).toString() + "%" }}\n          />\n        ))}\n      </div>\n      <div className="flex flex-wrap gap-x-4 gap-y-1">\n        {items.map((item, index) => (\n          <Status\n            className="text-xs text-muted-foreground"\n            key={index}\n            tone={item.tone ?? "neutral"}\n          >\n            {item.label}{" "}\n            <span className="font-mono tabular-nums text-foreground">{item.value}</span>\n          </Status>\n        ))}\n      </div>\n    </div>\n  );\n}\n';
+
+const statusSourcePatched = statusSource
+  .replace(
+    "export interface StatusBarItem {\n",
+    "export interface StatusBarItem {\n  id?: string;\n",
+  )
+  .replaceAll("items.map((item, index)", "items.map((item)")
+  .replaceAll(
+    "key={index}",
+    'key={item.id ?? [item.tone ?? "neutral", item.value, String(item.label)].join("-")}',
+  );
 
 const meterSource =
   'import type { HTMLAttributes, ReactNode } from "react";\n\nfunction cx(...classes: Array<string | false | null | undefined>) {\n  return classes.filter(Boolean).join(" ");\n}\n\nconst tones = {\n  default: "bg-primary",\n  warning: "bg-amber-500",\n  critical: "bg-critical",\n} as const;\n\nexport function Meter({\n  className = "",\n  label,\n  max = 100,\n  tone = "default",\n  value,\n  valueLabel,\n  ...props\n}: Omit<HTMLAttributes<HTMLDivElement>, "children"> & {\n  label: ReactNode;\n  max?: number;\n  tone?: keyof typeof tones;\n  value: number;\n  valueLabel?: ReactNode;\n}) {\n  const safeMax = max > 0 ? max : 100;\n  const percentage = Math.min(100, Math.max(0, (value / safeMax) * 100));\n\n  return (\n    <div className={cx("grid gap-2", className)} {...props}>\n      <div className="flex items-center justify-between gap-3 text-sm">\n        <span className="font-medium">{label}</span>\n        <span className="font-mono text-xs tabular-nums text-muted-foreground">\n          {valueLabel ?? `${value} / ${safeMax}`}\n        </span>\n      </div>\n      <meter className="sr-only" max={safeMax} min={0} value={value}>\n        {percentage}%\n      </meter>\n      <div aria-hidden="true" className="h-2 overflow-hidden rounded-full bg-muted">\n        <span\n          className={cx(\n            "block h-full origin-left rounded-full motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none",\n            tones[tone],\n          )}\n          style={{ transform: "scaleX(" + (percentage / 100).toString() + ")" }}\n        />\n      </div>\n    </div>\n  );\n}\n';
@@ -4108,6 +4211,7 @@ export const registry = [
         "Icon-only buttons require an aria-label.",
         "Focus is always visible for keyboard users.",
         "Motion is guarded by motion-safe and motion-reduce variants.",
+        "Loading buttons expose aria-busy and disable repeated activation until the action completes.",
       ],
       usage: [
         "Use a single primary action per region.",
@@ -4115,6 +4219,7 @@ export const registry = [
         "Use tactile, molded, or gel with the kiosk size for large direct-touch interfaces.",
         "Choose one physical style for a kiosk surface and apply it consistently.",
         "Prefer verbs for labels.",
+        "Use loading with a concise loadingLabel that describes the pending action, such as Saving or Checking in.",
         "Micro interactions are included in the generated source.",
       ],
       avoid: [
@@ -4123,6 +4228,7 @@ export const registry = [
         "Do not mix tactile, molded, and gel styles on the same kiosk surface.",
         "Do not use physical-control variants for dense desktop toolbars or compact action groups.",
         "Do not disable without explaining why.",
+        "Do not leave a button loading indefinitely; surface an error or recovery path when the action fails.",
       ],
     },
   },
@@ -4376,7 +4482,11 @@ export const registry = [
     dependencies: [],
     registryDependencies: ["file-upload", "photo"],
     files: [
-      { path: "photo-upload.tsx", content: photoUploadSource, target: "ui/photo-upload.tsx" },
+      {
+        path: "photo-upload.tsx",
+        content: photoUploadSourcePatched,
+        target: "ui/photo-upload.tsx",
+      },
     ],
     metadata: {
       purpose:
@@ -5176,7 +5286,7 @@ export const registry = [
     name: "application-shell",
     title: "Application Shell",
     description:
-      "A responsive app frame with structured header actions, mobile navigation, and a pinned sidebar profile footer.",
+      "A responsive app frame for integrated products, spacious portals, and focused kiosk experiences.",
     kind: "layout",
     dependencies: [],
     registryDependencies: [],
@@ -5239,11 +5349,14 @@ export const registry = [
         "HeaderBrand is hidden on desktop by default because the sidebar brand is the canonical desktop identity.",
         "The profile menu uses native details and summary disclosure semantics.",
         "Scrollable sidebar content keeps native scrolling while suppressing the visual scrollbar; keyboard, wheel, and touch scrolling remain available.",
+        "Kiosk controls should use the kiosk button size or preserve an equivalent 56px minimum touch target.",
+        "Kiosk interactions must not depend on hover and must retain visible keyboard focus.",
       ],
       usage: [
         "Use as the top-level frame for authenticated product screens.",
-        "Use variant=integrated for the dense default shell or variant=portal for a detached sidebar, global topbar, and spacious page heading.",
+        "Use variant=integrated for the dense default shell, variant=portal for a detached sidebar and spacious heading, or variant=kiosk for a full-screen single-task flow.",
         "Compose ApplicationShellTopbar before the sidebar and wrap page content in ApplicationShellContent when using the portal variation.",
+        "Compose Topbar, Content, Header, Main, and Footer for kiosk flows; the kiosk variation intentionally suppresses ApplicationShellSidebar.",
         "Place ApplicationShellSidebarToggle inside ApplicationShellSidebarHeader, aligned opposite the brand; mobile navigation remains controlled by ApplicationShellMobileTrigger.",
         "Use collapsed and onCollapsedChange when sidebar state must be controlled or persisted by the application.",
         "Keep primary navigation in ApplicationShellSidebar.",
@@ -5260,6 +5373,7 @@ export const registry = [
       avoid: [
         "Do not use for marketing pages or one-off landing layouts.",
         "Do not use the portal variation for dense tools where its additional whitespace reduces operational efficiency.",
+        "Do not use the kiosk variation for multi-route desktop tools or information-dense administration screens.",
         "Do not put every possible destination in the primary sidebar.",
         "Do not repeat the full brand in both the desktop sidebar and desktop header.",
       ],
@@ -5342,7 +5456,7 @@ export const registry = [
     kind: "component",
     dependencies: [],
     registryDependencies: [],
-    files: [{ path: "status.tsx", content: statusSource, target: "ui/status.tsx" }],
+    files: [{ path: "status.tsx", content: statusSourcePatched, target: "ui/status.tsx" }],
     metadata: {
       purpose: "Communicates service state, health, presence, and category distribution.",
       slots: ["status", "indicator", "status-bar", "status-bar-segment", "legend"],

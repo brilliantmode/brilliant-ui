@@ -17,6 +17,18 @@ export function KioskExample() {
       <Button size="kiosk" variant="gel">Start</Button>
     </div>
   );
+}
+
+export function LoadingExample() {
+  return (
+    <div className="flex flex-wrap gap-3">
+      <Button loading loadingLabel="Saving">Save changes</Button>
+      <Button loading loadingLabel="Checking in" size="kiosk" variant="tactile">
+        Check in
+      </Button>
+      <Button aria-label="Loading" loading loadingLabel={null} size="icon" />
+    </div>
+  );
 }`,
   "button-group": `import { Button } from "@brilliantmode/ui/button";
 import { ButtonGroup } from "@brilliantmode/ui/button-group";
@@ -949,6 +961,7 @@ export function Example() {
   ApplicationShellHeaderContent,
   ApplicationShellHeaderDescription,
   ApplicationShellHeaderTitle,
+  ApplicationShellFooter,
   ApplicationShellMain,
   ApplicationShellMenuItem,
   ApplicationShellMenuSection,
@@ -971,6 +984,7 @@ export function Example() {
   ApplicationShellProfileMenu,
   ApplicationShellProfileTrigger,
 } from "@brilliantmode/ui/application-shell";
+import { Button } from "@brilliantmode/ui/button";
 
 export function Example() {
   return (
@@ -1078,9 +1092,9 @@ export function Example() {
               ♢
               <span className="absolute right-2 top-2 size-1.5 rounded-full bg-primary" />
             </ApplicationShellHeaderAction>
-            <button className="ml-1 rounded bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground" type="button">
+            <Button className="ml-1" size="sm" variant="glow">
               New report
-            </button>
+            </Button>
           </ApplicationShellHeaderActions>
         </ApplicationShellHeader>
         <ApplicationShellMain>
@@ -1099,6 +1113,10 @@ export function Example() {
             </div>
           </div>
         </ApplicationShellMain>
+        <ApplicationShellFooter className="flex flex-wrap items-center justify-between gap-3">
+          <span>© 2026 Brilliant</span>
+          <a className="hover:text-foreground" href="/status">System status</a>
+        </ApplicationShellFooter>
       </ApplicationShellContent>
     </ApplicationShell>
   );
@@ -1162,6 +1180,97 @@ export function PortalExample() {
             </p>
           </section>
         </ApplicationShellMain>
+        <ApplicationShellFooter className="flex flex-wrap items-center justify-between gap-3">
+          <span>Partner operations</span>
+          <a className="hover:text-foreground" href="/support">Support</a>
+        </ApplicationShellFooter>
+      </ApplicationShellContent>
+    </ApplicationShell>
+  );
+}
+
+function KioskActionIcon({
+  name,
+}: {
+  name: "check-in" | "tickets" | "booking" | "help";
+}) {
+  const paths = {
+    "check-in": "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M19 8v6 M22 11h-6",
+    tickets: "M2 9a3 3 0 0 0 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 0 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z M13 5v2 M13 17v2 M13 11v2",
+    booking: "M8 2v4 M16 2v4 M3 10h18 M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2 M9 15l2 2 4-4",
+    help: "M4 13a8 8 0 0 1 16 0 M4 13v5a2 2 0 0 0 2 2h2v-7H4 M20 13h-4v7h2a2 2 0 0 0 2-2z M16 20c0 1.1-.9 2-2 2h-2",
+  } as const;
+
+  return (
+    <svg
+      aria-hidden="true"
+      className="size-6 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+      viewBox="0 0 24 24"
+    >
+      <path d={paths[name]} />
+    </svg>
+  );
+}
+
+export function KioskExample() {
+  return (
+    <ApplicationShell variant="kiosk">
+      <ApplicationShellTopbar>
+        <a className="inline-flex items-center gap-2 font-semibold" href="/">
+          <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
+          Brilliant
+        </a>
+        <div className="ml-auto flex items-center gap-2">
+          <Button size="kiosk" variant="molded">English</Button>
+          <Button aria-label="Accessibility options" size="kiosk" variant="molded">
+            Aa
+          </Button>
+        </div>
+      </ApplicationShellTopbar>
+
+      <ApplicationShellContent>
+        <ApplicationShellHeader>
+          <ApplicationShellHeaderContent>
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-primary">
+              Step 1 of 3
+            </p>
+            <ApplicationShellHeaderTitle>How can we help?</ApplicationShellHeaderTitle>
+            <ApplicationShellHeaderDescription>
+              Choose one option to begin. You can return to this screen at any time.
+            </ApplicationShellHeaderDescription>
+          </ApplicationShellHeaderContent>
+        </ApplicationShellHeader>
+
+        <ApplicationShellMain>
+          <div className="grid w-full max-w-3xl gap-5 sm:grid-cols-2">
+            <Button size="kiosk" variant="tactile">
+              <KioskActionIcon name="check-in" />
+              Check in
+            </Button>
+            <Button size="kiosk" variant="tactile">
+              <KioskActionIcon name="tickets" />
+              Buy tickets
+            </Button>
+            <Button size="kiosk" variant="gel">
+              <KioskActionIcon name="booking" />
+              Find a booking
+            </Button>
+            <Button size="kiosk" variant="gel">
+              <KioskActionIcon name="help" />
+              Ask for help
+            </Button>
+          </div>
+        </ApplicationShellMain>
+
+        <ApplicationShellFooter className="flex items-center justify-between gap-4">
+          <span>This session resets after 60 seconds of inactivity.</span>
+          <Button size="kiosk" variant="molded">Start over</Button>
+        </ApplicationShellFooter>
       </ApplicationShellContent>
     </ApplicationShell>
   );

@@ -59,11 +59,29 @@ describe("Brilliant UI MCP server", () => {
     expect(component.importPath).toBe("@brilliantmode/ui/button");
     expect(component.importExample).toContain("import { Button }");
     expect(component.apiDeclarations).toContain("export declare function Button");
+    expect(component.apiDeclarations).toContain("loading?: boolean");
+    expect(component.apiDeclarations).toContain("loadingLabel?: ReactNode");
     expect(component.usageExample).toContain('variant="glow"');
+    expect(component.usageExample).toContain('loadingLabel="Saving"');
     expect(component.usageExample).toContain('size="kiosk" variant="tactile"');
     expect(component.usageExample).toContain('size="kiosk" variant="molded"');
     expect(component.usageExample).toContain('size="kiosk" variant="gel"');
     expect(result.structuredContent).toEqual(component);
+
+    const applicationShellResult = await client.callTool({
+      arguments: { name: "application-shell" },
+      name: "get_component",
+    });
+    const applicationShell = applicationShellResult.structuredContent as {
+      apiDeclarations: string;
+      found: boolean;
+      usageExample: string;
+    };
+    expect(applicationShell.found).toBe(true);
+    expect(applicationShell.apiDeclarations).toContain('"integrated" | "portal" | "kiosk"');
+    expect(applicationShell.usageExample).toContain("export function KioskExample()");
+    expect(applicationShell.usageExample).toContain('variant="kiosk"');
+    expect(applicationShell.usageExample).toContain("ApplicationShellFooter");
   });
 
   it("returns actionable structured errors for unknown components", async () => {

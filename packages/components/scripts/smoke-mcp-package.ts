@@ -85,17 +85,41 @@ try {
       name: "get_component",
     });
     const structuredComponent = component.structuredContent as
-      | { found?: boolean; usageExample?: string }
+      | { apiDeclarations?: string; found?: boolean; usageExample?: string }
       | undefined;
     const usageExample = structuredComponent?.usageExample;
     if (
       !structuredComponent?.found ||
       !usageExample?.includes('variant="glow"') ||
+      !usageExample.includes('loadingLabel="Saving"') ||
       !usageExample.includes('size="kiosk" variant="tactile"') ||
       !usageExample.includes('size="kiosk" variant="molded"') ||
       !usageExample.includes('size="kiosk" variant="gel"')
     ) {
       throw new Error("Packaged get_component did not return its structured usage example.");
+    }
+    if (
+      !structuredComponent.apiDeclarations?.includes("loading?: boolean") ||
+      !structuredComponent.apiDeclarations.includes("loadingLabel?: ReactNode")
+    ) {
+      throw new Error("Packaged Button declarations did not expose loading state.");
+    }
+
+    const applicationShell = await client.callTool({
+      arguments: { name: "application-shell" },
+      name: "get_component",
+    });
+    const structuredApplicationShell = applicationShell.structuredContent as
+      | { apiDeclarations?: string; found?: boolean; usageExample?: string }
+      | undefined;
+    if (
+      !structuredApplicationShell?.found ||
+      !structuredApplicationShell.apiDeclarations?.includes('"integrated" | "portal" | "kiosk"') ||
+      !structuredApplicationShell.usageExample?.includes("export function KioskExample()") ||
+      !structuredApplicationShell.usageExample.includes('variant="kiosk"') ||
+      !structuredApplicationShell.usageExample.includes("ApplicationShellFooter")
+    ) {
+      throw new Error("Packaged Application Shell did not expose the kiosk variation and footer.");
     }
 
     const recommendation = await client.callTool({

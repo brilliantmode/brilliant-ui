@@ -98,6 +98,7 @@ import {
   documentationGuides,
   registry,
 } from "../../../packages/registry/src/index";
+import { semanticColors } from "../../../packages/tokens/src/index";
 import "./styles.css";
 
 type NavItem = readonly [label: string, href: string];
@@ -109,6 +110,18 @@ type NavGroup = {
   label: string;
   items: readonly NavItem[];
 };
+
+function isolatedThemeStyle(theme: "dark" | "light"): CSSProperties {
+  return {
+    colorScheme: theme,
+    ...Object.fromEntries(
+      Object.entries(semanticColors[theme]).map(([token, value]) => [
+        `--brilliant-${token}`,
+        value,
+      ]),
+    ),
+  } as CSSProperties;
+}
 
 const brandThemes = [
   {
@@ -377,7 +390,7 @@ const buttonSizes = [
   ["Small", "h-8 px-3 text-xs"],
   ["Default", "h-9 px-3.5 text-sm"],
   ["Large", "h-10 px-[1.125rem] text-sm"],
-  ["Kiosk", "h-14 px-6 text-base"],
+  ["Kiosk", "h-14 px-6 text-xl"],
   ["Icon", "size-9 px-0 text-sm"],
 ] as const;
 
@@ -388,6 +401,8 @@ const buttonProps = [
     '"primary"',
   ],
   ["size", '"sm" | "md" | "lg" | "kiosk" | "icon"', '"md"'],
+  ["loading", "boolean", "false"],
+  ["loadingLabel", "ReactNode", '"Loading"'],
   ["type", 'ButtonHTMLAttributes<HTMLButtonElement>["type"]', '"button"'],
   ["className", "string", "undefined"],
 ] as const;
@@ -1011,7 +1026,15 @@ function SectionHeading({
   );
 }
 
-function PreviewButton({ children, className }: { children: ReactNode; className: string }) {
+function PreviewButton({
+  busy = false,
+  children,
+  className,
+}: {
+  busy?: boolean;
+  children: ReactNode;
+  className: string;
+}) {
   return (
     <button
       className={[
@@ -1021,6 +1044,8 @@ function PreviewButton({ children, className }: { children: ReactNode; className
         "disabled:pointer-events-none disabled:opacity-50",
         className,
       ].join(" ")}
+      aria-busy={busy || undefined}
+      disabled={busy}
       type="button"
     >
       {children}
@@ -3245,11 +3270,122 @@ function DashboardLayoutPreview() {
   );
 }
 
+function KioskPreviewIcon({ index }: { index: number }) {
+  const paths = [
+    "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M19 8v6 M22 11h-6",
+    "M2 9a3 3 0 0 0 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 0 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z M13 5v2 M13 17v2 M13 11v2",
+    "M8 2v4 M16 2v4 M3 10h18 M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2 M9 15l2 2 4-4",
+    "M4 13a8 8 0 0 1 16 0 M4 13v5a2 2 0 0 0 2 2h2v-7H4 M20 13h-4v7h2a2 2 0 0 0 2-2z M16 20c0 1.1-.9 2-2 2h-2",
+  ] as const;
+
+  return (
+    <svg
+      aria-hidden="true"
+      className="size-6 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+      viewBox="0 0 24 24"
+    >
+      <path d={paths[index]} />
+    </svg>
+  );
+}
+
+function ApplicationShellKioskPreview({
+  contrast,
+  theme,
+}: {
+  contrast: "contrast" | "neutral";
+  theme: "dark" | "light";
+}) {
+  return (
+    <div
+      className="min-h-[36rem] overflow-hidden rounded-[0.5rem] border border-border bg-background text-foreground shadow-sm"
+      data-theme={theme}
+      style={isolatedThemeStyle(theme)}
+    >
+      <div
+        className={`flex h-20 items-center gap-3 border-b border-border bg-background/95 px-5 text-foreground sm:px-8 ${contrast === "contrast" ? "brand-surface" : ""}`}
+      >
+        <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
+        <span className="font-semibold">Brilliant</span>
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            className="min-h-14 rounded-[0.625rem] border border-border bg-background px-5 text-sm font-semibold shadow-[0_4px_0_var(--brilliant-border),0_8px_18px_oklch(0_0_0/0.12)] active:translate-y-0.5 active:shadow-[0_2px_0_var(--brilliant-border),0_4px_10px_oklch(0_0_0/0.1)]"
+            type="button"
+          >
+            English
+          </button>
+          <button
+            aria-label="Accessibility options"
+            className="min-h-14 min-w-14 rounded-[0.625rem] border border-border bg-background px-4 font-semibold shadow-[0_4px_0_var(--brilliant-border),0_8px_18px_oklch(0_0_0/0.12)] active:translate-y-0.5 active:shadow-[0_2px_0_var(--brilliant-border),0_4px_10px_oklch(0_0_0/0.1)]"
+            type="button"
+          >
+            Aa
+          </button>
+        </div>
+      </div>
+      <div className="flex min-h-[31rem] flex-col bg-muted/20">
+        <header className="px-5 py-8 sm:px-8">
+          <div className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+            Step 1 of 3
+          </div>
+          <h3 className="mt-3 text-3xl font-semibold tracking-[-0.025em] sm:text-4xl">
+            How can we help?
+          </h3>
+          <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
+            Choose one option to begin. You can return to this screen at any time.
+          </p>
+        </header>
+        <main className="grid flex-1 place-items-center px-5 py-6 sm:px-8">
+          <div className="grid w-full max-w-3xl gap-5 sm:grid-cols-2">
+            {["Check in", "Buy tickets", "Find a booking", "Ask for help"].map((label, index) => (
+              <button
+                className={`inline-flex min-h-16 items-center justify-center gap-3 rounded-[0.75rem] px-6 text-xl font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:translate-y-0.5 ${
+                  index < 2
+                    ? "bg-[linear-gradient(180deg,oklch(0.68_0.22_285),oklch(0.53_0.24_285))] shadow-[inset_0_1px_0_oklch(1_0_0/0.35),0_5px_0_oklch(0.38_0.2_285),0_10px_24px_oklch(0.45_0.2_285/0.24)]"
+                    : "bg-[linear-gradient(180deg,oklch(0.78_0.18_325),oklch(0.62_0.23_325))] shadow-[inset_0_8px_14px_oklch(1_0_0/0.3),inset_0_-4px_8px_oklch(0.4_0.2_325/0.25),0_6px_18px_oklch(0.45_0.2_325/0.2)]"
+                }`}
+                key={label}
+                type="button"
+              >
+                <KioskPreviewIcon index={index} />
+                {label}
+              </button>
+            ))}
+          </div>
+        </main>
+        <footer
+          className={`sticky bottom-0 flex items-center justify-between gap-4 border-t border-border bg-background/95 px-5 py-4 text-xs text-muted-foreground sm:px-8 ${contrast === "contrast" ? "brand-surface" : ""}`}
+        >
+          <span>This session resets after 60 seconds of inactivity.</span>
+          <button
+            className="min-h-14 rounded-[0.625rem] border border-border bg-background px-5 text-sm font-semibold text-foreground shadow-[0_4px_0_var(--brilliant-border)] active:translate-y-0.5 active:shadow-[0_2px_0_var(--brilliant-border)]"
+            type="button"
+          >
+            Start over
+          </button>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
 function ComponentMiniPreview({ name }: { name: string }) {
   const [applicationShellCollapsed, setApplicationShellCollapsed] = useState(false);
-  const [applicationShellVariant, setApplicationShellVariant] = useState<"integrated" | "portal">(
-    "integrated",
+  const [applicationShellNotice, setApplicationShellNotice] = useState("Ready");
+  const [applicationShellPage, setApplicationShellPage] = useState("Contracts");
+  const [applicationShellContrast, setApplicationShellContrast] = useState<"contrast" | "neutral">(
+    "neutral",
   );
+  const [applicationShellTheme, setApplicationShellTheme] = useState<"dark" | "light">("light");
+  const [applicationShellWorkspace, setApplicationShellWorkspace] = useState("Brilliant Labs");
+  const [applicationShellVariant, setApplicationShellVariant] = useState<
+    "integrated" | "portal" | "kiosk"
+  >("integrated");
 
   if (name === "chart") return <ChartPreview />;
   if (name === "stat") return <StatPreview />;
@@ -4000,25 +4136,77 @@ function ComponentMiniPreview({ name }: { name: string }) {
   if (name === "application-shell") {
     return (
       <div className="grid gap-3">
-        <fieldset className="inline-flex w-fit rounded-[0.375rem] border border-border bg-muted/50 p-1">
-          <legend className="sr-only">Application shell variation</legend>
-          {(["integrated", "portal"] as const).map((variant) => (
-            <button
-              aria-pressed={applicationShellVariant === variant}
-              className={`rounded-[0.25rem] px-3 py-1.5 text-xs font-medium capitalize focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${
-                applicationShellVariant === variant
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              key={variant}
-              onClick={() => setApplicationShellVariant(variant)}
-              type="button"
-            >
-              {variant}
-            </button>
-          ))}
-        </fieldset>
-        <div className="overflow-hidden rounded-[0.5rem] border border-border bg-background shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <fieldset className="inline-flex w-fit rounded-[0.375rem] border border-border bg-muted/50 p-1">
+            <legend className="sr-only">Application shell variation</legend>
+            {(["integrated", "portal", "kiosk"] as const).map((variant) => (
+              <button
+                aria-pressed={applicationShellVariant === variant}
+                className={`rounded-[0.25rem] px-3 py-1.5 text-xs font-medium capitalize focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${
+                  applicationShellVariant === variant
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                key={variant}
+                onClick={() => {
+                  setApplicationShellVariant(variant);
+                  setApplicationShellPage(variant === "portal" ? "Applications" : "Contracts");
+                  setApplicationShellNotice(`Switched to the ${variant} shell`);
+                }}
+                type="button"
+              >
+                {variant}
+              </button>
+            ))}
+          </fieldset>
+          <div className="flex flex-wrap items-center gap-2">
+            <fieldset className="inline-flex rounded-[0.375rem] border border-border bg-muted/50 p-1">
+              <legend className="sr-only">Color appearance</legend>
+              {(["light", "dark"] as const).map((theme) => (
+                <button
+                  aria-pressed={applicationShellTheme === theme}
+                  className={`rounded-[0.25rem] px-2.5 py-1.5 text-xs font-medium capitalize focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${applicationShellTheme === theme ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                  key={theme}
+                  onClick={() => {
+                    setApplicationShellTheme(theme);
+                    setApplicationShellNotice(`Using ${theme} appearance`);
+                  }}
+                  type="button"
+                >
+                  {theme}
+                </button>
+              ))}
+            </fieldset>
+            <fieldset className="inline-flex rounded-[0.375rem] border border-border bg-muted/50 p-1">
+              <legend className="sr-only">Surface contrast</legend>
+              {(["neutral", "contrast"] as const).map((contrast) => (
+                <button
+                  aria-pressed={applicationShellContrast === contrast}
+                  className={`rounded-[0.25rem] px-2.5 py-1.5 text-xs font-medium capitalize focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${applicationShellContrast === contrast ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                  key={contrast}
+                  onClick={() => {
+                    setApplicationShellContrast(contrast);
+                    setApplicationShellNotice(`Using ${contrast} contrast`);
+                  }}
+                  type="button"
+                >
+                  {contrast}
+                </button>
+              ))}
+            </fieldset>
+          </div>
+        </div>
+        {applicationShellVariant === "kiosk" ? (
+          <ApplicationShellKioskPreview
+            contrast={applicationShellContrast}
+            theme={applicationShellTheme}
+          />
+        ) : null}
+        <div
+          className={`overflow-hidden rounded-[0.5rem] border border-border bg-background text-foreground shadow-sm ${applicationShellVariant === "kiosk" ? "hidden" : ""}`}
+          data-theme={applicationShellTheme}
+          style={isolatedThemeStyle(applicationShellTheme)}
+        >
           <div
             className={`grid motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${
               applicationShellVariant === "portal"
@@ -4027,20 +4215,26 @@ function ComponentMiniPreview({ name }: { name: string }) {
             } ${applicationShellCollapsed ? "md:grid-cols-[4.5rem_minmax(0,1fr)]" : "md:grid-cols-[17.5rem_minmax(0,1fr)]"}`}
           >
             {applicationShellVariant === "portal" ? (
-              <div className="flex h-16 items-center gap-3 border-b border-border bg-background px-5 md:col-span-2 md:-mx-4">
+              <div
+                className={`flex h-16 items-center gap-3 border-b border-border bg-background px-5 text-foreground md:col-span-2 md:-mx-4 ${applicationShellContrast === "contrast" ? "brand-surface" : ""}`}
+              >
                 <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
                 <span className="text-sm font-semibold">Brilliant</span>
-                <button className="ml-auto text-sm text-muted-foreground" type="button">
+                <button
+                  className="ml-auto rounded-[0.25rem] px-2 py-1 text-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  onClick={() => setApplicationShellNotice("Sign-out action selected")}
+                  type="button"
+                >
                   Sign out
                 </button>
               </div>
             ) : null}
             <aside
-              className={`grid grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-background motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${
+              className={`grid grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-background text-foreground motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${
                 applicationShellVariant === "portal"
                   ? "h-[32rem] border-b border-border md:my-4 md:h-[28rem] md:rounded-[0.75rem] md:border md:shadow-sm"
                   : "h-[32rem] border-b border-border md:border-b-0 md:border-r"
-              } ${applicationShellCollapsed ? "p-2" : "p-4"}`}
+              } ${applicationShellCollapsed ? "p-2" : "p-4"} ${applicationShellContrast === "contrast" ? "brand-surface" : ""}`}
             >
               {applicationShellVariant === "integrated" ? (
                 <div
@@ -4082,8 +4276,11 @@ function ComponentMiniPreview({ name }: { name: string }) {
                 </div>
               ) : null}
               <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                <div
-                  className={`mb-4 flex h-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface text-sm text-muted-foreground shadow-sm ${applicationShellCollapsed ? "justify-center px-0" : "px-3"}`}
+                <button
+                  aria-label="Search workspace"
+                  className={`mb-4 flex h-9 w-full items-center gap-2 rounded-[0.375rem] border border-border bg-surface text-left text-sm text-muted-foreground shadow-sm hover:border-foreground/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${applicationShellCollapsed ? "justify-center px-0" : "px-3"}`}
+                  onClick={() => setApplicationShellNotice("Search opened")}
+                  type="button"
                 >
                   <span aria-hidden="true">⌕</span>
                   <span
@@ -4096,7 +4293,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                   >
                     /
                   </kbd>
-                </div>
+                </button>
                 <div className="grid gap-4">
                   <section className="grid gap-1">
                     <h4
@@ -4105,14 +4302,26 @@ function ComponentMiniPreview({ name }: { name: string }) {
                       Main
                     </h4>
                     <div className="grid gap-0.5">
-                      {["Contracts", "Analysts", "Setting"].map((item, index) => (
-                        <div
+                      {(applicationShellVariant === "portal"
+                        ? ["Overview", "Applications", "Channel partners", "Settings"]
+                        : ["Contracts", "Analysts", "Settings"]
+                      ).map((item) => (
+                        <button
+                          aria-current={applicationShellPage === item ? "page" : undefined}
                           className={[
-                            "flex items-center gap-3 rounded-[0.375rem] px-2 py-1.5 text-sm",
+                            "flex w-full items-center gap-3 rounded-[0.375rem] px-2 py-1.5 text-left text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
                             applicationShellCollapsed ? "justify-center" : "",
-                            index === 0 ? "font-medium text-foreground" : "text-muted-foreground",
+                            applicationShellPage === item
+                              ? "bg-muted font-medium text-foreground"
+                              : "text-muted-foreground",
                           ].join(" ")}
                           key={item}
+                          onClick={() => {
+                            setApplicationShellPage(item);
+                            setApplicationShellNotice(`Opened ${item}`);
+                          }}
+                          title={applicationShellCollapsed ? item : undefined}
+                          type="button"
                         >
                           <span className="grid size-5 place-items-center rounded-[0.3125rem] border border-border bg-background text-[0.55rem]">
                             □
@@ -4122,7 +4331,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                           >
                             {item}
                           </span>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </section>
@@ -4138,9 +4347,15 @@ function ComponentMiniPreview({ name }: { name: string }) {
                         ["Personal", "(239) 555-0108", "bg-amber-500/10 text-amber-700"],
                       ] satisfies Array<[string, string, string]>
                     ).map(([title, description, tone]) => (
-                      <div
-                        className={`flex items-center gap-3 rounded-[0.5rem] px-2 py-2 ${applicationShellCollapsed ? "justify-center" : ""}`}
+                      <button
+                        className={`flex w-full items-center gap-3 rounded-[0.5rem] px-2 py-2 text-left hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${applicationShellCollapsed ? "justify-center" : ""}`}
                         key={title}
+                        onClick={() => {
+                          setApplicationShellPage(title);
+                          setApplicationShellNotice(`Opened ${title}`);
+                        }}
+                        title={applicationShellCollapsed ? title : undefined}
+                        type="button"
                       >
                         <span
                           className={[
@@ -4160,7 +4375,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                             {description}
                           </span>
                         </span>
-                      </div>
+                      </button>
                     ))}
                   </section>
                 </div>
@@ -4174,6 +4389,16 @@ function ComponentMiniPreview({ name }: { name: string }) {
                     <button
                       className={`flex h-8 items-center gap-2 rounded-[0.375rem] px-2 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground ${applicationShellCollapsed ? "justify-center" : ""}`}
                       key={label}
+                      onClick={() => {
+                        if (label === "Appearance") {
+                          const nextTheme = applicationShellTheme === "light" ? "dark" : "light";
+                          setApplicationShellTheme(nextTheme);
+                          setApplicationShellNotice(`Using ${nextTheme} appearance`);
+                          return;
+                        }
+                        setApplicationShellNotice(`${label} opened`);
+                      }}
+                      title={applicationShellCollapsed ? label : undefined}
                       type="button"
                     >
                       <span className="grid size-5 shrink-0 place-items-center">{icon}</span>
@@ -4198,14 +4423,20 @@ function ComponentMiniPreview({ name }: { name: string }) {
                   >
                     <div className="border-b border-border py-1">
                       <div className="px-4 pb-1 text-xs text-muted-foreground">Workspace</div>
-                      {["Brilliant Labs", "Acme Studio"].map((item, index) => (
+                      {["Brilliant Labs", "Acme Studio"].map((item) => (
                         <button
                           className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm hover:bg-muted"
                           key={item}
+                          onClick={() => {
+                            setApplicationShellWorkspace(item);
+                            setApplicationShellNotice(`Switched workspace to ${item}`);
+                          }}
                           type="button"
                         >
                           <span className="min-w-0 flex-1 truncate">{item}</span>
-                          {index === 0 ? <span className="text-primary">✓</span> : null}
+                          {applicationShellWorkspace === item ? (
+                            <span className="text-primary">✓</span>
+                          ) : null}
                         </button>
                       ))}
                     </div>
@@ -4213,6 +4444,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                       <button
                         className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm hover:bg-muted"
                         key={item}
+                        onClick={() => setApplicationShellNotice(`${item} selected`)}
                         type="button"
                       >
                         <span className="grid size-5 place-items-center text-muted-foreground">
@@ -4246,7 +4478,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                 </details>
               </div>
             </aside>
-            <div className="min-w-0">
+            <div className="flex min-w-0 min-h-0 flex-col">
               <header
                 className={
                   applicationShellVariant === "portal"
@@ -4274,9 +4506,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                         : "text-sm font-semibold"
                     }
                   >
-                    {applicationShellVariant === "portal"
-                      ? "Channel partner operations"
-                      : "Dashboard"}
+                    {applicationShellPage}
                   </div>
                   <div
                     className={
@@ -4286,8 +4516,8 @@ function ComponentMiniPreview({ name }: { name: string }) {
                     }
                   >
                     {applicationShellVariant === "portal"
-                      ? "Review applications, approve accounts, and manage the partner portal surface."
-                      : "Live workspace overview"}
+                      ? `Manage ${applicationShellPage.toLowerCase()} across the partner portal.`
+                      : `Live ${applicationShellPage.toLowerCase()} workspace overview`}
                   </div>
                 </div>
                 {applicationShellVariant === "portal" ? (
@@ -4299,6 +4529,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                     <button
                       aria-label="Help"
                       className="grid size-9 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted"
+                      onClick={() => setApplicationShellNotice("Help opened")}
                       type="button"
                     >
                       ?
@@ -4306,13 +4537,15 @@ function ComponentMiniPreview({ name }: { name: string }) {
                     <button
                       aria-label="Notifications"
                       className="relative grid size-9 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted"
+                      onClick={() => setApplicationShellNotice("Notifications opened")}
                       type="button"
                     >
                       ♢
                       <span className="absolute top-2 right-2 size-1.5 rounded-full bg-primary" />
                     </button>
                     <button
-                      className="rounded-[0.25rem] bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground"
+                      className="rounded-[0.25rem] bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 hover:-translate-y-px hover:bg-primary/92 hover:shadow-xl hover:shadow-primary/30 active:translate-y-0 active:scale-[0.97] active:bg-primary/88 active:shadow-md active:shadow-primary/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transform-none motion-reduce:transition-none"
+                      onClick={() => setApplicationShellNotice("New report started")}
                       type="button"
                     >
                       New report
@@ -4321,8 +4554,25 @@ function ComponentMiniPreview({ name }: { name: string }) {
                 )}
               </header>
               <main
-                className={`grid gap-4 ${applicationShellVariant === "portal" ? "px-4 pb-4 md:px-0" : "p-4"}`}
+                className={`grid flex-1 content-start gap-4 ${applicationShellVariant === "portal" ? "px-4 pb-4 md:px-0" : "p-4"}`}
               >
+                <div
+                  aria-live="polite"
+                  className="flex min-h-9 items-center justify-between gap-3 rounded-[0.375rem] border border-primary/20 bg-primary/5 px-3 text-xs text-primary"
+                  role="status"
+                >
+                  <span>{applicationShellNotice}</span>
+                  {applicationShellNotice !== "Ready" ? (
+                    <button
+                      aria-label="Dismiss notification"
+                      className="grid size-6 place-items-center rounded hover:bg-primary/10"
+                      onClick={() => setApplicationShellNotice("Ready")}
+                      type="button"
+                    >
+                      ×
+                    </button>
+                  ) : null}
+                </div>
                 <div className="grid gap-4 sm:grid-cols-3">
                   {["Usage", "Members", "Revenue"].map((item) => (
                     <div
@@ -4339,6 +4589,18 @@ function ComponentMiniPreview({ name }: { name: string }) {
                   <div className="mt-3 h-3 w-2/3 rounded bg-muted" />
                 </div>
               </main>
+              <footer className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3 text-xs text-muted-foreground">
+                <span>
+                  {applicationShellVariant === "portal" ? "Partner operations" : "© 2026 Brilliant"}
+                </span>
+                <button
+                  className="rounded-[0.25rem] hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  onClick={() => setApplicationShellNotice("System status opened")}
+                  type="button"
+                >
+                  {applicationShellVariant === "portal" ? "Support" : "System status"}
+                </button>
+              </footer>
             </div>
           </div>
         </div>
@@ -6243,6 +6505,69 @@ import "@brilliantmode/ui/styles.css"`}</MiniTerminal>
                       </PreviewButton>
                     ))}
                   </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Loading</h3>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Loading replaces the button content, prevents repeated activation, and announces
+                  the busy state to assistive technology.
+                </p>
+                <div className="flex flex-wrap items-center gap-4 rounded-lg border border-border bg-background p-6">
+                  <PreviewButton busy className={`${buttonVariants[0][2]} h-9 px-3.5 text-sm`}>
+                    <svg
+                      aria-hidden="true"
+                      className="size-[1em] motion-safe:animate-spin motion-reduce:animate-none"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                      />
+                      <path
+                        className="opacity-80"
+                        d="M21 12a9 9 0 0 0-9-9"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeWidth="3"
+                      />
+                    </svg>
+                    Saving
+                  </PreviewButton>
+                  <PreviewButton
+                    busy
+                    className={`${tactileButtonVariants[0][2]} h-14 px-6 text-xl`}
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="size-[1em] motion-safe:animate-spin motion-reduce:animate-none"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                      />
+                      <path
+                        className="opacity-80"
+                        d="M21 12a9 9 0 0 0-9-9"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeWidth="3"
+                      />
+                    </svg>
+                    Checking in
+                  </PreviewButton>
                 </div>
               </div>
 

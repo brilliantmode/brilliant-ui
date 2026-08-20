@@ -51,10 +51,21 @@ describe("registry", () => {
     expect(source).toContain("tactile:");
     expect(source).toContain("molded:");
     expect(source).toContain("gel:");
-    expect(source).toContain('kiosk: "h-14 px-6 text-base"');
+    expect(source).toContain('kiosk: "h-14 px-6 text-xl"');
     expect(source).toContain("inset_0_1px_0");
     expect(source).toContain("active:translate-y-[2px]");
     expect(source).toContain("disabled:translate-y-0 disabled:shadow-none");
+  });
+
+  it("ships an accessible button loading state", () => {
+    const source = findRegistryItem("button")?.files[0]?.content;
+
+    expect(source).toContain("loading?: boolean");
+    expect(source).toContain("loadingLabel?: ReactNode");
+    expect(source).toContain('loadingLabel = "Loading"');
+    expect(source).toContain("aria-busy={loading || undefined}");
+    expect(source).toContain("disabled={disabled || loading}");
+    expect(source).toContain("motion-safe:animate-spin motion-reduce:animate-none");
   });
 
   it("ships photo crop and treatment APIs", () => {
@@ -141,13 +152,24 @@ describe("registry", () => {
     expect(source).toContain("collapsed?: boolean");
     expect(source).toContain("defaultCollapsed?: boolean");
     expect(source).toContain("onCollapsedChange?: (collapsed: boolean) => void");
-    expect(source).toContain('export type ApplicationShellVariant = "integrated" | "portal"');
+    expect(source).toContain(
+      'export type ApplicationShellVariant = "integrated" | "portal" | "kiosk"',
+    );
     expect(source).toContain("export function ApplicationShellTopbar");
     expect(source).toContain("export function ApplicationShellContent");
     expect(source).toContain('variant = "integrated"');
     expect(source).toContain("data-collapsed={collapsed}");
     expect(source).toContain("data-variant={variant}");
     expect(source).toContain('variant === "portal"');
+    expect(source).toContain('variant === "kiosk"');
+    expect(source).toContain('if (variant === "kiosk") return null');
+    expect(source).toContain("min-h-dvh bg-background");
+    expect(source).toContain('"min-h-[calc(100dvh-5rem)] bg-muted/20"');
+    expect(source).toContain('variant === "portal"');
+    expect(source).toContain('"min-h-[calc(100vh-4rem)]"');
+    expect(source).toContain('"min-h-screen"');
+    expect(source).toContain("flex min-w-0 flex-1 items-center justify-center");
+    expect(source).toContain("sticky bottom-0 z-30 mt-auto");
     expect(source).toContain('aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}');
     expect(source).toContain("transition-[grid-template-columns]");
     expect(source).toContain("transition-[max-width,opacity]");
