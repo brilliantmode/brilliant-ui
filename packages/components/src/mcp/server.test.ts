@@ -2,6 +2,7 @@ import { resolve } from "node:path";
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { packageVersion } from "./catalog.js";
 import { createBrilliantUiMcpServer } from "./server.js";
 
 describe("Brilliant UI MCP server", () => {
@@ -140,7 +141,7 @@ describe("Brilliant UI MCP server", () => {
       arguments: { query: "form validation" },
       name: "search_guides",
     });
-    expect(search.structuredContent).toMatchObject({ packageVersion: "0.1.0" });
+    expect(search.structuredContent).toMatchObject({ packageVersion });
     const searchResult = search.structuredContent as
       | { guides?: Array<{ slug?: string }> }
       | undefined;
@@ -186,7 +187,7 @@ describe("Brilliant UI MCP stdio executable", () => {
       });
       const text = result.content.find((block) => block.type === "text");
       expect(text?.type === "text" ? text.text : "").toContain("photo-upload");
-      expect(result.structuredContent).toMatchObject({ packageVersion: "0.1.0" });
+      expect(result.structuredContent).toMatchObject({ packageVersion });
     } finally {
       await client.close();
     }

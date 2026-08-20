@@ -1,5 +1,5 @@
 /* Generated from the Brilliant UI registry. Do not edit directly. */
-export const packageVersion = "0.1.0";
+export const packageVersion = "0.1.1";
 export const componentCatalog = [
   {
     dependencies: [],

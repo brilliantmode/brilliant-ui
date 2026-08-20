@@ -19,12 +19,22 @@ try {
     mkdir(consumerDirectory, { recursive: true }),
   ]);
 
-  await execFileAsync("pnpm", ["pack", "--pack-destination", packDirectory], {
+  await execFileAsync("npm", ["pack", "--pack-destination", packDirectory], {
     cwd: packageRoot,
   });
 
   const tarballName = (await readdir(packDirectory)).find((name) => name.endsWith(".tgz"));
-  if (!tarballName) throw new Error("pnpm pack did not produce a package tarball.");
+  if (!tarballName) throw new Error("npm pack did not produce a package tarball.");
+
+  const tarballPath = join(packDirectory, tarballName);
+  const { stdout: packedManifestText } = await execFileAsync(
+    "tar",
+    ["-xOf", tarballPath, "package/package.json"],
+    { encoding: "utf8" },
+  );
+  if (packedManifestText.includes('"catalog:')) {
+    throw new Error("Packed package.json contains pnpm catalog dependency specifiers.");
+  }
 
   await writeFile(
     join(consumerDirectory, "package.json"),
@@ -40,7 +50,7 @@ try {
     "utf8",
   );
 
-  await execFileAsync("pnpm", ["add", "--prefer-offline", join(packDirectory, tarballName)], {
+  await execFileAsync("npm", ["install", "--ignore-scripts", tarballPath], {
     cwd: consumerDirectory,
   });
 
