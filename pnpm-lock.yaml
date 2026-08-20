@@ -101,7 +101,7 @@ importers:
       '@brilliant-ui/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
-      '@brilliant/ui':
+      '@brilliantmode/ui':
         specifier: workspace:*
         version: link:../../packages/components
       '@fontsource-variable/instrument-sans':

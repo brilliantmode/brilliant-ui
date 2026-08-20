@@ -119,7 +119,10 @@ try {
     const structuredGuide = guide.structuredContent as
       | { content?: string; found?: boolean }
       | undefined;
-    if (!structuredGuide?.found || !structuredGuide.content?.includes("pnpm add @brilliant/ui")) {
+    if (
+      !structuredGuide?.found ||
+      !structuredGuide.content?.includes("pnpm add @brilliantmode/ui")
+    ) {
       throw new Error("Packaged get_guide did not return its version-matched Markdown guide.");
     }
 

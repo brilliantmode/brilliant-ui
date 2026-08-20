@@ -1,3 +1,4 @@
+import { componentUsageExamples, documentationGuides, registry } from "@brilliant-ui/registry";
 import {
   Card,
   CardContent,
@@ -5,7 +6,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@brilliant/ui/card";
+} from "@brilliantmode/ui/card";
 import {
   type ChartConfig,
   ChartContainer,
@@ -15,7 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   Sparkline,
-} from "@brilliant/ui/chart";
+} from "@brilliantmode/ui/chart";
 import {
   DashboardActions,
   DashboardDescription,
@@ -26,7 +27,7 @@ import {
   DashboardSectionHeader,
   DashboardSectionTitle,
   DashboardTitle,
-} from "@brilliant/ui/dashboard-layout";
+} from "@brilliantmode/ui/dashboard-layout";
 import {
   FileUpload,
   FileUploadDescription,
@@ -35,7 +36,7 @@ import {
   FileUploadIcon,
   FileUploadList,
   FileUploadTitle,
-} from "@brilliant/ui/file-upload";
+} from "@brilliantmode/ui/file-upload";
 import {
   Footer,
   FooterBottom,
@@ -46,7 +47,7 @@ import {
   FooterLink,
   FooterMain,
   FooterNav,
-} from "@brilliant/ui/footer";
+} from "@brilliantmode/ui/footer";
 import {
   Header,
   HeaderActions,
@@ -55,9 +56,9 @@ import {
   HeaderLink,
   HeaderMobileTrigger,
   HeaderNav,
-} from "@brilliant/ui/header";
-import { Meter } from "@brilliant/ui/meter";
-import { PhotoUpload } from "@brilliant/ui/photo-upload";
+} from "@brilliantmode/ui/header";
+import { Meter } from "@brilliantmode/ui/meter";
+import { PhotoUpload } from "@brilliantmode/ui/photo-upload";
 import {
   Metric,
   Stat,
@@ -66,9 +67,8 @@ import {
   StatLabel,
   StatValue,
   TrendIndicator,
-} from "@brilliant/ui/stat";
-import { Status, StatusBar } from "@brilliant/ui/status";
-import { componentUsageExamples, documentationGuides, registry } from "@brilliant-ui/registry";
+} from "@brilliantmode/ui/stat";
+import { Status, StatusBar } from "@brilliantmode/ui/status";
 import {
   type CSSProperties,
   type MouseEvent,
@@ -361,7 +361,10 @@ const foundations = [
   ["Themes", "Light, dark, system preference, high-contrast, and brand override contracts."],
   ["Micro UX", "Reusable press, lift, reveal, focus, loading, and reduced-motion primitives."],
   ["Registry", "Versioned shadcn-compatible items with metadata, checksums, and safe paths."],
-  ["One package", "Components, tokens, styles, and animation utilities ship from @brilliant/ui."],
+  [
+    "One package",
+    "Components, tokens, styles, and animation utilities ship from @brilliantmode/ui.",
+  ],
 ] as const;
 
 const differentiators = [
@@ -384,9 +387,9 @@ const differentiators = [
 ] as const;
 
 const shadcnFlow = [
-  ["Install", "pnpm add @brilliant/ui tailwindcss"],
-  ["Add styles", '@import "@brilliant/ui/styles.css"'],
-  ["Import", 'import { Button } from "@brilliant/ui/button"'],
+  ["Install", "pnpm add @brilliantmode/ui tailwindcss"],
+  ["Add styles", '@import "@brilliantmode/ui/styles.css"'],
+  ["Import", 'import { Button } from "@brilliantmode/ui/button"'],
 ] as const;
 
 const blockGroups = [
@@ -411,8 +414,8 @@ import {
   OnboardingWizardProgress,
   OnboardingWizardStep,
   OnboardingWizardStepList,
-} from "@brilliant/ui/onboarding-wizard";
-import { Button } from "@brilliant/ui/button";
+} from "@brilliantmode/ui/onboarding-wizard";
+import { Button } from "@brilliantmode/ui/button";
 
 const steps = [
   {
@@ -517,9 +520,9 @@ export function WorkspaceImportBlock() {
   },
   {
     category: "SaaS",
-    code: `import { Badge } from "@brilliant/ui/badge";
-import { Button } from "@brilliant/ui/button";
-import { Card } from "@brilliant/ui/card";
+    code: `import { Badge } from "@brilliantmode/ui/badge";
+import { Button } from "@brilliantmode/ui/button";
+import { Card } from "@brilliantmode/ui/card";
 
 const keys = [
   ["Production", "Last used 2 minutes ago", "Live"],
@@ -559,9 +562,9 @@ export function ApiKeysBlock() {
   },
   {
     category: "Billing",
-    code: `import { Button } from "@brilliant/ui/button";
-import { Card } from "@brilliant/ui/card";
-import { Progress } from "@brilliant/ui/progress";
+    code: `import { Button } from "@brilliantmode/ui/button";
+import { Card } from "@brilliantmode/ui/card";
+import { Progress } from "@brilliantmode/ui/progress";
 
 export function BillingUsageBlock() {
   return (
@@ -605,9 +608,9 @@ export function BillingUsageBlock() {
   {
     category: "Dashboard",
     code: `import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@brilliant/ui/chart";
-import { DashboardGrid, DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@brilliant/ui/dashboard-layout";
-import { Stat, StatDescription, StatHeader, StatLabel, StatValue, TrendIndicator } from "@brilliant/ui/stat";
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@brilliantmode/ui/chart";
+import { DashboardGrid, DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@brilliantmode/ui/dashboard-layout";
+import { Stat, StatDescription, StatHeader, StatLabel, StatValue, TrendIndicator } from "@brilliantmode/ui/stat";
 
 const data = [
   { day: "Mon", revenue: 18 }, { day: "Tue", revenue: 24 },
@@ -643,10 +646,10 @@ export function AnalyticsOverviewDashboard() {
   },
   {
     category: "Operations",
-    code: `import { DashboardGrid, DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@brilliant/ui/dashboard-layout";
-import { Meter } from "@brilliant/ui/meter";
-import { Stat, StatLabel, StatValue } from "@brilliant/ui/stat";
-import { Status, StatusBar } from "@brilliant/ui/status";
+    code: `import { DashboardGrid, DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@brilliantmode/ui/dashboard-layout";
+import { Meter } from "@brilliantmode/ui/meter";
+import { Stat, StatLabel, StatValue } from "@brilliantmode/ui/stat";
+import { Status, StatusBar } from "@brilliantmode/ui/status";
 
 const services = [
   ["API gateway", "99.99%", "positive"],
@@ -682,9 +685,9 @@ export function SystemHealthDashboard() {
   {
     category: "Dashboard",
     code: `import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@brilliant/ui/chart";
-import { DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@brilliant/ui/dashboard-layout";
-import { Meter } from "@brilliant/ui/meter";
+import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@brilliantmode/ui/chart";
+import { DashboardLayout, DashboardSection, DashboardSectionHeader, DashboardSectionTitle } from "@brilliantmode/ui/dashboard-layout";
+import { Meter } from "@brilliantmode/ui/meter";
 
 const data = [
   { team: "Core", used: 82, available: 18 },
@@ -718,7 +721,7 @@ export function CapacityDashboard() {
 ] as const;
 
 const cardExampleCode = {
-  analytics: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@brilliant/ui/card";
+  analytics: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@brilliantmode/ui/card";
 import { useState } from "react";
 
 export function Example() {
@@ -741,7 +744,7 @@ export function Example() {
     </Card>
   );
 }`,
-  project: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@brilliant/ui/card";
+  project: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@brilliantmode/ui/card";
 
 export function Example() {
   return (
@@ -762,7 +765,7 @@ export function Example() {
     </Card>
   );
 }`,
-  billing: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@brilliant/ui/card";
+  billing: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@brilliantmode/ui/card";
 
 export function Example() {
   return (
@@ -776,7 +779,7 @@ export function Example() {
     </Card>
   );
 }`,
-  integration: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@brilliant/ui/card";
+  integration: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@brilliantmode/ui/card";
 import { useState } from "react";
 
 export function Example() {
@@ -792,7 +795,7 @@ export function Example() {
     </Card>
   );
 }`,
-  media: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@brilliant/ui/card";
+  media: `import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@brilliantmode/ui/card";
 
 export function Example() {
   return (
@@ -804,7 +807,7 @@ export function Example() {
     </Card>
   );
 }`,
-  activity: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@brilliant/ui/card";
+  activity: `import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@brilliantmode/ui/card";
 import { useState } from "react";
 
 export function Example() {
@@ -825,7 +828,7 @@ export function Example() {
 const usageByComponent = componentUsageExamples;
 
 const photoExampleCode = {
-  crops: `import { Photo, PhotoImage } from "@brilliant/ui/photo";
+  crops: `import { Photo, PhotoImage } from "@brilliantmode/ui/photo";
 
 export function CropExample() {
   return (
@@ -842,7 +845,7 @@ export function CropExample() {
     </div>
   );
 }`,
-  filters: `import { Photo, PhotoImage, PhotoTint } from "@brilliant/ui/photo";
+  filters: `import { Photo, PhotoImage, PhotoTint } from "@brilliantmode/ui/photo";
 
 export function FilterExample() {
   return (
@@ -867,7 +870,7 @@ export function FilterExample() {
   Photo,
   PhotoFallback,
   PhotoImage,
-} from "@brilliant/ui/photo";
+} from "@brilliantmode/ui/photo";
 
 export function FitAndFallbackExample() {
   return (
@@ -885,7 +888,7 @@ export function FitAndFallbackExample() {
     </div>
   );
 }`,
-  ratios: `import { Photo, PhotoCaption, PhotoImage } from "@brilliant/ui/photo";
+  ratios: `import { Photo, PhotoCaption, PhotoImage } from "@brilliantmode/ui/photo";
 
 export function RatioExample() {
   return (
@@ -905,7 +908,7 @@ export function RatioExample() {
     </div>
   );
 }`,
-  variants: `import { Photo, PhotoCaption, PhotoImage } from "@brilliant/ui/photo";
+  variants: `import { Photo, PhotoCaption, PhotoImage } from "@brilliantmode/ui/photo";
 
 export function VariantExample() {
   return (
@@ -933,7 +936,7 @@ function usageForComponent(name: string) {
   if (explicit) return explicit;
 
   const exportName = componentExportName(name);
-  return `import { ${exportName} } from "@brilliant/ui/${name}";
+  return `import { ${exportName} } from "@brilliantmode/ui/${name}";
 
 export function Example() {
   return <${exportName}>Example</${exportName}>;
@@ -5838,8 +5841,8 @@ function App() {
                   </a>
                 </div>
                 <div className="mt-8">
-                  <MiniTerminal>{`pnpm add @brilliant/ui tailwindcss
-import "@brilliant/ui/styles.css"`}</MiniTerminal>
+                  <MiniTerminal>{`pnpm add @brilliantmode/ui tailwindcss
+import "@brilliantmode/ui/styles.css"`}</MiniTerminal>
                 </div>
               </section>
 
@@ -5898,7 +5901,7 @@ import "@brilliant/ui/styles.css"`}</MiniTerminal>
                 Components
               </SectionHeading>
 
-              <CodeBlock language="bash">pnpm add @brilliant/ui</CodeBlock>
+              <CodeBlock language="bash">pnpm add @brilliantmode/ui</CodeBlock>
 
               <div className="overflow-auto rounded-lg border border-border">
                 <table className="w-full border-collapse text-sm">
@@ -5951,7 +5954,7 @@ import "@brilliant/ui/styles.css"`}</MiniTerminal>
 
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold">Installation</h3>
-                <CodeBlock language="bash">pnpm add @brilliant/ui</CodeBlock>
+                <CodeBlock language="bash">pnpm add @brilliantmode/ui</CodeBlock>
               </div>
 
               <ExamplePanel code={usageForComponent("button")}>
@@ -6082,7 +6085,7 @@ import "@brilliant/ui/styles.css"`}</MiniTerminal>
 
                     <div className="space-y-3">
                       <h3 className="text-lg font-semibold">Installation</h3>
-                      <CodeBlock language="bash">pnpm add @brilliant/ui</CodeBlock>
+                      <CodeBlock language="bash">pnpm add @brilliantmode/ui</CodeBlock>
                       {item.dependencies.length > 0 ? (
                         <p className="text-sm leading-6 text-muted-foreground">
                           Runtime dependencies are managed by the Brilliant UI package:
@@ -6853,7 +6856,7 @@ import "@brilliant/ui/styles.css"`}</MiniTerminal>
                         block.id === "system-health" ||
                         block.id === "capacity-dashboard" ? (
                           <code className="mt-2 block text-xs text-muted-foreground">
-                            import from @brilliant/ui/
+                            import from @brilliantmode/ui/
                             {block.id === "analytics-overview"
                               ? "analytics-overview-dashboard"
                               : block.id === "system-health"
@@ -6929,15 +6932,15 @@ import "@brilliant/ui/styles.css"`}</MiniTerminal>
 
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold">1. Install</h3>
-                <CodeBlock language="bash">pnpm add @brilliant/ui tailwindcss</CodeBlock>
+                <CodeBlock language="bash">pnpm add @brilliantmode/ui tailwindcss</CodeBlock>
                 <details className="rounded-lg border border-border bg-surface">
                   <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
                     npm, Yarn, and Bun
                   </summary>
                   <div className="space-y-3 border-t border-border p-4">
-                    <CodeBlock language="bash">npm install @brilliant/ui tailwindcss</CodeBlock>
-                    <CodeBlock language="bash">yarn add @brilliant/ui tailwindcss</CodeBlock>
-                    <CodeBlock language="bash">bun add @brilliant/ui tailwindcss</CodeBlock>
+                    <CodeBlock language="bash">npm install @brilliantmode/ui tailwindcss</CodeBlock>
+                    <CodeBlock language="bash">yarn add @brilliantmode/ui tailwindcss</CodeBlock>
+                    <CodeBlock language="bash">bun add @brilliantmode/ui tailwindcss</CodeBlock>
                   </div>
                 </details>
               </div>
@@ -6950,7 +6953,7 @@ import "@brilliant/ui/styles.css"`}</MiniTerminal>
                   Tailwind source scanning.
                 </p>
                 <CodeBlock language="css">{`@import "tailwindcss";
-@import "@brilliant/ui/styles.css";`}</CodeBlock>
+@import "@brilliantmode/ui/styles.css";`}</CodeBlock>
               </div>
 
               <div className="space-y-3">
@@ -6958,7 +6961,7 @@ import "@brilliant/ui/styles.css"`}</MiniTerminal>
                 <p className="text-sm leading-6 text-muted-foreground">
                   Use component subpaths so bundlers can include only what your application imports.
                 </p>
-                <CodeBlock language="tsx">{`import { Button } from "@brilliant/ui/button";
+                <CodeBlock language="tsx">{`import { Button } from "@brilliantmode/ui/button";
 
 export function SaveButton() {
   return <Button>Save changes</Button>;
@@ -6971,8 +6974,8 @@ export function SaveButton() {
                   These utilities are included in the same package; there are no additional
                   Brilliant packages to install.
                 </p>
-                <CodeBlock language="ts">{`import { tokens } from "@brilliant/ui/tokens";
-import { animationPresets, microUx } from "@brilliant/ui/animations";`}</CodeBlock>
+                <CodeBlock language="ts">{`import { tokens } from "@brilliantmode/ui/tokens";
+import { animationPresets, microUx } from "@brilliantmode/ui/animations";`}</CodeBlock>
               </div>
 
               <div className="space-y-3">
@@ -7030,7 +7033,7 @@ import { animationPresets, microUx } from "@brilliant/ui/animations";`}</CodeBlo
 
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold">Upgrade</h3>
-                <CodeBlock language="bash">pnpm up @brilliant/ui</CodeBlock>
+                <CodeBlock language="bash">pnpm up @brilliantmode/ui</CodeBlock>
                 <p className="text-sm leading-6 text-muted-foreground">
                   Review release notes before upgrading across minor or major versions.
                 </p>

@@ -1,11 +1,11 @@
-# @brilliant/ui
+# @brilliantmode/ui
 
 Enterprise-ready React components with brandable tokens and built-in micro UX. Brilliant UI ships
 components, styles, design tokens, and animation utilities as one package.
 
 ## Maintenance and support
 
-`@brilliant/ui` is an official Brilliant package developed primarily for Brilliant-owned products.
+`@brilliantmode/ui` is an official Brilliant package developed primarily for Brilliant-owned products.
 It is publicly available for broader use, but public availability does not include external
 support, compatibility guarantees, feature commitments, or a guaranteed release schedule.
 Development follows Brilliant's internal priorities, and APIs may change during `0.x` releases.
@@ -20,20 +20,20 @@ External adopters should evaluate and pin versions appropriate to their own requ
 ## Install
 
 ```sh
-pnpm add @brilliant/ui tailwindcss
+pnpm add @brilliantmode/ui tailwindcss
 ```
 
 Add Brilliant UI to your global stylesheet after Tailwind:
 
 ```css
 @import "tailwindcss";
-@import "@brilliant/ui/styles.css";
+@import "@brilliantmode/ui/styles.css";
 ```
 
 Import components through their subpaths:
 
 ```tsx
-import { Button } from "@brilliant/ui/button";
+import { Button } from "@brilliantmode/ui/button";
 
 export function SaveButton() {
   return <Button>Save changes</Button>;
@@ -43,8 +43,8 @@ export function SaveButton() {
 Tokens and animation utilities are included in the same installation:
 
 ```ts
-import { animationPresets, microUx } from "@brilliant/ui/animations";
-import { tokens } from "@brilliant/ui/tokens";
+import { animationPresets, microUx } from "@brilliantmode/ui/animations";
+import { tokens } from "@brilliantmode/ui/tokens";
 ```
 
 ## AI coding with MCP
@@ -56,7 +56,7 @@ composition, forms, overlays, dashboards, accessibility, troubleshooting, and up
 results include both structured data and text JSON for compatibility with current and older MCP
 clients. Installing the package does not start the server.
 
-Configure an MCP client from the application where `@brilliant/ui` is installed:
+Configure an MCP client from the application where `@brilliantmode/ui` is installed:
 
 ```json
 {

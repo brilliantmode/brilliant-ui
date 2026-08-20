@@ -142,7 +142,7 @@ Goal: ship the accessible primitives, forms, navigation, and layouts required to
 
 ### Component infrastructure
 
-- [x] Create the protected `@brilliant/ui` package from canonical registry output.
+- [x] Create the protected `@brilliantmode/ui` package from canonical registry output.
 - [x] Add `cn` using `clsx` and `tailwind-merge` for generated components.
 - [x] Add variant conventions with Class Variance Authority.
 - [x] Define component anatomy, data attributes, and slot conventions.

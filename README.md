@@ -14,7 +14,7 @@ stable release.
 ## Maintenance and support
 
 Brilliant UI is an official Brilliant project developed primarily for Brilliant-owned products.
-The source and `@brilliant/ui` package are publicly available for broader use, but public
+The source and `@brilliantmode/ui` package are publicly available for broader use, but public
 availability does not include external support, compatibility guarantees, feature commitments, or
 a guaranteed release schedule. Development follows Brilliant's internal priorities, and APIs may
 change during `0.x` releases. External adopters should evaluate and pin versions appropriate to
@@ -30,25 +30,25 @@ pnpm build
 Consumer applications install the protected package and import only what they use:
 
 ```sh
-pnpm add @brilliant/ui tailwindcss
+pnpm add @brilliantmode/ui tailwindcss
 ```
 
 Add the package stylesheet to your global CSS after Tailwind:
 
 ```css
 @import "tailwindcss";
-@import "@brilliant/ui/styles.css";
+@import "@brilliantmode/ui/styles.css";
 ```
 
 ```tsx
-import { Button } from "@brilliant/ui/button";
+import { Button } from "@brilliantmode/ui/button";
 ```
 
 Tokens and animation utilities are included in the same installation:
 
 ```ts
-import { animationPresets } from "@brilliant/ui/animations";
-import { tokens } from "@brilliant/ui/tokens";
+import { animationPresets } from "@brilliantmode/ui/animations";
+import { tokens } from "@brilliantmode/ui/tokens";
 ```
 
 For AI coding tools, the same package includes a user-initiated stdio MCP server:
@@ -68,7 +68,7 @@ For AI coding tools, the same package includes a user-initiated stdio MCP server
 
 | Package | Purpose |
 | --- | --- |
-| `@brilliant/ui` | Protected, tree-shakeable components, layouts, blocks, styles, and shared conventions |
+| `@brilliantmode/ui` | Protected, tree-shakeable components, layouts, blocks, styles, and shared conventions |
 
 All `@brilliant-ui/*` workspaces are private implementation modules used to build and document the
 single public package. Consumers never need to install them.

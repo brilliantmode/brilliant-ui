@@ -5,7 +5,7 @@ export const componentCatalog = [
     dependencies: [],
     description: "An accessible action control with semantic visual hierarchy.",
     exports: ["ButtonProps", "Button"],
-    importPath: "@brilliant/ui/button",
+    importPath: "@brilliantmode/ui/button",
     kind: "component",
     metadata: {
       purpose: "Triggers an immediate action or submits a form.",
@@ -27,14 +27,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Button",
     usageExample:
-      'import { Button } from "@brilliant/ui/button";\n\nexport function Example() {\n  return (\n    <Button size="md" variant="primary">\n      Save changes\n    </Button>\n  );\n}',
+      'import { Button } from "@brilliantmode/ui/button";\n\nexport function Example() {\n  return (\n    <Button size="md" variant="primary">\n      Save changes\n    </Button>\n  );\n}',
     valueExports: ["Button"],
   },
   {
     dependencies: [],
     description: "A grouped action wrapper for related Brilliant buttons.",
     exports: ["ButtonGroupProps", "ButtonGroup"],
-    importPath: "@brilliant/ui/button-group",
+    importPath: "@brilliantmode/ui/button-group",
     kind: "component",
     metadata: {
       purpose: "Groups related actions into one compact control cluster.",
@@ -55,14 +55,14 @@ export const componentCatalog = [
     registryDependencies: ["button"],
     title: "Button Group",
     usageExample:
-      'import { Button } from "@brilliant/ui/button";\nimport { ButtonGroup } from "@brilliant/ui/button-group";\n\nexport function Example() {\n  return (\n    <ButtonGroup aria-label="View density">\n      <Button variant="secondary">Compact</Button>\n      <Button variant="primary">Comfortable</Button>\n      <Button variant="outline">Touch</Button>\n    </ButtonGroup>\n  );\n}',
+      'import { Button } from "@brilliantmode/ui/button";\nimport { ButtonGroup } from "@brilliantmode/ui/button-group";\n\nexport function Example() {\n  return (\n    <ButtonGroup aria-label="View density">\n      <Button variant="secondary">Compact</Button>\n      <Button variant="primary">Comfortable</Button>\n      <Button variant="outline">Touch</Button>\n    </ButtonGroup>\n  );\n}',
     valueExports: ["ButtonGroup"],
   },
   {
     dependencies: [],
     description: "A compact status label for metadata, state, and categorization.",
     exports: ["BadgeProps", "Badge"],
-    importPath: "@brilliant/ui/badge",
+    importPath: "@brilliantmode/ui/badge",
     kind: "component",
     metadata: {
       purpose: "Labels objects with short status or category text.",
@@ -75,14 +75,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Badge",
     usageExample:
-      'import { Badge } from "@brilliant/ui/badge";\n\nexport function Example() {\n  return (\n    <div className="flex flex-wrap gap-2">\n      <Badge variant="primary">Live</Badge>\n      <Badge variant="muted">Enterprise</Badge>\n    </div>\n  );\n}',
+      'import { Badge } from "@brilliantmode/ui/badge";\n\nexport function Example() {\n  return (\n    <div className="flex flex-wrap gap-2">\n      <Badge variant="primary">Live</Badge>\n      <Badge variant="muted">Enterprise</Badge>\n    </div>\n  );\n}',
     valueExports: ["Badge"],
   },
   {
     dependencies: [],
     description: "A ratio-preserving media wrapper for previews, thumbnails, and embeds.",
     exports: ["AspectRatioProps", "AspectRatio"],
-    importPath: "@brilliant/ui/aspect-ratio",
+    importPath: "@brilliantmode/ui/aspect-ratio",
     kind: "component",
     metadata: {
       purpose: "Keeps media and preview surfaces at a predictable aspect ratio.",
@@ -102,7 +102,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Aspect Ratio",
     usageExample:
-      'import { AspectRatio } from "@brilliant/ui/aspect-ratio";\n\nexport function Example() {\n  return (\n    <AspectRatio ratio={16 / 9}>\n      <div className="grid size-full place-items-center bg-primary text-primary-foreground">\n        <span className="rounded-md bg-background/15 px-2 py-1 text-xs font-medium">\n          16:9 preview\n        </span>\n      </div>\n    </AspectRatio>\n  );\n}',
+      'import { AspectRatio } from "@brilliantmode/ui/aspect-ratio";\n\nexport function Example() {\n  return (\n    <AspectRatio ratio={16 / 9}>\n      <div className="grid size-full place-items-center bg-primary text-primary-foreground">\n        <span className="rounded-md bg-background/15 px-2 py-1 text-xs font-medium">\n          16:9 preview\n        </span>\n      </div>\n    </AspectRatio>\n  );\n}',
     valueExports: ["AspectRatio"],
   },
   {
@@ -119,7 +119,7 @@ export const componentCatalog = [
       "PhotoFallback",
       "PhotoCaption",
     ],
-    importPath: "@brilliant/ui/photo",
+    importPath: "@brilliantmode/ui/photo",
     kind: "component",
     metadata: {
       purpose: "Renders product imagery, thumbnails, avatars-at-scale, and media previews.",
@@ -148,7 +148,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Photo",
     usageExample:
-      'import {\n  Photo,\n  PhotoCaption,\n  PhotoFallback,\n  PhotoImage,\n  PhotoTint,\n} from "@brilliant/ui/photo";\n\nexport function Example() {\n  return (\n    <Photo ratio={16 / 10} radius="md" variant="surface">\n      <PhotoFallback>Workspace preview unavailable</PhotoFallback>\n      <PhotoImage\n        alt="Sunlit concrete atrium"\n        filter="soft"\n        src="/images/photo-architecture.jpg"\n      />\n      <PhotoTint color="var(--brilliant-primary)" opacity={0.12} />\n      <PhotoCaption>Sunlit concrete atrium</PhotoCaption>\n    </Photo>\n  );\n}',
+      'import {\n  Photo,\n  PhotoCaption,\n  PhotoFallback,\n  PhotoImage,\n  PhotoTint,\n} from "@brilliantmode/ui/photo";\n\nexport function Example() {\n  return (\n    <Photo ratio={16 / 10} radius="md" variant="surface">\n      <PhotoFallback>Workspace preview unavailable</PhotoFallback>\n      <PhotoImage\n        alt="Sunlit concrete atrium"\n        filter="soft"\n        src="/images/photo-architecture.jpg"\n      />\n      <PhotoTint color="var(--brilliant-primary)" opacity={0.12} />\n      <PhotoCaption>Sunlit concrete atrium</PhotoCaption>\n    </Photo>\n  );\n}',
     valueExports: ["Photo", "PhotoImage", "PhotoTint", "PhotoFallback", "PhotoCaption"],
   },
   {
@@ -164,7 +164,7 @@ export const componentCatalog = [
       "AvatarStatusProps",
       "AvatarStatus",
     ],
-    importPath: "@brilliant/ui/avatar",
+    importPath: "@brilliantmode/ui/avatar",
     kind: "component",
     metadata: {
       purpose: "Represents a person, team, workspace, or object identity.",
@@ -185,7 +185,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Avatar",
     usageExample:
-      'import {\n  Avatar,\n  AvatarFallback,\n  AvatarImage,\n  AvatarStatus,\n} from "@brilliant/ui/avatar";\n\nexport function Example() {\n  return (\n    <div className="flex items-end gap-4">\n      {(["sm", "md", "lg", "xl"] as const).map((size) => (\n        <Avatar key={size} size={size}>\n          <AvatarImage\n            alt="Alex Rivera"\n            src="/images/avatar-product-designer.jpg"\n          />\n          <AvatarFallback>AR</AvatarFallback>\n          <AvatarStatus size={size} status="online" />\n        </Avatar>\n      ))}\n    </div>\n  );\n}',
+      'import {\n  Avatar,\n  AvatarFallback,\n  AvatarImage,\n  AvatarStatus,\n} from "@brilliantmode/ui/avatar";\n\nexport function Example() {\n  return (\n    <div className="flex items-end gap-4">\n      {(["sm", "md", "lg", "xl"] as const).map((size) => (\n        <Avatar key={size} size={size}>\n          <AvatarImage\n            alt="Alex Rivera"\n            src="/images/avatar-product-designer.jpg"\n          />\n          <AvatarFallback>AR</AvatarFallback>\n          <AvatarStatus size={size} status="online" />\n        </Avatar>\n      ))}\n    </div>\n  );\n}',
     valueExports: ["Avatar", "AvatarImage", "AvatarFallback", "AvatarStatus"],
   },
   {
@@ -200,7 +200,7 @@ export const componentCatalog = [
       "CardContent",
       "CardFooter",
     ],
-    importPath: "@brilliant/ui/card",
+    importPath: "@brilliantmode/ui/card",
     kind: "component",
     metadata: {
       purpose: "Groups related UI into a scannable surface.",
@@ -224,7 +224,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Card",
     usageExample:
-      'import {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from "@brilliant/ui/card";\nimport { useState } from "react";\n\nexport function Example() {\n  const [isProcessing] = useState(true);\n\n  return (\n    <div className="grid gap-3 md:grid-cols-4">\n      <Card interactive variant="surface">\n        <CardHeader>\n          <CardTitle>Surface</CardTitle>\n          <CardDescription>Neutral group</CardDescription>\n        </CardHeader>\n      </Card>\n      <Card interactive variant="elevated">\n        <CardHeader>\n          <CardTitle>Elevated</CardTitle>\n          <CardDescription>Dashboard metric</CardDescription>\n        </CardHeader>\n      </Card>\n      <Card interactive variant="accent">\n        <CardHeader>\n          <CardTitle>Accent</CardTitle>\n          <CardDescription>Selected state</CardDescription>\n        </CardHeader>\n      </Card>\n      <Card beam={isProcessing} interactive variant="beam">\n        <CardHeader>\n          <CardTitle>Beam</CardTitle>\n          <CardDescription>Live premium state</CardDescription>\n        </CardHeader>\n      </Card>\n    </div>\n  );\n}',
+      'import {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from "@brilliantmode/ui/card";\nimport { useState } from "react";\n\nexport function Example() {\n  const [isProcessing] = useState(true);\n\n  return (\n    <div className="grid gap-3 md:grid-cols-4">\n      <Card interactive variant="surface">\n        <CardHeader>\n          <CardTitle>Surface</CardTitle>\n          <CardDescription>Neutral group</CardDescription>\n        </CardHeader>\n      </Card>\n      <Card interactive variant="elevated">\n        <CardHeader>\n          <CardTitle>Elevated</CardTitle>\n          <CardDescription>Dashboard metric</CardDescription>\n        </CardHeader>\n      </Card>\n      <Card interactive variant="accent">\n        <CardHeader>\n          <CardTitle>Accent</CardTitle>\n          <CardDescription>Selected state</CardDescription>\n        </CardHeader>\n      </Card>\n      <Card beam={isProcessing} interactive variant="beam">\n        <CardHeader>\n          <CardTitle>Beam</CardTitle>\n          <CardDescription>Live premium state</CardDescription>\n        </CardHeader>\n      </Card>\n    </div>\n  );\n}',
     valueExports: [
       "Card",
       "CardHeader",
@@ -238,7 +238,7 @@ export const componentCatalog = [
     dependencies: [],
     description: "A typography primitive with muted, glow, and shimmer variants.",
     exports: ["TextProps", "Text"],
-    importPath: "@brilliant/ui/text",
+    importPath: "@brilliantmode/ui/text",
     kind: "component",
     metadata: {
       purpose: "Renders short UI copy, premium states, and animated emphasis text.",
@@ -264,14 +264,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Text",
     usageExample:
-      'import { Text } from "@brilliant/ui/text";\n\nexport function Example() {\n  return (\n    <div className="grid gap-4 md:grid-cols-2">\n      <Text size="lg" variant="default">Revenue intelligence</Text>\n      <Text size="lg" variant="muted">Updated 2 minutes ago</Text>\n      <Text size="lg" variant="glow">AI ready</Text>\n      <Text shimmerColor="white" size="lg" variant="shimmer">\n        Generating workspace insights\n      </Text>\n    </div>\n  );\n}',
+      'import { Text } from "@brilliantmode/ui/text";\n\nexport function Example() {\n  return (\n    <div className="grid gap-4 md:grid-cols-2">\n      <Text size="lg" variant="default">Revenue intelligence</Text>\n      <Text size="lg" variant="muted">Updated 2 minutes ago</Text>\n      <Text size="lg" variant="glow">AI ready</Text>\n      <Text shimmerColor="white" size="lg" variant="shimmer">\n        Generating workspace insights\n      </Text>\n    </div>\n  );\n}',
     valueExports: ["Text"],
   },
   {
     dependencies: [],
     description: "A crisp text field with focus, invalid, disabled, and tokenized styling.",
     exports: ["InputProps", "Input"],
-    importPath: "@brilliant/ui/input",
+    importPath: "@brilliantmode/ui/input",
     kind: "component",
     metadata: {
       purpose: "Collects short freeform text, search, numbers, URLs, or emails.",
@@ -287,7 +287,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Input",
     usageExample:
-      'import { Input } from "@brilliant/ui/input";\n\nexport function Example() {\n  return <Input name="brilliant-input-preview" placeholder="Acme workspace" />;\n}',
+      'import { Input } from "@brilliantmode/ui/input";\n\nexport function Example() {\n  return <Input name="brilliant-input-preview" placeholder="Acme workspace" />;\n}',
     valueExports: ["Input"],
   },
   {
@@ -305,7 +305,7 @@ export const componentCatalog = [
       "FileUploadList",
       "FileUploadError",
     ],
-    importPath: "@brilliant/ui/file-upload",
+    importPath: "@brilliantmode/ui/file-upload",
     kind: "component",
     metadata: {
       purpose: "Collects one or more local files before an application uploads or processes them.",
@@ -344,7 +344,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "File Upload",
     usageExample:
-      'import {\n  FileUpload,\n  FileUploadDescription,\n  FileUploadDropzone,\n  FileUploadError,\n  FileUploadIcon,\n  FileUploadList,\n  FileUploadTitle,\n} from "@brilliant/ui/file-upload";\n\nexport function Example() {\n  return (\n    <FileUpload\n      accept=".csv,text/csv"\n      maxFiles={3}\n      maxSize={5 * 1024 * 1024}\n      multiple\n    >\n      <FileUploadDropzone>\n        <span>\n          <FileUploadIcon />\n          <FileUploadTitle>Drop CSV files here or click to browse</FileUploadTitle>\n          <FileUploadDescription>Up to 3 files, 5 MB each.</FileUploadDescription>\n        </span>\n      </FileUploadDropzone>\n      <FileUploadList />\n      <FileUploadError />\n    </FileUpload>\n  );\n}',
+      'import {\n  FileUpload,\n  FileUploadDescription,\n  FileUploadDropzone,\n  FileUploadError,\n  FileUploadIcon,\n  FileUploadList,\n  FileUploadTitle,\n} from "@brilliantmode/ui/file-upload";\n\nexport function Example() {\n  return (\n    <FileUpload\n      accept=".csv,text/csv"\n      maxFiles={3}\n      maxSize={5 * 1024 * 1024}\n      multiple\n    >\n      <FileUploadDropzone>\n        <span>\n          <FileUploadIcon />\n          <FileUploadTitle>Drop CSV files here or click to browse</FileUploadTitle>\n          <FileUploadDescription>Up to 3 files, 5 MB each.</FileUploadDescription>\n        </span>\n      </FileUploadDropzone>\n      <FileUploadList />\n      <FileUploadError />\n    </FileUpload>\n  );\n}',
     valueExports: [
       "FileUpload",
       "FileUploadDropzone",
@@ -361,7 +361,7 @@ export const componentCatalog = [
     description:
       "An image-specific upload with immediate preview, crop controls, replace and remove actions, and optional camera capture.",
     exports: ["PhotoUploadProps", "PhotoUpload"],
-    importPath: "@brilliant/ui/photo-upload",
+    importPath: "@brilliantmode/ui/photo-upload",
     kind: "component",
     metadata: {
       purpose:
@@ -388,14 +388,14 @@ export const componentCatalog = [
     registryDependencies: ["file-upload", "photo"],
     title: "Photo Upload",
     usageExample:
-      'import { PhotoUpload } from "@brilliant/ui/photo-upload";\nimport { useState } from "react";\n\nexport function Example() {\n  const [photo, setPhoto] = useState<File | null>(null);\n\n  return (\n    <PhotoUpload\n      alt="Workspace profile"\n      className="mx-auto max-w-lg"\n      crop="square"\n      file={photo}\n      maxSize={5 * 1024 * 1024}\n      onFileChange={setPhoto}\n    />\n  );\n}',
+      'import { PhotoUpload } from "@brilliantmode/ui/photo-upload";\nimport { useState } from "react";\n\nexport function Example() {\n  const [photo, setPhoto] = useState<File | null>(null);\n\n  return (\n    <PhotoUpload\n      alt="Workspace profile"\n      className="mx-auto max-w-lg"\n      crop="square"\n      file={photo}\n      maxSize={5 * 1024 * 1024}\n      onFileChange={setPhoto}\n    />\n  );\n}',
     valueExports: ["PhotoUpload"],
   },
   {
     dependencies: [],
     description: "A form label primitive tuned for dense enterprise layouts.",
     exports: ["LabelProps", "Label"],
-    importPath: "@brilliant/ui/label",
+    importPath: "@brilliantmode/ui/label",
     kind: "component",
     metadata: {
       purpose: "Names a form control.",
@@ -408,14 +408,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Label",
     usageExample:
-      'import { Input } from "@brilliant/ui/input";\nimport { Label } from "@brilliant/ui/label";\n\nexport function Example() {\n  return (\n    <div className="space-y-2">\n      <Label htmlFor="workspace">Workspace name</Label>\n      <Input defaultValue="Acme" id="workspace" />\n    </div>\n  );\n}',
+      'import { Input } from "@brilliantmode/ui/input";\nimport { Label } from "@brilliantmode/ui/label";\n\nexport function Example() {\n  return (\n    <div className="space-y-2">\n      <Label htmlFor="workspace">Workspace name</Label>\n      <Input defaultValue="Acme" id="workspace" />\n    </div>\n  );\n}',
     valueExports: ["Label"],
   },
   {
     dependencies: [],
     description: "A multiline field with Brilliant focus and invalid states.",
     exports: ["TextareaProps", "Textarea"],
-    importPath: "@brilliant/ui/textarea",
+    importPath: "@brilliantmode/ui/textarea",
     kind: "component",
     metadata: {
       purpose: "Collects longer freeform text.",
@@ -428,14 +428,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Textarea",
     usageExample:
-      'import { Textarea } from "@brilliant/ui/textarea";\n\nexport function Example() {\n  return <Textarea placeholder="Add a launch note..." />;\n}',
+      'import { Textarea } from "@brilliantmode/ui/textarea";\n\nexport function Example() {\n  return <Textarea placeholder="Add a launch note..." />;\n}',
     valueExports: ["Textarea"],
   },
   {
     dependencies: [],
     description: "Form field composition for label, help text, and error states.",
     exports: ["FieldProps", "Field", "FieldLabel", "FieldDescription", "FieldError", "FieldGroup"],
-    importPath: "@brilliant/ui/field",
+    importPath: "@brilliantmode/ui/field",
     kind: "component",
     metadata: {
       purpose: "Composes labels, controls, descriptions, and validation messages.",
@@ -452,14 +452,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Field",
     usageExample:
-      'import {\n  Field,\n  FieldDescription,\n  FieldLabel,\n} from "@brilliant/ui/field";\nimport { Input } from "@brilliant/ui/input";\n\nexport function Example() {\n  return (\n    <Field>\n      <FieldLabel htmlFor="workspace-email">Workspace email</FieldLabel>\n      <Input id="workspace-email" defaultValue="workspace@company.com" type="email" />\n      <FieldDescription>Used for billing and approvals.</FieldDescription>\n    </Field>\n  );\n}',
+      'import {\n  Field,\n  FieldDescription,\n  FieldLabel,\n} from "@brilliantmode/ui/field";\nimport { Input } from "@brilliantmode/ui/input";\n\nexport function Example() {\n  return (\n    <Field>\n      <FieldLabel htmlFor="workspace-email">Workspace email</FieldLabel>\n      <Input id="workspace-email" defaultValue="workspace@company.com" type="email" />\n      <FieldDescription>Used for billing and approvals.</FieldDescription>\n    </Field>\n  );\n}',
     valueExports: ["Field", "FieldLabel", "FieldDescription", "FieldError", "FieldGroup"],
   },
   {
     dependencies: [],
     description: "A native checkbox with tokenized states and press micro UX.",
     exports: ["CheckboxProps", "Checkbox"],
-    importPath: "@brilliant/ui/checkbox",
+    importPath: "@brilliantmode/ui/checkbox",
     kind: "component",
     metadata: {
       purpose: "Toggles a binary option or selects items in a set.",
@@ -482,14 +482,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Checkbox",
     usageExample:
-      'import { Checkbox } from "@brilliant/ui/checkbox";\n\nexport function Example() {\n  return (\n    <div className="grid gap-4 sm:grid-cols-3">\n      <label className="flex items-center gap-4">\n        <Checkbox defaultChecked size="lg" />\n        <span>\n          <span className="block font-medium">Checked</span>\n          <span className="block text-xs text-muted-foreground">Require approval</span>\n        </span>\n      </label>\n      <label className="flex items-center gap-4">\n        <Checkbox size="lg" />\n        <span>\n          <span className="block font-medium">Empty</span>\n          <span className="block text-xs text-muted-foreground">Optional export</span>\n        </span>\n      </label>\n      <label className="flex items-center gap-4">\n        <Checkbox checked="indeterminate" size="lg" />\n        <span>\n          <span className="block font-medium">Mixed</span>\n          <span className="block text-xs text-muted-foreground">3 of 8 selected</span>\n        </span>\n      </label>\n    </div>\n  );\n}',
+      'import { Checkbox } from "@brilliantmode/ui/checkbox";\n\nexport function Example() {\n  return (\n    <div className="grid gap-4 sm:grid-cols-3">\n      <label className="flex items-center gap-4">\n        <Checkbox defaultChecked size="lg" />\n        <span>\n          <span className="block font-medium">Checked</span>\n          <span className="block text-xs text-muted-foreground">Require approval</span>\n        </span>\n      </label>\n      <label className="flex items-center gap-4">\n        <Checkbox size="lg" />\n        <span>\n          <span className="block font-medium">Empty</span>\n          <span className="block text-xs text-muted-foreground">Optional export</span>\n        </span>\n      </label>\n      <label className="flex items-center gap-4">\n        <Checkbox checked="indeterminate" size="lg" />\n        <span>\n          <span className="block font-medium">Mixed</span>\n          <span className="block text-xs text-muted-foreground">3 of 8 selected</span>\n        </span>\n      </label>\n    </div>\n  );\n}',
     valueExports: ["Checkbox"],
   },
   {
     dependencies: [],
     description: "A native switch-style checkbox for immediate on/off settings.",
     exports: ["SwitchProps", "Switch"],
-    importPath: "@brilliant/ui/switch",
+    importPath: "@brilliantmode/ui/switch",
     kind: "component",
     metadata: {
       purpose: "Toggles an immediate setting.",
@@ -502,14 +502,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Switch",
     usageExample:
-      'import { Switch } from "@brilliant/ui/switch";\n\nexport function Example() {\n  return (\n    <label className="flex items-center gap-3">\n      <Switch aria-label="Enable sync" defaultChecked />\n      <span>Enabled</span>\n    </label>\n  );\n}',
+      'import { Switch } from "@brilliantmode/ui/switch";\n\nexport function Example() {\n  return (\n    <label className="flex items-center gap-3">\n      <Switch aria-label="Enable sync" defaultChecked />\n      <span>Enabled</span>\n    </label>\n  );\n}',
     valueExports: ["Switch"],
   },
   {
     dependencies: [],
     description: "A native radio choice group with tokenized states and dot micro UX.",
     exports: ["RadioGroupProps", "RadioGroup", "RadioItemProps", "RadioItem"],
-    importPath: "@brilliant/ui/radio-group",
+    importPath: "@brilliantmode/ui/radio-group",
     kind: "component",
     metadata: {
       purpose: "Lets users choose exactly one option from a related set.",
@@ -532,14 +532,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Radio Group",
     usageExample:
-      'import { RadioGroup, RadioItem } from "@brilliant/ui/radio-group";\n\nexport function Example() {\n  return (\n    <RadioGroup aria-label="Billing plan" defaultValue="pro" size="md">\n      <RadioItem\n        description="Usage, members, and API controls"\n        label="Pro"\n        value="pro"\n      />\n      <RadioItem\n        description="SAML, SCIM, audit logs"\n        label="Enterprise"\n        value="enterprise"\n      />\n    </RadioGroup>\n  );\n}',
+      'import { RadioGroup, RadioItem } from "@brilliantmode/ui/radio-group";\n\nexport function Example() {\n  return (\n    <RadioGroup aria-label="Billing plan" defaultValue="pro" size="md">\n      <RadioItem\n        description="Usage, members, and API controls"\n        label="Pro"\n        value="pro"\n      />\n      <RadioItem\n        description="SAML, SCIM, audit logs"\n        label="Enterprise"\n        value="enterprise"\n      />\n    </RadioGroup>\n  );\n}',
     valueExports: ["RadioGroup", "RadioItem"],
   },
   {
     dependencies: [],
     description: "A native range control with Brilliant focus and thumb styling.",
     exports: ["SliderProps", "Slider"],
-    importPath: "@brilliant/ui/slider",
+    importPath: "@brilliantmode/ui/slider",
     kind: "component",
     metadata: {
       purpose: "Adjusts a numeric value within a bounded range.",
@@ -559,7 +559,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Slider",
     usageExample:
-      'import { Slider } from "@brilliant/ui/slider";\n\nexport function Example() {\n  return (\n    <Slider\n      aria-label="Usage threshold"\n      defaultValue={64}\n      max={100}\n      min={0}\n    />\n  );\n}',
+      'import { Slider } from "@brilliantmode/ui/slider";\n\nexport function Example() {\n  return (\n    <Slider\n      aria-label="Usage threshold"\n      defaultValue={64}\n      max={100}\n      min={0}\n    />\n  );\n}',
     valueExports: ["Slider"],
   },
   {
@@ -575,7 +575,7 @@ export const componentCatalog = [
       "SelectItem",
       "SelectSeparator",
     ],
-    importPath: "@brilliant/ui/select",
+    importPath: "@brilliantmode/ui/select",
     kind: "component",
     metadata: {
       purpose: "Chooses one option from a compact, fully styled dropdown menu.",
@@ -596,7 +596,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Select",
     usageExample:
-      'import {\n  Select,\n  SelectContent,\n  SelectItem,\n  SelectTrigger,\n  SelectValue,\n} from "@brilliant/ui/select";\n\nexport function Example() {\n  return (\n    <Select defaultValue="owner">\n      <SelectTrigger aria-label="Workspace role">\n        <SelectValue placeholder="Choose role" />\n      </SelectTrigger>\n      <SelectContent>\n        <SelectItem value="owner">Owner</SelectItem>\n        <SelectItem value="admin">Admin</SelectItem>\n        <SelectItem value="member">Member</SelectItem>\n      </SelectContent>\n    </Select>\n  );\n}',
+      'import {\n  Select,\n  SelectContent,\n  SelectItem,\n  SelectTrigger,\n  SelectValue,\n} from "@brilliantmode/ui/select";\n\nexport function Example() {\n  return (\n    <Select defaultValue="owner">\n      <SelectTrigger aria-label="Workspace role">\n        <SelectValue placeholder="Choose role" />\n      </SelectTrigger>\n      <SelectContent>\n        <SelectItem value="owner">Owner</SelectItem>\n        <SelectItem value="admin">Admin</SelectItem>\n        <SelectItem value="member">Member</SelectItem>\n      </SelectContent>\n    </Select>\n  );\n}',
     valueExports: [
       "Select",
       "SelectGroup",
@@ -612,7 +612,7 @@ export const componentCatalog = [
     dependencies: [],
     description: "A styled searchable listbox combobox with Brilliant micro UX.",
     exports: ["ComboboxOption", "ComboboxProps", "Combobox"],
-    importPath: "@brilliant/ui/combobox",
+    importPath: "@brilliantmode/ui/combobox",
     kind: "component",
     metadata: {
       purpose: "Lets users type or choose from suggested options.",
@@ -635,14 +635,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Combobox",
     usageExample:
-      'import { Combobox } from "@brilliant/ui/combobox";\n\nexport function Example() {\n  return (\n    <Combobox\n      aria-label="Search workspace"\n      options={[\n        { label: "Acme", value: "Acme" },\n        { label: "Brilliant", value: "Brilliant" },\n        { label: "Unifabriq", value: "Unifabriq" },\n      ]}\n      placeholder="Search workspace"\n    />\n  );\n}',
+      'import { Combobox } from "@brilliantmode/ui/combobox";\n\nexport function Example() {\n  return (\n    <Combobox\n      aria-label="Search workspace"\n      options={[\n        { label: "Acme", value: "Acme" },\n        { label: "Brilliant", value: "Brilliant" },\n        { label: "Unifabriq", value: "Unifabriq" },\n      ]}\n      placeholder="Search workspace"\n    />\n  );\n}',
     valueExports: ["Combobox"],
   },
   {
     dependencies: [],
     description: "A semantic message surface for status, guidance, and errors.",
     exports: ["AlertProps", "Alert", "AlertTitle", "AlertDescription"],
-    importPath: "@brilliant/ui/alert",
+    importPath: "@brilliantmode/ui/alert",
     kind: "component",
     metadata: {
       purpose: "Communicates important contextual feedback.",
@@ -655,7 +655,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Alert",
     usageExample:
-      'import {\n  Alert,\n  AlertDescription,\n  AlertTitle,\n} from "@brilliant/ui/alert";\n\nexport function Example() {\n  return (\n    <Alert variant="primary">\n      <AlertTitle>Sync complete</AlertTitle>\n      <AlertDescription>All records are current.</AlertDescription>\n    </Alert>\n  );\n}',
+      'import {\n  Alert,\n  AlertDescription,\n  AlertTitle,\n} from "@brilliantmode/ui/alert";\n\nexport function Example() {\n  return (\n    <Alert variant="primary">\n      <AlertTitle>Sync complete</AlertTitle>\n      <AlertDescription>All records are current.</AlertDescription>\n    </Alert>\n  );\n}',
     valueExports: ["Alert", "AlertTitle", "AlertDescription"],
   },
   {
@@ -670,7 +670,7 @@ export const componentCatalog = [
       "DialogContent",
       "DialogFooter",
     ],
-    importPath: "@brilliant/ui/dialog",
+    importPath: "@brilliantmode/ui/dialog",
     kind: "component",
     metadata: {
       purpose: "Shows focused content or tasks above the page.",
@@ -683,7 +683,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Dialog",
     usageExample:
-      'import {\n  Dialog,\n  DialogContent,\n  DialogFooter,\n  DialogHeader,\n  DialogTitle,\n} from "@brilliant/ui/dialog";\n\nexport function Example() {\n  return (\n    <Dialog open>\n      <DialogHeader>\n        <DialogTitle>Invite teammate</DialogTitle>\n      </DialogHeader>\n      <DialogContent>{/* Form fields */}</DialogContent>\n      <DialogFooter>{/* Actions */}</DialogFooter>\n    </Dialog>\n  );\n}',
+      'import {\n  Dialog,\n  DialogContent,\n  DialogFooter,\n  DialogHeader,\n  DialogTitle,\n} from "@brilliantmode/ui/dialog";\n\nexport function Example() {\n  return (\n    <Dialog open>\n      <DialogHeader>\n        <DialogTitle>Invite teammate</DialogTitle>\n      </DialogHeader>\n      <DialogContent>{/* Form fields */}</DialogContent>\n      <DialogFooter>{/* Actions */}</DialogFooter>\n    </Dialog>\n  );\n}',
     valueExports: [
       "Dialog",
       "DialogHeader",
@@ -705,7 +705,7 @@ export const componentCatalog = [
       "AlertDialogContent",
       "AlertDialogFooter",
     ],
-    importPath: "@brilliant/ui/alert-dialog",
+    importPath: "@brilliantmode/ui/alert-dialog",
     kind: "component",
     metadata: {
       purpose: "Confirms destructive, irreversible, or high-risk actions.",
@@ -718,7 +718,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Alert Dialog",
     usageExample:
-      'import { useRef } from "react";\nimport {\n  AlertDialog,\n  AlertDialogContent,\n  AlertDialogDescription,\n  AlertDialogFooter,\n  AlertDialogHeader,\n  AlertDialogTitle,\n} from "@brilliant/ui/alert-dialog";\nimport { Button } from "@brilliant/ui/button";\n\nexport function Example() {\n  const dialogRef = useRef<HTMLDialogElement>(null);\n\n  return (\n    <>\n      <Button variant="critical" onClick={() => dialogRef.current?.showModal()}>\n        Delete API key\n      </Button>\n      <AlertDialog ref={dialogRef}>\n        <AlertDialogHeader>\n          <AlertDialogTitle>Delete API key?</AlertDialogTitle>\n          <AlertDialogDescription>\n            This immediately revokes access for connected services.\n          </AlertDialogDescription>\n        </AlertDialogHeader>\n        <AlertDialogContent>{/* consequences or object summary */}</AlertDialogContent>\n        <AlertDialogFooter>\n          <Button variant="outline" onClick={() => dialogRef.current?.close()}>\n            Cancel\n          </Button>\n          <Button variant="critical">Delete</Button>\n        </AlertDialogFooter>\n      </AlertDialog>\n    </>\n  );\n}',
+      'import { useRef } from "react";\nimport {\n  AlertDialog,\n  AlertDialogContent,\n  AlertDialogDescription,\n  AlertDialogFooter,\n  AlertDialogHeader,\n  AlertDialogTitle,\n} from "@brilliantmode/ui/alert-dialog";\nimport { Button } from "@brilliantmode/ui/button";\n\nexport function Example() {\n  const dialogRef = useRef<HTMLDialogElement>(null);\n\n  return (\n    <>\n      <Button variant="critical" onClick={() => dialogRef.current?.showModal()}>\n        Delete API key\n      </Button>\n      <AlertDialog ref={dialogRef}>\n        <AlertDialogHeader>\n          <AlertDialogTitle>Delete API key?</AlertDialogTitle>\n          <AlertDialogDescription>\n            This immediately revokes access for connected services.\n          </AlertDialogDescription>\n        </AlertDialogHeader>\n        <AlertDialogContent>{/* consequences or object summary */}</AlertDialogContent>\n        <AlertDialogFooter>\n          <Button variant="outline" onClick={() => dialogRef.current?.close()}>\n            Cancel\n          </Button>\n          <Button variant="critical">Delete</Button>\n        </AlertDialogFooter>\n      </AlertDialog>\n    </>\n  );\n}',
     valueExports: [
       "AlertDialog",
       "AlertDialogHeader",
@@ -739,7 +739,7 @@ export const componentCatalog = [
       "DrawerDescription",
       "DrawerContent",
     ],
-    importPath: "@brilliant/ui/drawer",
+    importPath: "@brilliantmode/ui/drawer",
     kind: "component",
     metadata: {
       purpose: "Shows contextual panels without leaving the page.",
@@ -752,7 +752,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Drawer",
     usageExample:
-      'import { useRef } from "react";\nimport {\n  Drawer,\n  DrawerContent,\n  DrawerDescription,\n  DrawerHeader,\n  DrawerTitle,\n} from "@brilliant/ui/drawer";\n\nexport function Example() {\n  const drawerRef = useRef<HTMLDialogElement>(null);\n\n  return (\n    <>\n      <button type="button" onClick={() => drawerRef.current?.showModal()}>\n        Open mobile filters\n      </button>\n      <Drawer ref={drawerRef}>\n        <DrawerHeader>\n          <DrawerTitle>Usage filters</DrawerTitle>\n          <DrawerDescription>Filter events without leaving the report.</DrawerDescription>\n        </DrawerHeader>\n        <DrawerContent>{/* filter controls */}</DrawerContent>\n      </Drawer>\n    </>\n  );\n}',
+      'import { useRef } from "react";\nimport {\n  Drawer,\n  DrawerContent,\n  DrawerDescription,\n  DrawerHeader,\n  DrawerTitle,\n} from "@brilliantmode/ui/drawer";\n\nexport function Example() {\n  const drawerRef = useRef<HTMLDialogElement>(null);\n\n  return (\n    <>\n      <button type="button" onClick={() => drawerRef.current?.showModal()}>\n        Open mobile filters\n      </button>\n      <Drawer ref={drawerRef}>\n        <DrawerHeader>\n          <DrawerTitle>Usage filters</DrawerTitle>\n          <DrawerDescription>Filter events without leaving the report.</DrawerDescription>\n        </DrawerHeader>\n        <DrawerContent>{/* filter controls */}</DrawerContent>\n      </Drawer>\n    </>\n  );\n}',
     valueExports: ["Drawer", "DrawerHeader", "DrawerTitle", "DrawerDescription", "DrawerContent"],
   },
   {
@@ -766,7 +766,7 @@ export const componentCatalog = [
       "SheetDescription",
       "SheetContent",
     ],
-    importPath: "@brilliant/ui/sheet",
+    importPath: "@brilliantmode/ui/sheet",
     kind: "component",
     metadata: {
       purpose: "Shows secondary workflows in a side or edge panel.",
@@ -779,7 +779,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Sheet",
     usageExample:
-      'import { useRef } from "react";\nimport {\n  Sheet,\n  SheetContent,\n  SheetDescription,\n  SheetHeader,\n  SheetTitle,\n} from "@brilliant/ui/sheet";\n\nexport function Example() {\n  const sheetRef = useRef<HTMLDialogElement>(null);\n\n  return (\n    <>\n      <button type="button" onClick={() => sheetRef.current?.showModal()}>\n        Edit workspace\n      </button>\n\n      <Sheet ref={sheetRef} side="right">\n        <SheetHeader>\n          <SheetTitle>Workspace settings</SheetTitle>\n          <SheetDescription>\n            Edit billing and access defaults without leaving the page.\n          </SheetDescription>\n        </SheetHeader>\n        <SheetContent>{/* form fields */}</SheetContent>\n        <button type="button" onClick={() => sheetRef.current?.close()}>\n          Close\n        </button>\n      </Sheet>\n    </>\n  );\n}',
+      'import { useRef } from "react";\nimport {\n  Sheet,\n  SheetContent,\n  SheetDescription,\n  SheetHeader,\n  SheetTitle,\n} from "@brilliantmode/ui/sheet";\n\nexport function Example() {\n  const sheetRef = useRef<HTMLDialogElement>(null);\n\n  return (\n    <>\n      <button type="button" onClick={() => sheetRef.current?.showModal()}>\n        Edit workspace\n      </button>\n\n      <Sheet ref={sheetRef} side="right">\n        <SheetHeader>\n          <SheetTitle>Workspace settings</SheetTitle>\n          <SheetDescription>\n            Edit billing and access defaults without leaving the page.\n          </SheetDescription>\n        </SheetHeader>\n        <SheetContent>{/* form fields */}</SheetContent>\n        <button type="button" onClick={() => sheetRef.current?.close()}>\n          Close\n        </button>\n      </Sheet>\n    </>\n  );\n}',
     valueExports: ["Sheet", "SheetHeader", "SheetTitle", "SheetDescription", "SheetContent"],
   },
   {
@@ -798,7 +798,7 @@ export const componentCatalog = [
       "DropdownMenuLabel",
       "DropdownMenuSeparator",
     ],
-    importPath: "@brilliant/ui/dropdown-menu",
+    importPath: "@brilliantmode/ui/dropdown-menu",
     kind: "component",
     metadata: {
       purpose: "Shows contextual actions from a trigger without taking over the page.",
@@ -828,7 +828,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Dropdown Menu",
     usageExample:
-      'import { useState } from "react";\nimport {\n  DropdownMenu,\n  DropdownMenuCheckboxItem,\n  DropdownMenuContent,\n  DropdownMenuItem,\n  DropdownMenuLabel,\n  DropdownMenuSeparator,\n  DropdownMenuTrigger,\n} from "@brilliant/ui/dropdown-menu";\n\nexport function Example() {\n  const [compact, setCompact] = useState(true);\n\n  return (\n    <DropdownMenu>\n      <DropdownMenuTrigger>Workspace actions</DropdownMenuTrigger>\n      <DropdownMenuContent align="start">\n        <DropdownMenuLabel>Actions</DropdownMenuLabel>\n        <DropdownMenuItem>Open audit log</DropdownMenuItem>\n        <DropdownMenuItem>Invite teammate</DropdownMenuItem>\n        <DropdownMenuSeparator />\n        <DropdownMenuCheckboxItem checked={compact} onCheckedChange={setCompact}>\n          Compact density\n        </DropdownMenuCheckboxItem>\n      </DropdownMenuContent>\n    </DropdownMenu>\n  );\n}',
+      'import { useState } from "react";\nimport {\n  DropdownMenu,\n  DropdownMenuCheckboxItem,\n  DropdownMenuContent,\n  DropdownMenuItem,\n  DropdownMenuLabel,\n  DropdownMenuSeparator,\n  DropdownMenuTrigger,\n} from "@brilliantmode/ui/dropdown-menu";\n\nexport function Example() {\n  const [compact, setCompact] = useState(true);\n\n  return (\n    <DropdownMenu>\n      <DropdownMenuTrigger>Workspace actions</DropdownMenuTrigger>\n      <DropdownMenuContent align="start">\n        <DropdownMenuLabel>Actions</DropdownMenuLabel>\n        <DropdownMenuItem>Open audit log</DropdownMenuItem>\n        <DropdownMenuItem>Invite teammate</DropdownMenuItem>\n        <DropdownMenuSeparator />\n        <DropdownMenuCheckboxItem checked={compact} onCheckedChange={setCompact}>\n          Compact density\n        </DropdownMenuCheckboxItem>\n      </DropdownMenuContent>\n    </DropdownMenu>\n  );\n}',
     valueExports: [
       "DropdownMenu",
       "DropdownMenuTrigger",
@@ -847,7 +847,7 @@ export const componentCatalog = [
     dependencies: [],
     description: "A small hover/focus hint for controls and terse UI.",
     exports: ["TooltipProps", "Tooltip"],
-    importPath: "@brilliant/ui/tooltip",
+    importPath: "@brilliantmode/ui/tooltip",
     kind: "component",
     metadata: {
       purpose: "Adds short non-essential helper text.",
@@ -860,14 +860,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Tooltip",
     usageExample:
-      'import { Tooltip } from "@brilliant/ui/tooltip";\n\nexport function Example() {\n  return (\n    <Tooltip content="Copied on click">\n      <button type="button">API key</button>\n    </Tooltip>\n  );\n}',
+      'import { Tooltip } from "@brilliantmode/ui/tooltip";\n\nexport function Example() {\n  return (\n    <Tooltip content="Copied on click">\n      <button type="button">API key</button>\n    </Tooltip>\n  );\n}',
     valueExports: ["Tooltip"],
   },
   {
     dependencies: [],
     description: "A lightweight disclosure popover for compact contextual content.",
     exports: ["PopoverProps", "Popover", "PopoverTrigger", "PopoverContent"],
-    importPath: "@brilliant/ui/popover",
+    importPath: "@brilliantmode/ui/popover",
     kind: "component",
     metadata: {
       purpose: "Reveals compact contextual content.",
@@ -880,14 +880,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Popover",
     usageExample:
-      'import {\n  Popover,\n  PopoverContent,\n  PopoverTrigger,\n} from "@brilliant/ui/popover";\n\nexport function Example() {\n  return (\n    <Popover>\n      <PopoverTrigger>Open filters</PopoverTrigger>\n      <PopoverContent>Status, owner, and date controls.</PopoverContent>\n    </Popover>\n  );\n}',
+      'import {\n  Popover,\n  PopoverContent,\n  PopoverTrigger,\n} from "@brilliantmode/ui/popover";\n\nexport function Example() {\n  return (\n    <Popover>\n      <PopoverTrigger>Open filters</PopoverTrigger>\n      <PopoverContent>Status, owner, and date controls.</PopoverContent>\n    </Popover>\n  );\n}',
     valueExports: ["Popover", "PopoverTrigger", "PopoverContent"],
   },
   {
     dependencies: [],
     description: "A hover/focus card for richer previews.",
     exports: ["HoverCardProps", "HoverCard", "HoverCardTrigger", "HoverCardContent"],
-    importPath: "@brilliant/ui/hover-card",
+    importPath: "@brilliantmode/ui/hover-card",
     kind: "component",
     metadata: {
       purpose: "Shows a richer preview for an object or person.",
@@ -903,14 +903,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Hover Card",
     usageExample:
-      'import {\n  HoverCard,\n  HoverCardContent,\n  HoverCardTrigger,\n} from "@brilliant/ui/hover-card";\n\nexport function Example() {\n  return (\n    <HoverCard>\n      <HoverCardTrigger>Nirvana R</HoverCardTrigger>\n      <HoverCardContent>Workspace owner · active now.</HoverCardContent>\n    </HoverCard>\n  );\n}',
+      'import {\n  HoverCard,\n  HoverCardContent,\n  HoverCardTrigger,\n} from "@brilliantmode/ui/hover-card";\n\nexport function Example() {\n  return (\n    <HoverCard>\n      <HoverCardTrigger>Nirvana R</HoverCardTrigger>\n      <HoverCardContent>Workspace owner · active now.</HoverCardContent>\n    </HoverCard>\n  );\n}',
     valueExports: ["HoverCard", "HoverCardTrigger", "HoverCardContent"],
   },
   {
     dependencies: [],
     description: "A right-click contextual action menu.",
     exports: ["ContextMenuProps", "ContextMenu"],
-    importPath: "@brilliant/ui/context-menu",
+    importPath: "@brilliantmode/ui/context-menu",
     kind: "component",
     metadata: {
       purpose: "Provides contextual actions for an object or region.",
@@ -926,14 +926,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Context Menu",
     usageExample:
-      'import { ContextMenu } from "@brilliant/ui/context-menu";\n\nexport function Example() {\n  return (\n    <ContextMenu>\n      <div className="rounded-md border border-border p-4">\n        Right-click this workspace row\n      </div>\n    </ContextMenu>\n  );\n}',
+      'import { ContextMenu } from "@brilliantmode/ui/context-menu";\n\nexport function Example() {\n  return (\n    <ContextMenu>\n      <div className="rounded-md border border-border p-4">\n        Right-click this workspace row\n      </div>\n    </ContextMenu>\n  );\n}',
     valueExports: ["ContextMenu"],
   },
   {
     dependencies: [],
     description: "A semantic divider for grouping related content.",
     exports: ["SeparatorProps", "Separator"],
-    importPath: "@brilliant/ui/separator",
+    importPath: "@brilliantmode/ui/separator",
     kind: "component",
     metadata: {
       purpose: "Separates content groups visually and semantically.",
@@ -954,14 +954,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Separator",
     usageExample:
-      'import { Separator } from "@brilliant/ui/separator";\n\nexport function Example() {\n  return <Separator variant="primary" />;\n}',
+      'import { Separator } from "@brilliantmode/ui/separator";\n\nexport function Example() {\n  return <Separator variant="primary" />;\n}',
     valueExports: ["Separator"],
   },
   {
     dependencies: [],
     description: "A loading placeholder with shimmer, shape presets, and reduced-motion behavior.",
     exports: ["SkeletonProps", "Skeleton"],
-    importPath: "@brilliant/ui/skeleton",
+    importPath: "@brilliantmode/ui/skeleton",
     kind: "component",
     metadata: {
       purpose: "Reserves layout space while content loads.",
@@ -982,14 +982,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Skeleton",
     usageExample:
-      'import { Skeleton } from "@brilliant/ui/skeleton";\n\nexport function Example() {\n  return <Skeleton size="title" variant="raised" />;\n}',
+      'import { Skeleton } from "@brilliantmode/ui/skeleton";\n\nexport function Example() {\n  return <Skeleton size="title" variant="raised" />;\n}',
     valueExports: ["Skeleton"],
   },
   {
     dependencies: [],
     description: "A determinate or indeterminate progress indicator with tokenized motion.",
     exports: ["ProgressProps", "Progress"],
-    importPath: "@brilliant/ui/progress",
+    importPath: "@brilliantmode/ui/progress",
     kind: "component",
     metadata: {
       purpose: "Shows task completion or ongoing work.",
@@ -1011,14 +1011,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Progress",
     usageExample:
-      'import { Progress } from "@brilliant/ui/progress";\n\nexport function Example() {\n  return <Progress aria-label="Sync progress" value={64} />;\n}',
+      'import { Progress } from "@brilliantmode/ui/progress";\n\nexport function Example() {\n  return <Progress aria-label="Sync progress" value={64} />;\n}',
     valueExports: ["Progress"],
   },
   {
     dependencies: [],
     description: "A compact loading status primitive with accessible status text.",
     exports: ["SpinnerProps", "Spinner"],
-    importPath: "@brilliant/ui/spinner",
+    importPath: "@brilliantmode/ui/spinner",
     kind: "component",
     metadata: {
       purpose: "Indicates short, local loading work.",
@@ -1039,7 +1039,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Spinner",
     usageExample:
-      'import { Spinner } from "@brilliant/ui/spinner";\n\nexport function Example() {\n  return <Spinner label="Saving settings" size="md" variant="default" />;\n}',
+      'import { Spinner } from "@brilliantmode/ui/spinner";\n\nexport function Example() {\n  return <Spinner label="Saving settings" size="md" variant="default" />;\n}',
     valueExports: ["Spinner"],
   },
   {
@@ -1054,7 +1054,7 @@ export const componentCatalog = [
       "EmptyStateDescription",
       "EmptyStateActions",
     ],
-    importPath: "@brilliant/ui/empty-state",
+    importPath: "@brilliantmode/ui/empty-state",
     kind: "component",
     metadata: {
       purpose: "Explains why a region is empty and offers a useful next action.",
@@ -1075,7 +1075,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Empty State",
     usageExample:
-      'import {\n  EmptyState,\n  EmptyStateActions,\n  EmptyStateDescription,\n  EmptyStateIcon,\n  EmptyStateTitle,\n} from "@brilliant/ui/empty-state";\n\nexport function Example() {\n  return (\n    <EmptyState variant="surface">\n      <EmptyStateIcon>⌘</EmptyStateIcon>\n      <EmptyStateTitle>No API keys</EmptyStateTitle>\n      <EmptyStateDescription>\n        Create a key to connect this workspace to your automation pipeline.\n      </EmptyStateDescription>\n      <EmptyStateActions>{/* Button or link actions */}</EmptyStateActions>\n    </EmptyState>\n  );\n}',
+      'import {\n  EmptyState,\n  EmptyStateActions,\n  EmptyStateDescription,\n  EmptyStateIcon,\n  EmptyStateTitle,\n} from "@brilliantmode/ui/empty-state";\n\nexport function Example() {\n  return (\n    <EmptyState variant="surface">\n      <EmptyStateIcon>⌘</EmptyStateIcon>\n      <EmptyStateTitle>No API keys</EmptyStateTitle>\n      <EmptyStateDescription>\n        Create a key to connect this workspace to your automation pipeline.\n      </EmptyStateDescription>\n      <EmptyStateActions>{/* Button or link actions */}</EmptyStateActions>\n    </EmptyState>\n  );\n}',
     valueExports: [
       "EmptyState",
       "EmptyStateIcon",
@@ -1088,7 +1088,7 @@ export const componentCatalog = [
     dependencies: ["@radix-ui/react-tabs"],
     description: "A Radix-powered tab primitive for switching related panels.",
     exports: ["Tabs", "TabsList", "TabsTrigger", "TabsContent"],
-    importPath: "@brilliant/ui/tabs",
+    importPath: "@brilliantmode/ui/tabs",
     kind: "component",
     metadata: {
       purpose: "Switches between related content panels.",
@@ -1109,7 +1109,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Tabs",
     usageExample:
-      'import {\n  Tabs,\n  TabsContent,\n  TabsList,\n  TabsTrigger,\n} from "@brilliant/ui/tabs";\n\nexport function Example() {\n  return (\n    <Tabs defaultValue="overview">\n      <TabsList>\n        <TabsTrigger value="overview">Overview</TabsTrigger>\n        <TabsTrigger value="usage">Usage</TabsTrigger>\n        <TabsTrigger value="billing">Billing</TabsTrigger>\n      </TabsList>\n      <TabsContent value="overview">Workspace overview</TabsContent>\n      <TabsContent value="usage">Usage is trending below forecast.</TabsContent>\n      <TabsContent value="billing">Renewal closes August 30.</TabsContent>\n    </Tabs>\n  );\n}',
+      'import {\n  Tabs,\n  TabsContent,\n  TabsList,\n  TabsTrigger,\n} from "@brilliantmode/ui/tabs";\n\nexport function Example() {\n  return (\n    <Tabs defaultValue="overview">\n      <TabsList>\n        <TabsTrigger value="overview">Overview</TabsTrigger>\n        <TabsTrigger value="usage">Usage</TabsTrigger>\n        <TabsTrigger value="billing">Billing</TabsTrigger>\n      </TabsList>\n      <TabsContent value="overview">Workspace overview</TabsContent>\n      <TabsContent value="usage">Usage is trending below forecast.</TabsContent>\n      <TabsContent value="billing">Renewal closes August 30.</TabsContent>\n    </Tabs>\n  );\n}',
     valueExports: ["Tabs", "TabsList", "TabsTrigger", "TabsContent"],
   },
   {
@@ -1122,7 +1122,7 @@ export const componentCatalog = [
       "AccordionTrigger",
       "AccordionContent",
     ],
-    importPath: "@brilliant/ui/accordion",
+    importPath: "@brilliantmode/ui/accordion",
     kind: "component",
     metadata: {
       purpose: "Shows and hides stacked sections.",
@@ -1135,7 +1135,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Accordion",
     usageExample:
-      'import {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from "@brilliant/ui/accordion";\n\nexport function Example() {\n  return (\n    <Accordion>\n      <AccordionItem open>\n        <AccordionTrigger>What ships with Brilliant?</AccordionTrigger>\n        <AccordionContent>Tokens, micro UX, and source components.</AccordionContent>\n      </AccordionItem>\n    </Accordion>\n  );\n}',
+      'import {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from "@brilliantmode/ui/accordion";\n\nexport function Example() {\n  return (\n    <Accordion>\n      <AccordionItem open>\n        <AccordionTrigger>What ships with Brilliant?</AccordionTrigger>\n        <AccordionContent>Tokens, micro UX, and source components.</AccordionContent>\n      </AccordionItem>\n    </Accordion>\n  );\n}',
     valueExports: ["Accordion", "AccordionItem", "AccordionTrigger", "AccordionContent"],
   },
   {
@@ -1148,7 +1148,7 @@ export const componentCatalog = [
       "CollapsibleTrigger",
       "CollapsibleContent",
     ],
-    importPath: "@brilliant/ui/collapsible",
+    importPath: "@brilliantmode/ui/collapsible",
     kind: "component",
     metadata: {
       purpose: "Shows or hides one content region.",
@@ -1161,7 +1161,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Collapsible",
     usageExample:
-      'import {\n  Collapsible,\n  CollapsibleContent,\n  CollapsibleItem,\n  CollapsibleTrigger,\n} from "@brilliant/ui/collapsible";\n\nexport function Example() {\n  return (\n    <Collapsible>\n      <CollapsibleItem open>\n        <CollapsibleTrigger>Advanced settings</CollapsibleTrigger>\n        <CollapsibleContent>Optional controls stay available on demand.</CollapsibleContent>\n      </CollapsibleItem>\n    </Collapsible>\n  );\n}',
+      'import {\n  Collapsible,\n  CollapsibleContent,\n  CollapsibleItem,\n  CollapsibleTrigger,\n} from "@brilliantmode/ui/collapsible";\n\nexport function Example() {\n  return (\n    <Collapsible>\n      <CollapsibleItem open>\n        <CollapsibleTrigger>Advanced settings</CollapsibleTrigger>\n        <CollapsibleContent>Optional controls stay available on demand.</CollapsibleContent>\n      </CollapsibleItem>\n    </Collapsible>\n  );\n}',
     valueExports: ["Collapsible", "CollapsibleItem", "CollapsibleTrigger", "CollapsibleContent"],
   },
   {
@@ -1177,7 +1177,7 @@ export const componentCatalog = [
       "CarouselNext",
       "CarouselDots",
     ],
-    importPath: "@brilliant/ui/carousel",
+    importPath: "@brilliantmode/ui/carousel",
     kind: "component",
     metadata: {
       purpose: "Displays a small sequence of cards or previews with explicit navigation controls.",
@@ -1198,7 +1198,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Carousel",
     usageExample:
-      'import {\n  Carousel,\n  CarouselDots,\n  CarouselItem,\n  CarouselNext,\n  CarouselPrevious,\n  CarouselTrack,\n  CarouselViewport,\n} from "@brilliant/ui/carousel";\n\nconst slides = ["Usage", "Billing", "Members"];\n\nexport function Example() {\n  return (\n    <Carousel itemCount={slides.length}>\n      <CarouselViewport>\n        <CarouselTrack>\n          {slides.map((slide) => (\n            <CarouselItem key={slide}>{slide}</CarouselItem>\n          ))}\n        </CarouselTrack>\n      </CarouselViewport>\n      <div className="flex items-center justify-between">\n        <CarouselPrevious />\n        <CarouselDots />\n        <CarouselNext />\n      </div>\n    </Carousel>\n  );\n}',
+      'import {\n  Carousel,\n  CarouselDots,\n  CarouselItem,\n  CarouselNext,\n  CarouselPrevious,\n  CarouselTrack,\n  CarouselViewport,\n} from "@brilliantmode/ui/carousel";\n\nconst slides = ["Usage", "Billing", "Members"];\n\nexport function Example() {\n  return (\n    <Carousel itemCount={slides.length}>\n      <CarouselViewport>\n        <CarouselTrack>\n          {slides.map((slide) => (\n            <CarouselItem key={slide}>{slide}</CarouselItem>\n          ))}\n        </CarouselTrack>\n      </CarouselViewport>\n      <div className="flex items-center justify-between">\n        <CarouselPrevious />\n        <CarouselDots />\n        <CarouselNext />\n      </div>\n    </Carousel>\n  );\n}',
     valueExports: [
       "Carousel",
       "CarouselViewport",
@@ -1222,7 +1222,7 @@ export const componentCatalog = [
       "TableCell",
       "TableCaption",
     ],
-    importPath: "@brilliant/ui/table",
+    importPath: "@brilliantmode/ui/table",
     kind: "component",
     metadata: {
       purpose: "Displays structured rows and columns with dense, readable defaults.",
@@ -1243,7 +1243,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Table",
     usageExample:
-      'import {\n  Table,\n  TableBody,\n  TableCell,\n  TableHead,\n  TableHeader,\n  TableRow,\n} from "@brilliant/ui/table";\n\nexport function Example() {\n  return (\n    <Table>\n      <TableHeader>\n        <TableRow>\n          <TableHead>Workspace</TableHead>\n          <TableHead>Plan</TableHead>\n          <TableHead>Seats</TableHead>\n        </TableRow>\n      </TableHeader>\n      <TableBody>\n        <TableRow>\n          <TableCell>Acme</TableCell>\n          <TableCell>Enterprise</TableCell>\n          <TableCell>48</TableCell>\n        </TableRow>\n      </TableBody>\n    </Table>\n  );\n}',
+      'import {\n  Table,\n  TableBody,\n  TableCell,\n  TableHead,\n  TableHeader,\n  TableRow,\n} from "@brilliantmode/ui/table";\n\nexport function Example() {\n  return (\n    <Table>\n      <TableHeader>\n        <TableRow>\n          <TableHead>Workspace</TableHead>\n          <TableHead>Plan</TableHead>\n          <TableHead>Seats</TableHead>\n        </TableRow>\n      </TableHeader>\n      <TableBody>\n        <TableRow>\n          <TableCell>Acme</TableCell>\n          <TableCell>Enterprise</TableCell>\n          <TableCell>48</TableCell>\n        </TableRow>\n      </TableBody>\n    </Table>\n  );\n}',
     valueExports: [
       "Table",
       "TableHeader",
@@ -1259,7 +1259,7 @@ export const componentCatalog = [
     dependencies: [],
     description: "A form composition primitive for sections, copy, and action rows.",
     exports: ["Form", "FormSection", "FormHeader", "FormTitle", "FormDescription", "FormActions"],
-    importPath: "@brilliant/ui/form",
+    importPath: "@brilliantmode/ui/form",
     kind: "component",
     metadata: {
       purpose: "Composes product-grade forms from sections, field groups, and action rows.",
@@ -1280,7 +1280,7 @@ export const componentCatalog = [
     registryDependencies: ["field"],
     title: "Form",
     usageExample:
-      'import {\n  Form,\n  FormActions,\n  FormDescription,\n  FormHeader,\n  FormSection,\n  FormTitle,\n} from "@brilliant/ui/form";\nimport { Button } from "@brilliant/ui/button";\nimport { Field, FieldDescription, FieldLabel } from "@brilliant/ui/field";\nimport { Input } from "@brilliant/ui/input";\n\nexport function Example() {\n  return (\n    <Form>\n      <FormSection>\n        <FormHeader>\n          <FormTitle>Workspace settings</FormTitle>\n          <FormDescription>Defaults used for invites and billing.</FormDescription>\n        </FormHeader>\n        <Field>\n          <FieldLabel htmlFor="workspace-name">Workspace name</FieldLabel>\n          <Input id="workspace-name" defaultValue="Acme" />\n          <FieldDescription>Visible to everyone in the organization.</FieldDescription>\n        </Field>\n        <FormActions>\n          <Button variant="outline">Cancel</Button>\n          <Button>Save changes</Button>\n        </FormActions>\n      </FormSection>\n    </Form>\n  );\n}',
+      'import {\n  Form,\n  FormActions,\n  FormDescription,\n  FormHeader,\n  FormSection,\n  FormTitle,\n} from "@brilliantmode/ui/form";\nimport { Button } from "@brilliantmode/ui/button";\nimport { Field, FieldDescription, FieldLabel } from "@brilliantmode/ui/field";\nimport { Input } from "@brilliantmode/ui/input";\n\nexport function Example() {\n  return (\n    <Form>\n      <FormSection>\n        <FormHeader>\n          <FormTitle>Workspace settings</FormTitle>\n          <FormDescription>Defaults used for invites and billing.</FormDescription>\n        </FormHeader>\n        <Field>\n          <FieldLabel htmlFor="workspace-name">Workspace name</FieldLabel>\n          <Input id="workspace-name" defaultValue="Acme" />\n          <FieldDescription>Visible to everyone in the organization.</FieldDescription>\n        </Field>\n        <FormActions>\n          <Button variant="outline">Cancel</Button>\n          <Button>Save changes</Button>\n        </FormActions>\n      </FormSection>\n    </Form>\n  );\n}',
     valueExports: [
       "Form",
       "FormSection",
@@ -1294,7 +1294,7 @@ export const componentCatalog = [
     dependencies: ["@radix-ui/react-scroll-area"],
     description: "A Radix-powered scroll container with Brilliant scrollbar styling.",
     exports: ["ScrollArea", "ScrollBar"],
-    importPath: "@brilliant/ui/scroll-area",
+    importPath: "@brilliantmode/ui/scroll-area",
     kind: "component",
     metadata: {
       purpose: "Contains overflow content without browser-default scrollbar chrome.",
@@ -1314,14 +1314,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Scroll Area",
     usageExample:
-      'import { ScrollArea } from "@brilliant/ui/scroll-area";\n\nexport function Example() {\n  return (\n    <ScrollArea className="h-48 rounded-md border border-border">\n      <div className="grid gap-2 p-3">\n        {Array.from({ length: 12 }).map((_, index) => (\n          <div key={index}>Audit event {index + 1}</div>\n        ))}\n      </div>\n    </ScrollArea>\n  );\n}',
+      'import { ScrollArea } from "@brilliantmode/ui/scroll-area";\n\nexport function Example() {\n  return (\n    <ScrollArea className="h-48 rounded-md border border-border">\n      <div className="grid gap-2 p-3">\n        {Array.from({ length: 12 }).map((_, index) => (\n          <div key={index}>Audit event {index + 1}</div>\n        ))}\n      </div>\n    </ScrollArea>\n  );\n}',
     valueExports: ["ScrollArea", "ScrollBar"],
   },
   {
     dependencies: [],
     description: "A semantic breadcrumb navigation primitive.",
     exports: ["Breadcrumb", "BreadcrumbList", "BreadcrumbItem", "BreadcrumbSeparator"],
-    importPath: "@brilliant/ui/breadcrumb",
+    importPath: "@brilliantmode/ui/breadcrumb",
     kind: "component",
     metadata: {
       purpose: "Shows the current location in a hierarchy.",
@@ -1334,14 +1334,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Breadcrumb",
     usageExample:
-      'import {\n  Breadcrumb,\n  BreadcrumbItem,\n  BreadcrumbList,\n  BreadcrumbSeparator,\n} from "@brilliant/ui/breadcrumb";\n\nexport function Example() {\n  return (\n    <Breadcrumb>\n      <BreadcrumbList>\n        <BreadcrumbItem>Workspace</BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>Settings</BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>API keys</BreadcrumbItem>\n      </BreadcrumbList>\n    </Breadcrumb>\n  );\n}',
+      'import {\n  Breadcrumb,\n  BreadcrumbItem,\n  BreadcrumbList,\n  BreadcrumbSeparator,\n} from "@brilliantmode/ui/breadcrumb";\n\nexport function Example() {\n  return (\n    <Breadcrumb>\n      <BreadcrumbList>\n        <BreadcrumbItem>Workspace</BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>Settings</BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>API keys</BreadcrumbItem>\n      </BreadcrumbList>\n    </Breadcrumb>\n  );\n}',
     valueExports: ["Breadcrumb", "BreadcrumbList", "BreadcrumbItem", "BreadcrumbSeparator"],
   },
   {
     dependencies: [],
     description: "A simple semantic navigation menu primitive.",
     exports: ["NavigationMenu", "NavigationMenuLink"],
-    importPath: "@brilliant/ui/navigation-menu",
+    importPath: "@brilliantmode/ui/navigation-menu",
     kind: "component",
     metadata: {
       purpose: "Groups primary or secondary navigation links.",
@@ -1354,7 +1354,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Navigation Menu",
     usageExample:
-      'import {\n  NavigationMenu,\n  NavigationMenuLink,\n} from "@brilliant/ui/navigation-menu";\n\nexport function Example() {\n  return (\n    <NavigationMenu>\n      <NavigationMenuLink href="/dashboard">Dashboard</NavigationMenuLink>\n      <NavigationMenuLink href="/usage">Usage</NavigationMenuLink>\n      <NavigationMenuLink href="/settings">Settings</NavigationMenuLink>\n    </NavigationMenu>\n  );\n}',
+      'import {\n  NavigationMenu,\n  NavigationMenuLink,\n} from "@brilliantmode/ui/navigation-menu";\n\nexport function Example() {\n  return (\n    <NavigationMenu>\n      <NavigationMenuLink href="/dashboard">Dashboard</NavigationMenuLink>\n      <NavigationMenuLink href="/usage">Usage</NavigationMenuLink>\n      <NavigationMenuLink href="/settings">Settings</NavigationMenuLink>\n    </NavigationMenu>\n  );\n}',
     valueExports: ["NavigationMenu", "NavigationMenuLink"],
   },
   {
@@ -1373,7 +1373,7 @@ export const componentCatalog = [
       "HeaderActions",
       "HeaderMobileTrigger",
     ],
-    importPath: "@brilliant/ui/header",
+    importPath: "@brilliantmode/ui/header",
     kind: "layout",
     metadata: {
       purpose:
@@ -1409,7 +1409,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Header",
     usageExample:
-      'import {\n  Header,\n  HeaderActions,\n  HeaderBrand,\n  HeaderContainer,\n  HeaderLink,\n  HeaderMobileTrigger,\n  HeaderNav,\n} from "@brilliant/ui/header";\nimport { Button } from "@brilliant/ui/button";\n\nexport function Example() {\n  return (\n    <Header\n      behavior="elevate"\n      position="sticky"\n      scrollThreshold={24}\n      surface="solid"\n    >\n      <HeaderContainer>\n        <HeaderBrand href="/">\n          <img alt="" className="size-8" src="/images/brilliant-mark.svg" />\n          <span>Brilliant</span>\n        </HeaderBrand>\n        <HeaderMobileTrigger />\n        <HeaderNav align="center">\n          <HeaderLink active href="/dashboard">Dashboard</HeaderLink>\n          <HeaderLink href="/projects">Projects</HeaderLink>\n          <HeaderLink href="/settings">Settings</HeaderLink>\n        </HeaderNav>\n        <HeaderActions className="hidden md:flex">\n          <Button size="sm">New project</Button>\n        </HeaderActions>\n      </HeaderContainer>\n    </Header>\n  );\n}',
+      'import {\n  Header,\n  HeaderActions,\n  HeaderBrand,\n  HeaderContainer,\n  HeaderLink,\n  HeaderMobileTrigger,\n  HeaderNav,\n} from "@brilliantmode/ui/header";\nimport { Button } from "@brilliantmode/ui/button";\n\nexport function Example() {\n  return (\n    <Header\n      behavior="elevate"\n      position="sticky"\n      scrollThreshold={24}\n      surface="solid"\n    >\n      <HeaderContainer>\n        <HeaderBrand href="/">\n          <img alt="" className="size-8" src="/images/brilliant-mark.svg" />\n          <span>Brilliant</span>\n        </HeaderBrand>\n        <HeaderMobileTrigger />\n        <HeaderNav align="center">\n          <HeaderLink active href="/dashboard">Dashboard</HeaderLink>\n          <HeaderLink href="/projects">Projects</HeaderLink>\n          <HeaderLink href="/settings">Settings</HeaderLink>\n        </HeaderNav>\n        <HeaderActions className="hidden md:flex">\n          <Button size="sm">New project</Button>\n        </HeaderActions>\n      </HeaderContainer>\n    </Header>\n  );\n}',
     valueExports: [
       "Header",
       "HeaderContainer",
@@ -1436,7 +1436,7 @@ export const componentCatalog = [
       "FooterLink",
       "FooterBottom",
     ],
-    importPath: "@brilliant/ui/footer",
+    importPath: "@brilliantmode/ui/footer",
     kind: "layout",
     metadata: {
       purpose:
@@ -1472,7 +1472,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Footer",
     usageExample:
-      'import {\n  Footer,\n  FooterBottom,\n  FooterBrand,\n  FooterContainer,\n  FooterDescription,\n  FooterGroup,\n  FooterLink,\n  FooterMain,\n  FooterNav,\n} from "@brilliant/ui/footer";\n\nexport function Example() {\n  return (\n    <Footer variant="surface">\n      <FooterContainer>\n        <FooterMain>\n          <div>\n            <FooterBrand href="/">Brilliant UI</FooterBrand>\n            <FooterDescription>\n              App-owned components with enterprise defaults and built-in micro UX.\n            </FooterDescription>\n          </div>\n          <FooterNav>\n            <FooterGroup title="Product">\n              <FooterLink href="/components">Components</FooterLink>\n              <FooterLink href="/blocks">Blocks</FooterLink>\n            </FooterGroup>\n            <FooterGroup title="Resources">\n              <FooterLink href="/docs">Documentation</FooterLink>\n              <FooterLink href="/changelog">Changelog</FooterLink>\n            </FooterGroup>\n            <FooterGroup title="Company">\n              <FooterLink href="/about">About</FooterLink>\n              <FooterLink href="/contact">Contact</FooterLink>\n            </FooterGroup>\n          </FooterNav>\n        </FooterMain>\n        <FooterBottom>\n          <span>© 2026 Brilliant Mode</span>\n          <div className="flex gap-4">\n            <FooterLink href="/privacy">Privacy</FooterLink>\n            <FooterLink href="/terms">Terms</FooterLink>\n          </div>\n        </FooterBottom>\n      </FooterContainer>\n    </Footer>\n  );\n}',
+      'import {\n  Footer,\n  FooterBottom,\n  FooterBrand,\n  FooterContainer,\n  FooterDescription,\n  FooterGroup,\n  FooterLink,\n  FooterMain,\n  FooterNav,\n} from "@brilliantmode/ui/footer";\n\nexport function Example() {\n  return (\n    <Footer variant="surface">\n      <FooterContainer>\n        <FooterMain>\n          <div>\n            <FooterBrand href="/">Brilliant UI</FooterBrand>\n            <FooterDescription>\n              App-owned components with enterprise defaults and built-in micro UX.\n            </FooterDescription>\n          </div>\n          <FooterNav>\n            <FooterGroup title="Product">\n              <FooterLink href="/components">Components</FooterLink>\n              <FooterLink href="/blocks">Blocks</FooterLink>\n            </FooterGroup>\n            <FooterGroup title="Resources">\n              <FooterLink href="/docs">Documentation</FooterLink>\n              <FooterLink href="/changelog">Changelog</FooterLink>\n            </FooterGroup>\n            <FooterGroup title="Company">\n              <FooterLink href="/about">About</FooterLink>\n              <FooterLink href="/contact">Contact</FooterLink>\n            </FooterGroup>\n          </FooterNav>\n        </FooterMain>\n        <FooterBottom>\n          <span>© 2026 Brilliant Mode</span>\n          <div className="flex gap-4">\n            <FooterLink href="/privacy">Privacy</FooterLink>\n            <FooterLink href="/terms">Terms</FooterLink>\n          </div>\n        </FooterBottom>\n      </FooterContainer>\n    </Footer>\n  );\n}',
     valueExports: [
       "Footer",
       "FooterContainer",
@@ -1525,7 +1525,7 @@ export const componentCatalog = [
       "ApplicationShellMain",
       "ApplicationShellFooter",
     ],
-    importPath: "@brilliant/ui/application-shell",
+    importPath: "@brilliantmode/ui/application-shell",
     kind: "layout",
     metadata: {
       purpose:
@@ -1603,7 +1603,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Application Shell",
     usageExample:
-      'import {\n  ApplicationShell,\n  ApplicationShellBrand,\n  ApplicationShellHeader,\n  ApplicationShellHeaderAction,\n  ApplicationShellHeaderActions,\n  ApplicationShellHeaderBrand,\n  ApplicationShellHeaderContent,\n  ApplicationShellHeaderDescription,\n  ApplicationShellHeaderTitle,\n  ApplicationShellMain,\n  ApplicationShellMenuItem,\n  ApplicationShellMenuSection,\n  ApplicationShellMobileTrigger,\n  ApplicationShellNav,\n  ApplicationShellNavGroupItem,\n  ApplicationShellNavItem,\n  ApplicationShellNavMedia,\n  ApplicationShellNavSection,\n  ApplicationShellSearch,\n  ApplicationShellSidebar,\n  ApplicationShellSidebarContent,\n  ApplicationShellSidebarFooter,\n  ApplicationShellSidebarFooterAction,\n  ApplicationShellSidebarFooterActions,\n  ApplicationShellSidebarHeader,\n  ApplicationShellSidebarToggle,\n  ApplicationShellProfile,\n  ApplicationShellProfileMenu,\n  ApplicationShellProfileTrigger,\n} from "@brilliant/ui/application-shell";\n\nexport function Example() {\n  return (\n    <ApplicationShell>\n      <ApplicationShellSidebar>\n        <ApplicationShellSidebarHeader>\n          <ApplicationShellBrand href="/">\n            <img alt="" className="size-9" src="/images/brilliant-mark.svg" />\n            <span>\n              <span className="block text-sm font-semibold">Brilliant</span>\n              <span className="block text-xs text-muted-foreground">Component system</span>\n            </span>\n          </ApplicationShellBrand>\n          <ApplicationShellSidebarToggle />\n        </ApplicationShellSidebarHeader>\n        <ApplicationShellSidebarContent>\n          <ApplicationShellSearch href="/search">\n            <span aria-hidden="true">⌕</span>\n            <span className="flex-1">Search docs</span>\n            <kbd>/</kbd>\n          </ApplicationShellSearch>\n\n          <ApplicationShellNav>\n            <ApplicationShellNavSection title="Main">\n              <ApplicationShellNavItem\n                className="font-medium text-foreground"\n                href="/contracts"\n                icon="□"\n              >\n                Contracts\n              </ApplicationShellNavItem>\n              <ApplicationShellNavItem href="/analysts" icon="□">\n                Analysts\n              </ApplicationShellNavItem>\n              <ApplicationShellNavItem href="/settings" icon="□">\n                Setting\n              </ApplicationShellNavItem>\n            </ApplicationShellNavSection>\n\n            <ApplicationShellNavSection title="Inboxes">\n              <ApplicationShellNavGroupItem\n                description="(209) 555-0104"\n                href="/clients"\n                media={<ApplicationShellNavMedia tone="primary">C</ApplicationShellNavMedia>}\n              >\n                Clients\n              </ApplicationShellNavGroupItem>\n              <ApplicationShellNavGroupItem\n                description="(239) 555-0108"\n                href="/personal"\n                media={<ApplicationShellNavMedia tone="warning">P</ApplicationShellNavMedia>}\n              >\n                Personal\n              </ApplicationShellNavGroupItem>\n            </ApplicationShellNavSection>\n          </ApplicationShellNav>\n        </ApplicationShellSidebarContent>\n\n        <ApplicationShellSidebarFooter>\n          <ApplicationShellSidebarFooterActions>\n            <ApplicationShellSidebarFooterAction icon="?">\n              Help and support\n            </ApplicationShellSidebarFooterAction>\n            <ApplicationShellSidebarFooterAction icon="◐" trailing="⌘ T">\n              Appearance\n            </ApplicationShellSidebarFooterAction>\n          </ApplicationShellSidebarFooterActions>\n          <ApplicationShellProfile>\n            <ApplicationShellProfileMenu>\n              <ApplicationShellMenuSection title="Workspace">\n                <ApplicationShellMenuItem trailing="✓">Brilliant Labs</ApplicationShellMenuItem>\n                <ApplicationShellMenuItem>Acme Studio</ApplicationShellMenuItem>\n              </ApplicationShellMenuSection>\n              <ApplicationShellMenuSection>\n                <ApplicationShellMenuItem icon="○">Profile settings</ApplicationShellMenuItem>\n                <ApplicationShellMenuItem icon="?">Help and support</ApplicationShellMenuItem>\n                <ApplicationShellMenuItem icon="↪">Sign out</ApplicationShellMenuItem>\n              </ApplicationShellMenuSection>\n            </ApplicationShellProfileMenu>\n            <ApplicationShellProfileTrigger\n              description="dianne@brilliant.dev"\n              media={<ApplicationShellNavMedia>DR</ApplicationShellNavMedia>}\n              trailing="⌃"\n            >\n              Dianne Russell\n            </ApplicationShellProfileTrigger>\n          </ApplicationShellProfile>\n        </ApplicationShellSidebarFooter>\n      </ApplicationShellSidebar>\n\n      <div className="min-w-0">\n        <ApplicationShellHeader>\n          <ApplicationShellMobileTrigger />\n          <ApplicationShellHeaderBrand href="/">\n            <img alt="" className="size-7" src="/images/brilliant-mark.svg" />\n            <span className="hidden sm:inline">Brilliant</span>\n          </ApplicationShellHeaderBrand>\n          <ApplicationShellHeaderContent>\n            <ApplicationShellHeaderTitle>Dashboard</ApplicationShellHeaderTitle>\n            <ApplicationShellHeaderDescription>Live workspace overview</ApplicationShellHeaderDescription>\n          </ApplicationShellHeaderContent>\n          <ApplicationShellHeaderActions>\n            <ApplicationShellHeaderAction aria-label="Help">?</ApplicationShellHeaderAction>\n            <ApplicationShellHeaderAction aria-label="Notifications">\n              ♢\n              <span className="absolute right-2 top-2 size-1.5 rounded-full bg-primary" />\n            </ApplicationShellHeaderAction>\n            <button className="ml-1 rounded bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground" type="button">\n              New report\n            </button>\n          </ApplicationShellHeaderActions>\n        </ApplicationShellHeader>\n        <ApplicationShellMain>\n          <div className="grid gap-4">\n            <div className="grid gap-4 sm:grid-cols-3">\n              {["Usage", "Members", "Revenue"].map((item) => (\n                <div className="rounded-lg border border-border bg-surface p-4" key={item}>\n                  <div className="text-sm font-medium">{item}</div>\n                  <div className="mt-1 text-2xl font-semibold tracking-tight">24K</div>\n                </div>\n              ))}\n            </div>\n            <div className="rounded-lg border border-border bg-surface p-4">\n              <div className="h-3 w-1/3 rounded bg-muted" />\n              <div className="mt-3 h-3 w-2/3 rounded bg-muted" />\n            </div>\n          </div>\n        </ApplicationShellMain>\n      </div>\n    </ApplicationShell>\n  );\n}',
+      'import {\n  ApplicationShell,\n  ApplicationShellBrand,\n  ApplicationShellHeader,\n  ApplicationShellHeaderAction,\n  ApplicationShellHeaderActions,\n  ApplicationShellHeaderBrand,\n  ApplicationShellHeaderContent,\n  ApplicationShellHeaderDescription,\n  ApplicationShellHeaderTitle,\n  ApplicationShellMain,\n  ApplicationShellMenuItem,\n  ApplicationShellMenuSection,\n  ApplicationShellMobileTrigger,\n  ApplicationShellNav,\n  ApplicationShellNavGroupItem,\n  ApplicationShellNavItem,\n  ApplicationShellNavMedia,\n  ApplicationShellNavSection,\n  ApplicationShellSearch,\n  ApplicationShellSidebar,\n  ApplicationShellSidebarContent,\n  ApplicationShellSidebarFooter,\n  ApplicationShellSidebarFooterAction,\n  ApplicationShellSidebarFooterActions,\n  ApplicationShellSidebarHeader,\n  ApplicationShellSidebarToggle,\n  ApplicationShellProfile,\n  ApplicationShellProfileMenu,\n  ApplicationShellProfileTrigger,\n} from "@brilliantmode/ui/application-shell";\n\nexport function Example() {\n  return (\n    <ApplicationShell>\n      <ApplicationShellSidebar>\n        <ApplicationShellSidebarHeader>\n          <ApplicationShellBrand href="/">\n            <img alt="" className="size-9" src="/images/brilliant-mark.svg" />\n            <span>\n              <span className="block text-sm font-semibold">Brilliant</span>\n              <span className="block text-xs text-muted-foreground">Component system</span>\n            </span>\n          </ApplicationShellBrand>\n          <ApplicationShellSidebarToggle />\n        </ApplicationShellSidebarHeader>\n        <ApplicationShellSidebarContent>\n          <ApplicationShellSearch href="/search">\n            <span aria-hidden="true">⌕</span>\n            <span className="flex-1">Search docs</span>\n            <kbd>/</kbd>\n          </ApplicationShellSearch>\n\n          <ApplicationShellNav>\n            <ApplicationShellNavSection title="Main">\n              <ApplicationShellNavItem\n                className="font-medium text-foreground"\n                href="/contracts"\n                icon="□"\n              >\n                Contracts\n              </ApplicationShellNavItem>\n              <ApplicationShellNavItem href="/analysts" icon="□">\n                Analysts\n              </ApplicationShellNavItem>\n              <ApplicationShellNavItem href="/settings" icon="□">\n                Setting\n              </ApplicationShellNavItem>\n            </ApplicationShellNavSection>\n\n            <ApplicationShellNavSection title="Inboxes">\n              <ApplicationShellNavGroupItem\n                description="(209) 555-0104"\n                href="/clients"\n                media={<ApplicationShellNavMedia tone="primary">C</ApplicationShellNavMedia>}\n              >\n                Clients\n              </ApplicationShellNavGroupItem>\n              <ApplicationShellNavGroupItem\n                description="(239) 555-0108"\n                href="/personal"\n                media={<ApplicationShellNavMedia tone="warning">P</ApplicationShellNavMedia>}\n              >\n                Personal\n              </ApplicationShellNavGroupItem>\n            </ApplicationShellNavSection>\n          </ApplicationShellNav>\n        </ApplicationShellSidebarContent>\n\n        <ApplicationShellSidebarFooter>\n          <ApplicationShellSidebarFooterActions>\n            <ApplicationShellSidebarFooterAction icon="?">\n              Help and support\n            </ApplicationShellSidebarFooterAction>\n            <ApplicationShellSidebarFooterAction icon="◐" trailing="⌘ T">\n              Appearance\n            </ApplicationShellSidebarFooterAction>\n          </ApplicationShellSidebarFooterActions>\n          <ApplicationShellProfile>\n            <ApplicationShellProfileMenu>\n              <ApplicationShellMenuSection title="Workspace">\n                <ApplicationShellMenuItem trailing="✓">Brilliant Labs</ApplicationShellMenuItem>\n                <ApplicationShellMenuItem>Acme Studio</ApplicationShellMenuItem>\n              </ApplicationShellMenuSection>\n              <ApplicationShellMenuSection>\n                <ApplicationShellMenuItem icon="○">Profile settings</ApplicationShellMenuItem>\n                <ApplicationShellMenuItem icon="?">Help and support</ApplicationShellMenuItem>\n                <ApplicationShellMenuItem icon="↪">Sign out</ApplicationShellMenuItem>\n              </ApplicationShellMenuSection>\n            </ApplicationShellProfileMenu>\n            <ApplicationShellProfileTrigger\n              description="dianne@brilliant.dev"\n              media={<ApplicationShellNavMedia>DR</ApplicationShellNavMedia>}\n              trailing="⌃"\n            >\n              Dianne Russell\n            </ApplicationShellProfileTrigger>\n          </ApplicationShellProfile>\n        </ApplicationShellSidebarFooter>\n      </ApplicationShellSidebar>\n\n      <div className="min-w-0">\n        <ApplicationShellHeader>\n          <ApplicationShellMobileTrigger />\n          <ApplicationShellHeaderBrand href="/">\n            <img alt="" className="size-7" src="/images/brilliant-mark.svg" />\n            <span className="hidden sm:inline">Brilliant</span>\n          </ApplicationShellHeaderBrand>\n          <ApplicationShellHeaderContent>\n            <ApplicationShellHeaderTitle>Dashboard</ApplicationShellHeaderTitle>\n            <ApplicationShellHeaderDescription>Live workspace overview</ApplicationShellHeaderDescription>\n          </ApplicationShellHeaderContent>\n          <ApplicationShellHeaderActions>\n            <ApplicationShellHeaderAction aria-label="Help">?</ApplicationShellHeaderAction>\n            <ApplicationShellHeaderAction aria-label="Notifications">\n              ♢\n              <span className="absolute right-2 top-2 size-1.5 rounded-full bg-primary" />\n            </ApplicationShellHeaderAction>\n            <button className="ml-1 rounded bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground" type="button">\n              New report\n            </button>\n          </ApplicationShellHeaderActions>\n        </ApplicationShellHeader>\n        <ApplicationShellMain>\n          <div className="grid gap-4">\n            <div className="grid gap-4 sm:grid-cols-3">\n              {["Usage", "Members", "Revenue"].map((item) => (\n                <div className="rounded-lg border border-border bg-surface p-4" key={item}>\n                  <div className="text-sm font-medium">{item}</div>\n                  <div className="mt-1 text-2xl font-semibold tracking-tight">24K</div>\n                </div>\n              ))}\n            </div>\n            <div className="rounded-lg border border-border bg-surface p-4">\n              <div className="h-3 w-1/3 rounded bg-muted" />\n              <div className="mt-3 h-3 w-2/3 rounded bg-muted" />\n            </div>\n          </div>\n        </ApplicationShellMain>\n      </div>\n    </ApplicationShell>\n  );\n}',
     valueExports: [
       "ApplicationShell",
       "ApplicationShellHeader",
@@ -1656,7 +1656,7 @@ export const componentCatalog = [
       "Sparkline",
       "ChartState",
     ],
-    importPath: "@brilliant/ui/chart",
+    importPath: "@brilliantmode/ui/chart",
     kind: "component",
     metadata: {
       purpose:
@@ -1692,7 +1692,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Chart",
     usageExample:
-      'import {\n  ChartContainer,\n  ChartLegend,\n  ChartLegendContent,\n  ChartTooltip,\n  ChartTooltipContent,\n  type ChartConfig,\n} from "@brilliant/ui/chart";\nimport { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";\n\nconst data = [\n  { month: "Jan", desktop: 186, mobile: 80 },\n  { month: "Feb", desktop: 305, mobile: 200 },\n  { month: "Mar", desktop: 237, mobile: 120 },\n  { month: "Apr", desktop: 273, mobile: 190 },\n  { month: "May", desktop: 309, mobile: 230 },\n  { month: "Jun", desktop: 364, mobile: 280 },\n];\n\nconst config = {\n  desktop: { color: "var(--brilliant-chart-1)", label: "Desktop" },\n  mobile: { color: "var(--brilliant-chart-2)", label: "Mobile" },\n} satisfies ChartConfig;\n\nexport function Example() {\n  return (\n    <ChartContainer\n      className="h-72"\n      config={config}\n      description="Monthly desktop and mobile traffic from January through June."\n      title="Traffic overview"\n    >\n      <LineChart accessibilityLayer data={data} margin={{ left: 4, right: 12, top: 8 }}>\n        <CartesianGrid strokeDasharray="3 3" vertical={false} />\n        <XAxis axisLine={false} dataKey="month" tickLine={false} tickMargin={10} />\n        <YAxis axisLine={false} tickLine={false} width={34} />\n        <ChartTooltip content={<ChartTooltipContent />} cursor={false} />\n        <ChartLegend content={<ChartLegendContent />} />\n        <Line dataKey="desktop" dot={false} isAnimationActive="auto" stroke="var(--color-desktop)" strokeWidth={2} type="monotone" />\n        <Line dataKey="mobile" dot={false} isAnimationActive="auto" stroke="var(--color-mobile)" strokeWidth={2} type="monotone" />\n      </LineChart>\n    </ChartContainer>\n  );\n}',
+      'import {\n  ChartContainer,\n  ChartLegend,\n  ChartLegendContent,\n  ChartTooltip,\n  ChartTooltipContent,\n  type ChartConfig,\n} from "@brilliantmode/ui/chart";\nimport { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";\n\nconst data = [\n  { month: "Jan", desktop: 186, mobile: 80 },\n  { month: "Feb", desktop: 305, mobile: 200 },\n  { month: "Mar", desktop: 237, mobile: 120 },\n  { month: "Apr", desktop: 273, mobile: 190 },\n  { month: "May", desktop: 309, mobile: 230 },\n  { month: "Jun", desktop: 364, mobile: 280 },\n];\n\nconst config = {\n  desktop: { color: "var(--brilliant-chart-1)", label: "Desktop" },\n  mobile: { color: "var(--brilliant-chart-2)", label: "Mobile" },\n} satisfies ChartConfig;\n\nexport function Example() {\n  return (\n    <ChartContainer\n      className="h-72"\n      config={config}\n      description="Monthly desktop and mobile traffic from January through June."\n      title="Traffic overview"\n    >\n      <LineChart accessibilityLayer data={data} margin={{ left: 4, right: 12, top: 8 }}>\n        <CartesianGrid strokeDasharray="3 3" vertical={false} />\n        <XAxis axisLine={false} dataKey="month" tickLine={false} tickMargin={10} />\n        <YAxis axisLine={false} tickLine={false} width={34} />\n        <ChartTooltip content={<ChartTooltipContent />} cursor={false} />\n        <ChartLegend content={<ChartLegendContent />} />\n        <Line dataKey="desktop" dot={false} isAnimationActive="auto" stroke="var(--color-desktop)" strokeWidth={2} type="monotone" />\n        <Line dataKey="mobile" dot={false} isAnimationActive="auto" stroke="var(--color-mobile)" strokeWidth={2} type="monotone" />\n      </LineChart>\n    </ChartContainer>\n  );\n}',
     valueExports: [
       "ChartContainer",
       "ChartTooltip",
@@ -1716,7 +1716,7 @@ export const componentCatalog = [
       "TrendIndicator",
       "Metric",
     ],
-    importPath: "@brilliant/ui/stat",
+    importPath: "@brilliantmode/ui/stat",
     kind: "component",
     metadata: {
       purpose:
@@ -1741,7 +1741,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Stat",
     usageExample:
-      'import {\n  Stat,\n  StatDescription,\n  StatHeader,\n  StatLabel,\n  StatValue,\n  TrendIndicator,\n} from "@brilliant/ui/stat";\nimport { Sparkline } from "@brilliant/ui/chart";\n\nexport function Example() {\n  return (\n    <Stat>\n      <StatHeader>\n        <StatLabel>Net revenue</StatLabel>\n        <TrendIndicator direction="positive" value="12.4%" />\n      </StatHeader>\n      <div className="flex items-end justify-between gap-3">\n        <StatValue>$128,430</StatValue>\n        <Sparkline data={[18, 24, 21, 29, 31, 37, 44]} label="Revenue trend" />\n      </div>\n      <StatDescription>Compared with the previous 30 days</StatDescription>\n    </Stat>\n  );\n}',
+      'import {\n  Stat,\n  StatDescription,\n  StatHeader,\n  StatLabel,\n  StatValue,\n  TrendIndicator,\n} from "@brilliantmode/ui/stat";\nimport { Sparkline } from "@brilliantmode/ui/chart";\n\nexport function Example() {\n  return (\n    <Stat>\n      <StatHeader>\n        <StatLabel>Net revenue</StatLabel>\n        <TrendIndicator direction="positive" value="12.4%" />\n      </StatHeader>\n      <div className="flex items-end justify-between gap-3">\n        <StatValue>$128,430</StatValue>\n        <Sparkline data={[18, 24, 21, 29, 31, 37, 44]} label="Revenue trend" />\n      </div>\n      <StatDescription>Compared with the previous 30 days</StatDescription>\n    </Stat>\n  );\n}',
     valueExports: [
       "Stat",
       "StatHeader",
@@ -1757,7 +1757,7 @@ export const componentCatalog = [
     description:
       "Operational status dots, live-state indicators, and proportional status bars for dashboards.",
     exports: ["Status", "StatusBarItem", "StatusBar"],
-    importPath: "@brilliant/ui/status",
+    importPath: "@brilliantmode/ui/status",
     kind: "component",
     metadata: {
       purpose: "Communicates service state, health, presence, and category distribution.",
@@ -1781,7 +1781,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Status",
     usageExample:
-      'import { Status, StatusBar } from "@brilliant/ui/status";\n\nexport function Example() {\n  return (\n    <div className="grid gap-5">\n      <div className="flex flex-wrap gap-4">\n        <Status pulse tone="positive">All systems operational</Status>\n        <Status tone="warning">Elevated latency</Status>\n        <Status tone="critical">Billing sync interrupted</Status>\n      </div>\n      <StatusBar\n        items={[\n          { label: "Healthy", tone: "positive", value: 82 },\n          { label: "Degraded", tone: "warning", value: 12 },\n          { label: "Failed", tone: "critical", value: 6 },\n        ]}\n      />\n    </div>\n  );\n}',
+      'import { Status, StatusBar } from "@brilliantmode/ui/status";\n\nexport function Example() {\n  return (\n    <div className="grid gap-5">\n      <div className="flex flex-wrap gap-4">\n        <Status pulse tone="positive">All systems operational</Status>\n        <Status tone="warning">Elevated latency</Status>\n        <Status tone="critical">Billing sync interrupted</Status>\n      </div>\n      <StatusBar\n        items={[\n          { label: "Healthy", tone: "positive", value: 82 },\n          { label: "Degraded", tone: "warning", value: 12 },\n          { label: "Failed", tone: "critical", value: 6 },\n        ]}\n      />\n    </div>\n  );\n}',
     valueExports: ["Status", "StatusBar"],
   },
   {
@@ -1789,7 +1789,7 @@ export const componentCatalog = [
     description:
       "A labeled scalar measurement for quotas, capacity, budgets, and dashboard utilization.",
     exports: ["Meter"],
-    importPath: "@brilliant/ui/meter",
+    importPath: "@brilliantmode/ui/meter",
     kind: "component",
     metadata: {
       purpose: "Shows a current scalar value within a known range, distinct from task progress.",
@@ -1813,7 +1813,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Meter",
     usageExample:
-      'import { Meter } from "@brilliant/ui/meter";\nimport { useState } from "react";\n\nexport function Example() {\n  const [usage, setUsage] = useState(64);\n  return (\n    <div className="grid gap-5">\n      <Meter\n        label="Monthly events"\n        max={100}\n        tone={usage > 85 ? "critical" : usage > 70 ? "warning" : "default"}\n        value={usage}\n        valueLabel={`${usage}%`}\n      />\n      <input aria-label="Adjust usage" max={100} min={0} onChange={(event) => setUsage(event.currentTarget.valueAsNumber)} type="range" value={usage} />\n    </div>\n  );\n}',
+      'import { Meter } from "@brilliantmode/ui/meter";\nimport { useState } from "react";\n\nexport function Example() {\n  const [usage, setUsage] = useState(64);\n  return (\n    <div className="grid gap-5">\n      <Meter\n        label="Monthly events"\n        max={100}\n        tone={usage > 85 ? "critical" : usage > 70 ? "warning" : "default"}\n        value={usage}\n        valueLabel={`${usage}%`}\n      />\n      <input aria-label="Adjust usage" max={100} min={0} onChange={(event) => setUsage(event.currentTarget.valueAsNumber)} type="range" value={usage} />\n    </div>\n  );\n}',
     valueExports: ["Meter"],
   },
   {
@@ -1831,7 +1831,7 @@ export const componentCatalog = [
       "DashboardSectionHeader",
       "DashboardSectionTitle",
     ],
-    importPath: "@brilliant/ui/dashboard-layout",
+    importPath: "@brilliantmode/ui/dashboard-layout",
     kind: "layout",
     metadata: {
       purpose:
@@ -1866,7 +1866,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Dashboard Layout",
     usageExample:
-      "import {\n  DashboardActions,\n  DashboardDescription,\n  DashboardGrid,\n  DashboardHeader,\n  DashboardLayout,\n  DashboardSection,\n  DashboardSectionHeader,\n  DashboardSectionTitle,\n  DashboardTitle,\n} from \"@brilliant/ui/dashboard-layout\";\nimport { Meter } from \"@brilliant/ui/meter\";\nimport { Stat, StatLabel, StatValue } from \"@brilliant/ui/stat\";\nimport { Status } from \"@brilliant/ui/status\";\n\nexport function Example() {\n  return (\n    <DashboardLayout>\n      <DashboardHeader>\n        <div>\n          <DashboardTitle>Operations overview</DashboardTitle>\n          <DashboardDescription>Production workspace · updated moments ago</DashboardDescription>\n        </div>\n        <DashboardActions><button type=\"button\">Export</button></DashboardActions>\n      </DashboardHeader>\n      <DashboardGrid>\n        {[['Revenue', '$128K'], ['Users', '24.8K'], ['Uptime', '99.99%'], ['Incidents', '2']].map(([label, value]) => (\n          <Stat key={label}><StatLabel>{label}</StatLabel><StatValue>{value}</StatValue></Stat>\n        ))}\n      </DashboardGrid>\n      <DashboardSection>\n        <DashboardSectionHeader>\n          <DashboardSectionTitle>Capacity</DashboardSectionTitle>\n          <Status tone=\"positive\">Healthy</Status>\n        </DashboardSectionHeader>\n        <Meter label=\"Event capacity\" value={68} valueLabel=\"6.8M / 10M\" />\n      </DashboardSection>\n    </DashboardLayout>\n  );\n}",
+      "import {\n  DashboardActions,\n  DashboardDescription,\n  DashboardGrid,\n  DashboardHeader,\n  DashboardLayout,\n  DashboardSection,\n  DashboardSectionHeader,\n  DashboardSectionTitle,\n  DashboardTitle,\n} from \"@brilliantmode/ui/dashboard-layout\";\nimport { Meter } from \"@brilliantmode/ui/meter\";\nimport { Stat, StatLabel, StatValue } from \"@brilliantmode/ui/stat\";\nimport { Status } from \"@brilliantmode/ui/status\";\n\nexport function Example() {\n  return (\n    <DashboardLayout>\n      <DashboardHeader>\n        <div>\n          <DashboardTitle>Operations overview</DashboardTitle>\n          <DashboardDescription>Production workspace · updated moments ago</DashboardDescription>\n        </div>\n        <DashboardActions><button type=\"button\">Export</button></DashboardActions>\n      </DashboardHeader>\n      <DashboardGrid>\n        {[['Revenue', '$128K'], ['Users', '24.8K'], ['Uptime', '99.99%'], ['Incidents', '2']].map(([label, value]) => (\n          <Stat key={label}><StatLabel>{label}</StatLabel><StatValue>{value}</StatValue></Stat>\n        ))}\n      </DashboardGrid>\n      <DashboardSection>\n        <DashboardSectionHeader>\n          <DashboardSectionTitle>Capacity</DashboardSectionTitle>\n          <Status tone=\"positive\">Healthy</Status>\n        </DashboardSectionHeader>\n        <Meter label=\"Event capacity\" value={68} valueLabel=\"6.8M / 10M\" />\n      </DashboardSection>\n    </DashboardLayout>\n  );\n}",
     valueExports: [
       "DashboardLayout",
       "DashboardHeader",
@@ -1884,7 +1884,7 @@ export const componentCatalog = [
     description:
       "A responsive analytics dashboard with KPI trends and an accessible revenue chart.",
     exports: ["AnalyticsOverviewDashboard"],
-    importPath: "@brilliant/ui/analytics-overview-dashboard",
+    importPath: "@brilliantmode/ui/analytics-overview-dashboard",
     kind: "block",
     metadata: {
       purpose: "Provides a production-ready executive analytics overview for SaaS products.",
@@ -1907,7 +1907,7 @@ export const componentCatalog = [
     registryDependencies: ["chart", "dashboard-layout", "stat"],
     title: "Analytics Overview Dashboard",
     usageExample:
-      'import { AnalyticsOverviewDashboard } from "@brilliant/ui/analytics-overview-dashboard";\n\nexport function Example() {\n  return <AnalyticsOverviewDashboard>Example</AnalyticsOverviewDashboard>;\n}',
+      'import { AnalyticsOverviewDashboard } from "@brilliantmode/ui/analytics-overview-dashboard";\n\nexport function Example() {\n  return <AnalyticsOverviewDashboard>Example</AnalyticsOverviewDashboard>;\n}',
     valueExports: ["AnalyticsOverviewDashboard"],
   },
   {
@@ -1915,7 +1915,7 @@ export const componentCatalog = [
     description:
       "An operational dashboard for uptime, latency, service health, incidents, and capacity.",
     exports: ["SystemHealthDashboard"],
-    importPath: "@brilliant/ui/system-health-dashboard",
+    importPath: "@brilliantmode/ui/system-health-dashboard",
     kind: "block",
     metadata: {
       purpose: "Summarizes live production health without relying on decorative telemetry.",
@@ -1938,14 +1938,14 @@ export const componentCatalog = [
     registryDependencies: ["dashboard-layout", "meter", "stat", "status"],
     title: "System Health Dashboard",
     usageExample:
-      'import { SystemHealthDashboard } from "@brilliant/ui/system-health-dashboard";\n\nexport function Example() {\n  return <SystemHealthDashboard>Example</SystemHealthDashboard>;\n}',
+      'import { SystemHealthDashboard } from "@brilliantmode/ui/system-health-dashboard";\n\nexport function Example() {\n  return <SystemHealthDashboard>Example</SystemHealthDashboard>;\n}',
     valueExports: ["SystemHealthDashboard"],
   },
   {
     dependencies: ["recharts", "react-is"],
     description: "A stacked capacity comparison with quota meters for storage, events, and seats.",
     exports: ["CapacityDashboard"],
-    importPath: "@brilliant/ui/capacity-dashboard",
+    importPath: "@brilliantmode/ui/capacity-dashboard",
     kind: "block",
     metadata: {
       purpose: "Makes team-level utilization and quota risk directly comparable.",
@@ -1968,7 +1968,7 @@ export const componentCatalog = [
     registryDependencies: ["chart", "dashboard-layout", "meter"],
     title: "Capacity Dashboard",
     usageExample:
-      'import { CapacityDashboard } from "@brilliant/ui/capacity-dashboard";\n\nexport function Example() {\n  return <CapacityDashboard>Example</CapacityDashboard>;\n}',
+      'import { CapacityDashboard } from "@brilliantmode/ui/capacity-dashboard";\n\nexport function Example() {\n  return <CapacityDashboard>Example</CapacityDashboard>;\n}',
     valueExports: ["CapacityDashboard"],
   },
   {
@@ -1989,7 +1989,7 @@ export const componentCatalog = [
       "OnboardingWizardContent",
       "OnboardingWizardActions",
     ],
-    importPath: "@brilliant/ui/onboarding-wizard",
+    importPath: "@brilliantmode/ui/onboarding-wizard",
     kind: "layout",
     metadata: {
       purpose:
@@ -2029,7 +2029,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Onboarding Wizard",
     usageExample:
-      'import { useState } from "react";\nimport {\n  OnboardingWizard,\n  OnboardingWizardActions,\n  OnboardingWizardContent,\n  OnboardingWizardDescription,\n  OnboardingWizardHeader,\n  OnboardingWizardMeta,\n  OnboardingWizardPanel,\n  OnboardingWizardProgress,\n  OnboardingWizardStep,\n  OnboardingWizardStepList,\n  OnboardingWizardTitle,\n} from "@brilliant/ui/onboarding-wizard";\n\nconst steps = [\n  {\n    title: "Workspace",\n    description: "Name and team defaults",\n    heading: "Create workspace",\n    body: "Confirm the workspace name, region, and default team settings.",\n  },\n  {\n    title: "Import",\n    description: "Bring in existing data",\n    heading: "Import customer data",\n    body: "Connect a source or upload a CSV. You can map fields before anything is written.",\n  },\n  {\n    title: "Invite",\n    description: "Add operators and reviewers",\n    heading: "Invite team",\n    body: "Invite operators and reviewers, or skip this until launch.",\n  },\n] as const;\n\nexport function Example() {\n  const [activeStep, setActiveStep] = useState(1);\n  const currentStep = steps[activeStep];\n  const progress = Math.round(((activeStep + 1) / steps.length) * 100);\n\n  return (\n    <OnboardingWizard variant="split">\n      <div>\n        <OnboardingWizardHeader>\n          <OnboardingWizardTitle>Launch workspace</OnboardingWizardTitle>\n          <OnboardingWizardDescription>\n            Configure the basics before your team starts using Brilliant.\n          </OnboardingWizardDescription>\n          <OnboardingWizardProgress value={progress} />\n        </OnboardingWizardHeader>\n\n        <OnboardingWizardStepList>\n          {steps.map((step, index) => (\n            <OnboardingWizardStep\n              description={step.description}\n              index={index + 1}\n              key={step.title}\n              onClick={() => setActiveStep(index)}\n              state={index < activeStep ? "complete" : index === activeStep ? "current" : "upcoming"}\n              title={step.title}\n            />\n          ))}\n        </OnboardingWizardStepList>\n      </div>\n\n      <OnboardingWizardPanel>\n        <OnboardingWizardContent>\n          <OnboardingWizardMeta>Step {activeStep + 1} of {steps.length}</OnboardingWizardMeta>\n          <div>\n            <OnboardingWizardTitle>{currentStep.heading}</OnboardingWizardTitle>\n            <OnboardingWizardDescription>\n              {currentStep.body}\n            </OnboardingWizardDescription>\n          </div>\n          {activeStep === 1 ? (\n            <div className="grid gap-3 sm:grid-cols-2">\n            <button className="rounded-lg border border-border bg-background p-4 text-left">\n              <span className="block font-medium">Connect Salesforce</span>\n              <span className="mt-1 block text-sm text-muted-foreground">\n                Sync accounts and owners.\n              </span>\n            </button>\n            <button className="rounded-lg border border-border bg-background p-4 text-left">\n              <span className="block font-medium">Upload CSV</span>\n              <span className="mt-1 block text-sm text-muted-foreground">\n                Review columns before import.\n              </span>\n            </button>\n          </div>\n          ) : null}\n        </OnboardingWizardContent>\n\n        <OnboardingWizardActions>\n          <button\n            className="text-sm font-medium text-muted-foreground disabled:opacity-50"\n            disabled={activeStep === 0}\n            onClick={() => setActiveStep((step) => Math.max(0, step - 1))}\n            type="button"\n          >\n            Back\n          </button>\n          <button\n            className="rounded bg-primary px-3 py-2 text-sm font-medium text-primary-foreground"\n            onClick={() => setActiveStep((step) => Math.min(steps.length - 1, step + 1))}\n            type="button"\n          >\n            {activeStep === steps.length - 1 ? "Finish" : "Continue"}\n          </button>\n        </OnboardingWizardActions>\n      </OnboardingWizardPanel>\n    </OnboardingWizard>\n  );\n}',
+      'import { useState } from "react";\nimport {\n  OnboardingWizard,\n  OnboardingWizardActions,\n  OnboardingWizardContent,\n  OnboardingWizardDescription,\n  OnboardingWizardHeader,\n  OnboardingWizardMeta,\n  OnboardingWizardPanel,\n  OnboardingWizardProgress,\n  OnboardingWizardStep,\n  OnboardingWizardStepList,\n  OnboardingWizardTitle,\n} from "@brilliantmode/ui/onboarding-wizard";\n\nconst steps = [\n  {\n    title: "Workspace",\n    description: "Name and team defaults",\n    heading: "Create workspace",\n    body: "Confirm the workspace name, region, and default team settings.",\n  },\n  {\n    title: "Import",\n    description: "Bring in existing data",\n    heading: "Import customer data",\n    body: "Connect a source or upload a CSV. You can map fields before anything is written.",\n  },\n  {\n    title: "Invite",\n    description: "Add operators and reviewers",\n    heading: "Invite team",\n    body: "Invite operators and reviewers, or skip this until launch.",\n  },\n] as const;\n\nexport function Example() {\n  const [activeStep, setActiveStep] = useState(1);\n  const currentStep = steps[activeStep];\n  const progress = Math.round(((activeStep + 1) / steps.length) * 100);\n\n  return (\n    <OnboardingWizard variant="split">\n      <div>\n        <OnboardingWizardHeader>\n          <OnboardingWizardTitle>Launch workspace</OnboardingWizardTitle>\n          <OnboardingWizardDescription>\n            Configure the basics before your team starts using Brilliant.\n          </OnboardingWizardDescription>\n          <OnboardingWizardProgress value={progress} />\n        </OnboardingWizardHeader>\n\n        <OnboardingWizardStepList>\n          {steps.map((step, index) => (\n            <OnboardingWizardStep\n              description={step.description}\n              index={index + 1}\n              key={step.title}\n              onClick={() => setActiveStep(index)}\n              state={index < activeStep ? "complete" : index === activeStep ? "current" : "upcoming"}\n              title={step.title}\n            />\n          ))}\n        </OnboardingWizardStepList>\n      </div>\n\n      <OnboardingWizardPanel>\n        <OnboardingWizardContent>\n          <OnboardingWizardMeta>Step {activeStep + 1} of {steps.length}</OnboardingWizardMeta>\n          <div>\n            <OnboardingWizardTitle>{currentStep.heading}</OnboardingWizardTitle>\n            <OnboardingWizardDescription>\n              {currentStep.body}\n            </OnboardingWizardDescription>\n          </div>\n          {activeStep === 1 ? (\n            <div className="grid gap-3 sm:grid-cols-2">\n            <button className="rounded-lg border border-border bg-background p-4 text-left">\n              <span className="block font-medium">Connect Salesforce</span>\n              <span className="mt-1 block text-sm text-muted-foreground">\n                Sync accounts and owners.\n              </span>\n            </button>\n            <button className="rounded-lg border border-border bg-background p-4 text-left">\n              <span className="block font-medium">Upload CSV</span>\n              <span className="mt-1 block text-sm text-muted-foreground">\n                Review columns before import.\n              </span>\n            </button>\n          </div>\n          ) : null}\n        </OnboardingWizardContent>\n\n        <OnboardingWizardActions>\n          <button\n            className="text-sm font-medium text-muted-foreground disabled:opacity-50"\n            disabled={activeStep === 0}\n            onClick={() => setActiveStep((step) => Math.max(0, step - 1))}\n            type="button"\n          >\n            Back\n          </button>\n          <button\n            className="rounded bg-primary px-3 py-2 text-sm font-medium text-primary-foreground"\n            onClick={() => setActiveStep((step) => Math.min(steps.length - 1, step + 1))}\n            type="button"\n          >\n            {activeStep === steps.length - 1 ? "Finish" : "Continue"}\n          </button>\n        </OnboardingWizardActions>\n      </OnboardingWizardPanel>\n    </OnboardingWizard>\n  );\n}',
     valueExports: [
       "OnboardingWizard",
       "OnboardingWizardHeader",
@@ -2048,7 +2048,7 @@ export const componentCatalog = [
     dependencies: [],
     description: "A compact command menubar primitive.",
     exports: ["Menubar", "MenubarItem"],
-    importPath: "@brilliant/ui/menubar",
+    importPath: "@brilliantmode/ui/menubar",
     kind: "component",
     metadata: {
       purpose: "Groups app-level commands.",
@@ -2061,14 +2061,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Menubar",
     usageExample:
-      'import { Menubar, MenubarItem } from "@brilliant/ui/menubar";\n\nexport function Example() {\n  return (\n    <Menubar>\n      <MenubarItem>File</MenubarItem>\n      <MenubarItem>Edit</MenubarItem>\n      <MenubarItem>View</MenubarItem>\n    </Menubar>\n  );\n}',
+      'import { Menubar, MenubarItem } from "@brilliantmode/ui/menubar";\n\nexport function Example() {\n  return (\n    <Menubar>\n      <MenubarItem>File</MenubarItem>\n      <MenubarItem>Edit</MenubarItem>\n      <MenubarItem>View</MenubarItem>\n    </Menubar>\n  );\n}',
     valueExports: ["Menubar", "MenubarItem"],
   },
   {
     dependencies: [],
     description: "A semantic pagination navigation primitive.",
     exports: ["Pagination", "PaginationList", "PaginationItem", "PaginationLink"],
-    importPath: "@brilliant/ui/pagination",
+    importPath: "@brilliantmode/ui/pagination",
     kind: "component",
     metadata: {
       purpose: "Navigates paged collections.",
@@ -2084,7 +2084,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Pagination",
     usageExample:
-      'import {\n  Pagination,\n  PaginationItem,\n  PaginationLink,\n  PaginationList,\n} from "@brilliant/ui/pagination";\n\nexport function Example() {\n  return (\n    <Pagination>\n      <PaginationList>\n        <PaginationItem><PaginationLink href="?page=1">1</PaginationLink></PaginationItem>\n        <PaginationItem><PaginationLink aria-current="page" href="?page=2">2</PaginationLink></PaginationItem>\n        <PaginationItem><PaginationLink href="?page=3">3</PaginationLink></PaginationItem>\n      </PaginationList>\n    </Pagination>\n  );\n}',
+      'import {\n  Pagination,\n  PaginationItem,\n  PaginationLink,\n  PaginationList,\n} from "@brilliantmode/ui/pagination";\n\nexport function Example() {\n  return (\n    <Pagination>\n      <PaginationList>\n        <PaginationItem><PaginationLink href="?page=1">1</PaginationLink></PaginationItem>\n        <PaginationItem><PaginationLink aria-current="page" href="?page=2">2</PaginationLink></PaginationItem>\n        <PaginationItem><PaginationLink href="?page=3">3</PaginationLink></PaginationItem>\n      </PaginationList>\n    </Pagination>\n  );\n}',
     valueExports: ["Pagination", "PaginationList", "PaginationItem", "PaginationLink"],
   },
   {
@@ -2100,7 +2100,7 @@ export const componentCatalog = [
       "ToastDescription",
       "ToastClose",
     ],
-    importPath: "@brilliant/ui/toast",
+    importPath: "@brilliantmode/ui/toast",
     kind: "component",
     metadata: {
       purpose: "Shows transient non-blocking feedback.",
@@ -2122,7 +2122,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Toast",
     usageExample:
-      'import { ToastProvider, useToast } from "@brilliant/ui/toast";\n\nfunction SaveButton() {\n  const { toast } = useToast();\n\n  return (\n    <button\n      type="button"\n      onClick={() =>\n        toast({\n          title: "Settings saved",\n          description: "Workspace policy updated.",\n          variant: "primary",\n        })\n      }\n    >\n      Save settings\n    </button>\n  );\n}\n\nexport function Example() {\n  return (\n    <ToastProvider>\n      <SaveButton />\n    </ToastProvider>\n  );\n}',
+      'import { ToastProvider, useToast } from "@brilliantmode/ui/toast";\n\nfunction SaveButton() {\n  const { toast } = useToast();\n\n  return (\n    <button\n      type="button"\n      onClick={() =>\n        toast({\n          title: "Settings saved",\n          description: "Workspace policy updated.",\n          variant: "primary",\n        })\n      }\n    >\n      Save settings\n    </button>\n  );\n}\n\nexport function Example() {\n  return (\n    <ToastProvider>\n      <SaveButton />\n    </ToastProvider>\n  );\n}',
     valueExports: [
       "ToastProvider",
       "useToast",
@@ -2137,7 +2137,7 @@ export const componentCatalog = [
     dependencies: [],
     description: "A table foundation for calendar/date-picker composition.",
     exports: ["CalendarProps", "Calendar"],
-    importPath: "@brilliant/ui/calendar",
+    importPath: "@brilliantmode/ui/calendar",
     kind: "component",
     metadata: {
       purpose: "Provides a semantic calendar table foundation.",
@@ -2150,14 +2150,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Calendar",
     usageExample:
-      'import { Calendar } from "@brilliant/ui/calendar";\n\nexport function Example() {\n  return (\n    <Calendar>\n      <tbody>{/* Calendar rows */}</tbody>\n    </Calendar>\n  );\n}',
+      'import { Calendar } from "@brilliantmode/ui/calendar";\n\nexport function Example() {\n  return (\n    <Calendar>\n      <tbody>{/* Calendar rows */}</tbody>\n    </Calendar>\n  );\n}',
     valueExports: ["Calendar"],
   },
   {
     dependencies: [],
     description: "A native date input with Brilliant form styling.",
     exports: ["DateInputProps", "DateInput"],
-    importPath: "@brilliant/ui/date-input",
+    importPath: "@brilliantmode/ui/date-input",
     kind: "component",
     metadata: {
       purpose: "Collects a date using native platform controls.",
@@ -2170,14 +2170,14 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Date Input",
     usageExample:
-      'import { DateInput } from "@brilliant/ui/date-input";\n\nexport function Example() {\n  return <DateInput aria-label="Renewal date" defaultValue="2026-08-19" />;\n}',
+      'import { DateInput } from "@brilliantmode/ui/date-input";\n\nexport function Example() {\n  return <DateInput aria-label="Renewal date" defaultValue="2026-08-19" />;\n}',
     valueExports: ["DateInput"],
   },
   {
     dependencies: [],
     description: "A command palette/listbox foundation.",
     exports: ["Command", "CommandInput", "CommandList", "CommandItem"],
-    importPath: "@brilliant/ui/command",
+    importPath: "@brilliantmode/ui/command",
     kind: "component",
     metadata: {
       purpose: "Builds command palettes and searchable action lists.",
@@ -2193,7 +2193,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Command",
     usageExample:
-      'import {\n  Command,\n  CommandInput,\n  CommandItem,\n  CommandList,\n} from "@brilliant/ui/command";\n\nexport function Example() {\n  return (\n    <Command>\n      <CommandInput placeholder="Search commands..." />\n      <CommandList>\n        <CommandItem>Invite teammate</CommandItem>\n      </CommandList>\n    </Command>\n  );\n}',
+      'import {\n  Command,\n  CommandInput,\n  CommandItem,\n  CommandList,\n} from "@brilliantmode/ui/command";\n\nexport function Example() {\n  return (\n    <Command>\n      <CommandInput placeholder="Search commands..." />\n      <CommandList>\n        <CommandItem>Invite teammate</CommandItem>\n      </CommandList>\n    </Command>\n  );\n}',
     valueExports: ["Command", "CommandInput", "CommandList", "CommandItem"],
   },
 ] as const;

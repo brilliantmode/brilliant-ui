@@ -1,5 +1,5 @@
 export const componentUsageExamples = {
-  button: `import { Button } from "@brilliant/ui/button";
+  button: `import { Button } from "@brilliantmode/ui/button";
 
 export function Example() {
   return (
@@ -8,8 +8,8 @@ export function Example() {
     </Button>
   );
 }`,
-  "button-group": `import { Button } from "@brilliant/ui/button";
-import { ButtonGroup } from "@brilliant/ui/button-group";
+  "button-group": `import { Button } from "@brilliantmode/ui/button";
+import { ButtonGroup } from "@brilliantmode/ui/button-group";
 
 export function Example() {
   return (
@@ -20,7 +20,7 @@ export function Example() {
     </ButtonGroup>
   );
 }`,
-  badge: `import { Badge } from "@brilliant/ui/badge";
+  badge: `import { Badge } from "@brilliantmode/ui/badge";
 
 export function Example() {
   return (
@@ -30,7 +30,7 @@ export function Example() {
     </div>
   );
 }`,
-  "aspect-ratio": `import { AspectRatio } from "@brilliant/ui/aspect-ratio";
+  "aspect-ratio": `import { AspectRatio } from "@brilliantmode/ui/aspect-ratio";
 
 export function Example() {
   return (
@@ -49,7 +49,7 @@ export function Example() {
   PhotoFallback,
   PhotoImage,
   PhotoTint,
-} from "@brilliant/ui/photo";
+} from "@brilliantmode/ui/photo";
 
 export function Example() {
   return (
@@ -70,7 +70,7 @@ export function Example() {
   AvatarFallback,
   AvatarImage,
   AvatarStatus,
-} from "@brilliant/ui/avatar";
+} from "@brilliantmode/ui/avatar";
 
 export function Example() {
   return (
@@ -94,7 +94,7 @@ export function Example() {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@brilliant/ui/card";
+} from "@brilliantmode/ui/card";
 import { useState } from "react";
 
 export function Example() {
@@ -129,7 +129,7 @@ export function Example() {
     </div>
   );
 }`,
-  text: `import { Text } from "@brilliant/ui/text";
+  text: `import { Text } from "@brilliantmode/ui/text";
 
 export function Example() {
   return (
@@ -143,7 +143,7 @@ export function Example() {
     </div>
   );
 }`,
-  input: `import { Input } from "@brilliant/ui/input";
+  input: `import { Input } from "@brilliantmode/ui/input";
 
 export function Example() {
   return <Input name="brilliant-input-preview" placeholder="Acme workspace" />;
@@ -156,7 +156,7 @@ export function Example() {
   FileUploadIcon,
   FileUploadList,
   FileUploadTitle,
-} from "@brilliant/ui/file-upload";
+} from "@brilliantmode/ui/file-upload";
 
 export function Example() {
   return (
@@ -178,7 +178,7 @@ export function Example() {
     </FileUpload>
   );
 }`,
-  "photo-upload": `import { PhotoUpload } from "@brilliant/ui/photo-upload";
+  "photo-upload": `import { PhotoUpload } from "@brilliantmode/ui/photo-upload";
 import { useState } from "react";
 
 export function Example() {
@@ -195,8 +195,8 @@ export function Example() {
     />
   );
 }`,
-  label: `import { Input } from "@brilliant/ui/input";
-import { Label } from "@brilliant/ui/label";
+  label: `import { Input } from "@brilliantmode/ui/input";
+import { Label } from "@brilliantmode/ui/label";
 
 export function Example() {
   return (
@@ -206,7 +206,7 @@ export function Example() {
     </div>
   );
 }`,
-  textarea: `import { Textarea } from "@brilliant/ui/textarea";
+  textarea: `import { Textarea } from "@brilliantmode/ui/textarea";
 
 export function Example() {
   return <Textarea placeholder="Add a launch note..." />;
@@ -215,8 +215,8 @@ export function Example() {
   Field,
   FieldDescription,
   FieldLabel,
-} from "@brilliant/ui/field";
-import { Input } from "@brilliant/ui/input";
+} from "@brilliantmode/ui/field";
+import { Input } from "@brilliantmode/ui/input";
 
 export function Example() {
   return (
@@ -227,7 +227,7 @@ export function Example() {
     </Field>
   );
 }`,
-  checkbox: `import { Checkbox } from "@brilliant/ui/checkbox";
+  checkbox: `import { Checkbox } from "@brilliantmode/ui/checkbox";
 
 export function Example() {
   return (
@@ -256,7 +256,7 @@ export function Example() {
     </div>
   );
 }`,
-  switch: `import { Switch } from "@brilliant/ui/switch";
+  switch: `import { Switch } from "@brilliantmode/ui/switch";
 
 export function Example() {
   return (
@@ -266,7 +266,7 @@ export function Example() {
     </label>
   );
 }`,
-  slider: `import { Slider } from "@brilliant/ui/slider";
+  slider: `import { Slider } from "@brilliantmode/ui/slider";
 
 export function Example() {
   return (
@@ -284,7 +284,7 @@ export function Example() {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@brilliant/ui/select";
+} from "@brilliantmode/ui/select";
 
 export function Example() {
   return (
@@ -300,7 +300,7 @@ export function Example() {
     </Select>
   );
 }`,
-  combobox: `import { Combobox } from "@brilliant/ui/combobox";
+  combobox: `import { Combobox } from "@brilliantmode/ui/combobox";
 
 export function Example() {
   return (
@@ -315,7 +315,7 @@ export function Example() {
     />
   );
 }`,
-  "radio-group": `import { RadioGroup, RadioItem } from "@brilliant/ui/radio-group";
+  "radio-group": `import { RadioGroup, RadioItem } from "@brilliantmode/ui/radio-group";
 
 export function Example() {
   return (
@@ -337,7 +337,7 @@ export function Example() {
   Alert,
   AlertDescription,
   AlertTitle,
-} from "@brilliant/ui/alert";
+} from "@brilliantmode/ui/alert";
 
 export function Example() {
   return (
@@ -353,7 +353,7 @@ export function Example() {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@brilliant/ui/dialog";
+} from "@brilliantmode/ui/dialog";
 
 export function Example() {
   return (
@@ -374,8 +374,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@brilliant/ui/alert-dialog";
-import { Button } from "@brilliant/ui/button";
+} from "@brilliantmode/ui/alert-dialog";
+import { Button } from "@brilliantmode/ui/button";
 
 export function Example() {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -410,7 +410,7 @@ import {
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-} from "@brilliant/ui/drawer";
+} from "@brilliantmode/ui/drawer";
 
 export function Example() {
   const drawerRef = useRef<HTMLDialogElement>(null);
@@ -437,7 +437,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@brilliant/ui/sheet";
+} from "@brilliantmode/ui/sheet";
 
 export function Example() {
   const sheetRef = useRef<HTMLDialogElement>(null);
@@ -463,7 +463,7 @@ export function Example() {
     </>
   );
 }`,
-  tooltip: `import { Tooltip } from "@brilliant/ui/tooltip";
+  tooltip: `import { Tooltip } from "@brilliantmode/ui/tooltip";
 
 export function Example() {
   return (
@@ -476,7 +476,7 @@ export function Example() {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@brilliant/ui/popover";
+} from "@brilliantmode/ui/popover";
 
 export function Example() {
   return (
@@ -490,7 +490,7 @@ export function Example() {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@brilliant/ui/hover-card";
+} from "@brilliantmode/ui/hover-card";
 
 export function Example() {
   return (
@@ -500,7 +500,7 @@ export function Example() {
     </HoverCard>
   );
 }`,
-  "context-menu": `import { ContextMenu } from "@brilliant/ui/context-menu";
+  "context-menu": `import { ContextMenu } from "@brilliantmode/ui/context-menu";
 
 export function Example() {
   return (
@@ -520,7 +520,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@brilliant/ui/dropdown-menu";
+} from "@brilliantmode/ui/dropdown-menu";
 
 export function Example() {
   const [compact, setCompact] = useState(true);
@@ -545,7 +545,7 @@ export function Example() {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@brilliant/ui/tabs";
+} from "@brilliantmode/ui/tabs";
 
 export function Example() {
   return (
@@ -566,7 +566,7 @@ export function Example() {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@brilliant/ui/accordion";
+} from "@brilliantmode/ui/accordion";
 
 export function Example() {
   return (
@@ -583,7 +583,7 @@ export function Example() {
   CollapsibleContent,
   CollapsibleItem,
   CollapsibleTrigger,
-} from "@brilliant/ui/collapsible";
+} from "@brilliantmode/ui/collapsible";
 
 export function Example() {
   return (
@@ -603,7 +603,7 @@ export function Example() {
   CarouselPrevious,
   CarouselTrack,
   CarouselViewport,
-} from "@brilliant/ui/carousel";
+} from "@brilliantmode/ui/carousel";
 
 const slides = ["Usage", "Billing", "Members"];
 
@@ -632,7 +632,7 @@ export function Example() {
   TableHead,
   TableHeader,
   TableRow,
-} from "@brilliant/ui/table";
+} from "@brilliantmode/ui/table";
 
 export function Example() {
   return (
@@ -661,10 +661,10 @@ export function Example() {
   FormHeader,
   FormSection,
   FormTitle,
-} from "@brilliant/ui/form";
-import { Button } from "@brilliant/ui/button";
-import { Field, FieldDescription, FieldLabel } from "@brilliant/ui/field";
-import { Input } from "@brilliant/ui/input";
+} from "@brilliantmode/ui/form";
+import { Button } from "@brilliantmode/ui/button";
+import { Field, FieldDescription, FieldLabel } from "@brilliantmode/ui/field";
+import { Input } from "@brilliantmode/ui/input";
 
 export function Example() {
   return (
@@ -687,7 +687,7 @@ export function Example() {
     </Form>
   );
 }`,
-  "scroll-area": `import { ScrollArea } from "@brilliant/ui/scroll-area";
+  "scroll-area": `import { ScrollArea } from "@brilliantmode/ui/scroll-area";
 
 export function Example() {
   return (
@@ -705,7 +705,7 @@ export function Example() {
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@brilliant/ui/breadcrumb";
+} from "@brilliantmode/ui/breadcrumb";
 
 export function Example() {
   return (
@@ -723,7 +723,7 @@ export function Example() {
   "navigation-menu": `import {
   NavigationMenu,
   NavigationMenuLink,
-} from "@brilliant/ui/navigation-menu";
+} from "@brilliantmode/ui/navigation-menu";
 
 export function Example() {
   return (
@@ -734,7 +734,7 @@ export function Example() {
     </NavigationMenu>
   );
 }`,
-  menubar: `import { Menubar, MenubarItem } from "@brilliant/ui/menubar";
+  menubar: `import { Menubar, MenubarItem } from "@brilliantmode/ui/menubar";
 
 export function Example() {
   return (
@@ -750,7 +750,7 @@ export function Example() {
   PaginationItem,
   PaginationLink,
   PaginationList,
-} from "@brilliant/ui/pagination";
+} from "@brilliantmode/ui/pagination";
 
 export function Example() {
   return (
@@ -763,27 +763,27 @@ export function Example() {
     </Pagination>
   );
 }`,
-  separator: `import { Separator } from "@brilliant/ui/separator";
+  separator: `import { Separator } from "@brilliantmode/ui/separator";
 
 export function Example() {
   return <Separator variant="primary" />;
 }`,
-  skeleton: `import { Skeleton } from "@brilliant/ui/skeleton";
+  skeleton: `import { Skeleton } from "@brilliantmode/ui/skeleton";
 
 export function Example() {
   return <Skeleton size="title" variant="raised" />;
 }`,
-  progress: `import { Progress } from "@brilliant/ui/progress";
+  progress: `import { Progress } from "@brilliantmode/ui/progress";
 
 export function Example() {
   return <Progress aria-label="Sync progress" value={64} />;
 }`,
-  spinner: `import { Spinner } from "@brilliant/ui/spinner";
+  spinner: `import { Spinner } from "@brilliantmode/ui/spinner";
 
 export function Example() {
   return <Spinner label="Saving settings" size="md" variant="default" />;
 }`,
-  toast: `import { ToastProvider, useToast } from "@brilliant/ui/toast";
+  toast: `import { ToastProvider, useToast } from "@brilliantmode/ui/toast";
 
 function SaveButton() {
   const { toast } = useToast();
@@ -811,12 +811,12 @@ export function Example() {
     </ToastProvider>
   );
 }`,
-  "date-input": `import { DateInput } from "@brilliant/ui/date-input";
+  "date-input": `import { DateInput } from "@brilliantmode/ui/date-input";
 
 export function Example() {
   return <DateInput aria-label="Renewal date" defaultValue="2026-08-19" />;
 }`,
-  calendar: `import { Calendar } from "@brilliant/ui/calendar";
+  calendar: `import { Calendar } from "@brilliantmode/ui/calendar";
 
 export function Example() {
   return (
@@ -830,7 +830,7 @@ export function Example() {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@brilliant/ui/command";
+} from "@brilliantmode/ui/command";
 
 export function Example() {
   return (
@@ -850,8 +850,8 @@ export function Example() {
   HeaderLink,
   HeaderMobileTrigger,
   HeaderNav,
-} from "@brilliant/ui/header";
-import { Button } from "@brilliant/ui/button";
+} from "@brilliantmode/ui/header";
+import { Button } from "@brilliantmode/ui/button";
 
 export function Example() {
   return (
@@ -889,7 +889,7 @@ export function Example() {
   FooterLink,
   FooterMain,
   FooterNav,
-} from "@brilliant/ui/footer";
+} from "@brilliantmode/ui/footer";
 
 export function Example() {
   return (
@@ -958,7 +958,7 @@ export function Example() {
   ApplicationShellProfile,
   ApplicationShellProfileMenu,
   ApplicationShellProfileTrigger,
-} from "@brilliant/ui/application-shell";
+} from "@brilliantmode/ui/application-shell";
 
 export function Example() {
   return (
@@ -1104,7 +1104,7 @@ import {
   OnboardingWizardStep,
   OnboardingWizardStepList,
   OnboardingWizardTitle,
-} from "@brilliant/ui/onboarding-wizard";
+} from "@brilliantmode/ui/onboarding-wizard";
 
 const steps = [
   {
@@ -1212,7 +1212,7 @@ export function Example() {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "@brilliant/ui/chart";
+} from "@brilliantmode/ui/chart";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 const data = [
@@ -1256,8 +1256,8 @@ export function Example() {
   StatLabel,
   StatValue,
   TrendIndicator,
-} from "@brilliant/ui/stat";
-import { Sparkline } from "@brilliant/ui/chart";
+} from "@brilliantmode/ui/stat";
+import { Sparkline } from "@brilliantmode/ui/chart";
 
 export function Example() {
   return (
@@ -1274,7 +1274,7 @@ export function Example() {
     </Stat>
   );
 }`,
-  status: `import { Status, StatusBar } from "@brilliant/ui/status";
+  status: `import { Status, StatusBar } from "@brilliantmode/ui/status";
 
 export function Example() {
   return (
@@ -1294,7 +1294,7 @@ export function Example() {
     </div>
   );
 }`,
-  meter: `import { Meter } from "@brilliant/ui/meter";
+  meter: `import { Meter } from "@brilliantmode/ui/meter";
 import { useState } from "react";
 
 export function Example() {
@@ -1322,10 +1322,10 @@ export function Example() {
   DashboardSectionHeader,
   DashboardSectionTitle,
   DashboardTitle,
-} from "@brilliant/ui/dashboard-layout";
-import { Meter } from "@brilliant/ui/meter";
-import { Stat, StatLabel, StatValue } from "@brilliant/ui/stat";
-import { Status } from "@brilliant/ui/status";
+} from "@brilliantmode/ui/dashboard-layout";
+import { Meter } from "@brilliantmode/ui/meter";
+import { Stat, StatLabel, StatValue } from "@brilliantmode/ui/stat";
+import { Status } from "@brilliantmode/ui/status";
 
 export function Example() {
   return (
@@ -1358,7 +1358,7 @@ export function Example() {
   EmptyStateDescription,
   EmptyStateIcon,
   EmptyStateTitle,
-} from "@brilliant/ui/empty-state";
+} from "@brilliantmode/ui/empty-state";
 
 export function Example() {
   return (

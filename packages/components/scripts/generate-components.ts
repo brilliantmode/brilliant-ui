@@ -68,7 +68,7 @@ function componentUsageExample(name: string): string {
   if (explicit) return explicit;
 
   const exportName = componentExportName(name);
-  return `import { ${exportName} } from "@brilliant/ui/${name}";
+  return `import { ${exportName} } from "@brilliantmode/ui/${name}";
 
 export function Example() {
   return <${exportName}>Example</${exportName}>;
@@ -115,7 +115,7 @@ const componentCatalog = packageItems.map((item) => ({
   dependencies: item.dependencies,
   description: item.description,
   exports: exportedSymbols(item.files[0]?.content ?? ""),
-  importPath: `@brilliant/ui/${item.name}`,
+  importPath: `@brilliantmode/ui/${item.name}`,
   kind: item.kind,
   metadata: item.metadata,
   name: item.name,

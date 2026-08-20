@@ -6,13 +6,13 @@ import { componentCatalog, packageVersion } from "./catalog.js";
 import { documentationGuides } from "./guides.js";
 
 const installation = {
-  install: "pnpm add @brilliant/ui tailwindcss",
-  stylesheet: '@import "tailwindcss";\n@import "@brilliant/ui/styles.css";',
-  example: 'import { Button } from "@brilliant/ui/button";',
+  install: "pnpm add @brilliantmode/ui tailwindcss",
+  stylesheet: '@import "tailwindcss";\n@import "@brilliantmode/ui/styles.css";',
+  example: 'import { Button } from "@brilliantmode/ui/button";',
   mcp: {
     command: "pnpm",
     args: ["exec", "brilliant-ui-mcp"],
-    note: "Run from a project that has @brilliant/ui installed.",
+    note: "Run from a project that has @brilliantmode/ui installed.",
   },
 } as const;
 
@@ -518,7 +518,7 @@ export function createBrilliantUiMcpServer(): McpServer {
         found: true,
         importExample: `import { ${item.valueExports[0] ?? item.title.replaceAll(" ", "")} } from "${item.importPath}";`,
         packageVersion,
-        stylesheet: '@import "@brilliant/ui/styles.css";',
+        stylesheet: '@import "@brilliantmode/ui/styles.css";',
       });
     },
   );
@@ -624,7 +624,8 @@ export function createBrilliantUiMcpServer(): McpServer {
     "get_installation",
     {
       annotations: readOnlyAnnotations,
-      description: "Get the exact @brilliant/ui installation, stylesheet, import, and MCP setup.",
+      description:
+        "Get the exact @brilliantmode/ui installation, stylesheet, import, and MCP setup.",
       icons: toolIcons,
       inputSchema: z.object({}),
       outputSchema: installationOutputSchema,
@@ -658,7 +659,8 @@ export function createBrilliantUiMcpServer(): McpServer {
     "installation",
     "brilliant://installation",
     {
-      description: "Installation and MCP configuration for the installed @brilliant/ui version.",
+      description:
+        "Installation and MCP configuration for the installed @brilliantmode/ui version.",
       mimeType: "application/json",
       title: "Brilliant UI installation",
     },
@@ -717,7 +719,7 @@ export function createBrilliantUiMcpServer(): McpServer {
         contents: [
           {
             mimeType: "text/markdown",
-            text: `${guide.content}\n\n---\n\nDocumentation for @brilliant/ui ${packageVersion}.`,
+            text: `${guide.content}\n\n---\n\nDocumentation for @brilliantmode/ui ${packageVersion}.`,
             uri: uri.href,
           },
         ],
