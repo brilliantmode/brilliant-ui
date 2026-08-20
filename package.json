@@ -21,7 +21,7 @@
     "@biomejs/biome": "^2.2.0",
     "@changesets/cli": "^3.0.0",
     "turbo": "^2.5.0",
-    "typescript": "^5.9.0",
-    "vitest": "^3.2.0"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
   }
 }
