@@ -3077,7 +3077,10 @@ interface ApplicationShellContextValue {
   mobileNavOpen: boolean;
   openMobileNav: () => void;
   toggleSidebar: () => void;
+  variant: ApplicationShellVariant;
 }
+
+export type ApplicationShellVariant = "integrated" | "portal";
 
 const ApplicationShellContext = createContext<ApplicationShellContextValue | null>(null);
 
@@ -3098,6 +3101,7 @@ export interface ApplicationShellProps extends HTMLAttributes<HTMLDivElement> {
   defaultCollapsed?: boolean;
   defaultMobileNavOpen?: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
+  variant?: ApplicationShellVariant;
 }
 
 export function ApplicationShell({
@@ -3107,6 +3111,7 @@ export function ApplicationShell({
   defaultCollapsed = false,
   defaultMobileNavOpen = false,
   onCollapsedChange,
+  variant = "integrated",
   ...props
 }: ApplicationShellProps) {
   const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed);
@@ -3135,21 +3140,26 @@ export function ApplicationShell({
         if (controlledCollapsed === undefined) setInternalCollapsed(nextCollapsed);
         onCollapsedChange?.(nextCollapsed);
       },
+      variant,
     }),
-    [collapsed, controlledCollapsed, mobileNavOpen, onCollapsedChange],
+    [collapsed, controlledCollapsed, mobileNavOpen, onCollapsedChange, variant],
   );
 
   return (
     <ApplicationShellContext.Provider value={value}>
       <div
         className={cx(
-          "min-h-screen bg-background text-foreground md:grid motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          "min-h-screen text-foreground md:grid motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          variant === "portal"
+            ? "bg-muted/30 md:grid-rows-[4rem_minmax(0,1fr)] md:gap-x-6 md:px-6 lg:gap-x-8 lg:px-8"
+            : "bg-background",
           collapsed
             ? "md:grid-cols-[4.5rem_minmax(0,1fr)]"
             : "md:grid-cols-[17.5rem_minmax(0,1fr)]",
           className,
         )}
         data-collapsed={collapsed}
+        data-variant={variant}
         {...props}
       >
         {children}
@@ -3158,11 +3168,40 @@ export function ApplicationShell({
   );
 }
 
-export function ApplicationShellHeader({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+export function ApplicationShellTopbar({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLElement>) {
+  const { variant } = useApplicationShell();
+
   return (
     <header
       className={cx(
-        "sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/82 md:px-6",
+        "sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/82",
+        variant === "portal" && "md:col-span-2 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function ApplicationShellContent({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  return <div className={cx("min-w-0", className)} {...props} />;
+}
+
+export function ApplicationShellHeader({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
+  const { variant } = useApplicationShell();
+
+  return (
+    <header
+      className={cx(
+        variant === "portal"
+          ? "relative z-30 flex min-h-36 items-start gap-3 border-0 bg-transparent px-4 py-8 md:px-0 md:py-10"
+          : "sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/82 md:px-6",
         className,
       )}
       {...props}
@@ -3197,14 +3236,38 @@ export function ApplicationShellHeaderTitle({
   className = "",
   ...props
 }: HTMLAttributes<HTMLHeadingElement>) {
-  return <h1 className={cx("truncate text-sm font-semibold", className)} {...props} />;
+  const { variant } = useApplicationShell();
+
+  return (
+    <h1
+      className={cx(
+        variant === "portal"
+          ? "text-2xl font-semibold tracking-[-0.02em] sm:text-3xl"
+          : "truncate text-sm font-semibold",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 export function ApplicationShellHeaderDescription({
   className = "",
   ...props
 }: HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cx("truncate text-xs text-muted-foreground", className)} {...props} />;
+  const { variant } = useApplicationShell();
+
+  return (
+    <p
+      className={cx(
+        variant === "portal"
+          ? "mt-2 max-w-3xl text-sm leading-6 text-muted-foreground sm:text-base"
+          : "truncate text-xs text-muted-foreground",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 export function ApplicationShellHeaderActions({
@@ -3308,7 +3371,7 @@ export function ApplicationShellSidebarToggle({
 }
 
 export function ApplicationShellSidebar({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
-  const { closeMobileNav, collapsed, mobileNavOpen } = useApplicationShell();
+  const { closeMobileNav, collapsed, mobileNavOpen, variant } = useApplicationShell();
 
   return (
     <>
@@ -3325,7 +3388,10 @@ export function ApplicationShellSidebar({ className = "", ...props }: HTMLAttrib
       <aside
         aria-label="Application navigation"
         className={cx(
-          "group/sidebar fixed inset-y-0 left-0 z-50 grid w-[min(17.5rem,calc(100vw-2rem))] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden border-r border-border bg-background px-4 py-4 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] md:sticky md:top-0 md:z-auto md:h-screen md:w-auto md:translate-x-0 md:shadow-none",
+          "group/sidebar fixed inset-y-0 left-0 z-50 grid w-[min(17.5rem,calc(100vw-2rem))] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden border-r border-border bg-background px-4 py-4 shadow-[12px_0_40px_-28px_oklch(0_0_0/0.45)] md:sticky md:z-auto md:w-auto md:translate-x-0",
+          variant === "portal"
+            ? "md:top-20 md:my-6 md:h-[calc(100vh-7rem)] md:rounded-[0.75rem] md:border md:shadow-sm"
+            : "md:top-0 md:h-screen md:shadow-none",
           "motion-safe:transition-[transform,padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
           collapsed && "md:px-2",
           mobileNavOpen ? "translate-x-0" : "-translate-x-full",
@@ -3785,7 +3851,17 @@ export function ApplicationShellAccountItem({
 }
 
 export function ApplicationShellMain({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
-  return <main className={cx("min-w-0 px-4 py-6 md:px-8 lg:px-10", className)} {...props} />;
+  const { variant } = useApplicationShell();
+
+  return (
+    <main
+      className={cx(
+        variant === "portal" ? "min-w-0 px-4 pb-8 md:px-0" : "min-w-0 px-4 py-6 md:px-8 lg:px-10",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 export function ApplicationShellFooter({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
@@ -5098,6 +5174,8 @@ export const registry = [
         "Provides the outer frame for SaaS apps, dashboards, internal tools, and AI workspaces.",
       slots: [
         "root",
+        "topbar",
+        "content",
         "header",
         "header-brand",
         "header-content",
@@ -5146,6 +5224,8 @@ export const registry = [
       ],
       usage: [
         "Use as the top-level frame for authenticated product screens.",
+        "Use variant=integrated for the dense default shell or variant=portal for a detached sidebar, global topbar, and spacious page heading.",
+        "Compose ApplicationShellTopbar before the sidebar and wrap page content in ApplicationShellContent when using the portal variation.",
         "Place ApplicationShellSidebarToggle inside ApplicationShellSidebarHeader, aligned opposite the brand; mobile navigation remains controlled by ApplicationShellMobileTrigger.",
         "Use collapsed and onCollapsedChange when sidebar state must be controlled or persisted by the application.",
         "Keep primary navigation in ApplicationShellSidebar.",
@@ -5161,6 +5241,7 @@ export const registry = [
       ],
       avoid: [
         "Do not use for marketing pages or one-off landing layouts.",
+        "Do not use the portal variation for dense tools where its additional whitespace reduces operational efficiency.",
         "Do not put every possible destination in the primary sidebar.",
         "Do not repeat the full brand in both the desktop sidebar and desktop header.",
       ],

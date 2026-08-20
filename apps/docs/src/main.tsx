@@ -3211,6 +3211,9 @@ function DashboardLayoutPreview() {
 
 function ComponentMiniPreview({ name }: { name: string }) {
   const [applicationShellCollapsed, setApplicationShellCollapsed] = useState(false);
+  const [applicationShellVariant, setApplicationShellVariant] = useState<"integrated" | "portal">(
+    "integrated",
+  );
 
   if (name === "chart") return <ChartPreview />;
   if (name === "stat") return <StatPreview />;
@@ -3960,264 +3963,347 @@ function ComponentMiniPreview({ name }: { name: string }) {
 
   if (name === "application-shell") {
     return (
-      <div className="overflow-hidden rounded-[0.5rem] border border-border bg-background shadow-sm">
-        <div
-          className={`grid min-h-[32rem] motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${applicationShellCollapsed ? "md:grid-cols-[4.5rem_minmax(0,1fr)]" : "md:grid-cols-[17.5rem_minmax(0,1fr)]"}`}
-        >
-          <aside
-            className={`grid h-[32rem] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden border-b border-border bg-background md:border-b-0 md:border-r motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${applicationShellCollapsed ? "p-2" : "p-4"}`}
-          >
-            <div
-              className={`mb-4 flex shrink-0 items-center gap-3 border-b border-border pb-4 ${applicationShellCollapsed ? "justify-center" : "-mx-4 px-4"}`}
+      <div className="grid gap-3">
+        <fieldset className="inline-flex w-fit rounded-[0.375rem] border border-border bg-muted/50 p-1">
+          <legend className="sr-only">Application shell variation</legend>
+          {(["integrated", "portal"] as const).map((variant) => (
+            <button
+              aria-pressed={applicationShellVariant === variant}
+              className={`rounded-[0.25rem] px-3 py-1.5 text-xs font-medium capitalize focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${
+                applicationShellVariant === variant
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              key={variant}
+              onClick={() => setApplicationShellVariant(variant)}
+              type="button"
             >
-              <img
-                alt=""
-                className={`size-9 shrink-0 opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-9"}`}
-                src="/images/brilliant-mark.svg"
-              />
-              <div
-                className={`overflow-hidden whitespace-nowrap opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
-              >
-                <div className="text-sm font-semibold tracking-tight">Brilliant</div>
-                <div className="text-xs text-muted-foreground">Component system</div>
+              {variant}
+            </button>
+          ))}
+        </fieldset>
+        <div className="overflow-hidden rounded-[0.5rem] border border-border bg-background shadow-sm">
+          <div
+            className={`grid motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${
+              applicationShellVariant === "portal"
+                ? "min-h-[36rem] bg-muted/30 md:grid-rows-[4rem_minmax(0,1fr)] md:gap-x-4 md:px-4"
+                : "min-h-[32rem]"
+            } ${applicationShellCollapsed ? "md:grid-cols-[4.5rem_minmax(0,1fr)]" : "md:grid-cols-[17.5rem_minmax(0,1fr)]"}`}
+          >
+            {applicationShellVariant === "portal" ? (
+              <div className="flex h-16 items-center gap-3 border-b border-border bg-background px-5 md:col-span-2 md:-mx-4">
+                <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
+                <span className="text-sm font-semibold">Brilliant</span>
+                <button className="ml-auto text-sm text-muted-foreground" type="button">
+                  Sign out
+                </button>
               </div>
-              <button
-                aria-expanded={!applicationShellCollapsed}
-                aria-label={applicationShellCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-                className={`grid size-9 shrink-0 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground ${applicationShellCollapsed ? "" : "ml-auto"}`}
-                onClick={() => setApplicationShellCollapsed((collapsed) => !collapsed)}
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  className="size-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.8"
-                  viewBox="0 0 24 24"
+            ) : null}
+            <aside
+              className={`grid grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-background motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${
+                applicationShellVariant === "portal"
+                  ? "h-[32rem] border-b border-border md:my-4 md:h-[28rem] md:rounded-[0.75rem] md:border md:shadow-sm"
+                  : "h-[32rem] border-b border-border md:border-b-0 md:border-r"
+              } ${applicationShellCollapsed ? "p-2" : "p-4"}`}
+            >
+              {applicationShellVariant === "integrated" ? (
+                <div
+                  className={`mb-4 flex shrink-0 items-center gap-3 border-b border-border pb-4 ${applicationShellCollapsed ? "justify-center" : "-mx-4 px-4"}`}
                 >
-                  <rect height="16" rx="2" width="18" x="3" y="4" />
-                  <path d="M9 4v16" />
-                  <path d={applicationShellCollapsed ? "m13 9 3 3-3 3" : "m16 9-3 3 3 3"} />
-                </svg>
-              </button>
-            </div>
-            <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div
-                className={`mb-4 flex h-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface text-sm text-muted-foreground shadow-sm ${applicationShellCollapsed ? "justify-center px-0" : "px-3"}`}
-              >
-                <span aria-hidden="true">⌕</span>
-                <span
-                  className={`overflow-hidden opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40 flex-1"}`}
-                >
-                  Search docs
-                </span>
-                <kbd
-                  className={`overflow-hidden rounded bg-background font-mono text-[0.65rem] opacity-100 motion-safe:transition-[max-width,opacity,padding,border-width] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 border-0 p-0 opacity-0" : "max-w-8 border border-border px-1.5 py-0.5"}`}
-                >
-                  /
-                </kbd>
-              </div>
-              <div className="grid gap-4">
-                <section className="grid gap-1">
-                  <h4
-                    className={`overflow-hidden whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground opacity-100 motion-safe:transition-[max-height,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-h-0 opacity-0" : "max-h-6"}`}
+                  <img
+                    alt=""
+                    className={`size-9 shrink-0 opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-9"}`}
+                    src="/images/brilliant-mark.svg"
+                  />
+                  <div
+                    className={`overflow-hidden whitespace-nowrap opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
                   >
-                    Main
-                  </h4>
-                  <div className="grid gap-0.5">
-                    {["Contracts", "Analysts", "Setting"].map((item, index) => (
+                    <div className="text-sm font-semibold tracking-tight">Brilliant</div>
+                    <div className="text-xs text-muted-foreground">Component system</div>
+                  </div>
+                  <button
+                    aria-expanded={!applicationShellCollapsed}
+                    aria-label={applicationShellCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    className={`grid size-9 shrink-0 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground ${applicationShellCollapsed ? "" : "ml-auto"}`}
+                    onClick={() => setApplicationShellCollapsed((collapsed) => !collapsed)}
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="size-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.8"
+                      viewBox="0 0 24 24"
+                    >
+                      <rect height="16" rx="2" width="18" x="3" y="4" />
+                      <path d="M9 4v16" />
+                      <path d={applicationShellCollapsed ? "m13 9 3 3-3 3" : "m16 9-3 3 3 3"} />
+                    </svg>
+                  </button>
+                </div>
+              ) : null}
+              <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div
+                  className={`mb-4 flex h-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface text-sm text-muted-foreground shadow-sm ${applicationShellCollapsed ? "justify-center px-0" : "px-3"}`}
+                >
+                  <span aria-hidden="true">⌕</span>
+                  <span
+                    className={`overflow-hidden opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40 flex-1"}`}
+                  >
+                    Search docs
+                  </span>
+                  <kbd
+                    className={`overflow-hidden rounded bg-background font-mono text-[0.65rem] opacity-100 motion-safe:transition-[max-width,opacity,padding,border-width] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 border-0 p-0 opacity-0" : "max-w-8 border border-border px-1.5 py-0.5"}`}
+                  >
+                    /
+                  </kbd>
+                </div>
+                <div className="grid gap-4">
+                  <section className="grid gap-1">
+                    <h4
+                      className={`overflow-hidden whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground opacity-100 motion-safe:transition-[max-height,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-h-0 opacity-0" : "max-h-6"}`}
+                    >
+                      Main
+                    </h4>
+                    <div className="grid gap-0.5">
+                      {["Contracts", "Analysts", "Setting"].map((item, index) => (
+                        <div
+                          className={[
+                            "flex items-center gap-3 rounded-[0.375rem] px-2 py-1.5 text-sm",
+                            applicationShellCollapsed ? "justify-center" : "",
+                            index === 0 ? "font-medium text-foreground" : "text-muted-foreground",
+                          ].join(" ")}
+                          key={item}
+                        >
+                          <span className="grid size-5 place-items-center rounded-[0.3125rem] border border-border bg-background text-[0.55rem]">
+                            □
+                          </span>
+                          <span
+                            className={`overflow-hidden whitespace-nowrap opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
+                          >
+                            {item}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                  <section className="grid gap-1.5">
+                    <h4
+                      className={`overflow-hidden whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground opacity-100 motion-safe:transition-[max-height,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-h-0 opacity-0" : "max-h-6"}`}
+                    >
+                      Inboxes
+                    </h4>
+                    {(
+                      [
+                        ["Clients", "(209) 555-0104", "bg-primary/10 text-primary"],
+                        ["Personal", "(239) 555-0108", "bg-amber-500/10 text-amber-700"],
+                      ] satisfies Array<[string, string, string]>
+                    ).map(([title, description, tone]) => (
                       <div
-                        className={[
-                          "flex items-center gap-3 rounded-[0.375rem] px-2 py-1.5 text-sm",
-                          applicationShellCollapsed ? "justify-center" : "",
-                          index === 0 ? "font-medium text-foreground" : "text-muted-foreground",
-                        ].join(" ")}
-                        key={item}
+                        className={`flex items-center gap-3 rounded-[0.5rem] px-2 py-2 ${applicationShellCollapsed ? "justify-center" : ""}`}
+                        key={title}
                       >
-                        <span className="grid size-5 place-items-center rounded-[0.3125rem] border border-border bg-background text-[0.55rem]">
-                          □
+                        <span
+                          className={[
+                            "grid size-10 place-items-center rounded-full border border-border text-sm font-semibold",
+                            tone,
+                          ].join(" ")}
+                        >
+                          {title.slice(0, 1)}
                         </span>
                         <span
-                          className={`overflow-hidden whitespace-nowrap opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
+                          className={`min-w-0 overflow-hidden opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
                         >
-                          {item}
+                          <span className="block truncate text-sm font-medium text-foreground">
+                            {title}
+                          </span>
+                          <span className="block truncate text-sm text-muted-foreground">
+                            {description}
+                          </span>
                         </span>
                       </div>
                     ))}
-                  </div>
-                </section>
-                <section className="grid gap-1.5">
-                  <h4
-                    className={`overflow-hidden whitespace-nowrap px-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground opacity-100 motion-safe:transition-[max-height,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-h-0 opacity-0" : "max-h-6"}`}
-                  >
-                    Inboxes
-                  </h4>
-                  {(
-                    [
-                      ["Clients", "(209) 555-0104", "bg-primary/10 text-primary"],
-                      ["Personal", "(239) 555-0108", "bg-amber-500/10 text-amber-700"],
-                    ] satisfies Array<[string, string, string]>
-                  ).map(([title, description, tone]) => (
-                    <div
-                      className={`flex items-center gap-3 rounded-[0.5rem] px-2 py-2 ${applicationShellCollapsed ? "justify-center" : ""}`}
-                      key={title}
+                  </section>
+                </div>
+              </div>
+              <div className="shrink-0 border-t border-border bg-background pt-3">
+                <div className="grid gap-0.5 pb-3">
+                  {[
+                    ["?", "Help and support", ""],
+                    ["◐", "Appearance", "⌘ T"],
+                  ].map(([icon, label, trailing]) => (
+                    <button
+                      className={`flex h-8 items-center gap-2 rounded-[0.375rem] px-2 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground ${applicationShellCollapsed ? "justify-center" : ""}`}
+                      key={label}
+                      type="button"
                     >
+                      <span className="grid size-5 shrink-0 place-items-center">{icon}</span>
                       <span
-                        className={[
-                          "grid size-10 place-items-center rounded-full border border-border text-sm font-semibold",
-                          tone,
-                        ].join(" ")}
+                        className={`min-w-0 overflow-hidden truncate opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40 flex-1"}`}
                       >
-                        {title.slice(0, 1)}
+                        {label}
                       </span>
-                      <span
-                        className={`min-w-0 overflow-hidden opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
-                      >
-                        <span className="block truncate text-sm font-medium text-foreground">
-                          {title}
+                      {trailing ? (
+                        <span
+                          className={`overflow-hidden whitespace-nowrap text-xs opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-10"}`}
+                        >
+                          {trailing}
                         </span>
-                        <span className="block truncate text-sm text-muted-foreground">
-                          {description}
-                        </span>
-                      </span>
-                    </div>
+                      ) : null}
+                    </button>
                   ))}
-                </section>
-              </div>
-            </div>
-            <div className="shrink-0 border-t border-border bg-background pt-3">
-              <div className="grid gap-0.5 pb-3">
-                {[
-                  ["?", "Help and support", ""],
-                  ["◐", "Appearance", "⌘ T"],
-                ].map(([icon, label, trailing]) => (
-                  <button
-                    className={`flex h-8 items-center gap-2 rounded-[0.375rem] px-2 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground ${applicationShellCollapsed ? "justify-center" : ""}`}
-                    key={label}
-                    type="button"
+                </div>
+                <details className="group relative">
+                  <div
+                    className={`absolute bottom-full z-20 mb-2 hidden overflow-hidden rounded-[0.5rem] border border-border bg-surface py-1 shadow-md group-open:block ${applicationShellCollapsed ? "left-0 w-60" : "inset-x-0"}`}
                   >
-                    <span className="grid size-5 shrink-0 place-items-center">{icon}</span>
-                    <span
-                      className={`min-w-0 overflow-hidden truncate opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40 flex-1"}`}
-                    >
-                      {label}
-                    </span>
-                    {trailing ? (
-                      <span
-                        className={`overflow-hidden whitespace-nowrap text-xs opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-10"}`}
-                      >
-                        {trailing}
-                      </span>
-                    ) : null}
-                  </button>
-                ))}
-              </div>
-              <details className="group relative">
-                <div
-                  className={`absolute bottom-full z-20 mb-2 hidden overflow-hidden rounded-[0.5rem] border border-border bg-surface py-1 shadow-md group-open:block ${applicationShellCollapsed ? "left-0 w-60" : "inset-x-0"}`}
-                >
-                  <div className="border-b border-border py-1">
-                    <div className="px-4 pb-1 text-xs text-muted-foreground">Workspace</div>
-                    {["Brilliant Labs", "Acme Studio"].map((item, index) => (
+                    <div className="border-b border-border py-1">
+                      <div className="px-4 pb-1 text-xs text-muted-foreground">Workspace</div>
+                      {["Brilliant Labs", "Acme Studio"].map((item, index) => (
+                        <button
+                          className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm hover:bg-muted"
+                          key={item}
+                          type="button"
+                        >
+                          <span className="min-w-0 flex-1 truncate">{item}</span>
+                          {index === 0 ? <span className="text-primary">✓</span> : null}
+                        </button>
+                      ))}
+                    </div>
+                    {["Profile settings", "Help and support", "Sign out"].map((item) => (
                       <button
                         className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm hover:bg-muted"
                         key={item}
                         type="button"
                       >
-                        <span className="min-w-0 flex-1 truncate">{item}</span>
-                        {index === 0 ? <span className="text-primary">✓</span> : null}
+                        <span className="grid size-5 place-items-center text-muted-foreground">
+                          ○
+                        </span>
+                        <span>{item}</span>
                       </button>
                     ))}
                   </div>
-                  {["Profile settings", "Help and support", "Sign out"].map((item) => (
+                  <summary
+                    className={`flex cursor-pointer list-none items-center gap-3 rounded-[0.5rem] px-2 py-2 hover:bg-muted ${applicationShellCollapsed ? "justify-center" : ""}`}
+                  >
+                    <span className="relative grid size-10 place-items-center rounded-full bg-muted text-sm">
+                      DR
+                      <span className="absolute right-0 bottom-0 size-2.5 rounded-full border border-background bg-emerald-500" />
+                    </span>
+                    <span
+                      className={`min-w-0 flex-1 overflow-hidden opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
+                    >
+                      <span className="block truncate text-sm font-medium">Dianne Russell</span>
+                      <span className="block truncate text-xs text-muted-foreground">
+                        dianne@brilliant.dev
+                      </span>
+                    </span>
+                    <span
+                      className={`overflow-hidden text-muted-foreground opacity-100 transition-[max-width,opacity,transform] group-open:rotate-180 ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-8"}`}
+                    >
+                      ⌃
+                    </span>
+                  </summary>
+                </details>
+              </div>
+            </aside>
+            <div className="min-w-0">
+              <header
+                className={
+                  applicationShellVariant === "portal"
+                    ? "flex min-h-40 items-start gap-3 px-4 py-7 md:px-0"
+                    : "flex h-14 items-center gap-3 border-b border-border px-4"
+                }
+              >
+                <a
+                  className="inline-flex items-center gap-2 text-sm font-semibold md:hidden"
+                  href="/"
+                >
+                  <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
+                  <span>Brilliant</span>
+                </a>
+                <div className="min-w-0 flex-1">
+                  {applicationShellVariant === "portal" ? (
+                    <div className="mb-3 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-primary">
+                      UF internal
+                    </div>
+                  ) : null}
+                  <div
+                    className={
+                      applicationShellVariant === "portal"
+                        ? "text-2xl font-semibold tracking-tight"
+                        : "text-sm font-semibold"
+                    }
+                  >
+                    {applicationShellVariant === "portal"
+                      ? "Channel partner operations"
+                      : "Dashboard"}
+                  </div>
+                  <div
+                    className={
+                      applicationShellVariant === "portal"
+                        ? "mt-2 max-w-xl text-sm leading-6 text-muted-foreground"
+                        : "text-xs text-muted-foreground"
+                    }
+                  >
+                    {applicationShellVariant === "portal"
+                      ? "Review applications, approve accounts, and manage the partner portal surface."
+                      : "Live workspace overview"}
+                  </div>
+                </div>
+                {applicationShellVariant === "portal" ? (
+                  <span className="rounded-[0.375rem] bg-primary/10 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-primary">
+                    Super admin
+                  </span>
+                ) : (
+                  <>
                     <button
-                      className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm hover:bg-muted"
-                      key={item}
+                      aria-label="Help"
+                      className="grid size-9 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted"
                       type="button"
                     >
-                      <span className="grid size-5 place-items-center text-muted-foreground">
-                        ○
-                      </span>
-                      <span>{item}</span>
+                      ?
                     </button>
+                    <button
+                      aria-label="Notifications"
+                      className="relative grid size-9 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted"
+                      type="button"
+                    >
+                      ♢
+                      <span className="absolute top-2 right-2 size-1.5 rounded-full bg-primary" />
+                    </button>
+                    <button
+                      className="rounded-[0.25rem] bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground"
+                      type="button"
+                    >
+                      New report
+                    </button>
+                  </>
+                )}
+              </header>
+              <main
+                className={`grid gap-4 ${applicationShellVariant === "portal" ? "px-4 pb-4 md:px-0" : "p-4"}`}
+              >
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {["Usage", "Members", "Revenue"].map((item) => (
+                    <div
+                      className="rounded-[0.5rem] border border-border bg-surface p-4"
+                      key={item}
+                    >
+                      <div className="text-sm font-medium">{item}</div>
+                      <div className="mt-1 text-2xl font-semibold tracking-tight">24K</div>
+                    </div>
                   ))}
                 </div>
-                <summary
-                  className={`flex cursor-pointer list-none items-center gap-3 rounded-[0.5rem] px-2 py-2 hover:bg-muted ${applicationShellCollapsed ? "justify-center" : ""}`}
-                >
-                  <span className="relative grid size-10 place-items-center rounded-full bg-muted text-sm">
-                    DR
-                    <span className="absolute right-0 bottom-0 size-2.5 rounded-full border border-background bg-emerald-500" />
-                  </span>
-                  <span
-                    className={`min-w-0 flex-1 overflow-hidden opacity-100 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-40"}`}
-                  >
-                    <span className="block truncate text-sm font-medium">Dianne Russell</span>
-                    <span className="block truncate text-xs text-muted-foreground">
-                      dianne@brilliant.dev
-                    </span>
-                  </span>
-                  <span
-                    className={`overflow-hidden text-muted-foreground opacity-100 transition-[max-width,opacity,transform] group-open:rotate-180 ${applicationShellCollapsed ? "max-w-0 opacity-0" : "max-w-8"}`}
-                  >
-                    ⌃
-                  </span>
-                </summary>
-              </details>
+                <div className="rounded-[0.5rem] border border-border bg-surface p-4">
+                  <div className="h-3 w-1/3 rounded bg-muted" />
+                  <div className="mt-3 h-3 w-2/3 rounded bg-muted" />
+                </div>
+              </main>
             </div>
-          </aside>
-          <div className="min-w-0">
-            <header className="flex h-14 items-center gap-3 border-b border-border px-4">
-              <a
-                className="inline-flex items-center gap-2 text-sm font-semibold md:hidden"
-                href="/"
-              >
-                <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
-                <span>Brilliant</span>
-              </a>
-              <div className="min-w-0 flex-1">
-                <div className="text-sm font-semibold">Dashboard</div>
-                <div className="text-xs text-muted-foreground">Live workspace overview</div>
-              </div>
-              <button
-                aria-label="Help"
-                className="grid size-9 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted"
-                type="button"
-              >
-                ?
-              </button>
-              <button
-                aria-label="Notifications"
-                className="relative grid size-9 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted"
-                type="button"
-              >
-                ♢
-                <span className="absolute top-2 right-2 size-1.5 rounded-full bg-primary" />
-              </button>
-              <button
-                className="rounded-[0.25rem] bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground"
-                type="button"
-              >
-                New report
-              </button>
-            </header>
-            <main className="grid gap-4 p-4">
-              <div className="grid gap-4 sm:grid-cols-3">
-                {["Usage", "Members", "Revenue"].map((item) => (
-                  <div className="rounded-[0.5rem] border border-border bg-surface p-4" key={item}>
-                    <div className="text-sm font-medium">{item}</div>
-                    <div className="mt-1 text-2xl font-semibold tracking-tight">24K</div>
-                  </div>
-                ))}
-              </div>
-              <div className="rounded-[0.5rem] border border-border bg-surface p-4">
-                <div className="h-3 w-1/3 rounded bg-muted" />
-                <div className="mt-3 h-3 w-2/3 rounded bg-muted" />
-              </div>
-            </main>
           </div>
         </div>
       </div>

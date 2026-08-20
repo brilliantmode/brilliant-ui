@@ -121,7 +121,13 @@ describe("registry", () => {
     expect(source).toContain("collapsed?: boolean");
     expect(source).toContain("defaultCollapsed?: boolean");
     expect(source).toContain("onCollapsedChange?: (collapsed: boolean) => void");
+    expect(source).toContain('export type ApplicationShellVariant = "integrated" | "portal"');
+    expect(source).toContain("export function ApplicationShellTopbar");
+    expect(source).toContain("export function ApplicationShellContent");
+    expect(source).toContain('variant = "integrated"');
     expect(source).toContain("data-collapsed={collapsed}");
+    expect(source).toContain("data-variant={variant}");
+    expect(source).toContain('variant === "portal"');
     expect(source).toContain('aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}');
     expect(source).toContain("transition-[grid-template-columns]");
     expect(source).toContain("transition-[max-width,opacity]");

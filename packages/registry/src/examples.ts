@@ -931,6 +931,7 @@ export function Example() {
   "application-shell": `import {
   ApplicationShell,
   ApplicationShellBrand,
+  ApplicationShellContent,
   ApplicationShellHeader,
   ApplicationShellHeaderAction,
   ApplicationShellHeaderActions,
@@ -955,6 +956,7 @@ export function Example() {
   ApplicationShellSidebarFooterActions,
   ApplicationShellSidebarHeader,
   ApplicationShellSidebarToggle,
+  ApplicationShellTopbar,
   ApplicationShellProfile,
   ApplicationShellProfileMenu,
   ApplicationShellProfileTrigger,
@@ -1049,7 +1051,7 @@ export function Example() {
         </ApplicationShellSidebarFooter>
       </ApplicationShellSidebar>
 
-      <div className="min-w-0">
+      <ApplicationShellContent>
         <ApplicationShellHeader>
           <ApplicationShellMobileTrigger />
           <ApplicationShellHeaderBrand href="/">
@@ -1087,7 +1089,70 @@ export function Example() {
             </div>
           </div>
         </ApplicationShellMain>
-      </div>
+      </ApplicationShellContent>
+    </ApplicationShell>
+  );
+}
+
+export function PortalExample() {
+  return (
+    <ApplicationShell variant="portal">
+      <ApplicationShellTopbar>
+        <a className="inline-flex items-center gap-2 font-semibold" href="/">
+          <img alt="" className="size-7" src="/images/brilliant-mark.svg" />
+          Brilliant
+        </a>
+        <button className="ml-auto text-sm text-muted-foreground" type="button">
+          Sign out
+        </button>
+      </ApplicationShellTopbar>
+
+      <ApplicationShellSidebar>
+        <ApplicationShellSidebarContent>
+          <ApplicationShellNav>
+            <ApplicationShellNavSection>
+              {['Overview', 'Applications', 'Channel partners', 'Settings'].map((item, index) => (
+                <ApplicationShellNavItem
+                  aria-current={index === 1 ? 'page' : undefined}
+                  href={'/' + item.toLowerCase().replace(' ', '-')}
+                  icon="□"
+                  key={item}
+                >
+                  {item}
+                </ApplicationShellNavItem>
+              ))}
+            </ApplicationShellNavSection>
+          </ApplicationShellNav>
+        </ApplicationShellSidebarContent>
+      </ApplicationShellSidebar>
+
+      <ApplicationShellContent>
+        <ApplicationShellHeader>
+          <ApplicationShellMobileTrigger />
+          <ApplicationShellHeaderContent>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+              UF internal
+            </p>
+            <ApplicationShellHeaderTitle>Channel partner operations</ApplicationShellHeaderTitle>
+            <ApplicationShellHeaderDescription>
+              Review applications, approve accounts, and manage the partner portal surface.
+            </ApplicationShellHeaderDescription>
+          </ApplicationShellHeaderContent>
+          <ApplicationShellHeaderActions>
+            <span className="rounded bg-primary/10 px-3 py-2 text-sm font-medium text-primary">
+              Super admin
+            </span>
+          </ApplicationShellHeaderActions>
+        </ApplicationShellHeader>
+        <ApplicationShellMain>
+          <section className="rounded-[0.75rem] border border-border bg-surface p-6 shadow-sm">
+            <h2 className="text-xl font-semibold">Channel partner applications</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Submitted self-serve and operator-entered applications.
+            </p>
+          </section>
+        </ApplicationShellMain>
+      </ApplicationShellContent>
     </ApplicationShell>
   );
 }`,
