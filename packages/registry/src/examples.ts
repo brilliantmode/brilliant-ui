@@ -3,8 +3,8 @@ export const componentUsageExamples = {
 
 export function Example() {
   return (
-    <Button size="md" variant="primary">
-      Save changes
+    <Button size="md" variant="glow">
+      Continue
     </Button>
   );
 }`,

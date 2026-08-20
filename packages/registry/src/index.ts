@@ -118,6 +118,8 @@ const buttonSource = `import type { ButtonHTMLAttributes } from "react";
 const variants = {
   primary:
     "bg-primary text-primary-foreground hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.99] active:bg-primary/88",
+  glow:
+    "bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:-translate-y-px hover:bg-primary/92 hover:shadow-xl hover:shadow-primary/30 active:translate-y-0 active:scale-[0.99] active:bg-primary/88 active:shadow-md active:shadow-primary/20",
   secondary:
     "border-hairline border-border bg-surface text-foreground shadow-sm hover:-translate-y-px hover:border-foreground/40 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-secondary active:shadow-sm",
   outline:
@@ -4102,10 +4104,15 @@ export const registry = [
       ],
       usage: [
         "Use a single primary action per region.",
+        "Use glow for a high-emphasis primary action that benefits from subtle elevation.",
         "Prefer verbs for labels.",
         "Micro interactions are included in the generated source.",
       ],
-      avoid: ["Do not use for navigation; use a link.", "Do not disable without explaining why."],
+      avoid: [
+        "Do not use for navigation; use a link.",
+        "Do not use multiple glow actions in the same region.",
+        "Do not disable without explaining why.",
+      ],
     },
   },
   {

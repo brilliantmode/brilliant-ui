@@ -326,6 +326,11 @@ const buttonVariants = [
     "bg-primary text-primary-foreground hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.99] active:bg-primary/88",
   ],
   [
+    "Glow",
+    "Continue",
+    "bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:-translate-y-px hover:bg-primary/92 hover:shadow-xl hover:shadow-primary/30 active:translate-y-0 active:scale-[0.99] active:bg-primary/88 active:shadow-md active:shadow-primary/20",
+  ],
+  [
     "Secondary",
     "Secondary",
     "border border-border bg-surface text-foreground shadow-sm hover:-translate-y-px hover:border-foreground/40 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-secondary active:shadow-sm",
@@ -6140,8 +6145,8 @@ import "@brilliantmode/ui/styles.css"`}</MiniTerminal>
               </div>
 
               <ExamplePanel code={usageForComponent("button")}>
-                <PreviewButton className={`${buttonVariants[0][2]} h-9 px-3.5 text-sm`}>
-                  Save changes
+                <PreviewButton className={`${buttonVariants[1][2]} h-9 px-3.5 text-sm`}>
+                  Continue
                 </PreviewButton>
               </ExamplePanel>
 

@@ -37,6 +37,14 @@ describe("registry", () => {
     expect(findRegistryItem("missing")).toBeUndefined();
   });
 
+  it("ships the button glow variant with a tokenized shadow", () => {
+    const source = findRegistryItem("button")?.files[0]?.content;
+
+    expect(source).toContain("glow:");
+    expect(source).toContain("shadow-primary/25");
+    expect(source).toContain("hover:shadow-primary/30");
+  });
+
   it("ships photo crop and treatment APIs", () => {
     const photoSource = findRegistryItem("photo")?.files[0]?.content;
 
