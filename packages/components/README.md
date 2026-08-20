@@ -3,6 +3,14 @@
 Enterprise-ready React components with brandable tokens and built-in micro UX. Brilliant UI ships
 components, styles, design tokens, and animation utilities as one package.
 
+## Maintenance and support
+
+`@brilliant/ui` is an official Brilliant package developed primarily for Brilliant-owned products.
+It is publicly available for broader use, but public availability does not include external
+support, compatibility guarantees, feature commitments, or a guaranteed release schedule.
+Development follows Brilliant's internal priorities, and APIs may change during `0.x` releases.
+External adopters should evaluate and pin versions appropriate to their own requirements.
+
 ## Requirements
 
 - React 19.1 or newer

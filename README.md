@@ -11,6 +11,15 @@ current workspace establishes the monorepo, strict TypeScript policy, design-tok
 theme contracts, registry contract, and optional MCP integration. APIs may change before the first
 stable release.
 
+## Maintenance and support
+
+Brilliant UI is an official Brilliant project developed primarily for Brilliant-owned products.
+The source and `@brilliant/ui` package are publicly available for broader use, but public
+availability does not include external support, compatibility guarantees, feature commitments, or
+a guaranteed release schedule. Development follows Brilliant's internal priorities, and APIs may
+change during `0.x` releases. External adopters should evaluate and pin versions appropriate to
+their own requirements.
+
 ## Quick start
 
 ```sh
