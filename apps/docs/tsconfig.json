@@ -3,6 +3,9 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "noEmit": true,
+    "paths": {
+      "@brilliant-ui/registry": ["../../packages/registry/src/index.ts"]
+    },
     "types": ["vite/client"]
   },
   "include": ["src", "vite.config.ts"]
