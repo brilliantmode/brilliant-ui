@@ -4,6 +4,14 @@
   "description": "Protected, upgradeable React components for Brilliant UI",
   "license": "MIT",
   "homepage": "https://brilliant-ui.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brilliantmode/brilliant-ui.git",
+    "directory": "packages/components"
+  },
+  "bugs": {
+    "url": "https://github.com/brilliantmode/brilliant-ui/issues"
+  },
   "keywords": [
     "react",
     "ui",
@@ -27,7 +35,8 @@
     "**/*.css"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "exports": {
     ".": {
