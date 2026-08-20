@@ -40,7 +40,7 @@ try {
     "utf8",
   );
 
-  await execFileAsync("pnpm", ["add", "--offline", join(packDirectory, tarballName)], {
+  await execFileAsync("pnpm", ["add", "--prefer-offline", join(packDirectory, tarballName)], {
     cwd: consumerDirectory,
   });
 
