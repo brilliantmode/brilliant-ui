@@ -100,6 +100,7 @@ type NavItem = readonly [label: string, href: string];
 type PresetBrandTheme = "blue" | "emerald" | "indigo" | "rose" | "violet";
 type BrandTheme = "custom" | PresetBrandTheme;
 type ShellTone = "contrast" | "neutral";
+type DocsShellLayout = "integrated" | "portal";
 type NavGroup = {
   label: string;
   items: readonly NavItem[];
@@ -5019,14 +5020,18 @@ function BrandThemePicker({
   customColor,
   expanded = false,
   onBrandThemeChange,
+  onShellLayoutChange,
   onShellToneChange,
+  shellLayout,
   shellTone,
 }: {
   brandTheme: BrandTheme;
   customColor: string;
   expanded?: boolean;
   onBrandThemeChange: (theme: BrandTheme) => void;
+  onShellLayoutChange?: (layout: DocsShellLayout) => void;
   onShellToneChange?: (tone: ShellTone) => void;
+  shellLayout?: DocsShellLayout;
   shellTone?: ShellTone;
 }) {
   const detailsRef = useRef<HTMLDetailsElement>(null);
@@ -5062,9 +5067,9 @@ function BrandThemePicker({
   return (
     <details className="group/brand relative" ref={detailsRef}>
       <summary
-        aria-label={`Theme: ${selectedTheme.label}, ${shellTone ?? "neutral"} surfaces`}
+        aria-label={`Theme: ${selectedTheme.label}, ${shellTone ?? "neutral"} surfaces, ${shellLayout ?? "integrated"} shell`}
         className="inline-grid size-9 cursor-pointer list-none place-items-center rounded-[0.375rem] border border-border bg-surface shadow-sm outline-none hover:bg-muted focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97] [&::-webkit-details-marker]:hidden"
-        title={`Theme: ${selectedTheme.label}, ${shellTone ?? "neutral"} surfaces`}
+        title={`Theme: ${selectedTheme.label}, ${shellTone ?? "neutral"} surfaces, ${shellLayout ?? "integrated"} shell`}
       >
         <span
           aria-hidden="true"
@@ -5140,6 +5145,26 @@ function BrandThemePicker({
                   type="button"
                 >
                   {tone}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        ) : null}
+        {onShellLayoutChange && shellLayout ? (
+          <fieldset className="mt-2 border-t border-border px-1 pt-2">
+            <legend className="sr-only">Shell layout</legend>
+            <p className="mb-2 px-1 text-xs font-semibold text-foreground">Shell layout</p>
+            <div className="grid grid-cols-2 rounded-[0.375rem] bg-muted p-0.5">
+              {(["integrated", "portal"] as const).map((layout) => (
+                <button
+                  aria-pressed={shellLayout === layout}
+                  className="h-7 rounded-[0.25rem] text-xs capitalize text-muted-foreground data-[selected=true]:bg-surface data-[selected=true]:font-medium data-[selected=true]:text-foreground data-[selected=true]:shadow-sm"
+                  data-selected={shellLayout === layout}
+                  key={layout}
+                  onClick={() => onShellLayoutChange(layout)}
+                  type="button"
+                >
+                  {layout}
                 </button>
               ))}
             </div>
@@ -5417,8 +5442,10 @@ function AppHeader({
   onMenuClick,
   onNavigate,
   onSearchOpen,
+  onShellLayoutChange,
   onShellToneChange,
   onThemeToggle,
+  shellLayout,
   shellTone,
   theme,
 }: {
@@ -5429,8 +5456,10 @@ function AppHeader({
   onMenuClick: () => void;
   onNavigate: NavigateHandler;
   onSearchOpen: () => void;
+  onShellLayoutChange: (layout: DocsShellLayout) => void;
   onShellToneChange: (tone: ShellTone) => void;
   onThemeToggle: () => void;
+  shellLayout: DocsShellLayout;
   shellTone: ShellTone;
   theme: "dark" | "light";
 }) {
@@ -5438,7 +5467,7 @@ function AppHeader({
     <Header
       behavior="elevate"
       border
-      className={shellTone === "contrast" ? "brand-surface" : ""}
+      className={`${shellTone === "contrast" ? "brand-surface" : ""} ${shellLayout === "portal" ? "md:col-span-2 md:-mx-6 lg:-mx-8" : ""}`}
       position="sticky"
       scrollThreshold={24}
       surface={shellTone === "contrast" ? "solid" : "translucent"}
@@ -5455,7 +5484,11 @@ function AppHeader({
             ☰
           </span>
         </button>
-        <HeaderBrand className="md:hidden" href="/" onClick={(event) => onNavigate(event, "/")}>
+        <HeaderBrand
+          className={shellLayout === "portal" ? "md:inline-flex" : "md:hidden"}
+          href="/"
+          onClick={(event) => onNavigate(event, "/")}
+        >
           <img alt="" className="size-8" src="/images/brilliant-mark.svg" />
           <span>Brilliant UI</span>
         </HeaderBrand>
@@ -5504,9 +5537,45 @@ function AppHeader({
             brandTheme={brandTheme}
             customColor={customColor}
             onBrandThemeChange={onBrandThemeChange}
+            onShellLayoutChange={onShellLayoutChange}
             onShellToneChange={onShellToneChange}
+            shellLayout={shellLayout}
             shellTone={shellTone}
           />
+          <button
+            aria-label={`Use ${shellLayout === "integrated" ? "portal" : "integrated"} documentation shell`}
+            className="inline-flex h-9 items-center gap-2 rounded-[0.375rem] border border-border bg-surface px-2.5 text-sm text-muted-foreground shadow-sm outline-none hover:bg-muted hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97] motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none"
+            onClick={() =>
+              onShellLayoutChange(shellLayout === "integrated" ? "portal" : "integrated")
+            }
+            title={`Current shell: ${shellLayout}`}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="size-4 shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.8"
+              viewBox="0 0 24 24"
+            >
+              {shellLayout === "integrated" ? (
+                <>
+                  <rect height="18" rx="2" width="18" x="3" y="3" />
+                  <path d="M8 3v18M8 8h13" />
+                </>
+              ) : (
+                <>
+                  <path d="M3 6h18M3 3h18v6H3z" />
+                  <rect height="10" rx="1.5" width="5" x="3" y="11" />
+                  <path d="M11 12h10M11 16h10M11 20h7" />
+                </>
+              )}
+            </svg>
+            <span className="hidden capitalize 2xl:inline">{shellLayout}</span>
+          </button>
           <button
             aria-label={`Use ${theme === "dark" ? "light" : "dark"} theme`}
             className="inline-grid size-9 place-items-center rounded-[0.375rem] border border-border bg-surface text-muted-foreground shadow-sm outline-none hover:bg-muted hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97] motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none"
@@ -5684,6 +5753,11 @@ function App() {
   const [shellTone, setShellTone] = useState<ShellTone>(() =>
     window.localStorage.getItem("brilliant-shell-tone") === "contrast" ? "contrast" : "neutral",
   );
+  const [shellLayout, setShellLayout] = useState<DocsShellLayout>(() =>
+    window.localStorage.getItem("brilliant-docs-shell-layout") === "portal"
+      ? "portal"
+      : "integrated",
+  );
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(
     () => window.localStorage.getItem("brilliant-docs-sidebar-collapsed") === "true",
@@ -5796,6 +5870,11 @@ function App() {
   }, [shellTone]);
 
   useEffect(() => {
+    document.documentElement.dataset.shellLayout = shellLayout;
+    window.localStorage.setItem("brilliant-docs-shell-layout", shellLayout);
+  }, [shellLayout]);
+
+  useEffect(() => {
     const handleSearchShortcut = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       const targetIsEditable =
@@ -5841,7 +5920,9 @@ function App() {
   }, [mobileNavOpen]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div
+      className={`min-h-screen text-foreground ${shellLayout === "portal" ? "bg-muted/30" : "bg-background"}`}
+    >
       <a
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-[0.25rem] focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground"
         href="#content"
@@ -5865,10 +5946,19 @@ function App() {
       />
 
       <div
-        className={`mx-auto grid max-w-screen-2xl motion-safe:transition-[grid-template-columns] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${sidebarCollapsed ? "md:grid-cols-[72px_minmax(0,1fr)]" : "md:grid-cols-[280px_minmax(0,1fr)]"}`}
+        className={`mx-auto grid max-w-screen-2xl motion-safe:transition-[grid-template-columns,gap,padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${
+          shellLayout === "portal"
+            ? "bg-muted/30 md:grid-rows-[4rem_minmax(0,auto)_auto] md:gap-x-6 md:px-6 lg:gap-x-8 lg:px-8"
+            : "bg-background"
+        } ${sidebarCollapsed ? "md:grid-cols-[72px_minmax(0,1fr)]" : "md:grid-cols-[280px_minmax(0,1fr)]"}`}
+        data-shell-layout={shellLayout}
       >
         <aside
-          className={`sticky top-0 hidden h-screen overflow-visible border-r border-border bg-background py-6 md:row-span-2 md:block motion-safe:transition-[padding] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${shellTone === "contrast" ? "brand-surface" : ""} ${sidebarCollapsed ? "px-3" : "px-6"}`}
+          className={`sticky hidden overflow-visible bg-background py-6 md:block motion-safe:transition-[padding,margin,border-radius] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none ${
+            shellLayout === "portal"
+              ? "top-20 md:row-start-2 md:my-6 md:h-[calc(100vh-7rem)] md:rounded-[0.75rem] md:border md:border-border md:shadow-sm"
+              : "top-0 h-screen border-r border-border md:row-span-2"
+          } ${shellTone === "contrast" ? "brand-surface" : ""} ${sidebarCollapsed ? "px-3" : "px-6"}`}
         >
           <DocsNav
             activeRoute={activeRoute}
@@ -5889,8 +5979,10 @@ function App() {
           onMenuClick={() => setMobileNavOpen(true)}
           onNavigate={navigate}
           onSearchOpen={openSearch}
+          onShellLayoutChange={setShellLayout}
           onShellToneChange={setShellTone}
           onThemeToggle={toggleTheme}
+          shellLayout={shellLayout}
           shellTone={shellTone}
           theme={theme}
         />
