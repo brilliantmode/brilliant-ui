@@ -8350,6 +8350,28 @@ import { animationPresets, microUx } from "@brilliant/ui/animations";`}</CodeBlo
               </div>
 
               <div className="space-y-3">
+                <h3 className="text-lg font-semibold">AI coding with MCP</h3>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Brilliant UI includes an optional stdio MCP server. Add this configuration to an
+                  MCP-compatible coding tool from the project where the package is installed. The
+                  client starts the server only after the user enables it.
+                </p>
+                <CodeBlock language="tsx">{`{
+  "mcpServers": {
+    "brilliant-ui": {
+      "command": "pnpm",
+      "args": ["exec", "brilliant-ui-mcp"]
+    }
+  }
+}`}</CodeBlock>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  The server exposes version-matched component search, API declarations, usage
+                  guidance, installation details, and design tokens. It communicates only over stdin
+                  and stdout and does not open a network port.
+                </p>
+              </div>
+
+              <div className="space-y-3">
                 <h3 className="text-lg font-semibold">Brand customization</h3>
                 <p className="text-sm leading-6 text-muted-foreground">
                   Override Brilliant CSS variables after the package import. Components continue to

@@ -7,6 +7,7 @@ import { registry } from "../../registry/src/index.ts";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outputRoot = resolve(packageRoot, "src/generated");
+const mcpRoot = resolve(packageRoot, "src/mcp");
 const tokensRoot = resolve(packageRoot, "../tokens/src");
 const animationsRoot = resolve(packageRoot, "../animations/src");
 const packageKinds = new Set(["block", "component", "layout"]);
@@ -20,6 +21,34 @@ function packageSource(source: string): string {
 }
 
 const packageItems = registry.filter((item) => packageKinds.has(item.kind));
+
+function exportedSymbols(source: string): readonly string[] {
+  return [
+    ...new Set(
+      [
+        ...source.matchAll(
+          /export\s+(?:async\s+)?(?:class|const|enum|function|interface|type)\s+([A-Za-z_$][\w$]*)/g,
+        ),
+      ]
+        .map((match) => match[1])
+        .filter((name): name is string => Boolean(name)),
+    ),
+  ];
+}
+
+function exportedValues(source: string): readonly string[] {
+  return [
+    ...new Set(
+      [
+        ...source.matchAll(
+          /export\s+(?:async\s+)?(?:class|const|enum|function)\s+([A-Za-z_$][\w$]*)/g,
+        ),
+      ]
+        .map((match) => match[1])
+        .filter((name): name is string => Boolean(name)),
+    ),
+  ];
+}
 
 await rm(outputRoot, { force: true, recursive: true });
 await mkdir(outputRoot, { recursive: true });
@@ -41,6 +70,29 @@ for (const item of packageItems) {
 
 await writeFile(resolve(outputRoot, "index.ts"), `${exports.join("\n")}\n`, "utf8");
 
+const packageJson = JSON.parse(await readFile(resolve(packageRoot, "package.json"), "utf8")) as {
+  version: string;
+};
+const componentCatalog = packageItems.map((item) => ({
+  dependencies: item.dependencies,
+  description: item.description,
+  exports: exportedSymbols(item.files[0]?.content ?? ""),
+  importPath: `@brilliant/ui/${item.name}`,
+  kind: item.kind,
+  metadata: item.metadata,
+  name: item.name,
+  registryDependencies: item.registryDependencies,
+  title: item.title,
+  valueExports: exportedValues(item.files[0]?.content ?? ""),
+}));
+
+await mkdir(mcpRoot, { recursive: true });
+await writeFile(
+  resolve(mcpRoot, "catalog.ts"),
+  `/* Generated from the Brilliant UI registry. Do not edit directly. */\nexport const packageVersion = ${JSON.stringify(packageJson.version)};\nexport const componentCatalog = ${JSON.stringify(componentCatalog, null, 2)} as const;\n`,
+  "utf8",
+);
+
 const tokenSource = await readFile(resolve(tokensRoot, "index.ts"), "utf8");
 const tokenStyles = await readFile(resolve(tokensRoot, "styles.css"), "utf8");
 const animationSource = await readFile(resolve(animationsRoot, "index.ts"), "utf8");
@@ -60,6 +112,7 @@ await writeFile(
 const generatedSources = [
   outputRoot,
   resolve(packageRoot, "src/animations.ts"),
+  resolve(mcpRoot, "catalog.ts"),
   resolve(packageRoot, "src/tokens.ts"),
 ];
 

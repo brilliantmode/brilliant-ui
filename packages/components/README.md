@@ -39,6 +39,27 @@ import { animationPresets, microUx } from "@brilliant/ui/animations";
 import { tokens } from "@brilliant/ui/tokens";
 ```
 
+## AI coding with MCP
+
+The package includes an optional, user-initiated MCP server over stdio. It exposes the installed
+version's component catalog, TypeScript declarations, usage guidance, installation instructions,
+and design tokens. Installing the package does not start the server.
+
+Configure an MCP client from the application where `@brilliant/ui` is installed:
+
+```json
+{
+  "mcpServers": {
+    "brilliant-ui": {
+      "command": "pnpm",
+      "args": ["exec", "brilliant-ui-mcp"]
+    }
+  }
+}
+```
+
+The MCP client launches and owns the stdio process after the user enables this configuration.
+
 Override semantic variables after importing the package stylesheet:
 
 ```css

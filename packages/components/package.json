@@ -16,6 +16,9 @@
     "node": ">=20"
   },
   "type": "module",
+  "bin": {
+    "brilliant-ui-mcp": "./dist/mcp/bin.js"
+  },
   "files": [
     "dist",
     "src/styles.css"
@@ -40,6 +43,10 @@
       "types": "./dist/tokens.d.ts",
       "import": "./dist/tokens.js"
     },
+    "./mcp": {
+      "types": "./dist/mcp/server.d.ts",
+      "import": "./dist/mcp/server.js"
+    },
     "./*": {
       "types": "./dist/generated/*.d.ts",
       "import": "./dist/generated/*.js"
@@ -50,10 +57,11 @@
     "prepack": "pnpm build",
     "build": "pnpm generate && tsc -p tsconfig.build.json",
     "lint": "pnpm generate && biome check src scripts",
-    "test": "pnpm generate && vitest run",
+    "test": "pnpm build && vitest run",
     "typecheck": "pnpm generate && tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@modelcontextprotocol/server": "^2.0.0",
     "@radix-ui/react-dropdown-menu": "catalog:",
     "@radix-ui/react-scroll-area": "catalog:",
     "@radix-ui/react-select": "catalog:",
@@ -63,10 +71,13 @@
     "clsx": "catalog:",
     "react-is": "catalog:",
     "recharts": "catalog:",
-    "tailwind-merge": "catalog:"
+    "tailwind-merge": "catalog:",
+    "zod": "^4.2.0"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
+    "@modelcontextprotocol/client": "^2.0.0",
+    "@types/node": "catalog:",
     "@types/react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

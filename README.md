@@ -8,7 +8,8 @@ themes, accessible primitives, application blocks, and tooling for production so
 
 Brilliant UI is moving from **Phase 1: foundation** into **Phase 2: core infrastructure**. The
 current workspace establishes the monorepo, strict TypeScript policy, design-token pipeline,
-theme contracts, registry contract, and CLI. APIs may change before the first stable release.
+theme contracts, registry contract, and optional MCP integration. APIs may change before the first
+stable release.
 
 ## Quick start
 
@@ -39,6 +40,19 @@ Tokens and animation utilities are included in the same installation:
 ```ts
 import { animationPresets } from "@brilliant/ui/animations";
 import { tokens } from "@brilliant/ui/tokens";
+```
+
+For AI coding tools, the same package includes a user-initiated stdio MCP server:
+
+```json
+{
+  "mcpServers": {
+    "brilliant-ui": {
+      "command": "pnpm",
+      "args": ["exec", "brilliant-ui-mcp"]
+    }
+  }
+}
 ```
 
 ## Public package
