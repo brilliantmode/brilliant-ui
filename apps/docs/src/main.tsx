@@ -1,4 +1,3 @@
-import { componentUsageExamples, documentationGuides, registry } from "@brilliant-ui/registry";
 import {
   Card,
   CardContent,
@@ -94,6 +93,11 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import {
+  componentUsageExamples,
+  documentationGuides,
+  registry,
+} from "../../../packages/registry/src/index";
 import "./styles.css";
 
 type NavItem = readonly [label: string, href: string];
