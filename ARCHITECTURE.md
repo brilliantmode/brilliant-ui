@@ -6,9 +6,8 @@ Dependencies flow inward. Product-facing packages may depend on foundation packa
 packages never depend on product-facing packages.
 
 ```text
-apps/docs ─────────────┐
-apps/playground ───────┼──> components (Phase 3) ──> core ──> tokens
-cli ──> registry ──────┘
+apps/docs ───────────────> components (Phase 3) ──> core ──> tokens
+cli ──> registry ───────> components (Phase 3)
 ```
 
 The registry distributes source code rather than hiding it behind a runtime dependency. This
