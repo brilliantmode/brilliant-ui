@@ -87,9 +87,13 @@ try {
     const structuredComponent = component.structuredContent as
       | { found?: boolean; usageExample?: string }
       | undefined;
+    const usageExample = structuredComponent?.usageExample;
     if (
       !structuredComponent?.found ||
-      !structuredComponent.usageExample?.includes("Save changes")
+      !usageExample?.includes('variant="glow"') ||
+      !usageExample.includes('size="kiosk" variant="tactile"') ||
+      !usageExample.includes('size="kiosk" variant="molded"') ||
+      !usageExample.includes('size="kiosk" variant="gel"')
     ) {
       throw new Error("Packaged get_component did not return its structured usage example.");
     }

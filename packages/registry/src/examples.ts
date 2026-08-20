@@ -7,6 +7,16 @@ export function Example() {
       Continue
     </Button>
   );
+}
+
+export function KioskExample() {
+  return (
+    <div className="flex flex-wrap gap-6">
+      <Button size="kiosk" variant="tactile">Confirm</Button>
+      <Button size="kiosk" variant="molded">Push</Button>
+      <Button size="kiosk" variant="gel">Start</Button>
+    </div>
+  );
 }`,
   "button-group": `import { Button } from "@brilliantmode/ui/button";
 import { ButtonGroup } from "@brilliantmode/ui/button-group";

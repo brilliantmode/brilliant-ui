@@ -326,11 +326,6 @@ const buttonVariants = [
     "bg-primary text-primary-foreground hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.99] active:bg-primary/88",
   ],
   [
-    "Glow",
-    "Continue",
-    "bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:-translate-y-px hover:bg-primary/92 hover:shadow-xl hover:shadow-primary/30 active:translate-y-0 active:scale-[0.99] active:bg-primary/88 active:shadow-md active:shadow-primary/20",
-  ],
-  [
     "Secondary",
     "Secondary",
     "border border-border bg-surface text-foreground shadow-sm hover:-translate-y-px hover:border-foreground/40 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-secondary active:shadow-sm",
@@ -352,16 +347,47 @@ const buttonVariants = [
   ],
 ] as const;
 
+const elevatedButtonVariants = [
+  [
+    "Glow",
+    "Continue",
+    "bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:-translate-y-px hover:bg-primary/92 hover:shadow-xl hover:shadow-primary/30 active:translate-y-0 active:scale-[0.99] active:bg-primary/88 active:shadow-md active:shadow-primary/20",
+  ],
+] as const;
+
+const tactileButtonVariants = [
+  [
+    "Keycap",
+    "Confirm",
+    "rounded-[0.375rem] bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--brilliant-primary)_58%,white)_0%,color-mix(in_oklch,var(--brilliant-primary)_82%,white)_35%,var(--brilliant-primary)_78%,color-mix(in_oklch,var(--brilliant-primary)_82%,black)_100%)] text-primary-foreground shadow-[inset_0_1px_0_color-mix(in_oklch,var(--brilliant-primary)_42%,white),0_3px_0_0_color-mix(in_oklch,var(--brilliant-primary)_62%,black),0_6px_10px_-5px_color-mix(in_oklch,var(--brilliant-primary)_45%,transparent)] hover:-translate-y-px hover:brightness-[1.03] active:translate-y-[2px] active:scale-[0.99] active:brightness-[0.98] active:shadow-[inset_0_1px_0_color-mix(in_oklch,var(--brilliant-primary)_60%,white),0_1px_0_0_color-mix(in_oklch,var(--brilliant-primary)_62%,black),0_2px_5px_-3px_color-mix(in_oklch,var(--brilliant-primary)_35%,transparent)] disabled:translate-y-0 disabled:shadow-none disabled:brightness-100",
+  ],
+  [
+    "Molded",
+    "Push",
+    "rounded-[1rem] bg-[linear-gradient(145deg,color-mix(in_oklch,var(--brilliant-surface)_72%,white),color-mix(in_oklch,var(--brilliant-surface)_90%,black))] text-foreground shadow-[inset_2px_2px_3px_color-mix(in_oklch,var(--brilliant-surface)_38%,white),inset_-2px_-2px_4px_color-mix(in_oklch,var(--brilliant-foreground)_12%,transparent),5px_6px_10px_-4px_color-mix(in_oklch,var(--brilliant-foreground)_32%,transparent),-3px_-3px_8px_color-mix(in_oklch,var(--brilliant-surface)_35%,white)] hover:-translate-y-px active:translate-y-[2px] active:scale-[0.99] active:shadow-[inset_3px_3px_6px_color-mix(in_oklch,var(--brilliant-foreground)_20%,transparent),inset_-2px_-2px_4px_color-mix(in_oklch,var(--brilliant-surface)_35%,white)] disabled:translate-y-0 disabled:shadow-none",
+  ],
+  [
+    "Gel",
+    "Start",
+    "rounded-[1rem] bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--brilliant-primary)_28%,white)_0%,color-mix(in_oklch,var(--brilliant-primary)_52%,white)_18%,color-mix(in_oklch,var(--brilliant-primary)_76%,white)_42%,var(--brilliant-primary)_68%,color-mix(in_oklch,var(--brilliant-primary)_78%,black)_100%)] text-primary-foreground shadow-[inset_0_3px_4px_color-mix(in_oklch,var(--brilliant-primary)_24%,white),inset_0_-2px_3px_color-mix(in_oklch,var(--brilliant-primary)_72%,black),0_6px_12px_-5px_color-mix(in_oklch,var(--brilliant-primary)_48%,transparent)] hover:-translate-y-px hover:brightness-[1.04] active:translate-y-[2px] active:scale-[0.99] active:brightness-[0.97] active:shadow-[inset_0_2px_5px_color-mix(in_oklch,var(--brilliant-primary)_68%,black),0_2px_5px_-3px_color-mix(in_oklch,var(--brilliant-primary)_35%,transparent)] disabled:translate-y-0 disabled:shadow-none disabled:brightness-100",
+  ],
+] as const;
+
 const buttonSizes = [
   ["Small", "h-8 px-3 text-xs"],
   ["Default", "h-9 px-3.5 text-sm"],
   ["Large", "h-10 px-[1.125rem] text-sm"],
+  ["Kiosk", "h-14 px-6 text-base"],
   ["Icon", "size-9 px-0 text-sm"],
 ] as const;
 
 const buttonProps = [
-  ["variant", '"primary" | "secondary" | "outline" | "ghost" | "critical"', '"primary"'],
-  ["size", '"sm" | "md" | "lg" | "icon"', '"md"'],
+  [
+    "variant",
+    '"primary" | "glow" | "tactile" | "molded" | "gel" | "secondary" | "outline" | "ghost" | "critical"',
+    '"primary"',
+  ],
+  ["size", '"sm" | "md" | "lg" | "kiosk" | "icon"', '"md"'],
   ["type", 'ButtonHTMLAttributes<HTMLButtonElement>["type"]', '"button"'],
   ["className", "string", "undefined"],
 ] as const;
@@ -6145,21 +6171,65 @@ import "@brilliantmode/ui/styles.css"`}</MiniTerminal>
               </div>
 
               <ExamplePanel code={usageForComponent("button")}>
-                <PreviewButton className={`${buttonVariants[1][2]} h-9 px-3.5 text-sm`}>
+                <PreviewButton className={`${elevatedButtonVariants[0][2]} h-9 px-3.5 text-sm`}>
                   Continue
                 </PreviewButton>
               </ExamplePanel>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold">Variants</h3>
-                <div className="rounded-lg border border-border bg-background p-6">
-                  <div className="flex flex-wrap gap-3">
-                    {buttonVariants.map(([label, text, className]) => (
-                      <PreviewButton className={`h-9 px-3.5 text-sm ${className}`} key={label}>
-                        {text}
-                      </PreviewButton>
-                    ))}
-                  </div>
+                <h3 className="text-lg font-semibold">Button families</h3>
+                <div className="grid gap-4">
+                  <section className="rounded-lg border border-border bg-background p-5">
+                    <h4 className="text-sm font-semibold">Core actions</h4>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Product controls for forms, dialogs, toolbars, and standard application flows.
+                    </p>
+                    <div className="mt-5 flex flex-wrap gap-5">
+                      {buttonVariants.map(([label, text, className]) => (
+                        <div className="grid gap-2" key={label}>
+                          <span className="text-xs font-medium text-muted-foreground">{label}</span>
+                          <PreviewButton className={`h-9 px-3.5 text-sm ${className}`}>
+                            {text}
+                          </PreviewButton>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="rounded-lg border border-border bg-background p-5">
+                    <h4 className="text-sm font-semibold">Elevated actions</h4>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Restrained emphasis for one important action in a region.
+                    </p>
+                    <div className="mt-5 flex flex-wrap gap-5">
+                      {elevatedButtonVariants.map(([label, text, className]) => (
+                        <div className="grid gap-2" key={label}>
+                          <span className="text-xs font-medium text-muted-foreground">{label}</span>
+                          <PreviewButton className={`h-9 px-3.5 text-sm ${className}`}>
+                            {text}
+                          </PreviewButton>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="rounded-lg border border-border bg-muted/35 p-5">
+                    <h4 className="text-sm font-semibold">Tactile and kiosk controls</h4>
+                    <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+                      Large physical-looking controls for direct-touch interfaces. Choose one style
+                      per kiosk rather than mixing them.
+                    </p>
+                    <div className="mt-6 flex flex-wrap items-end gap-7">
+                      {tactileButtonVariants.map(([label, text, className]) => (
+                        <div className="grid gap-3" key={label}>
+                          <span className="text-xs font-medium text-muted-foreground">{label}</span>
+                          <PreviewButton className={`h-14 min-w-36 px-6 text-base ${className}`}>
+                            {text}
+                          </PreviewButton>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
                 </div>
               </div>
 

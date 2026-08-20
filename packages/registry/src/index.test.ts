@@ -45,6 +45,18 @@ describe("registry", () => {
     expect(source).toContain("hover:shadow-primary/30");
   });
 
+  it("ships organized tactile button variants with a kiosk size", () => {
+    const source = findRegistryItem("button")?.files[0]?.content;
+
+    expect(source).toContain("tactile:");
+    expect(source).toContain("molded:");
+    expect(source).toContain("gel:");
+    expect(source).toContain('kiosk: "h-14 px-6 text-base"');
+    expect(source).toContain("inset_0_1px_0");
+    expect(source).toContain("active:translate-y-[2px]");
+    expect(source).toContain("disabled:translate-y-0 disabled:shadow-none");
+  });
+
   it("ships photo crop and treatment APIs", () => {
     const photoSource = findRegistryItem("photo")?.files[0]?.content;
 

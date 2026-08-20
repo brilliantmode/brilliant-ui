@@ -59,7 +59,10 @@ describe("Brilliant UI MCP server", () => {
     expect(component.importPath).toBe("@brilliantmode/ui/button");
     expect(component.importExample).toContain("import { Button }");
     expect(component.apiDeclarations).toContain("export declare function Button");
-    expect(component.usageExample).toContain("Save changes");
+    expect(component.usageExample).toContain('variant="glow"');
+    expect(component.usageExample).toContain('size="kiosk" variant="tactile"');
+    expect(component.usageExample).toContain('size="kiosk" variant="molded"');
+    expect(component.usageExample).toContain('size="kiosk" variant="gel"');
     expect(result.structuredContent).toEqual(component);
   });
 

@@ -120,6 +120,12 @@ const variants = {
     "bg-primary text-primary-foreground hover:-translate-y-px hover:bg-primary/92 active:translate-y-0 active:scale-[0.99] active:bg-primary/88",
   glow:
     "bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:-translate-y-px hover:bg-primary/92 hover:shadow-xl hover:shadow-primary/30 active:translate-y-0 active:scale-[0.99] active:bg-primary/88 active:shadow-md active:shadow-primary/20",
+  tactile:
+    "rounded-[0.375rem] bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--brilliant-primary)_58%,white)_0%,color-mix(in_oklch,var(--brilliant-primary)_82%,white)_35%,var(--brilliant-primary)_78%,color-mix(in_oklch,var(--brilliant-primary)_82%,black)_100%)] text-primary-foreground shadow-[inset_0_1px_0_color-mix(in_oklch,var(--brilliant-primary)_42%,white),0_3px_0_0_color-mix(in_oklch,var(--brilliant-primary)_62%,black),0_6px_10px_-5px_color-mix(in_oklch,var(--brilliant-primary)_45%,transparent)] hover:-translate-y-px hover:brightness-[1.03] active:translate-y-[2px] active:scale-[0.99] active:brightness-[0.98] active:shadow-[inset_0_1px_0_color-mix(in_oklch,var(--brilliant-primary)_60%,white),0_1px_0_0_color-mix(in_oklch,var(--brilliant-primary)_62%,black),0_2px_5px_-3px_color-mix(in_oklch,var(--brilliant-primary)_35%,transparent)] disabled:translate-y-0 disabled:shadow-none disabled:brightness-100",
+  molded:
+    "rounded-[1rem] bg-[linear-gradient(145deg,color-mix(in_oklch,var(--brilliant-surface)_72%,white),color-mix(in_oklch,var(--brilliant-surface)_90%,black))] text-foreground shadow-[inset_2px_2px_3px_color-mix(in_oklch,var(--brilliant-surface)_38%,white),inset_-2px_-2px_4px_color-mix(in_oklch,var(--brilliant-foreground)_12%,transparent),5px_6px_10px_-4px_color-mix(in_oklch,var(--brilliant-foreground)_32%,transparent),-3px_-3px_8px_color-mix(in_oklch,var(--brilliant-surface)_35%,white)] hover:-translate-y-px active:translate-y-[2px] active:scale-[0.99] active:shadow-[inset_3px_3px_6px_color-mix(in_oklch,var(--brilliant-foreground)_20%,transparent),inset_-2px_-2px_4px_color-mix(in_oklch,var(--brilliant-surface)_35%,white)] disabled:translate-y-0 disabled:shadow-none",
+  gel:
+    "rounded-[1rem] bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--brilliant-primary)_28%,white)_0%,color-mix(in_oklch,var(--brilliant-primary)_52%,white)_18%,color-mix(in_oklch,var(--brilliant-primary)_76%,white)_42%,var(--brilliant-primary)_68%,color-mix(in_oklch,var(--brilliant-primary)_78%,black)_100%)] text-primary-foreground shadow-[inset_0_3px_4px_color-mix(in_oklch,var(--brilliant-primary)_24%,white),inset_0_-2px_3px_color-mix(in_oklch,var(--brilliant-primary)_72%,black),0_6px_12px_-5px_color-mix(in_oklch,var(--brilliant-primary)_48%,transparent)] hover:-translate-y-px hover:brightness-[1.04] active:translate-y-[2px] active:scale-[0.99] active:brightness-[0.97] active:shadow-[inset_0_2px_5px_color-mix(in_oklch,var(--brilliant-primary)_68%,black),0_2px_5px_-3px_color-mix(in_oklch,var(--brilliant-primary)_35%,transparent)] disabled:translate-y-0 disabled:shadow-none disabled:brightness-100",
   secondary:
     "border-hairline border-border bg-surface text-foreground shadow-sm hover:-translate-y-px hover:border-foreground/40 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.99] active:bg-secondary active:shadow-sm",
   outline:
@@ -134,6 +140,7 @@ const sizes = {
   sm: "h-8 px-3 text-xs",
   md: "h-9 px-3.5 text-sm",
   lg: "h-10 px-[1.125rem] text-sm",
+  kiosk: "h-14 px-6 text-base",
   icon: "size-9 px-0",
 } as const;
 
@@ -4105,12 +4112,16 @@ export const registry = [
       usage: [
         "Use a single primary action per region.",
         "Use glow for a high-emphasis primary action that benefits from subtle elevation.",
+        "Use tactile, molded, or gel with the kiosk size for large direct-touch interfaces.",
+        "Choose one physical style for a kiosk surface and apply it consistently.",
         "Prefer verbs for labels.",
         "Micro interactions are included in the generated source.",
       ],
       avoid: [
         "Do not use for navigation; use a link.",
         "Do not use multiple glow actions in the same region.",
+        "Do not mix tactile, molded, and gel styles on the same kiosk surface.",
+        "Do not use physical-control variants for dense desktop toolbars or compact action groups.",
         "Do not disable without explaining why.",
       ],
     },
