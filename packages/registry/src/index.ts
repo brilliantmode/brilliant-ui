@@ -4,6 +4,9 @@ import {
   systemHealthDashboardSource,
 } from "./dashboard-sources";
 
+export { componentUsageExamples } from "./examples";
+export { type DocumentationGuide, documentationGuides } from "./guides";
+
 export const registryKinds = [
   "component",
   "block",

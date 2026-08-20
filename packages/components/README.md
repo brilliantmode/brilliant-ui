@@ -42,8 +42,11 @@ import { tokens } from "@brilliant/ui/tokens";
 ## AI coding with MCP
 
 The package includes an optional, user-initiated MCP server over stdio. It exposes the installed
-version's component catalog, TypeScript declarations, usage guidance, installation instructions,
-and design tokens. Installing the package does not start the server.
+version's component catalog, TypeScript declarations, copy-ready usage examples, accessibility
+guidance, installation instructions, design tokens, and application-level guides for theming,
+composition, forms, overlays, dashboards, accessibility, troubleshooting, and upgrades. Tool
+results include both structured data and text JSON for compatibility with current and older MCP
+clients. Installing the package does not start the server.
 
 Configure an MCP client from the application where `@brilliant/ui` is installed:
 
@@ -59,6 +62,14 @@ Configure an MCP client from the application where `@brilliant/ui` is installed:
 ```
 
 The MCP client launches and owns the stdio process after the user enables this configuration.
+The package also runs a clean-consumer smoke test before release to verify that the packed binary,
+tool discovery, structured component and guide results, and resources work outside this monorepo.
+
+AI clients can discover the documentation with `search_guides`, retrieve full Markdown with
+`get_guide`, or read `brilliant://guides/{slug}` resources. Component-specific API documentation
+remains available through `get_component` and `brilliant://components/{name}`. Component
+suggestions use local whole-word, intent-aware scoring and include the matched terms and reason;
+negative `avoid` guidance reduces relevance instead of accidentally promoting a component.
 
 Override semantic variables after importing the package stylesheet:
 

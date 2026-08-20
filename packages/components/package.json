@@ -57,8 +57,9 @@
     "prepack": "pnpm build",
     "build": "pnpm generate && tsc -p tsconfig.build.json",
     "lint": "pnpm generate && biome check src scripts",
-    "test": "pnpm build && vitest run",
-    "typecheck": "pnpm generate && tsc -p tsconfig.json --noEmit"
+    "test": "pnpm build && vitest run && pnpm test:mcp-package",
+    "test:mcp-package": "tsx scripts/smoke-mcp-package.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.0.0",

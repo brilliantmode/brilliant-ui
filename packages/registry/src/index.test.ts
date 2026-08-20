@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   checksumContent,
   createRegistryArtifacts,
+  documentationGuides,
   findRegistryItem,
   type RegistryItem,
   registry,
@@ -17,6 +18,18 @@ describe("registry", () => {
     const names = registry.map((item) => item.name);
     expect(new Set(names).size).toBe(names.length);
     expect(registry.every((item) => registryKinds.includes(item.kind))).toBe(true);
+  });
+
+  it("contains unique, substantive AI documentation guides", () => {
+    const slugs = documentationGuides.map((guide) => guide.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+    expect(documentationGuides.length).toBeGreaterThanOrEqual(8);
+    expect(
+      documentationGuides.every(
+        (guide) =>
+          guide.summary.length > 20 && guide.topics.length > 2 && guide.content.length > 300,
+      ),
+    ).toBe(true);
   });
 
   it("resolves bundled items", () => {
