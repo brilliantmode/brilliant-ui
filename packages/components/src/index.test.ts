@@ -1,3 +1,5 @@
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {
   Button,
@@ -9,6 +11,7 @@ import {
   defineComponentAnatomy,
   microUx,
   motion,
+  QRCode,
   stateClasses,
   tokens,
 } from "./index.js";
@@ -18,6 +21,39 @@ describe("component infrastructure", () => {
     expect(typeof Button).toBe("function");
     expect(typeof CardFlip).toBe("function");
     expect(typeof CardExpand).toBe("function");
+    expect(typeof QRCode).toBe("function");
+  });
+
+  it("renders an accessible QR Code SVG", () => {
+    const markup = renderToStaticMarkup(
+      createElement(QRCode, {
+        title: "Open account setup",
+        value: "https://example.com/setup",
+      }),
+    );
+
+    expect(markup).toContain("<svg");
+    expect(markup).toContain('role="img"');
+    expect(markup).toContain("<title>Open account setup</title>");
+    expect(markup).toContain('data-slot="root"');
+    expect(markup).toContain('viewBox="0 0 ');
+    expect(markup).toContain("<path");
+  });
+
+  it("optionally embeds an excavated SVG logo", () => {
+    const logo =
+      "data:image/svg+xml," +
+      encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"/>');
+    const markup = renderToStaticMarkup(
+      createElement(QRCode, {
+        imageSettings: { excavate: true, height: 24, src: logo, width: 24 },
+        level: "H",
+        value: "TOKEN-9F3A-72KC",
+      }),
+    );
+
+    expect(markup).toContain("<image");
+    expect(markup).toContain("data:image/svg+xml");
   });
 
   it("merges conditional classes and resolves Tailwind conflicts", () => {

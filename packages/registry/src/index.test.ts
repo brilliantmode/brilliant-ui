@@ -173,6 +173,23 @@ describe("registry", () => {
     ]);
   });
 
+  it("ships an accessible responsive QR Code", () => {
+    const item = findRegistryItem("qr-code");
+    const source = item?.files[0]?.content;
+
+    expect(item?.dependencies).toEqual(["qrcode.react"]);
+    expect(item?.metadata.slots).toEqual(["root"]);
+    expect(source).toContain('import { QRCodeSVG } from "qrcode.react"');
+    expect(source).toContain("export function QRCode(");
+    expect(source).toContain('bgColor = "#ffffff"');
+    expect(source).toContain('fgColor = "#000000"');
+    expect(source).toContain('level = "M"');
+    expect(source).toContain("marginSize = 4");
+    expect(source).toContain('role = "img"');
+    expect(source).toContain('title = "QR code"');
+    expect(source).toContain('className={["block h-auto max-w-full"');
+  });
+
   it("keeps avatar images circular without clipping presence status", () => {
     const avatarSource = findRegistryItem("avatar")?.files[0]?.content;
 

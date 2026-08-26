@@ -1,5 +1,5 @@
 /* Generated from the Brilliant UI registry. Do not edit directly. */
-export const packageVersion = "0.2.0";
+export const packageVersion = "0.3.0";
 export const componentCatalog = [
   {
     dependencies: [],
@@ -337,6 +337,43 @@ export const componentCatalog = [
     usageExample:
       'import {\n  CardExpand,\n  CardExpandContent,\n  CardExpandTrigger,\n} from "@brilliantmode/ui/card-expand";\nimport { Card } from "@brilliantmode/ui/card";\n\nexport function Example() {\n  return (\n    <CardExpand className="max-w-sm" speed="medium">\n      <Card\n        className="relative cursor-pointer overflow-hidden rounded-[0.875rem] group-data-[expanded=true]/card-expand:border-primary/25 group-data-[expanded=true]/card-expand:shadow-md"\n        interactive\n        variant="accent"\n      >\n        <CardExpandTrigger className="absolute inset-x-0 top-0 z-10 h-32 items-start justify-end p-4 text-muted-foreground focus-visible:ring-inset [&>span]:size-9 [&>span]:rounded-full [&>span]:border [&>span]:border-border/80 [&>span]:bg-background/80 [&>span]:shadow-sm [&>span]:backdrop-blur hover:[&>span]:bg-background active:[&>span]:scale-[0.94]" />\n        <div className="min-h-32 p-5 pr-16">\n          <div className="flex items-start gap-3">\n            <span className="grid size-11 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">SF</span>\n            <div>\n              <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Boarding pass</p>\n              <p className="mt-1 text-lg font-semibold tracking-tight">San Francisco</p>\n            </div>\n          </div>\n          <div className="mt-7 grid grid-cols-3 gap-4">\n            <div><p className="text-xs text-muted-foreground">Gate</p><p className="mt-1 font-semibold">B12</p></div>\n            <div><p className="text-xs text-muted-foreground">Boards</p><p className="mt-1 font-semibold">8:40</p></div>\n            <div><p className="text-xs text-muted-foreground">Seat</p><p className="mt-1 font-semibold">14A</p></div>\n          </div>\n        </div>\n        <CardExpandContent innerClassName="mx-5 border-t border-border pb-5 pt-4 text-sm text-muted-foreground">\n          <div className="grid gap-3">\n            <div className="flex justify-between gap-4"><span>Flight</span><strong className="text-foreground">BU 204</strong></div>\n            <div className="flex justify-between gap-4"><span>Terminal</span><strong className="text-foreground">2</strong></div>\n            <div className="flex justify-between gap-4"><span>Passenger</span><strong className="text-foreground">Alex Rivera</strong></div>\n          </div>\n        </CardExpandContent>\n      </Card>\n    </CardExpand>\n  );\n}',
     valueExports: ["CardExpand", "CardExpandTrigger", "CardExpandContent"],
+  },
+  {
+    dependencies: ["qrcode.react"],
+    description:
+      "A responsive SVG QR code for URLs or alphanumeric payloads, with accessible labeling and reliable scanning defaults.",
+    exports: ["QRCodeProps", "QRCode"],
+    importPath: "@brilliantmode/ui/qr-code",
+    kind: "component",
+    metadata: {
+      purpose:
+        "Encodes URLs, payment links, tickets, device pairing data, and short text for scanning.",
+      slots: ["root"],
+      accessibility: [
+        "Renders an SVG with role img and an accessible title; customize title to describe the destination or action.",
+        "Always provide the encoded value as adjacent readable text or an equivalent link when users may be unable to scan it.",
+        "The QR image is not interactive; place download, copy, or open actions in separate native controls.",
+      ],
+      usage: [
+        "Pass either a URL or an alphanumeric payload through value; the component encodes the string exactly as provided.",
+        "Keep the default four-module quiet zone unless the surrounding layout guarantees equivalent clear space.",
+        "Use level M for ordinary codes and level H when embedding a logo through imageSettings.",
+        "Optionally embed an SVG data URL or image asset with imageSettings; keep excavate enabled and the logo small enough to preserve scannability.",
+        "Keep dark modules on a light background and verify custom colors with the target scanners.",
+        "Use size for the intrinsic SVG dimensions and className for responsive layout constraints.",
+      ],
+      avoid: [
+        "Do not encode secrets or credentials that should not be visible to nearby cameras.",
+        "Do not remove the quiet zone or use low-contrast brand colors.",
+        "Do not rely on the QR code as the only way to complete a critical task.",
+      ],
+    },
+    name: "qr-code",
+    registryDependencies: [],
+    title: "QR Code",
+    usageExample:
+      'import { QRCode } from "@brilliantmode/ui/qr-code";\n\nconst ufLogo =\n  "data:image/svg+xml," +\n  encodeURIComponent(\n    \'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="#4f46e5"><circle cx="128" cy="128" r="18"/><g transform="translate(128 128)"><circle cy="-36" r="8"/><circle cy="-36" r="8" transform="rotate(60)"/><circle cy="-36" r="8" transform="rotate(120)"/><circle cy="-36" r="8" transform="rotate(180)"/><circle cy="-36" r="8" transform="rotate(240)"/><circle cy="-36" r="8" transform="rotate(300)"/><circle cy="-68" r="11"/><circle cy="-68" r="11" transform="rotate(45)"/><circle cy="-68" r="11" transform="rotate(90)"/><circle cy="-68" r="11" transform="rotate(135)"/><circle cy="-68" r="11" transform="rotate(180)"/><circle cy="-68" r="11" transform="rotate(225)"/><circle cy="-68" r="11" transform="rotate(270)"/><circle cy="-68" r="11" transform="rotate(315)"/><circle cy="-100" r="6"/><circle cy="-100" r="6" transform="rotate(36)"/><circle cy="-100" r="6" transform="rotate(72)"/><circle cy="-100" r="6" transform="rotate(108)"/><circle cy="-100" r="6" transform="rotate(144)"/><circle cy="-100" r="6" transform="rotate(180)"/><circle cy="-100" r="6" transform="rotate(216)"/><circle cy="-100" r="6" transform="rotate(252)"/><circle cy="-100" r="6" transform="rotate(288)"/><circle cy="-100" r="6" transform="rotate(324)"/></g></svg>\',\n  );\n\nexport function Example() {\n  const codes = [\n    {\n      background: "#ffffff",\n      foreground: "#000000",\n      image: undefined,\n      label: "URL",\n      title: "Open Brilliant UI documentation",\n      value: "https://brilliant-ui.dev/components/qr-code",\n    },\n    {\n      background: "#eff6ff",\n      foreground: "#172554",\n      image: ufLogo,\n      label: "Invite token",\n      title: "Accept invite with token TOKEN-9F3A-72KC",\n      value: "TOKEN-9F3A-72KC",\n    },\n    {\n      background: "#fff1f2",\n      foreground: "#3f0d12",\n      image: undefined,\n      label: "Ticket code",\n      title: "Check in with ticket EVT-2026-0842",\n      value: "EVT-2026-0842",\n    },\n  ];\n\n  return (\n    <div className="grid gap-4 sm:grid-cols-3">\n      {codes.map((code) => (\n        <div className="grid justify-items-center gap-3 rounded-[0.625rem] border border-border bg-surface p-4 shadow-sm" key={code.label}>\n          <QRCode\n            {...(code.image\n              ? {\n                  imageSettings: {\n                    excavate: true,\n                    height: 32,\n                    src: code.image,\n                    width: 32,\n                  },\n                }\n              : {})}\n            bgColor={code.background}\n            fgColor={code.foreground}\n            level={code.image ? "H" : "M"}\n            size={136}\n            title={code.title}\n            value={code.value}\n          />\n          <div className="min-w-0 text-center">\n            <p className="text-sm font-medium">{code.label}</p>\n            <p className="mt-1 truncate font-mono text-xs text-muted-foreground">{code.value}</p>\n          </div>\n        </div>\n      ))}\n    </div>\n  );\n}',
+    valueExports: ["QRCode"],
   },
   {
     dependencies: [],

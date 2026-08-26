@@ -65,6 +65,7 @@ import {
 } from "@brilliantmode/ui/header";
 import { Meter } from "@brilliantmode/ui/meter";
 import { PhotoUpload } from "@brilliantmode/ui/photo-upload";
+import { QRCode } from "@brilliantmode/ui/qr-code";
 import {
   Metric,
   Stat,
@@ -209,6 +210,7 @@ const navGroups = [
       ["Avatar", "/components/avatar"],
       ["Aspect Ratio", "/components/aspect-ratio"],
       ["Photo", "/components/photo"],
+      ["QR Code", "/components/qr-code"],
       ["Separator", "/components/separator"],
     ],
     label: "Display",
@@ -3820,6 +3822,74 @@ function ComponentMiniPreview({ name }: { name: string }) {
     );
   }
 
+  if (name === "qr-code") {
+    const ufLogo =
+      "data:image/svg+xml," +
+      encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="#4f46e5"><circle cx="128" cy="128" r="18"/><g transform="translate(128 128)"><circle cy="-36" r="8"/><circle cy="-36" r="8" transform="rotate(60)"/><circle cy="-36" r="8" transform="rotate(120)"/><circle cy="-36" r="8" transform="rotate(180)"/><circle cy="-36" r="8" transform="rotate(240)"/><circle cy="-36" r="8" transform="rotate(300)"/><circle cy="-68" r="11"/><circle cy="-68" r="11" transform="rotate(45)"/><circle cy="-68" r="11" transform="rotate(90)"/><circle cy="-68" r="11" transform="rotate(135)"/><circle cy="-68" r="11" transform="rotate(180)"/><circle cy="-68" r="11" transform="rotate(225)"/><circle cy="-68" r="11" transform="rotate(270)"/><circle cy="-68" r="11" transform="rotate(315)"/><circle cy="-100" r="6"/><circle cy="-100" r="6" transform="rotate(36)"/><circle cy="-100" r="6" transform="rotate(72)"/><circle cy="-100" r="6" transform="rotate(108)"/><circle cy="-100" r="6" transform="rotate(144)"/><circle cy="-100" r="6" transform="rotate(180)"/><circle cy="-100" r="6" transform="rotate(216)"/><circle cy="-100" r="6" transform="rotate(252)"/><circle cy="-100" r="6" transform="rotate(288)"/><circle cy="-100" r="6" transform="rotate(324)"/></g></svg>',
+      );
+    const codes = [
+      {
+        background: "#ffffff",
+        foreground: "#000000",
+        image: undefined,
+        label: "URL",
+        title: "Open Brilliant UI documentation",
+        value: "https://brilliant-ui.dev/components/qr-code",
+      },
+      {
+        background: "#eff6ff",
+        foreground: "#172554",
+        image: ufLogo,
+        label: "Invite token",
+        title: "Accept invite with token TOKEN-9F3A-72KC",
+        value: "TOKEN-9F3A-72KC",
+      },
+      {
+        background: "#fff1f2",
+        foreground: "#3f0d12",
+        image: undefined,
+        label: "Ticket code",
+        title: "Check in with ticket EVT-2026-0842",
+        value: "EVT-2026-0842",
+      },
+    ];
+
+    return (
+      <div className="mx-auto grid max-w-2xl gap-4 sm:grid-cols-3">
+        {codes.map((code) => (
+          <div
+            className="grid min-w-0 justify-items-center gap-3 rounded-[0.625rem] border border-border bg-surface p-4 shadow-sm"
+            key={code.label}
+          >
+            <QRCode
+              {...(code.image
+                ? {
+                    imageSettings: {
+                      excavate: true,
+                      height: 32,
+                      src: code.image,
+                      width: 32,
+                    },
+                  }
+                : {})}
+              bgColor={code.background}
+              fgColor={code.foreground}
+              level={code.image ? "H" : "M"}
+              size={136}
+              title={code.title}
+              value={code.value}
+            />
+            <div className="min-w-0 max-w-full text-center">
+              <p className="text-sm font-medium">{code.label}</p>
+              <p className="mt-1 truncate font-mono text-xs text-muted-foreground">{code.value}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   if (name === "text") {
     return (
       <div className="grid gap-4 md:grid-cols-2">
@@ -5036,6 +5106,9 @@ const navIcons: Record<string, ReactNode> = {
   Photo: <path d="M5 6h14v12H5V6Zm3 9 3-4 2 3 1.5-2 2.5 3M9 9h.01" />,
   Popover: <path d="M6 5h12v10H9l-3 4V5Z" />,
   Progress: <path d="M5 12h14M5 12h8" />,
+  "QR Code": (
+    <path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm11 0h2v2h-2v-2Zm3 0h2v5h-2v-5Zm-3 4h2v2h-2v-2Z" />
+  ),
   "Radio Group": <path d="M8 8h.01M8 16h.01M12 8h7M12 16h7" />,
   Scrollbar: <path d="M8 4h8v16H8V4Zm5 3h1v6h-1" />,
   "Scroll Area": <path d="M7 4h10v16H7V4Zm7 3h1v7h-1" />,

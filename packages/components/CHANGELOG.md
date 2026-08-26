@@ -1,5 +1,16 @@
 # @brilliantmode/ui
 
+## 0.3.0
+
+### Minor Changes
+
+- c18bd0e: Add Card Flip and Card Expand behavior primitives with controlled and uncontrolled state, configurable motion speeds, accessible triggers, reduced-motion support, and polished Wallet-pass-style Card composition examples, including a card whose front and back can both expand.
+- Add a responsive, accessible QR Code component with reliable quiet-zone and error-correction defaults.
+
+### Patch Changes
+
+- f0e3bf9: Show a thin, token-colored scrollbar when Application Shell sidebars, dropdown menus, selects, and combobox results exceed their available height.
+
 ## 0.2.0
 
 ### Minor Changes

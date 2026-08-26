@@ -154,6 +154,31 @@ try {
       throw new Error("Packaged Card Flip did not expose state and Card composition.");
     }
 
+    const qrCode = await client.callTool({
+      arguments: { name: "qr-code" },
+      name: "get_component",
+    });
+    const structuredQrCode = qrCode.structuredContent as
+      | {
+          dependencies?: string[];
+          found?: boolean;
+          usageExample?: string;
+          valueExports?: string[];
+        }
+      | undefined;
+    if (
+      !structuredQrCode?.found ||
+      !structuredQrCode.dependencies?.includes("qrcode.react") ||
+      !structuredQrCode.valueExports?.includes("QRCode") ||
+      !structuredQrCode.usageExample?.includes('title: "Open Brilliant UI documentation"') ||
+      !structuredQrCode.usageExample.includes('value: "TOKEN-9F3A-72KC"') ||
+      !structuredQrCode.usageExample.includes("fgColor={code.foreground}") ||
+      !structuredQrCode.usageExample.includes("imageSettings:") ||
+      !structuredQrCode.usageExample.includes('level={code.image ? "H" : "M"}')
+    ) {
+      throw new Error("Packaged QR Code did not expose its dependency and accessible usage.");
+    }
+
     const recommendation = await client.callTool({
       arguments: {
         task: "Account settings with profile fields, notification preferences, save feedback, and destructive account deletion confirmation",

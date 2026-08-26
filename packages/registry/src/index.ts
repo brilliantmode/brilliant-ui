@@ -1172,6 +1172,39 @@ export function CardExpandContent({
 }
 `;
 
+const qrCodeSource = `import { QRCodeSVG } from "qrcode.react";
+import type { ComponentProps } from "react";
+
+export type QRCodeProps = ComponentProps<typeof QRCodeSVG>;
+
+export function QRCode({
+  bgColor = "#ffffff",
+  className = "",
+  fgColor = "#000000",
+  level = "M",
+  marginSize = 4,
+  role = "img",
+  size = 160,
+  title = "QR code",
+  ...props
+}: QRCodeProps) {
+  return (
+    <QRCodeSVG
+      {...props}
+      bgColor={bgColor}
+      className={["block h-auto max-w-full", className].join(" ")}
+      data-slot="root"
+      fgColor={fgColor}
+      level={level}
+      marginSize={marginSize}
+      role={role}
+      size={size}
+      title={title}
+    />
+  );
+}
+`;
+
 const inputSource = `import type { InputHTMLAttributes } from "react";
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
@@ -4890,6 +4923,39 @@ export const registry = [
         "Do not recreate an accordion trigger row inside the card; the surface and compact indicator already control expansion.",
         "Do not put essential identity or the primary card action only in the expanded content.",
         "Do not create named combination components for flip and expand; compose the two primitives.",
+      ],
+    },
+  },
+  {
+    name: "qr-code",
+    title: "QR Code",
+    description:
+      "A responsive SVG QR code for URLs or alphanumeric payloads, with accessible labeling and reliable scanning defaults.",
+    kind: "component",
+    dependencies: ["qrcode.react"],
+    registryDependencies: [],
+    files: [{ path: "qr-code.tsx", content: qrCodeSource, target: "ui/qr-code.tsx" }],
+    metadata: {
+      purpose:
+        "Encodes URLs, payment links, tickets, device pairing data, and short text for scanning.",
+      slots: ["root"],
+      accessibility: [
+        "Renders an SVG with role img and an accessible title; customize title to describe the destination or action.",
+        "Always provide the encoded value as adjacent readable text or an equivalent link when users may be unable to scan it.",
+        "The QR image is not interactive; place download, copy, or open actions in separate native controls.",
+      ],
+      usage: [
+        "Pass either a URL or an alphanumeric payload through value; the component encodes the string exactly as provided.",
+        "Keep the default four-module quiet zone unless the surrounding layout guarantees equivalent clear space.",
+        "Use level M for ordinary codes and level H when embedding a logo through imageSettings.",
+        "Optionally embed an SVG data URL or image asset with imageSettings; keep excavate enabled and the logo small enough to preserve scannability.",
+        "Keep dark modules on a light background and verify custom colors with the target scanners.",
+        "Use size for the intrinsic SVG dimensions and className for responsive layout constraints.",
+      ],
+      avoid: [
+        "Do not encode secrets or credentials that should not be visible to nearby cameras.",
+        "Do not remove the quiet zone or use low-contrast brand colors.",
+        "Do not rely on the QR code as the only way to complete a critical task.",
       ],
     },
   },
