@@ -248,6 +248,54 @@ export const componentCatalog = [
   },
   {
     dependencies: [],
+    description:
+      "A two-sided card with controlled state, an accessible flip trigger, and reduced-motion handling.",
+    exports: [
+      "FlippableCardProps",
+      "FlippableCard",
+      "FlippableCardFront",
+      "FlippableCardBack",
+      "FlippableCardTriggerProps",
+      "FlippableCardTrigger",
+    ],
+    importPath: "@brilliantmode/ui/flippable-card",
+    kind: "component",
+    metadata: {
+      purpose:
+        "Reveals secondary card details on a distinct back face without leaving the current context.",
+      slots: ["root", "inner", "front", "back", "trigger"],
+      accessibility: [
+        "The flip action is a native button with a state-specific accessible name and aria-pressed state.",
+        "The hidden face is aria-hidden and inert so its controls cannot receive focus.",
+        "Reduced-motion users receive an immediate state change without the rotation transition.",
+        "Front and back content should communicate the same card identity.",
+      ],
+      usage: [
+        "Compose exactly one FlippableCardFront and one FlippableCardBack inside the root.",
+        "Place FlippableCardTrigger on each face so users can move in both directions.",
+        "Use flipped and onFlippedChange when application state must control the visible face.",
+        "Constrain the root width in layout; the built-in aspect ratio follows a wallet-card proportion.",
+      ],
+      avoid: [
+        "Do not hide required actions or critical information exclusively on the back.",
+        "Do not flip automatically or use the motion as decoration.",
+        "Do not place a second nested flippable card inside either face.",
+      ],
+    },
+    name: "flippable-card",
+    registryDependencies: [],
+    title: "Flippable Card",
+    usageExample:
+      'import {\n  FlippableCard,\n  FlippableCardBack,\n  FlippableCardFront,\n  FlippableCardTrigger,\n} from "@brilliantmode/ui/flippable-card";\n\nexport function Example() {\n  return (\n    <FlippableCard className="max-w-sm">\n      <FlippableCardFront>\n        <div className="flex items-start justify-between gap-4">\n          <div>\n            <p className="text-xs font-medium uppercase tracking-[0.16em] opacity-75">\n              Brilliant Pass\n            </p>\n            <p className="mt-1 text-lg font-semibold">Design Systems Summit</p>\n          </div>\n          <FlippableCardTrigger />\n        </div>\n        <div className="mt-auto">\n          <p className="text-xs opacity-70">Attendee</p>\n          <p className="mt-1 font-medium">Alex Rivera</p>\n        </div>\n      </FlippableCardFront>\n      <FlippableCardBack>\n        <div className="flex items-start justify-between gap-4">\n          <div>\n            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">\n              Pass details\n            </p>\n            <p className="mt-1 text-base font-semibold">August 28 · Hall A</p>\n          </div>\n          <FlippableCardTrigger />\n        </div>\n        <div className="mt-auto rounded-[0.375rem] bg-muted p-3 text-sm">\n          Present this pass at registration.\n        </div>\n      </FlippableCardBack>\n    </FlippableCard>\n  );\n}',
+    valueExports: [
+      "FlippableCard",
+      "FlippableCardFront",
+      "FlippableCardBack",
+      "FlippableCardTrigger",
+    ],
+  },
+  {
+    dependencies: [],
     description: "A typography primitive with muted, glow, and shimmer variants.",
     exports: ["TextProps", "Text"],
     importPath: "@brilliantmode/ui/text",

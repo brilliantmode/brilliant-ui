@@ -736,6 +736,180 @@ export function CardFooter({ className = "", ...props }: HTMLAttributes<HTMLDivE
 }
 `;
 
+const flippableCardSource = `"use client";
+
+import { createContext, useContext, useMemo, useState } from "react";
+import type {
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
+
+interface FlippableCardContextValue {
+  disabled: boolean;
+  flipped: boolean;
+  setFlipped: (flipped: boolean) => void;
+}
+
+const FlippableCardContext = createContext<FlippableCardContextValue | null>(null);
+
+function useFlippableCard() {
+  const context = useContext(FlippableCardContext);
+  if (!context) {
+    throw new Error("Flippable Card parts must be rendered inside <FlippableCard>.");
+  }
+  return context;
+}
+
+export interface FlippableCardProps extends HTMLAttributes<HTMLDivElement> {
+  defaultFlipped?: boolean;
+  disabled?: boolean;
+  flipped?: boolean;
+  onFlippedChange?: (flipped: boolean) => void;
+}
+
+export function FlippableCard({
+  children,
+  className = "",
+  defaultFlipped = false,
+  disabled = false,
+  flipped: controlledFlipped,
+  onFlippedChange,
+  ...props
+}: FlippableCardProps) {
+  const [internalFlipped, setInternalFlipped] = useState(defaultFlipped);
+  const flipped = controlledFlipped ?? internalFlipped;
+  const context = useMemo<FlippableCardContextValue>(
+    () => ({
+      disabled,
+      flipped,
+      setFlipped: (nextFlipped) => {
+        if (disabled || nextFlipped === flipped) return;
+        if (controlledFlipped === undefined) setInternalFlipped(nextFlipped);
+        onFlippedChange?.(nextFlipped);
+      },
+    }),
+    [controlledFlipped, disabled, flipped, onFlippedChange],
+  );
+
+  return (
+    <FlippableCardContext.Provider value={context}>
+      <div
+        {...props}
+        className={["relative w-full [perspective:1200px]", className].join(" ")}
+        data-disabled={disabled ? "true" : undefined}
+        data-flipped={flipped ? "true" : "false"}
+      >
+        <div
+          className={[
+            "grid aspect-[1.586] w-full [transform-style:preserve-3d]",
+            "motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+            flipped ? "[transform:rotateY(180deg)]" : "",
+          ].join(" ")}
+        >
+          {children}
+        </div>
+      </div>
+    </FlippableCardContext.Provider>
+  );
+}
+
+export function FlippableCardFront({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  const { flipped } = useFlippableCard();
+
+  return (
+    <div
+      {...props}
+      aria-hidden={flipped || undefined}
+      className={[
+        "col-start-1 row-start-1 flex min-h-0 flex-col overflow-hidden rounded-[0.875rem] border-hairline border-primary/30 bg-primary p-5 text-primary-foreground shadow-md [backface-visibility:hidden]",
+        className,
+      ].join(" ")}
+      data-side="front"
+      inert={flipped || undefined}
+    />
+  );
+}
+
+export function FlippableCardBack({
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  const { flipped } = useFlippableCard();
+
+  return (
+    <div
+      {...props}
+      aria-hidden={!flipped || undefined}
+      className={[
+        "col-start-1 row-start-1 flex min-h-0 flex-col overflow-hidden rounded-[0.875rem] border-hairline border-border bg-surface p-5 text-foreground shadow-md [backface-visibility:hidden] [transform:rotateY(180deg)]",
+        className,
+      ].join(" ")}
+      data-side="back"
+      inert={!flipped || undefined}
+    />
+  );
+}
+
+export interface FlippableCardTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: ReactNode;
+}
+
+export function FlippableCardTrigger({
+  "aria-label": ariaLabel,
+  children,
+  className = "",
+  disabled: triggerDisabled,
+  onClick,
+  type = "button",
+  ...props
+}: FlippableCardTriggerProps) {
+  const { disabled, flipped, setFlipped } = useFlippableCard();
+  const resolvedDisabled = disabled || triggerDisabled;
+
+  return (
+    <button
+      {...props}
+      aria-label={ariaLabel ?? (flipped ? "Show card front" : "Show card details")}
+      aria-pressed={flipped}
+      className={[
+        "inline-flex size-8 shrink-0 items-center justify-center rounded-full border-hairline border-current/25 bg-background/10 text-current outline-none",
+        "hover:bg-background/20 focus-visible:ring-2 focus-visible:ring-current/45 active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-50",
+        "motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
+        className,
+      ].join(" ")}
+      disabled={resolvedDisabled}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) setFlipped(!flipped);
+      }}
+      type={type}
+    >
+      {children ?? (
+        <svg
+          aria-hidden="true"
+          className="size-4"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path d="M20 7v5h-5" />
+          <path d="M4 17v-5h5" />
+          <path d="M6.1 9a7 7 0 0 1 11.8-2L20 12" />
+          <path d="m4 12 2.1 5a7 7 0 0 0 11.8-2" />
+        </svg>
+      )}
+    </button>
+  );
+}
+`;
+
 const inputSource = `import type { InputHTMLAttributes } from "react";
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
@@ -4382,6 +4556,44 @@ export const registry = [
         "Set interactive when the card represents a clickable target.",
       ],
       avoid: ["Do not nest too many cards.", "Do not use cards as random decoration."],
+    },
+  },
+  {
+    name: "flippable-card",
+    title: "Flippable Card",
+    description:
+      "A two-sided card with controlled state, an accessible flip trigger, and reduced-motion handling.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [
+      {
+        path: "flippable-card.tsx",
+        content: flippableCardSource,
+        target: "ui/flippable-card.tsx",
+      },
+    ],
+    metadata: {
+      purpose:
+        "Reveals secondary card details on a distinct back face without leaving the current context.",
+      slots: ["root", "inner", "front", "back", "trigger"],
+      accessibility: [
+        "The flip action is a native button with a state-specific accessible name and aria-pressed state.",
+        "The hidden face is aria-hidden and inert so its controls cannot receive focus.",
+        "Reduced-motion users receive an immediate state change without the rotation transition.",
+        "Front and back content should communicate the same card identity.",
+      ],
+      usage: [
+        "Compose exactly one FlippableCardFront and one FlippableCardBack inside the root.",
+        "Place FlippableCardTrigger on each face so users can move in both directions.",
+        "Use flipped and onFlippedChange when application state must control the visible face.",
+        "Constrain the root width in layout; the built-in aspect ratio follows a wallet-card proportion.",
+      ],
+      avoid: [
+        "Do not hide required actions or critical information exclusively on the back.",
+        "Do not flip automatically or use the motion as decoration.",
+        "Do not place a second nested flippable card inside either face.",
+      ],
     },
   },
   {

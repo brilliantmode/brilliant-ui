@@ -37,6 +37,12 @@ import {
   FileUploadTitle,
 } from "@brilliantmode/ui/file-upload";
 import {
+  FlippableCard,
+  FlippableCardBack,
+  FlippableCardFront,
+  FlippableCardTrigger,
+} from "@brilliantmode/ui/flippable-card";
+import {
   Footer,
   FooterBottom,
   FooterBrand,
@@ -196,6 +202,7 @@ const navGroups = [
       ["Button Group", "/components/button-group"],
       ["Badge", "/components/badge"],
       ["Card", "/components/card"],
+      ["Flippable Card", "/components/flippable-card"],
       ["Text", "/components/text"],
       ["Avatar", "/components/avatar"],
       ["Aspect Ratio", "/components/aspect-ratio"],
@@ -3558,6 +3565,42 @@ function ComponentMiniPreview({ name }: { name: string }) {
           </div>
         ))}
       </div>
+    );
+  }
+
+  if (name === "flippable-card") {
+    return (
+      <FlippableCard className="mx-auto max-w-sm">
+        <FlippableCardFront>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.16em] opacity-75">
+                Brilliant Pass
+              </p>
+              <p className="mt-1 text-lg font-semibold">Design Systems Summit</p>
+            </div>
+            <FlippableCardTrigger />
+          </div>
+          <div className="mt-auto">
+            <p className="text-xs opacity-70">Attendee</p>
+            <p className="mt-1 font-medium">Alex Rivera</p>
+          </div>
+        </FlippableCardFront>
+        <FlippableCardBack>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                Pass details
+              </p>
+              <p className="mt-1 text-base font-semibold">August 28 · Hall A</p>
+            </div>
+            <FlippableCardTrigger />
+          </div>
+          <div className="mt-auto rounded-[0.375rem] bg-muted p-3 text-sm">
+            Present this pass at registration.
+          </div>
+        </FlippableCardBack>
+      </FlippableCard>
     );
   }
 

@@ -99,6 +99,26 @@ describe("registry", () => {
     expect(photoSource).toContain("export function PhotoTint");
   });
 
+  it("ships an accessible controlled or uncontrolled flippable card", () => {
+    const item = findRegistryItem("flippable-card");
+    const source = item?.files[0]?.content;
+
+    expect(item?.kind).toBe("component");
+    expect(source).toContain("export function FlippableCard(");
+    expect(source).toContain("export function FlippableCardFront");
+    expect(source).toContain("export function FlippableCardBack");
+    expect(source).toContain("export function FlippableCardTrigger");
+    expect(source).toContain("defaultFlipped?: boolean");
+    expect(source).toContain("onFlippedChange?: (flipped: boolean) => void");
+    expect(source).toContain("[perspective:1200px]");
+    expect(source).toContain("[backface-visibility:hidden]");
+    expect(source).toContain("[transform:rotateY(180deg)]");
+    expect(source).toContain("motion-reduce:transition-none");
+    expect(source).toContain("aria-pressed={flipped}");
+    expect(source).toContain("inert={flipped || undefined}");
+    expect(source).toContain("inert={!flipped || undefined}");
+  });
+
   it("keeps avatar images circular without clipping presence status", () => {
     const avatarSource = findRegistryItem("avatar")?.files[0]?.content;
 
