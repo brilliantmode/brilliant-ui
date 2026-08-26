@@ -3570,7 +3570,12 @@ function ComponentMiniPreview({ name }: { name: string }) {
 
   if (name === "flippable-card") {
     return (
-      <FlippableCard className="mx-auto max-w-sm">
+      <FlippableCard
+        backTriggerIcon={<span aria-hidden="true">←</span>}
+        className="mx-auto max-w-sm"
+        direction="left"
+        frontTriggerIcon={<span aria-hidden="true">ⓘ</span>}
+      >
         <FlippableCardFront>
           <div className="flex items-start justify-between gap-4">
             <div>

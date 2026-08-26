@@ -160,7 +160,12 @@ export function Example() {
 
 export function Example() {
   return (
-    <FlippableCard className="max-w-sm">
+    <FlippableCard
+      backTriggerIcon={<span aria-hidden="true">←</span>}
+      className="max-w-sm"
+      direction="left"
+      frontTriggerIcon={<span aria-hidden="true">ⓘ</span>}
+    >
       <FlippableCardFront>
         <div className="flex items-start justify-between gap-4">
           <div>

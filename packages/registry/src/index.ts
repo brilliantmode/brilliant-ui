@@ -746,8 +746,11 @@ import type {
 } from "react";
 
 interface FlippableCardContextValue {
+  backTriggerIcon?: ReactNode;
+  direction: FlippableCardDirection;
   disabled: boolean;
   flipped: boolean;
+  frontTriggerIcon?: ReactNode;
   setFlipped: (flipped: boolean) => void;
 }
 
@@ -762,18 +765,33 @@ function useFlippableCard() {
 }
 
 export interface FlippableCardProps extends HTMLAttributes<HTMLDivElement> {
+  backTriggerIcon?: ReactNode;
   defaultFlipped?: boolean;
+  direction?: FlippableCardDirection;
   disabled?: boolean;
   flipped?: boolean;
+  frontTriggerIcon?: ReactNode;
   onFlippedChange?: (flipped: boolean) => void;
 }
 
+const flipRotations = {
+  down: "[transform:rotateX(-180deg)]",
+  left: "[transform:rotateY(-180deg)]",
+  right: "[transform:rotateY(180deg)]",
+  up: "[transform:rotateX(180deg)]",
+} as const;
+
+export type FlippableCardDirection = keyof typeof flipRotations;
+
 export function FlippableCard({
+  backTriggerIcon,
   children,
   className = "",
   defaultFlipped = false,
+  direction = "left",
   disabled = false,
   flipped: controlledFlipped,
+  frontTriggerIcon,
   onFlippedChange,
   ...props
 }: FlippableCardProps) {
@@ -781,15 +799,26 @@ export function FlippableCard({
   const flipped = controlledFlipped ?? internalFlipped;
   const context = useMemo<FlippableCardContextValue>(
     () => ({
+      backTriggerIcon,
+      direction,
       disabled,
       flipped,
+      frontTriggerIcon,
       setFlipped: (nextFlipped) => {
         if (disabled || nextFlipped === flipped) return;
         if (controlledFlipped === undefined) setInternalFlipped(nextFlipped);
         onFlippedChange?.(nextFlipped);
       },
     }),
-    [controlledFlipped, disabled, flipped, onFlippedChange],
+    [
+      backTriggerIcon,
+      controlledFlipped,
+      direction,
+      disabled,
+      flipped,
+      frontTriggerIcon,
+      onFlippedChange,
+    ],
   );
 
   return (
@@ -797,14 +826,15 @@ export function FlippableCard({
       <div
         {...props}
         className={["relative w-full [perspective:1200px]", className].join(" ")}
+        data-direction={direction}
         data-disabled={disabled ? "true" : undefined}
         data-flipped={flipped ? "true" : "false"}
       >
         <div
           className={[
             "grid aspect-[1.586] w-full [transform-style:preserve-3d]",
-            "motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
-            flipped ? "[transform:rotateY(180deg)]" : "",
+            "motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+            flipped ? flipRotations[direction] : "",
           ].join(" ")}
         >
           {children}
@@ -838,14 +868,15 @@ export function FlippableCardBack({
   className = "",
   ...props
 }: HTMLAttributes<HTMLDivElement>) {
-  const { flipped } = useFlippableCard();
+  const { direction, flipped } = useFlippableCard();
 
   return (
     <div
       {...props}
       aria-hidden={!flipped || undefined}
       className={[
-        "col-start-1 row-start-1 flex min-h-0 flex-col overflow-hidden rounded-[0.875rem] border-hairline border-border bg-surface p-5 text-foreground shadow-md [backface-visibility:hidden] [transform:rotateY(180deg)]",
+        "col-start-1 row-start-1 flex min-h-0 flex-col overflow-hidden rounded-[0.875rem] border-hairline border-border bg-surface p-5 text-foreground shadow-md [backface-visibility:hidden]",
+        flipRotations[direction],
         className,
       ].join(" ")}
       data-side="back"
@@ -856,6 +887,7 @@ export function FlippableCardBack({
 
 export interface FlippableCardTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
+  icon?: ReactNode;
 }
 
 export function FlippableCardTrigger({
@@ -863,12 +895,15 @@ export function FlippableCardTrigger({
   children,
   className = "",
   disabled: triggerDisabled,
+  icon,
   onClick,
   type = "button",
   ...props
 }: FlippableCardTriggerProps) {
-  const { disabled, flipped, setFlipped } = useFlippableCard();
+  const { backTriggerIcon, disabled, flipped, frontTriggerIcon, setFlipped } =
+    useFlippableCard();
   const resolvedDisabled = disabled || triggerDisabled;
+  const resolvedIcon = icon ?? (flipped ? backTriggerIcon : frontTriggerIcon);
 
   return (
     <button
@@ -888,7 +923,7 @@ export function FlippableCardTrigger({
       }}
       type={type}
     >
-      {children ?? (
+      {children ?? resolvedIcon ?? (
         <svg
           aria-hidden="true"
           className="size-4"
@@ -4586,6 +4621,8 @@ export const registry = [
       usage: [
         "Compose exactly one FlippableCardFront and one FlippableCardBack inside the root.",
         "Place FlippableCardTrigger on each face so users can move in both directions.",
+        "Use frontTriggerIcon and backTriggerIcon for face-specific defaults, or icon on an individual trigger for a local override.",
+        "Set direction to left, right, up, or down to match the card's placement and surrounding interaction model.",
         "Use flipped and onFlippedChange when application state must control the visible face.",
         "Constrain the root width in layout; the built-in aspect ratio follows a wallet-card proportion.",
       ],
