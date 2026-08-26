@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   Button,
+  CardExpand,
+  CardFlip,
   cn,
   componentStates,
   dataStateAttributes,
@@ -14,6 +16,8 @@ import {
 describe("component infrastructure", () => {
   it("exports protected UI components from the package root", () => {
     expect(typeof Button).toBe("function");
+    expect(typeof CardFlip).toBe("function");
+    expect(typeof CardExpand).toBe("function");
   });
 
   it("merges conditional classes and resolves Tailwind conflicts", () => {

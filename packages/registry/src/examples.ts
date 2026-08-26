@@ -151,52 +151,88 @@ export function Example() {
     </div>
   );
 }`,
-  "flippable-card": `import {
-  FlippableCard,
-  FlippableCardBack,
-  FlippableCardFront,
-  FlippableCardTrigger,
-} from "@brilliantmode/ui/flippable-card";
+  "card-flip": `import {
+  CardFlip,
+  CardFlipBack,
+  CardFlipFront,
+  CardFlipTrigger,
+} from "@brilliantmode/ui/card-flip";
+import { Card } from "@brilliantmode/ui/card";
 
 export function Example() {
   return (
-    <FlippableCard
-      backTriggerIcon={<span aria-hidden="true">←</span>}
-      className="max-w-sm"
-      direction="left"
-      frontTriggerIcon={<span aria-hidden="true">ⓘ</span>}
-      speed="medium"
-    >
-      <FlippableCardFront>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.16em] opacity-75">
-              Brilliant Pass
-            </p>
-            <p className="mt-1 text-lg font-semibold">Design Systems Summit</p>
+    <CardFlip className="max-w-sm" innerClassName="min-h-56" speed="medium">
+      <CardFlipFront>
+        <Card className="flex h-full flex-col rounded-[0.875rem] p-5" variant="accent">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Event pass</p>
+              <p className="mt-2 text-xl font-semibold tracking-tight">Design Systems Summit</p>
+            </div>
+            <CardFlipTrigger className="size-9 rounded-full border border-border bg-background shadow-sm hover:bg-muted" />
           </div>
-          <FlippableCardTrigger />
-        </div>
-        <div className="mt-auto">
-          <p className="text-xs opacity-70">Attendee</p>
-          <p className="mt-1 font-medium">Alex Rivera</p>
-        </div>
-      </FlippableCardFront>
-      <FlippableCardBack>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-              Pass details
-            </p>
-            <p className="mt-1 text-base font-semibold">August 28 · Hall A</p>
+          <div className="mt-auto grid grid-cols-2 gap-4 pt-8">
+            <div><p className="text-xs text-muted-foreground">Attendee</p><p className="mt-1 font-semibold">Alex Rivera</p></div>
+            <div><p className="text-xs text-muted-foreground">Access</p><p className="mt-1 font-semibold">All areas</p></div>
           </div>
-          <FlippableCardTrigger />
+        </Card>
+      </CardFlipFront>
+      <CardFlipBack>
+        <Card className="flex h-full flex-col rounded-[0.875rem] p-5" variant="elevated">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Pass details</p>
+              <p className="mt-2 text-lg font-semibold">August 28 · Hall A</p>
+            </div>
+            <CardFlipTrigger className="size-9 rounded-full border border-border bg-background shadow-sm hover:bg-muted" />
+          </div>
+          <div className="mt-auto rounded-[0.5rem] bg-muted p-3 text-sm text-muted-foreground">
+            Present this pass at registration.
+          </div>
+        </Card>
+      </CardFlipBack>
+    </CardFlip>
+  );
+}`,
+  "card-expand": `import {
+  CardExpand,
+  CardExpandContent,
+  CardExpandTrigger,
+} from "@brilliantmode/ui/card-expand";
+import { Card } from "@brilliantmode/ui/card";
+
+export function Example() {
+  return (
+    <CardExpand className="max-w-sm" speed="medium">
+      <Card
+        className="relative cursor-pointer overflow-hidden rounded-[0.875rem] group-data-[expanded=true]/card-expand:border-primary/25 group-data-[expanded=true]/card-expand:shadow-md"
+        interactive
+        variant="accent"
+      >
+        <CardExpandTrigger className="absolute inset-x-0 top-0 z-10 h-32 items-start justify-end p-4 text-muted-foreground focus-visible:ring-inset [&>span]:size-9 [&>span]:rounded-full [&>span]:border [&>span]:border-border/80 [&>span]:bg-background/80 [&>span]:shadow-sm [&>span]:backdrop-blur hover:[&>span]:bg-background active:[&>span]:scale-[0.94]" />
+        <div className="min-h-32 p-5 pr-16">
+          <div className="flex items-start gap-3">
+            <span className="grid size-11 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">SF</span>
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Boarding pass</p>
+              <p className="mt-1 text-lg font-semibold tracking-tight">San Francisco</p>
+            </div>
+          </div>
+          <div className="mt-7 grid grid-cols-3 gap-4">
+            <div><p className="text-xs text-muted-foreground">Gate</p><p className="mt-1 font-semibold">B12</p></div>
+            <div><p className="text-xs text-muted-foreground">Boards</p><p className="mt-1 font-semibold">8:40</p></div>
+            <div><p className="text-xs text-muted-foreground">Seat</p><p className="mt-1 font-semibold">14A</p></div>
+          </div>
         </div>
-        <div className="mt-auto rounded-[0.375rem] bg-muted p-3 text-sm">
-          Present this pass at registration.
-        </div>
-      </FlippableCardBack>
-    </FlippableCard>
+        <CardExpandContent innerClassName="mx-5 border-t border-border pb-5 pt-4 text-sm text-muted-foreground">
+          <div className="grid gap-3">
+            <div className="flex justify-between gap-4"><span>Flight</span><strong className="text-foreground">BU 204</strong></div>
+            <div className="flex justify-between gap-4"><span>Terminal</span><strong className="text-foreground">2</strong></div>
+            <div className="flex justify-between gap-4"><span>Passenger</span><strong className="text-foreground">Alex Rivera</strong></div>
+          </div>
+        </CardExpandContent>
+      </Card>
+    </CardExpand>
   );
 }`,
   text: `import { Text } from "@brilliantmode/ui/text";

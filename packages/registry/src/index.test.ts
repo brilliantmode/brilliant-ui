@@ -99,10 +99,11 @@ describe("registry", () => {
     expect(photoSource).toContain("export function PhotoTint");
   });
 
-  it("ships an accessible controlled or uncontrolled flippable card", () => {
-    const item = findRegistryItem("flippable-card");
+  it("ships one composable Card Flip primitive", () => {
+    const item = findRegistryItem("card-flip");
     const source = item?.files[0]?.content;
 
+    expect(findRegistryItem("flippable-card")).toBeUndefined();
     expect(item?.kind).toBe("component");
     expect(item?.metadata.slots).toEqual([
       "root",
@@ -112,31 +113,64 @@ describe("registry", () => {
       "trigger",
       "trigger-icon",
     ]);
-    expect(source).toContain("export function FlippableCard(");
-    expect(source).toContain("export function FlippableCardFront");
-    expect(source).toContain("export function FlippableCardBack");
-    expect(source).toContain("export function FlippableCardTrigger");
+    expect(source).toContain("export function CardFlip(");
+    expect(source).toContain("export function CardFlipFront");
+    expect(source).toContain("export function CardFlipBack");
+    expect(source).toContain("export function CardFlipTrigger");
     expect(source).toContain("defaultFlipped?: boolean");
-    expect(source).toContain("direction?: FlippableCardDirection");
+    expect(source).toContain("direction?: CardFlipDirection");
+    expect(source).toContain("innerClassName?: string");
     expect(source).toContain("frontTriggerIcon?: ReactNode");
     expect(source).toContain("backTriggerIcon?: ReactNode");
     expect(source).toContain("icon?: ReactNode");
-    expect(source).toContain("speed?: FlippableCardSpeed");
+    expect(source).toContain("speed?: CardFlipSpeed");
     expect(source).toContain('speed = "medium"');
     expect(source).toContain("onFlippedChange?: (flipped: boolean) => void");
     expect(source).toContain("[perspective:1200px]");
     expect(source).toContain("[backface-visibility:hidden]");
+    expect(source).toContain("[-webkit-backface-visibility:hidden]");
+    expect(source).toContain("isolate col-start-1 row-start-1");
     expect(source).toContain('left: "[transform:rotateY(-180deg)]"');
-    expect(source).toContain("[transform:rotateY(180deg)]");
-    expect(source).toContain("[transform:rotateX(-180deg)]");
-    expect(source).toContain("[transform:rotateX(180deg)]");
-    expect(source).toContain("duration-[var(--brilliant-duration-fast)]");
     expect(source).toContain("duration-[var(--brilliant-duration-normal)]");
-    expect(source).toContain("duration-[var(--brilliant-duration-slow)]");
     expect(source).toContain("motion-reduce:transition-none");
     expect(source).toContain("aria-pressed={flipped}");
     expect(source).toContain("inert={flipped || undefined}");
     expect(source).toContain("inert={!flipped || undefined}");
+  });
+
+  it("ships one composable whole-surface Card Expand primitive", () => {
+    const item = findRegistryItem("card-expand");
+    const source = item?.files[0]?.content;
+
+    expect(findRegistryItem("expandable-card")).toBeUndefined();
+    expect(item?.registryDependencies).toEqual([]);
+    expect(item?.metadata.slots).toEqual([
+      "root",
+      "trigger",
+      "trigger-icon",
+      "content",
+      "content-inner",
+    ]);
+    expect(source).not.toContain('import { Card } from "./card"');
+    expect(source).toContain("export function CardExpand(");
+    expect(source).toContain("export function CardExpandTrigger");
+    expect(source).toContain("export function CardExpandContent");
+    expect(source).toContain("defaultExpanded?: boolean");
+    expect(source).toContain("expanded?: boolean");
+    expect(source).toContain("onExpandedChange?: (expanded: boolean) => void");
+    expect(source).toContain("speed?: CardExpandSpeed");
+    expect(source).toContain('speed = "medium"');
+    expect(source).not.toContain("target.closest(");
+    expect(source).toContain("<button");
+    expect(source).toContain("setExpanded(!expanded)");
+    expect(source).toContain("aria-controls={contentId}");
+    expect(source).toContain("aria-expanded={expanded}");
+    expect(source).toContain("grid-rows-[0fr]");
+    expect(source).toContain("inert={!expanded || undefined}");
+    expect(source).toContain("motion-reduce:transition-none");
+    expect(resolveRegistryDependencies(["card-expand"]).map((item) => item.name)).toEqual([
+      "card-expand",
+    ]);
   });
 
   it("keeps avatar images circular without clipping presence status", () => {

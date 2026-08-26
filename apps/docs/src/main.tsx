@@ -6,6 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@brilliantmode/ui/card";
+import { CardExpand, CardExpandContent, CardExpandTrigger } from "@brilliantmode/ui/card-expand";
+import {
+  CardFlip,
+  CardFlipBack,
+  CardFlipFront,
+  CardFlipTrigger,
+} from "@brilliantmode/ui/card-flip";
 import {
   type ChartConfig,
   ChartContainer,
@@ -36,12 +43,6 @@ import {
   FileUploadList,
   FileUploadTitle,
 } from "@brilliantmode/ui/file-upload";
-import {
-  FlippableCard,
-  FlippableCardBack,
-  FlippableCardFront,
-  FlippableCardTrigger,
-} from "@brilliantmode/ui/flippable-card";
 import {
   Footer,
   FooterBottom,
@@ -202,7 +203,8 @@ const navGroups = [
       ["Button Group", "/components/button-group"],
       ["Badge", "/components/badge"],
       ["Card", "/components/card"],
-      ["Flippable Card", "/components/flippable-card"],
+      ["Card Flip", "/components/card-flip"],
+      ["Card Expand", "/components/card-expand"],
       ["Text", "/components/text"],
       ["Avatar", "/components/avatar"],
       ["Aspect Ratio", "/components/aspect-ratio"],
@@ -3381,6 +3383,199 @@ function ApplicationShellKioskPreview({
   );
 }
 
+const cardFlipExpandCompositionUsage = `import { useState } from "react";
+import { Card } from "@brilliantmode/ui/card";
+import {
+  CardExpand,
+  CardExpandContent,
+  CardExpandTrigger,
+} from "@brilliantmode/ui/card-expand";
+import {
+  CardFlip,
+  CardFlipBack,
+  CardFlipFront,
+  CardFlipTrigger,
+} from "@brilliantmode/ui/card-flip";
+
+export function FlipAndExpandExample() {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <CardFlip className="max-w-sm">
+      <CardFlipFront>
+        <CardExpand expanded={expanded} onExpandedChange={setExpanded}>
+          <Card className="relative overflow-hidden">
+            <CardExpandTrigger className="absolute inset-x-0 top-0 h-44" />
+            <CardFlipTrigger className="absolute right-4 top-4 z-10" />
+            <div className="min-h-44 p-5">Front summary</div>
+            <CardExpandContent innerClassName="border-t p-5">
+              Front details
+            </CardExpandContent>
+          </Card>
+        </CardExpand>
+      </CardFlipFront>
+      <CardFlipBack>
+        <CardExpand expanded={expanded} onExpandedChange={setExpanded}>
+          <Card className="relative overflow-hidden">
+            <CardExpandTrigger className="absolute inset-x-0 top-0 h-44" />
+            <CardFlipTrigger className="absolute right-4 top-4 z-10" />
+            <div className="min-h-44 p-5">Back summary</div>
+            <CardExpandContent innerClassName="border-t p-5">
+              Back details
+            </CardExpandContent>
+          </Card>
+        </CardExpand>
+      </CardFlipBack>
+    </CardFlip>
+  );
+}`;
+
+function CardFlipPreview() {
+  return (
+    <CardFlip className="mx-auto max-w-sm" innerClassName="min-h-56" speed="medium">
+      <CardFlipFront>
+        <Card className="flex h-full flex-col rounded-[0.875rem] p-5" variant="accent">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                Event pass
+              </p>
+              <p className="mt-2 text-xl font-semibold tracking-tight">Design Systems Summit</p>
+            </div>
+            <CardFlipTrigger className="size-9 rounded-full border border-border bg-background shadow-sm hover:bg-muted" />
+          </div>
+          <div className="mt-auto grid grid-cols-2 gap-4 pt-8">
+            <div>
+              <p className="text-xs text-muted-foreground">Attendee</p>
+              <p className="mt-1 font-semibold">Alex Rivera</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Access</p>
+              <p className="mt-1 font-semibold">All areas</p>
+            </div>
+          </div>
+        </Card>
+      </CardFlipFront>
+      <CardFlipBack>
+        <Card className="flex h-full flex-col rounded-[0.875rem] p-5" variant="elevated">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                Pass details
+              </p>
+              <p className="mt-2 text-lg font-semibold">August 28 · Hall A</p>
+            </div>
+            <CardFlipTrigger className="size-9 rounded-full border border-border bg-background shadow-sm hover:bg-muted" />
+          </div>
+          <div className="mt-auto rounded-[0.5rem] bg-muted p-3 text-sm text-muted-foreground">
+            Present this pass at registration.
+          </div>
+        </Card>
+      </CardFlipBack>
+    </CardFlip>
+  );
+}
+
+function ExpandableCardFlipPreview() {
+  const [expanded, setExpanded] = useState(false);
+  const expandTriggerClassName =
+    "absolute inset-x-0 top-0 z-10 h-44 items-end justify-end p-4 text-muted-foreground focus-visible:ring-inset [&>span]:size-8 [&>span]:rounded-full [&>span]:border [&>span]:border-border/80 [&>span]:bg-background [&>span]:shadow-sm hover:[&>span]:bg-muted active:[&>span]:scale-[0.94]";
+  const flipTriggerClassName =
+    "absolute right-4 top-4 z-20 size-8 rounded-full border border-border bg-background shadow-sm hover:bg-muted";
+
+  return (
+    <CardFlip className="mx-auto max-w-sm" speed="medium">
+      <CardFlipFront>
+        <CardExpand
+          className="h-full"
+          expanded={expanded}
+          onExpandedChange={setExpanded}
+          speed="medium"
+        >
+          <Card
+            className="relative flex h-full flex-col overflow-hidden rounded-[0.875rem]"
+            interactive
+            variant="accent"
+          >
+            <CardExpandTrigger className={expandTriggerClassName} />
+            <CardFlipTrigger className={flipTriggerClassName} />
+            <div className="min-h-44 p-5 pr-16">
+              <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                Event pass
+              </p>
+              <p className="mt-2 text-xl font-semibold tracking-tight">Design Systems Summit</p>
+              <div className="mt-7 grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs text-muted-foreground">Attendee</p>
+                  <p className="mt-1 font-semibold">Alex Rivera</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Access</p>
+                  <p className="mt-1 font-semibold">All areas</p>
+                </div>
+              </div>
+            </div>
+            <CardExpandContent innerClassName="mx-5 border-t border-border pb-5 pt-4 text-sm">
+              <div className="grid gap-3">
+                {[
+                  ["Venue", "Hall A"],
+                  ["Doors open", "8:30 AM"],
+                  ["Pass ID", "DS-2048"],
+                ].map(([label, value]) => (
+                  <div className="flex justify-between gap-4" key={label}>
+                    <span className="text-muted-foreground">{label}</span>
+                    <strong>{value}</strong>
+                  </div>
+                ))}
+              </div>
+            </CardExpandContent>
+          </Card>
+        </CardExpand>
+      </CardFlipFront>
+      <CardFlipBack>
+        <CardExpand
+          className="h-full"
+          expanded={expanded}
+          onExpandedChange={setExpanded}
+          speed="medium"
+        >
+          <Card
+            className="relative flex h-full flex-col overflow-hidden rounded-[0.875rem]"
+            interactive
+            variant="elevated"
+          >
+            <CardExpandTrigger className={expandTriggerClassName} />
+            <CardFlipTrigger className={flipTriggerClassName} />
+            <div className="min-h-44 p-5 pr-16">
+              <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                Pass details
+              </p>
+              <p className="mt-2 text-xl font-semibold tracking-tight">August 28 · Hall A</p>
+              <div className="mt-7 rounded-[0.5rem] bg-muted p-3 text-sm text-muted-foreground">
+                Present this pass at registration.
+              </div>
+            </div>
+            <CardExpandContent innerClassName="mx-5 border-t border-border pb-5 pt-4 text-sm">
+              <div className="grid gap-3">
+                {[
+                  ["Entrance", "North lobby"],
+                  ["Help desk", "Level 1"],
+                  ["Valid until", "6:00 PM"],
+                ].map(([label, value]) => (
+                  <div className="flex justify-between gap-4" key={label}>
+                    <span className="text-muted-foreground">{label}</span>
+                    <strong>{value}</strong>
+                  </div>
+                ))}
+              </div>
+            </CardExpandContent>
+          </Card>
+        </CardExpand>
+      </CardFlipBack>
+    </CardFlip>
+  );
+}
+
 function ComponentMiniPreview({ name }: { name: string }) {
   const [applicationShellCollapsed, setApplicationShellCollapsed] = useState(false);
   const [applicationShellNotice, setApplicationShellNotice] = useState("Ready");
@@ -3568,45 +3763,60 @@ function ComponentMiniPreview({ name }: { name: string }) {
     );
   }
 
-  if (name === "flippable-card") {
+  if (name === "card-flip") {
+    return <CardFlipPreview />;
+  }
+
+  if (name === "card-expand") {
     return (
-      <FlippableCard
-        backTriggerIcon={<span aria-hidden="true">←</span>}
-        className="mx-auto max-w-sm"
-        direction="left"
-        frontTriggerIcon={<span aria-hidden="true">ⓘ</span>}
-        speed="medium"
-      >
-        <FlippableCardFront>
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[0.16em] opacity-75">
-                Brilliant Pass
-              </p>
-              <p className="mt-1 text-lg font-semibold">Design Systems Summit</p>
+      <CardExpand className="mx-auto max-w-sm">
+        <Card
+          className="relative cursor-pointer overflow-hidden rounded-[0.875rem] group-data-[expanded=true]/card-expand:border-primary/25 group-data-[expanded=true]/card-expand:shadow-md"
+          interactive
+          variant="accent"
+        >
+          <CardExpandTrigger className="absolute inset-x-0 top-0 z-10 h-32 items-start justify-end p-4 text-muted-foreground focus-visible:ring-inset [&>span]:size-9 [&>span]:rounded-full [&>span]:border [&>span]:border-border/80 [&>span]:bg-background/80 [&>span]:shadow-sm [&>span]:backdrop-blur hover:[&>span]:bg-background active:[&>span]:scale-[0.94]" />
+          <div className="min-h-32 p-5 pr-16">
+            <div className="flex items-start gap-3">
+              <span className="grid size-11 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                SF
+              </span>
+              <div>
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                  Boarding pass
+                </p>
+                <p className="mt-1 text-lg font-semibold tracking-tight">San Francisco</p>
+              </div>
             </div>
-            <FlippableCardTrigger />
-          </div>
-          <div className="mt-auto">
-            <p className="text-xs opacity-70">Attendee</p>
-            <p className="mt-1 font-medium">Alex Rivera</p>
-          </div>
-        </FlippableCardFront>
-        <FlippableCardBack>
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                Pass details
-              </p>
-              <p className="mt-1 text-base font-semibold">August 28 · Hall A</p>
+            <div className="mt-7 grid grid-cols-3 gap-4">
+              {[
+                ["Gate", "B12"],
+                ["Boards", "8:40"],
+                ["Seat", "14A"],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <p className="text-xs text-muted-foreground">{label}</p>
+                  <p className="mt-1 font-semibold">{value}</p>
+                </div>
+              ))}
             </div>
-            <FlippableCardTrigger />
           </div>
-          <div className="mt-auto rounded-[0.375rem] bg-muted p-3 text-sm">
-            Present this pass at registration.
-          </div>
-        </FlippableCardBack>
-      </FlippableCard>
+          <CardExpandContent innerClassName="mx-5 border-t border-border pb-5 pt-4 text-sm text-muted-foreground">
+            <div className="grid gap-3">
+              {[
+                ["Flight", "BU 204"],
+                ["Terminal", "2"],
+                ["Passenger", "Alex Rivera"],
+              ].map(([label, value]) => (
+                <div className="flex justify-between gap-4" key={label}>
+                  <span>{label}</span>
+                  <strong className="text-foreground">{value}</strong>
+                </div>
+              ))}
+            </div>
+          </CardExpandContent>
+        </Card>
+      </CardExpand>
     );
   }
 
@@ -6728,6 +6938,22 @@ import "@brilliantmode/ui/styles.css"`}</MiniTerminal>
                     <ExamplePanel code={usage}>
                       <ComponentMiniPreview name={item.name} />
                     </ExamplePanel>
+
+                    {item.name === "card-flip" ? (
+                      <div className="space-y-3 border-t border-border pt-6">
+                        <div>
+                          <h3 className="text-lg font-semibold">Flip + Expand composition</h3>
+                          <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+                            Compose CardExpand inside each face when the same card must support both
+                            behaviors. A shared controlled expansion state keeps both faces at the
+                            same height during a flip.
+                          </p>
+                        </div>
+                        <ExamplePanel code={cardFlipExpandCompositionUsage}>
+                          <ExpandableCardFlipPreview />
+                        </ExamplePanel>
+                      </div>
+                    ) : null}
 
                     {item.name === "chart" ? (
                       <div className="grid gap-8">

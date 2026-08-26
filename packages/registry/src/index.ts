@@ -736,7 +736,7 @@ export function CardFooter({ className = "", ...props }: HTMLAttributes<HTMLDivE
 }
 `;
 
-const flippableCardSource = `"use client";
+const cardFlipSource = `"use client";
 
 import { createContext, useContext, useMemo, useState } from "react";
 import type {
@@ -745,34 +745,35 @@ import type {
   ReactNode,
 } from "react";
 
-interface FlippableCardContextValue {
+interface CardFlipContextValue {
   backTriggerIcon?: ReactNode;
-  direction: FlippableCardDirection;
+  direction: CardFlipDirection;
   disabled: boolean;
   flipped: boolean;
   frontTriggerIcon?: ReactNode;
   setFlipped: (flipped: boolean) => void;
 }
 
-const FlippableCardContext = createContext<FlippableCardContextValue | null>(null);
+const CardFlipContext = createContext<CardFlipContextValue | null>(null);
 
-function useFlippableCard() {
-  const context = useContext(FlippableCardContext);
+function useCardFlip() {
+  const context = useContext(CardFlipContext);
   if (!context) {
-    throw new Error("Flippable Card parts must be rendered inside <FlippableCard>.");
+    throw new Error("CardFlip parts must be rendered inside <CardFlip>.");
   }
   return context;
 }
 
-export interface FlippableCardProps extends HTMLAttributes<HTMLDivElement> {
+export interface CardFlipProps extends HTMLAttributes<HTMLDivElement> {
   backTriggerIcon?: ReactNode;
   defaultFlipped?: boolean;
-  direction?: FlippableCardDirection;
+  direction?: CardFlipDirection;
   disabled?: boolean;
   flipped?: boolean;
   frontTriggerIcon?: ReactNode;
+  innerClassName?: string;
   onFlippedChange?: (flipped: boolean) => void;
-  speed?: FlippableCardSpeed;
+  speed?: CardFlipSpeed;
 }
 
 const flipRotations = {
@@ -782,7 +783,7 @@ const flipRotations = {
   up: "[transform:rotateX(180deg)]",
 } as const;
 
-export type FlippableCardDirection = keyof typeof flipRotations;
+export type CardFlipDirection = keyof typeof flipRotations;
 
 const flipSpeeds = {
   fast: "motion-safe:duration-[var(--brilliant-duration-fast)]",
@@ -790,9 +791,9 @@ const flipSpeeds = {
   slow: "motion-safe:duration-[var(--brilliant-duration-slow)]",
 } as const;
 
-export type FlippableCardSpeed = keyof typeof flipSpeeds;
+export type CardFlipSpeed = keyof typeof flipSpeeds;
 
-export function FlippableCard({
+export function CardFlip({
   backTriggerIcon,
   children,
   className = "",
@@ -801,13 +802,14 @@ export function FlippableCard({
   disabled = false,
   flipped: controlledFlipped,
   frontTriggerIcon,
+  innerClassName = "",
   onFlippedChange,
   speed = "medium",
   ...props
-}: FlippableCardProps) {
+}: CardFlipProps) {
   const [internalFlipped, setInternalFlipped] = useState(defaultFlipped);
   const flipped = controlledFlipped ?? internalFlipped;
-  const context = useMemo<FlippableCardContextValue>(
+  const context = useMemo<CardFlipContextValue>(
     () => ({
       backTriggerIcon,
       direction,
@@ -832,7 +834,7 @@ export function FlippableCard({
   );
 
   return (
-    <FlippableCardContext.Provider value={context}>
+    <CardFlipContext.Provider value={context}>
       <div
         {...props}
         className={["relative w-full [perspective:1200px]", className].join(" ")}
@@ -843,31 +845,33 @@ export function FlippableCard({
       >
         <div
           className={[
-            "grid aspect-[1.586] w-full [transform-style:preserve-3d]",
+            "grid w-full [transform-style:preserve-3d]",
             "motion-safe:transition-transform motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
             flipSpeeds[speed],
             flipped ? flipRotations[direction] : "",
+            innerClassName,
           ].join(" ")}
+          data-slot="inner"
         >
           {children}
         </div>
       </div>
-    </FlippableCardContext.Provider>
+    </CardFlipContext.Provider>
   );
 }
 
-export function FlippableCardFront({
+export function CardFlipFront({
   className = "",
   ...props
 }: HTMLAttributes<HTMLDivElement>) {
-  const { flipped } = useFlippableCard();
+  const { flipped } = useCardFlip();
 
   return (
     <div
       {...props}
       aria-hidden={flipped || undefined}
       className={[
-        "col-start-1 row-start-1 flex min-h-0 flex-col overflow-hidden rounded-[0.875rem] border-hairline border-primary/30 bg-primary p-5 text-primary-foreground shadow-md [backface-visibility:hidden]",
+        "isolate col-start-1 row-start-1 min-h-0 [-webkit-backface-visibility:hidden] [backface-visibility:hidden]",
         className,
       ].join(" ")}
       data-side="front"
@@ -876,18 +880,18 @@ export function FlippableCardFront({
   );
 }
 
-export function FlippableCardBack({
+export function CardFlipBack({
   className = "",
   ...props
 }: HTMLAttributes<HTMLDivElement>) {
-  const { direction, flipped } = useFlippableCard();
+  const { direction, flipped } = useCardFlip();
 
   return (
     <div
       {...props}
       aria-hidden={!flipped || undefined}
       className={[
-        "col-start-1 row-start-1 flex min-h-0 flex-col overflow-hidden rounded-[0.875rem] border-hairline border-border bg-surface p-5 text-foreground shadow-md [backface-visibility:hidden]",
+        "isolate col-start-1 row-start-1 min-h-0 [-webkit-backface-visibility:hidden] [backface-visibility:hidden]",
         flipRotations[direction],
         className,
       ].join(" ")}
@@ -897,12 +901,12 @@ export function FlippableCardBack({
   );
 }
 
-export interface FlippableCardTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface CardFlipTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
   icon?: ReactNode;
 }
 
-export function FlippableCardTrigger({
+export function CardFlipTrigger({
   "aria-label": ariaLabel,
   children,
   className = "",
@@ -911,9 +915,9 @@ export function FlippableCardTrigger({
   onClick,
   type = "button",
   ...props
-}: FlippableCardTriggerProps) {
+}: CardFlipTriggerProps) {
   const { backTriggerIcon, disabled, flipped, frontTriggerIcon, setFlipped } =
-    useFlippableCard();
+    useCardFlip();
   const resolvedDisabled = disabled || triggerDisabled;
   const resolvedIcon = icon ?? (flipped ? backTriggerIcon : frontTriggerIcon);
 
@@ -923,8 +927,8 @@ export function FlippableCardTrigger({
       aria-label={ariaLabel ?? (flipped ? "Show card front" : "Show card details")}
       aria-pressed={flipped}
       className={[
-        "inline-flex size-8 shrink-0 items-center justify-center rounded-full border-hairline border-current/25 bg-background/10 text-current outline-none",
-        "hover:bg-background/20 focus-visible:ring-2 focus-visible:ring-current/45 active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-50",
+        "inline-flex shrink-0 items-center justify-center outline-none",
+        "focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         "motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         className,
       ].join(" ")}
@@ -953,6 +957,217 @@ export function FlippableCardTrigger({
         </svg>
       )}
     </button>
+  );
+}
+`;
+
+const cardExpandSource = `"use client";
+
+import { createContext, useCallback, useContext, useId, useMemo, useState } from "react";
+import type {
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
+
+const expandSpeeds = {
+  fast: "motion-safe:duration-[var(--brilliant-duration-fast)]",
+  medium: "motion-safe:duration-[var(--brilliant-duration-normal)]",
+  slow: "motion-safe:duration-[var(--brilliant-duration-slow)]",
+} as const;
+
+export type CardExpandSpeed = keyof typeof expandSpeeds;
+
+interface CardExpandContextValue {
+  contentId: string;
+  disabled: boolean;
+  expanded: boolean;
+  setExpanded: (expanded: boolean) => void;
+  speed: CardExpandSpeed;
+}
+
+const CardExpandContext = createContext<CardExpandContextValue | null>(null);
+
+function useCardExpand() {
+  const context = useContext(CardExpandContext);
+  if (!context) {
+    throw new Error("CardExpand parts must be rendered inside <CardExpand>.");
+  }
+  return context;
+}
+
+export interface CardExpandProps extends HTMLAttributes<HTMLDivElement> {
+  contentId?: string;
+  defaultExpanded?: boolean;
+  disabled?: boolean;
+  expanded?: boolean;
+  onExpandedChange?: (expanded: boolean) => void;
+  speed?: CardExpandSpeed;
+}
+
+export function CardExpand({
+  children,
+  className = "",
+  contentId: providedContentId,
+  defaultExpanded = false,
+  disabled = false,
+  expanded: controlledExpanded,
+  onExpandedChange,
+  speed = "medium",
+  ...props
+}: CardExpandProps) {
+  const generatedContentId = useId();
+  const contentId = providedContentId ?? generatedContentId;
+  const [internalExpanded, setInternalExpanded] = useState(defaultExpanded);
+  const expanded = controlledExpanded ?? internalExpanded;
+  const setExpanded = useCallback(
+    (nextExpanded: boolean) => {
+      if (disabled || nextExpanded === expanded) return;
+      if (controlledExpanded === undefined) setInternalExpanded(nextExpanded);
+      onExpandedChange?.(nextExpanded);
+    },
+    [controlledExpanded, disabled, expanded, onExpandedChange],
+  );
+  const context = useMemo<CardExpandContextValue>(
+    () => ({ contentId, disabled, expanded, setExpanded, speed }),
+    [contentId, disabled, expanded, setExpanded, speed],
+  );
+
+  return (
+    <CardExpandContext.Provider value={context}>
+      <div
+        {...props}
+        className={["group/card-expand", className].join(" ")}
+        data-disabled={disabled ? "true" : undefined}
+        data-expanded={expanded ? "true" : "false"}
+        data-speed={speed}
+      >
+        {children}
+      </div>
+    </CardExpandContext.Provider>
+  );
+}
+
+export interface CardExpandTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  collapseLabel?: string;
+  expandLabel?: string;
+  icon?: ReactNode;
+}
+
+export function CardExpandTrigger({
+  "aria-label": ariaLabel,
+  children,
+  className = "",
+  collapseLabel = "Collapse card details",
+  disabled: triggerDisabled,
+  expandLabel = "Expand card details",
+  icon,
+  onClick,
+  type = "button",
+  ...props
+}: CardExpandTriggerProps) {
+  const { contentId, disabled, expanded, setExpanded, speed } = useCardExpand();
+
+  return (
+    <button
+      {...props}
+      aria-controls={contentId}
+      aria-expanded={expanded}
+      aria-label={
+        ariaLabel ??
+        (children === undefined || children === null
+          ? expanded
+            ? collapseLabel
+            : expandLabel
+          : undefined)
+      }
+      className={[
+        "inline-flex items-center justify-center outline-none",
+        "focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+        "motion-safe:transition-[background-color,box-shadow,transform] motion-reduce:transition-none",
+        expandSpeeds[speed],
+        className,
+      ].join(" ")}
+      disabled={disabled || triggerDisabled}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) setExpanded(!expanded);
+      }}
+      type={type}
+    >
+      {children}
+      <span
+        className={[
+          "inline-flex items-center justify-center",
+          "motion-safe:transition-transform motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          expandSpeeds[speed],
+          expanded ? "rotate-180" : "",
+        ].join(" ")}
+      >
+        {icon ?? (
+          <svg
+            aria-hidden="true"
+            className="size-4"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.8"
+            viewBox="0 0 24 24"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        )}
+      </span>
+    </button>
+  );
+}
+
+export interface CardExpandContentProps extends HTMLAttributes<HTMLDivElement> {
+  innerClassName?: string;
+}
+
+export function CardExpandContent({
+  children,
+  className = "",
+  innerClassName = "",
+  ...props
+}: CardExpandContentProps) {
+  const { contentId, expanded, speed } = useCardExpand();
+
+  return (
+    <div
+      {...props}
+      aria-hidden={!expanded || undefined}
+      className={[
+        "grid overflow-hidden",
+        "motion-safe:transition-[grid-template-rows,opacity] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+        expandSpeeds[speed],
+        expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+        className,
+      ].join(" ")}
+      data-state={expanded ? "open" : "closed"}
+      id={contentId}
+      inert={!expanded || undefined}
+    >
+      <div
+        className={[
+          "min-h-0 overflow-hidden",
+          "motion-safe:transition-transform motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+          expandSpeeds[speed],
+          expanded ? "translate-y-0" : "-translate-y-2",
+        ].join(" ")}
+      >
+        <div
+          className={[
+            "min-h-0",
+            innerClassName,
+          ].join(" ")}
+        >
+          {children}
+        </div>
+      </div>
+    </div>
   );
 }
 `;
@@ -4606,44 +4821,75 @@ export const registry = [
     },
   },
   {
-    name: "flippable-card",
-    title: "Flippable Card",
+    name: "card-flip",
+    title: "Card Flip",
     description:
-      "A two-sided card with controlled state, an accessible flip trigger, and reduced-motion handling.",
+      "An unstyled two-face behavior primitive with controlled state, direction, speed, and accessible triggers.",
     kind: "component",
     dependencies: [],
     registryDependencies: [],
-    files: [
-      {
-        path: "flippable-card.tsx",
-        content: flippableCardSource,
-        target: "ui/flippable-card.tsx",
-      },
-    ],
+    files: [{ path: "card-flip.tsx", content: cardFlipSource, target: "ui/card-flip.tsx" }],
     metadata: {
       purpose:
-        "Reveals secondary card details on a distinct back face without leaving the current context.",
+        "Adds an independently composable 3D front/back behavior to cards and other bounded surfaces.",
       slots: ["root", "inner", "front", "back", "trigger", "trigger-icon"],
       accessibility: [
         "The flip action is a native button with a state-specific accessible name and aria-pressed state.",
         "The hidden face is aria-hidden and inert so its controls cannot receive focus.",
         "Reduced-motion users receive an immediate state change without the rotation transition.",
-        "Front and back content should communicate the same card identity.",
       ],
       usage: [
-        "The inner slot is the framework-managed 3D transform layer; compose content through the front and back faces rather than targeting it directly.",
-        "Compose exactly one FlippableCardFront and one FlippableCardBack inside the root.",
-        "Place FlippableCardTrigger on each face so users can move in both directions.",
-        "Use frontTriggerIcon and backTriggerIcon for face-specific defaults, or icon on an individual trigger for a local override.",
-        "Set direction to left, right, up, or down to match the card's placement and surrounding interaction model.",
-        "Set speed to fast, medium, or slow; medium is the default.",
-        "Use flipped and onFlippedChange when application state must control the visible face.",
-        "Constrain the root width in layout; the built-in aspect ratio follows a wallet-card proportion.",
+        "Compose exactly one CardFlipFront and one CardFlipBack inside CardFlip.",
+        "Place CardFlipTrigger on both faces so either state has a way back.",
+        "Use innerClassName when the rotating surface needs an explicit aspect ratio or minimum height.",
+        "Use controlled flipped state when flip behavior must coordinate with other card behaviors.",
+        "Put Card or another visual surface inside each face; CardFlip does not impose surface styling.",
       ],
       avoid: [
         "Do not hide required actions or critical information exclusively on the back.",
         "Do not flip automatically or use the motion as decoration.",
-        "Do not place a second nested flippable card inside either face.",
+        "Do not nest another CardFlip inside either face.",
+      ],
+    },
+  },
+  {
+    name: "card-expand",
+    title: "Card Expand",
+    description:
+      "A whole-surface expansion primitive for composing compact cards that open into richer details.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [
+      {
+        path: "card-expand.tsx",
+        content: cardExpandSource,
+        target: "ui/card-expand.tsx",
+      },
+    ],
+    metadata: {
+      purpose:
+        "Adds coordinated whole-surface tap and accessible disclosure behavior to a Card or custom surface.",
+      slots: ["root", "trigger", "trigger-icon", "content", "content-inner"],
+      accessibility: [
+        "CardExpandTrigger is a native button with aria-expanded and aria-controls.",
+        "Stretch CardExpandTrigger over the compact summary to make the pass surface keyboard, pointer, and assistive-technology operable through one native control.",
+        "Collapsed details are aria-hidden and inert so their controls cannot receive focus.",
+        "Reduced-motion users receive an immediate state change without the expansion transition.",
+      ],
+      usage: [
+        "Place a Card or custom visual surface inside CardExpand; the primitive does not impose card styling.",
+        "Put CardExpandTrigger and CardExpandContent inside that surface.",
+        "Position CardExpandTrigger over the full compact summary for a Wallet-pass-style tap target; keep it above the summary only so expanded detail controls remain usable.",
+        "Use icon on CardExpandTrigger to replace the default chevron and customize expandLabel or collapseLabel when needed.",
+        "Set speed to fast, medium, or slow; medium is the default.",
+        "Use expanded and onExpandedChange to coordinate expansion with application state.",
+        "CardExpand can be placed inside either CardFlip face when both behaviors are needed.",
+      ],
+      avoid: [
+        "Do not recreate an accordion trigger row inside the card; the surface and compact indicator already control expansion.",
+        "Do not put essential identity or the primary card action only in the expanded content.",
+        "Do not create named combination components for flip and expand; compose the two primitives.",
       ],
     },
   },

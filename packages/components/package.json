@@ -64,7 +64,7 @@
   "scripts": {
     "generate": "tsx scripts/generate-components.ts",
     "prepack": "pnpm build",
-    "build": "pnpm generate && tsc -p tsconfig.build.json",
+    "build": "pnpm generate && tsx scripts/clean-dist.ts && tsc -p tsconfig.build.json",
     "lint": "pnpm generate && biome check src scripts",
     "test": "pnpm build && vitest run && pnpm test:mcp-package",
     "test:mcp-package": "tsx scripts/smoke-mcp-package.ts",

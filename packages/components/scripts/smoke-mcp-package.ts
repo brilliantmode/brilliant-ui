@@ -122,6 +122,38 @@ try {
       throw new Error("Packaged Application Shell did not expose the kiosk variation and footer.");
     }
 
+    const cardExpand = await client.callTool({
+      arguments: { name: "card-expand" },
+      name: "get_component",
+    });
+    const structuredCardExpand = cardExpand.structuredContent as
+      | { apiDeclarations?: string; found?: boolean; usageExample?: string }
+      | undefined;
+    if (
+      !structuredCardExpand?.found ||
+      !structuredCardExpand.apiDeclarations?.includes("onExpandedChange") ||
+      !structuredCardExpand.usageExample?.includes("<Card") ||
+      !structuredCardExpand.usageExample.includes("<CardExpandTrigger")
+    ) {
+      throw new Error("Packaged Card Expand did not expose state and Card composition.");
+    }
+
+    const cardFlip = await client.callTool({
+      arguments: { name: "card-flip" },
+      name: "get_component",
+    });
+    const structuredCardFlip = cardFlip.structuredContent as
+      | { apiDeclarations?: string; found?: boolean; usageExample?: string }
+      | undefined;
+    if (
+      !structuredCardFlip?.found ||
+      !structuredCardFlip.apiDeclarations?.includes("onFlippedChange") ||
+      !structuredCardFlip.usageExample?.includes("<Card") ||
+      !structuredCardFlip.usageExample.includes("<CardFlipTrigger")
+    ) {
+      throw new Error("Packaged Card Flip did not expose state and Card composition.");
+    }
+
     const recommendation = await client.callTool({
       arguments: {
         task: "Account settings with profile fields, notification preferences, save feedback, and destructive account deletion confirmation",
