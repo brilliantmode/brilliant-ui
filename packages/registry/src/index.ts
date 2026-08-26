@@ -4623,7 +4623,7 @@ export const registry = [
     metadata: {
       purpose:
         "Reveals secondary card details on a distinct back face without leaving the current context.",
-      slots: ["root", "inner", "front", "back", "trigger"],
+      slots: ["root", "inner", "front", "back", "trigger", "trigger-icon"],
       accessibility: [
         "The flip action is a native button with a state-specific accessible name and aria-pressed state.",
         "The hidden face is aria-hidden and inert so its controls cannot receive focus.",
@@ -4631,6 +4631,7 @@ export const registry = [
         "Front and back content should communicate the same card identity.",
       ],
       usage: [
+        "The inner slot is the framework-managed 3D transform layer; compose content through the front and back faces rather than targeting it directly.",
         "Compose exactly one FlippableCardFront and one FlippableCardBack inside the root.",
         "Place FlippableCardTrigger on each face so users can move in both directions.",
         "Use frontTriggerIcon and backTriggerIcon for face-specific defaults, or icon on an individual trigger for a local override.",

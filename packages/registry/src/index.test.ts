@@ -104,6 +104,14 @@ describe("registry", () => {
     const source = item?.files[0]?.content;
 
     expect(item?.kind).toBe("component");
+    expect(item?.metadata.slots).toEqual([
+      "root",
+      "inner",
+      "front",
+      "back",
+      "trigger",
+      "trigger-icon",
+    ]);
     expect(source).toContain("export function FlippableCard(");
     expect(source).toContain("export function FlippableCardFront");
     expect(source).toContain("export function FlippableCardBack");
