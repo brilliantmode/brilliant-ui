@@ -4275,7 +4275,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
                   </button>
                 </div>
               ) : null}
-              <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:thin] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/35 [&::-webkit-scrollbar-track]:bg-transparent">
                 <button
                   aria-label="Search workspace"
                   className={`mb-4 flex h-9 w-full items-center gap-2 rounded-[0.375rem] border border-border bg-surface text-left text-sm text-muted-foreground shadow-sm hover:border-foreground/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${applicationShellCollapsed ? "justify-center px-0" : "px-3"}`}
@@ -5261,7 +5261,7 @@ function DocsNav({
       />
       <nav
         aria-label="Documentation"
-        className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:thin] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/35 [&::-webkit-scrollbar-track]:bg-transparent"
       >
         {navGroups.map((group) => (
           <DocsNavGroup

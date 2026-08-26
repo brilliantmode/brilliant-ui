@@ -68,6 +68,25 @@ describe("registry", () => {
     expect(source).toContain("motion-safe:animate-spin motion-reduce:animate-none");
   });
 
+  it("shows scrollbars only when dropdown content overflows", () => {
+    const selectSource = findRegistryItem("select")?.files[0]?.content;
+    const comboboxSource = findRegistryItem("combobox")?.files[0]?.content;
+    const dropdownMenuSource = findRegistryItem("dropdown-menu")?.files[0]?.content;
+
+    expect(selectSource).toContain(
+      "max-h-[min(18rem,var(--radix-select-content-available-height))]",
+    );
+    expect(selectSource).toContain("![scrollbar-width:thin]");
+    expect(selectSource).toContain("[&::-webkit-scrollbar]:!block");
+    expect(comboboxSource).toContain("max-h-64 w-full overflow-y-auto overscroll-contain");
+    expect(comboboxSource).toContain("[scrollbar-width:thin]");
+    expect(dropdownMenuSource).toContain(
+      "max-h-[min(18rem,var(--radix-dropdown-menu-content-available-height))]",
+    );
+    expect(dropdownMenuSource).toContain("overflow-y-auto overscroll-contain");
+    expect(dropdownMenuSource).toContain("[scrollbar-width:thin]");
+  });
+
   it("ships photo crop and treatment APIs", () => {
     const photoSource = findRegistryItem("photo")?.files[0]?.content;
 
@@ -135,7 +154,10 @@ describe("registry", () => {
     expect(source).toContain("export function ApplicationShellSidebarContent");
     expect(source).toContain("grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden border-r");
     expect(source).toContain("border-b border-border px-4 pb-4");
-    expect(source).toContain("[scrollbar-width:none] [&::-webkit-scrollbar]:hidden");
+    expect(source).toContain("overflow-y-auto overscroll-contain [scrollbar-width:thin]");
+    expect(source).toContain("[&::-webkit-scrollbar-thumb]:bg-muted-foreground/35");
+    expect(source).not.toContain("[scrollbar-width:none]");
+    expect(source).not.toContain("[&::-webkit-scrollbar]:hidden");
     expect(source).toContain("export function ApplicationShellSidebarFooter");
     expect(source).toContain("shrink-0 border-t border-border bg-background pt-3");
     expect(source).toContain("export function ApplicationShellSidebarFooterActions");

@@ -596,6 +596,7 @@ export const componentCatalog = [
         "Uses Radix Select for keyboard navigation and managed ARIA behavior.",
         "Pair the trigger with a visible label or aria-label.",
         "Items expose selected and highlighted states without relying on color alone.",
+        "Long option lists retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
       ],
       usage: [
         "Use for short known option lists.",
@@ -633,6 +634,7 @@ export const componentCatalog = [
         "Uses combobox and listbox roles with active descendant state.",
         "Pair with a visible label or aria-label.",
         "Supports keyboard open, close, arrow navigation, and enter selection.",
+        "Long result lists retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
       ],
       usage: [
         "Use for searchable suggestions and short-to-medium option lists.",
@@ -828,6 +830,7 @@ export const componentCatalog = [
         "Uses Radix Dropdown Menu for keyboard navigation and menu semantics.",
         "Keep destructive actions clearly labeled.",
         "Do not make menu-only actions essential.",
+        "Long menus retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
       ],
       usage: [
         "Use for secondary object actions.",
@@ -1593,7 +1596,7 @@ export const componentCatalog = [
         "HeaderBrand is a native link; decorative logo images should use an empty alt when the adjacent brand name supplies the accessible text.",
         "HeaderBrand is hidden on desktop by default because the sidebar brand is the canonical desktop identity.",
         "The profile menu uses native details and summary disclosure semantics.",
-        "Scrollable sidebar content keeps native scrolling while suppressing the visual scrollbar; keyboard, wheel, and touch scrolling remain available.",
+        "Scrollable sidebar content shows a thin scrollbar when navigation exceeds the available height; keyboard, wheel, and touch scrolling remain available.",
         "Kiosk controls should use the kiosk button size or preserve an equivalent 56px minimum touch target.",
         "Kiosk interactions must not depend on hover and must retain visible keyboard focus.",
       ],

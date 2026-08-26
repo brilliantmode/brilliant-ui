@@ -1553,7 +1553,7 @@ export function SelectContent({
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
         className={cx(
-          "z-50 max-h-72 min-w-[8rem] overflow-hidden rounded-[0.375rem] border-hairline border-border bg-surface text-foreground shadow-md",
+          "z-50 max-h-[min(18rem,var(--radix-select-content-available-height))] min-w-[8rem] overflow-hidden rounded-[0.375rem] border-hairline border-border bg-surface text-foreground shadow-md",
           "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
           "motion-safe:data-[state=open]:animate-enter motion-safe:data-[state=closed]:animate-exit motion-reduce:animate-none",
           position === "popper" && "w-[var(--radix-select-trigger-width)]",
@@ -1562,7 +1562,9 @@ export function SelectContent({
         position={position}
         {...props}
       >
-        <SelectPrimitive.Viewport className="p-1">{props.children}</SelectPrimitive.Viewport>
+        <SelectPrimitive.Viewport className="p-1 ![scrollbar-width:thin] [&::-webkit-scrollbar]:!block [&::-webkit-scrollbar]:!w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/35 [&::-webkit-scrollbar-track]:bg-transparent">
+          {props.children}
+        </SelectPrimitive.Viewport>
       </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
   );
@@ -1750,7 +1752,7 @@ export function Combobox({
       </svg>
       {open ? (
         <div
-          className="absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-[0.375rem] border-hairline border-border bg-surface p-1 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none"
+          className="absolute z-50 mt-1 max-h-64 w-full overflow-y-auto overscroll-contain rounded-[0.375rem] border-hairline border-border bg-surface p-1 text-sm shadow-md [scrollbar-width:thin] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/35 [&::-webkit-scrollbar-track]:bg-transparent motion-safe:animate-enter motion-reduce:animate-none"
           id={listboxId}
           role="listbox"
         >
@@ -1957,7 +1959,7 @@ export function DropdownMenuContent({
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
         className={cx(
-          "z-50 min-w-48 overflow-hidden rounded-[0.375rem] border-hairline border-border bg-surface p-1 text-sm text-foreground shadow-md",
+          "z-50 max-h-[min(18rem,var(--radix-dropdown-menu-content-available-height))] min-w-48 overflow-y-auto overscroll-contain rounded-[0.375rem] border-hairline border-border bg-surface p-1 text-sm text-foreground shadow-md [scrollbar-width:thin] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/35 [&::-webkit-scrollbar-track]:bg-transparent",
           "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
           "motion-safe:data-[state=open]:animate-enter motion-reduce:animate-none",
           className,
@@ -3529,7 +3531,7 @@ export function ApplicationShellSidebarContent({
   return (
     <div
       className={cx(
-        "min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        "min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:thin] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/35 [&::-webkit-scrollbar-track]:bg-transparent",
         className,
       )}
       {...props}
@@ -4668,6 +4670,7 @@ export const registry = [
         "Uses Radix Select for keyboard navigation and managed ARIA behavior.",
         "Pair the trigger with a visible label or aria-label.",
         "Items expose selected and highlighted states without relying on color alone.",
+        "Long option lists retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
       ],
       usage: [
         "Use for short known option lists.",
@@ -4692,6 +4695,7 @@ export const registry = [
         "Uses combobox and listbox roles with active descendant state.",
         "Pair with a visible label or aria-label.",
         "Supports keyboard open, close, arrow navigation, and enter selection.",
+        "Long result lists retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
       ],
       usage: [
         "Use for searchable suggestions and short-to-medium option lists.",
@@ -4811,6 +4815,7 @@ export const registry = [
         "Uses Radix Dropdown Menu for keyboard navigation and menu semantics.",
         "Keep destructive actions clearly labeled.",
         "Do not make menu-only actions essential.",
+        "Long menus retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
       ],
       usage: [
         "Use for secondary object actions.",
@@ -5348,7 +5353,7 @@ export const registry = [
         "HeaderBrand is a native link; decorative logo images should use an empty alt when the adjacent brand name supplies the accessible text.",
         "HeaderBrand is hidden on desktop by default because the sidebar brand is the canonical desktop identity.",
         "The profile menu uses native details and summary disclosure semantics.",
-        "Scrollable sidebar content keeps native scrolling while suppressing the visual scrollbar; keyboard, wheel, and touch scrolling remain available.",
+        "Scrollable sidebar content shows a thin scrollbar when navigation exceeds the available height; keyboard, wheel, and touch scrolling remain available.",
         "Kiosk controls should use the kiosk button size or preserve an equivalent 56px minimum touch target.",
         "Kiosk interactions must not depend on hover and must retain visible keyboard focus.",
       ],
