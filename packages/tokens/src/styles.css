@@ -80,8 +80,10 @@
   --brilliant-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
   --brilliant-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.06);
   --brilliant-shadow-md: 0 4px 12px oklch(0 0 0 / 0.08);
+  --brilliant-duration-instant: 0ms;
   --brilliant-duration-fast: 120ms;
   --brilliant-duration-normal: 200ms;
+  --brilliant-duration-slow: 320ms;
   --brilliant-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --brilliant-ease-enter: cubic-bezier(0, 0, 0, 1);
   --brilliant-ease-exit: cubic-bezier(0.3, 0, 1, 1);

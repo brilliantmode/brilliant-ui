@@ -3575,6 +3575,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
         className="mx-auto max-w-sm"
         direction="left"
         frontTriggerIcon={<span aria-hidden="true">ⓘ</span>}
+        speed="medium"
       >
         <FlippableCardFront>
           <div className="flex items-start justify-between gap-4">

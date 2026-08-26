@@ -253,6 +253,7 @@ export const componentCatalog = [
     exports: [
       "FlippableCardProps",
       "FlippableCardDirection",
+      "FlippableCardSpeed",
       "FlippableCard",
       "FlippableCardFront",
       "FlippableCardBack",
@@ -276,6 +277,7 @@ export const componentCatalog = [
         "Place FlippableCardTrigger on each face so users can move in both directions.",
         "Use frontTriggerIcon and backTriggerIcon for face-specific defaults, or icon on an individual trigger for a local override.",
         "Set direction to left, right, up, or down to match the card's placement and surrounding interaction model.",
+        "Set speed to fast, medium, or slow; medium is the default.",
         "Use flipped and onFlippedChange when application state must control the visible face.",
         "Constrain the root width in layout; the built-in aspect ratio follows a wallet-card proportion.",
       ],
@@ -289,7 +291,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Flippable Card",
     usageExample:
-      'import {\n  FlippableCard,\n  FlippableCardBack,\n  FlippableCardFront,\n  FlippableCardTrigger,\n} from "@brilliantmode/ui/flippable-card";\n\nexport function Example() {\n  return (\n    <FlippableCard\n      backTriggerIcon={<span aria-hidden="true">←</span>}\n      className="max-w-sm"\n      direction="left"\n      frontTriggerIcon={<span aria-hidden="true">ⓘ</span>}\n    >\n      <FlippableCardFront>\n        <div className="flex items-start justify-between gap-4">\n          <div>\n            <p className="text-xs font-medium uppercase tracking-[0.16em] opacity-75">\n              Brilliant Pass\n            </p>\n            <p className="mt-1 text-lg font-semibold">Design Systems Summit</p>\n          </div>\n          <FlippableCardTrigger />\n        </div>\n        <div className="mt-auto">\n          <p className="text-xs opacity-70">Attendee</p>\n          <p className="mt-1 font-medium">Alex Rivera</p>\n        </div>\n      </FlippableCardFront>\n      <FlippableCardBack>\n        <div className="flex items-start justify-between gap-4">\n          <div>\n            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">\n              Pass details\n            </p>\n            <p className="mt-1 text-base font-semibold">August 28 · Hall A</p>\n          </div>\n          <FlippableCardTrigger />\n        </div>\n        <div className="mt-auto rounded-[0.375rem] bg-muted p-3 text-sm">\n          Present this pass at registration.\n        </div>\n      </FlippableCardBack>\n    </FlippableCard>\n  );\n}',
+      'import {\n  FlippableCard,\n  FlippableCardBack,\n  FlippableCardFront,\n  FlippableCardTrigger,\n} from "@brilliantmode/ui/flippable-card";\n\nexport function Example() {\n  return (\n    <FlippableCard\n      backTriggerIcon={<span aria-hidden="true">←</span>}\n      className="max-w-sm"\n      direction="left"\n      frontTriggerIcon={<span aria-hidden="true">ⓘ</span>}\n      speed="medium"\n    >\n      <FlippableCardFront>\n        <div className="flex items-start justify-between gap-4">\n          <div>\n            <p className="text-xs font-medium uppercase tracking-[0.16em] opacity-75">\n              Brilliant Pass\n            </p>\n            <p className="mt-1 text-lg font-semibold">Design Systems Summit</p>\n          </div>\n          <FlippableCardTrigger />\n        </div>\n        <div className="mt-auto">\n          <p className="text-xs opacity-70">Attendee</p>\n          <p className="mt-1 font-medium">Alex Rivera</p>\n        </div>\n      </FlippableCardFront>\n      <FlippableCardBack>\n        <div className="flex items-start justify-between gap-4">\n          <div>\n            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">\n              Pass details\n            </p>\n            <p className="mt-1 text-base font-semibold">August 28 · Hall A</p>\n          </div>\n          <FlippableCardTrigger />\n        </div>\n        <div className="mt-auto rounded-[0.375rem] bg-muted p-3 text-sm">\n          Present this pass at registration.\n        </div>\n      </FlippableCardBack>\n    </FlippableCard>\n  );\n}',
     valueExports: [
       "FlippableCard",
       "FlippableCardFront",

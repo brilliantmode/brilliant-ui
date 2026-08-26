@@ -772,6 +772,7 @@ export interface FlippableCardProps extends HTMLAttributes<HTMLDivElement> {
   flipped?: boolean;
   frontTriggerIcon?: ReactNode;
   onFlippedChange?: (flipped: boolean) => void;
+  speed?: FlippableCardSpeed;
 }
 
 const flipRotations = {
@@ -783,6 +784,14 @@ const flipRotations = {
 
 export type FlippableCardDirection = keyof typeof flipRotations;
 
+const flipSpeeds = {
+  fast: "motion-safe:duration-[var(--brilliant-duration-fast)]",
+  medium: "motion-safe:duration-[var(--brilliant-duration-normal)]",
+  slow: "motion-safe:duration-[var(--brilliant-duration-slow)]",
+} as const;
+
+export type FlippableCardSpeed = keyof typeof flipSpeeds;
+
 export function FlippableCard({
   backTriggerIcon,
   children,
@@ -793,6 +802,7 @@ export function FlippableCard({
   flipped: controlledFlipped,
   frontTriggerIcon,
   onFlippedChange,
+  speed = "medium",
   ...props
 }: FlippableCardProps) {
   const [internalFlipped, setInternalFlipped] = useState(defaultFlipped);
@@ -829,11 +839,13 @@ export function FlippableCard({
         data-direction={direction}
         data-disabled={disabled ? "true" : undefined}
         data-flipped={flipped ? "true" : "false"}
+        data-speed={speed}
       >
         <div
           className={[
             "grid aspect-[1.586] w-full [transform-style:preserve-3d]",
-            "motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+            "motion-safe:transition-transform motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+            flipSpeeds[speed],
             flipped ? flipRotations[direction] : "",
           ].join(" ")}
         >
@@ -4623,6 +4635,7 @@ export const registry = [
         "Place FlippableCardTrigger on each face so users can move in both directions.",
         "Use frontTriggerIcon and backTriggerIcon for face-specific defaults, or icon on an individual trigger for a local override.",
         "Set direction to left, right, up, or down to match the card's placement and surrounding interaction model.",
+        "Set speed to fast, medium, or slow; medium is the default.",
         "Use flipped and onFlippedChange when application state must control the visible face.",
         "Constrain the root width in layout; the built-in aspect ratio follows a wallet-card proportion.",
       ],

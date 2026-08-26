@@ -18,6 +18,12 @@ describe("design tokens", () => {
 
   it("exposes motion and semantic foundations from one entry point", () => {
     expect(tokens.motion).toBe(motion);
+    expect(tokens.motion.duration).toEqual({
+      fast: "120ms",
+      instant: "0ms",
+      normal: "200ms",
+      slow: "320ms",
+    });
     expect(tokens.radii.lg).toBe("0.625rem");
   });
 

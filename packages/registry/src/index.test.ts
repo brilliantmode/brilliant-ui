@@ -113,6 +113,8 @@ describe("registry", () => {
     expect(source).toContain("frontTriggerIcon?: ReactNode");
     expect(source).toContain("backTriggerIcon?: ReactNode");
     expect(source).toContain("icon?: ReactNode");
+    expect(source).toContain("speed?: FlippableCardSpeed");
+    expect(source).toContain('speed = "medium"');
     expect(source).toContain("onFlippedChange?: (flipped: boolean) => void");
     expect(source).toContain("[perspective:1200px]");
     expect(source).toContain("[backface-visibility:hidden]");
@@ -121,6 +123,8 @@ describe("registry", () => {
     expect(source).toContain("[transform:rotateX(-180deg)]");
     expect(source).toContain("[transform:rotateX(180deg)]");
     expect(source).toContain("duration-[var(--brilliant-duration-fast)]");
+    expect(source).toContain("duration-[var(--brilliant-duration-normal)]");
+    expect(source).toContain("duration-[var(--brilliant-duration-slow)]");
     expect(source).toContain("motion-reduce:transition-none");
     expect(source).toContain("aria-pressed={flipped}");
     expect(source).toContain("inert={flipped || undefined}");
