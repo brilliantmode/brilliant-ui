@@ -1,5 +1,11 @@
 # @brilliantmode/ui
 
+## 0.3.2
+
+### Patch Changes
+
+- Support decorative icons and logos in searchable Combobox options and selected values while preserving text labels, filtering, keyboard selection, and accessible names. Replace the docs-only combobox preview with the shipped component and document the new option icon slot.
+
 ## 0.3.1
 
 ### Patch Changes

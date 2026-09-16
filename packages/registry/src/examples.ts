@@ -480,7 +480,7 @@ export function Example() {
     <Combobox
       aria-label="Search workspace"
       options={[
-        { label: "Acme", value: "Acme" },
+        { label: "Acme", value: "Acme", icon: <img src="/acme-logo.svg" alt="" className="h-5 w-8 object-contain" /> },
         { label: "Brilliant", value: "Brilliant" },
         { label: "Unifabriq", value: "Unifabriq" },
       ]}

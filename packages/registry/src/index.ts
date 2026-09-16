@@ -2102,10 +2102,11 @@ export function SelectSeparator({
 const comboboxSource = `"use client";
 
 import { useId, useMemo, useState } from "react";
-import type { InputHTMLAttributes, KeyboardEvent } from "react";
+import type { InputHTMLAttributes, KeyboardEvent, ReactNode } from "react";
 
 export interface ComboboxOption {
   disabled?: boolean;
+  icon?: ReactNode;
   label: string;
   value: string;
 }
@@ -2144,6 +2145,7 @@ export function Combobox({
   const [open, setOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const inputValue = value ?? internalValue;
+  const selectedIcon = options.find((option) => option.value === inputValue)?.icon;
 
   const filteredOptions = useMemo(() => {
     const query = inputValue.trim().toLowerCase();
@@ -2207,6 +2209,7 @@ export function Combobox({
           "h-9 w-full appearance-none rounded-[0.25rem] border-0 bg-background px-3 pr-9 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)]",
           "placeholder:text-muted-foreground motion-safe:transition-[background-color,box-shadow] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
           "focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)] focus-visible:outline-none",
+          selectedIcon != null && "pl-14",
           className,
         )}
         id={inputId}
@@ -2229,6 +2232,11 @@ export function Combobox({
         value={inputValue}
         {...props}
       />
+      {selectedIcon != null ? (
+        <span aria-hidden="true" className="pointer-events-none absolute top-1/2 left-3 flex h-5 w-8 -translate-y-1/2 items-center justify-center overflow-hidden">
+          {selectedIcon}
+        </span>
+      ) : null}
       <svg aria-hidden="true" className="-translate-y-1/2 pointer-events-none absolute top-1/2 right-3 size-4 text-muted-foreground" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 16 16">
         <path d="m4 6 4 4 4-4" />
       </svg>
@@ -2246,7 +2254,7 @@ export function Combobox({
                 <button
                   aria-selected={selected}
                   className={cx(
-                    "cursor-pointer relative flex w-full items-center rounded-[0.25rem] py-1.5 pr-3 pl-8 text-left outline-none disabled:cursor-default aria-disabled:cursor-default",
+                    "cursor-pointer relative flex w-full items-center gap-2 rounded-[0.25rem] py-1.5 pr-3 pl-8 text-left outline-none disabled:cursor-default aria-disabled:cursor-default",
                     "motion-safe:transition-colors motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
                     highlighted && "bg-muted text-foreground",
                     option.disabled && "pointer-events-none opacity-50",
@@ -2270,7 +2278,12 @@ export function Combobox({
                       </svg>
                     ) : null}
                   </span>
-                  {option.label}
+                  {option.icon != null ? (
+                    <span aria-hidden="true" className="flex h-5 w-8 shrink-0 items-center justify-center overflow-hidden">
+                      {option.icon}
+                    </span>
+                  ) : null}
+                  <span className="min-w-0">{option.label}</span>
                 </button>
               );
             })
@@ -5328,20 +5341,32 @@ export const registry = [
     files: [{ path: "combobox.tsx", content: comboboxSource, target: "ui/combobox.tsx" }],
     metadata: {
       purpose: "Lets users type or choose from suggested options.",
-      slots: ["root", "input", "listbox", "option", "indicator", "empty"],
+      slots: [
+        "root",
+        "input",
+        "selected-icon",
+        "listbox",
+        "option",
+        "option-icon",
+        "indicator",
+        "empty",
+      ],
       accessibility: [
         "Uses combobox and listbox roles with active descendant state.",
         "Pair with a visible label or aria-label.",
+        "Option icons are decorative and hidden from assistive technology. Keep the vendor or item name in label.",
         "Supports keyboard open, close, arrow navigation, and enter selection.",
         "Long result lists retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
       ],
       usage: [
         "Use for searchable suggestions and short-to-medium option lists.",
-        "Pass options as value/label objects.",
+        "Pass options as value/label objects; labels remain strings for search and accessible names.",
+        "Set option.icon to a decorative icon or logo (up to 32px wide and 20px high). It also appears beside an exact selected value.",
         "Use Command for richer command palettes or grouped actions.",
       ],
       avoid: [
         "Do not use for very large async datasets without virtualization or server filtering.",
+        "Do not put interactive controls inside option icons.",
       ],
     },
   },

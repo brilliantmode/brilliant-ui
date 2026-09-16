@@ -1,5 +1,5 @@
 /* Generated from the Brilliant UI registry. Do not edit directly. */
-export const packageVersion = "0.3.1";
+export const packageVersion = "0.3.2";
 export const componentCatalog = [
   {
     dependencies: [],
@@ -759,27 +759,39 @@ export const componentCatalog = [
     kind: "component",
     metadata: {
       purpose: "Lets users type or choose from suggested options.",
-      slots: ["root", "input", "listbox", "option", "indicator", "empty"],
+      slots: [
+        "root",
+        "input",
+        "selected-icon",
+        "listbox",
+        "option",
+        "option-icon",
+        "indicator",
+        "empty",
+      ],
       accessibility: [
         "Uses combobox and listbox roles with active descendant state.",
         "Pair with a visible label or aria-label.",
+        "Option icons are decorative and hidden from assistive technology. Keep the vendor or item name in label.",
         "Supports keyboard open, close, arrow navigation, and enter selection.",
         "Long result lists retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
       ],
       usage: [
         "Use for searchable suggestions and short-to-medium option lists.",
-        "Pass options as value/label objects.",
+        "Pass options as value/label objects; labels remain strings for search and accessible names.",
+        "Set option.icon to a decorative icon or logo (up to 32px wide and 20px high). It also appears beside an exact selected value.",
         "Use Command for richer command palettes or grouped actions.",
       ],
       avoid: [
         "Do not use for very large async datasets without virtualization or server filtering.",
+        "Do not put interactive controls inside option icons.",
       ],
     },
     name: "combobox",
     registryDependencies: [],
     title: "Combobox",
     usageExample:
-      'import { Combobox } from "@brilliantmode/ui/combobox";\n\nexport function Example() {\n  return (\n    <Combobox\n      aria-label="Search workspace"\n      options={[\n        { label: "Acme", value: "Acme" },\n        { label: "Brilliant", value: "Brilliant" },\n        { label: "Unifabriq", value: "Unifabriq" },\n      ]}\n      placeholder="Search workspace"\n    />\n  );\n}',
+      'import { Combobox } from "@brilliantmode/ui/combobox";\n\nexport function Example() {\n  return (\n    <Combobox\n      aria-label="Search workspace"\n      options={[\n        { label: "Acme", value: "Acme", icon: <img src="/acme-logo.svg" alt="" className="h-5 w-8 object-contain" /> },\n        { label: "Brilliant", value: "Brilliant" },\n        { label: "Unifabriq", value: "Unifabriq" },\n      ]}\n      placeholder="Search workspace"\n    />\n  );\n}',
     valueExports: ["Combobox"],
   },
   {
