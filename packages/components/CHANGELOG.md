@@ -1,5 +1,12 @@
 # @brilliantmode/ui
 
+## 0.3.1
+
+### Patch Changes
+
+- Provide pointer cursors by default for actionable controls, including buttons, menu items, tabs, navigation, and disclosure triggers. Keep disabled states from advertising a clickable cursor and retain native text-entry cursors.
+- Support React 19 refs on Input, Textarea, Dialog, and AlertDialog. Keep Select and DropdownMenu portals within their containing native dialog so menus remain visible and interactive in the modal top layer. Route toast notifications to the active native modal and restore them when it closes or unmounts.
+
 ## 0.3.0
 
 ### Minor Changes

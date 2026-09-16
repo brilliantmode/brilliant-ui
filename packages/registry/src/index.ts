@@ -166,7 +166,7 @@ export function Button({
     <button
       aria-busy={loading || undefined}
       className={[
-        "relative isolate inline-flex shrink-0 appearance-none items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em]",
+        "cursor-pointer relative isolate inline-flex shrink-0 appearance-none items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em] disabled:cursor-default aria-disabled:cursor-default",
         "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         "focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50",
@@ -927,7 +927,7 @@ export function CardFlipTrigger({
       aria-label={ariaLabel ?? (flipped ? "Show card front" : "Show card details")}
       aria-pressed={flipped}
       className={[
-        "inline-flex shrink-0 items-center justify-center outline-none",
+        "cursor-pointer inline-flex shrink-0 items-center justify-center outline-none aria-disabled:cursor-default",
         "focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         "motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         className,
@@ -1082,7 +1082,7 @@ export function CardExpandTrigger({
           : undefined)
       }
       className={[
-        "inline-flex items-center justify-center outline-none",
+        "cursor-pointer inline-flex items-center justify-center outline-none aria-disabled:cursor-default",
         "focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         "motion-safe:transition-[background-color,box-shadow,transform] motion-reduce:transition-none",
         expandSpeeds[speed],
@@ -1205,9 +1205,11 @@ export function QRCode({
 }
 `;
 
-const inputSource = `import type { InputHTMLAttributes } from "react";
+const inputSource = `import type { Ref, InputHTMLAttributes } from "react";
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  ref?: Ref<HTMLInputElement>;
+}
 
 export function Input({ className = "", type = "text", ...props }: InputProps) {
   return (
@@ -1248,9 +1250,11 @@ export function Label({ children, className = "", htmlFor, ...props }: LabelProp
 }
 `;
 
-const textareaSource = `import type { TextareaHTMLAttributes } from "react";
+const textareaSource = `import type { Ref, TextareaHTMLAttributes } from "react";
 
-export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {}
+export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  ref?: Ref<HTMLTextAreaElement>;
+}
 
 export function Textarea({ className = "", ...props }: TextareaProps) {
   return (
@@ -1906,10 +1910,10 @@ export function Spinner({
 `;
 
 const fileUploadSource =
-  '// biome-ignore-all lint/style/useTemplate: Concatenation keeps this copied source safe to serialize in the registry.\n\n"use client";\n\nimport type { ButtonHTMLAttributes, ChangeEvent, DragEvent, HTMLAttributes } from "react";\nimport { createContext, useContext, useId, useRef, useState } from "react";\n\ntype ProgressByName = Readonly<Record<string, number>>;\n\ninterface FileUploadContextValue {\n  disabled: boolean;\n  error: string | null;\n  files: readonly File[];\n  inputId: string;\n  openPicker: () => void;\n  progress: ProgressByName;\n  removeFile: (file: File) => void;\n  selectFiles: (files: FileList | readonly File[]) => void;\n}\n\nconst FileUploadContext = createContext<FileUploadContextValue | null>(null);\n\nfunction cx(...classes: Array<string | false | null | undefined>) {\n  return classes.filter(Boolean).join(" ");\n}\n\nfunction useFileUpload() {\n  const context = useContext(FileUploadContext);\n  if (!context) throw new Error("File Upload parts must be rendered inside <FileUpload>.");\n  return context;\n}\n\nfunction fileKey(file: File) {\n  return [file.name, file.size, file.lastModified].join("-");\n}\n\nfunction formatBytes(bytes: number) {\n  if (bytes < 1024) return bytes + " B";\n  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";\n  return (bytes / (1024 * 1024)).toFixed(1) + " MB";\n}\n\nfunction matchesAccept(file: File, accept?: string) {\n  if (!accept) return true;\n  return accept.split(",").some((rawType) => {\n    const type = rawType.trim().toLowerCase();\n    if (type.startsWith(".")) return file.name.toLowerCase().endsWith(type);\n    if (type.endsWith("/*")) return file.type.startsWith(type.slice(0, -1));\n    return file.type === type;\n  });\n}\n\nexport interface FileUploadProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {\n  accept?: string;\n  capture?: "environment" | "user";\n  defaultFiles?: readonly File[];\n  disabled?: boolean;\n  files?: readonly File[];\n  maxFiles?: number;\n  maxSize?: number;\n  multiple?: boolean;\n  name?: string;\n  onFilesChange?: (files: readonly File[]) => void;\n  progress?: ProgressByName;\n}\n\nexport function FileUpload({\n  accept,\n  capture,\n  children,\n  className = "",\n  defaultFiles = [],\n  disabled = false,\n  files: controlledFiles,\n  maxFiles = 1,\n  maxSize = Number.POSITIVE_INFINITY,\n  multiple = false,\n  name,\n  onFilesChange,\n  progress = {},\n  ...props\n}: FileUploadProps) {\n  const inputId = useId();\n  const inputRef = useRef<HTMLInputElement>(null);\n  const [internalFiles, setInternalFiles] = useState<readonly File[]>(defaultFiles);\n  const [error, setError] = useState<string | null>(null);\n  const files = controlledFiles ?? internalFiles;\n\n  const commitFiles = (nextFiles: readonly File[]) => {\n    if (controlledFiles === undefined) setInternalFiles(nextFiles);\n    onFilesChange?.(nextFiles);\n  };\n\n  const selectFiles = (incoming: FileList | readonly File[]) => {\n    if (disabled) return;\n    const candidates = Array.from(incoming);\n    const invalidType = candidates.find((file) => !matchesAccept(file, accept));\n    const oversized = candidates.find((file) => file.size > maxSize);\n\n    if (invalidType) {\n      setError(invalidType.name + " is not an accepted file type.");\n      return;\n    }\n    if (oversized) {\n      setError(oversized.name + " exceeds the " + formatBytes(maxSize) + " limit.");\n      return;\n    }\n\n    const merged = multiple ? [...files, ...candidates] : candidates.slice(0, 1);\n    const unique = merged.filter(\n      (file, index, allFiles) =>\n        allFiles.findIndex((item) => fileKey(item) === fileKey(file)) === index,\n    );\n\n    if (unique.length > maxFiles) {\n      setError("Choose no more than " + maxFiles + " " + (maxFiles === 1 ? "file" : "files") + ".");\n      return;\n    }\n\n    setError(null);\n    commitFiles(unique);\n    if (inputRef.current) inputRef.current.value = "";\n  };\n\n  const removeFile = (file: File) => {\n    setError(null);\n    commitFiles(files.filter((item) => fileKey(item) !== fileKey(file)));\n  };\n\n  return (\n    <FileUploadContext.Provider\n      value={{\n        disabled,\n        error,\n        files,\n        inputId,\n        openPicker: () => inputRef.current?.click(),\n        progress,\n        removeFile,\n        selectFiles,\n      }}\n    >\n      <div className={cx("grid gap-3", className)} data-disabled={disabled || undefined} {...props}>\n        <input\n          accept={accept}\n          capture={capture}\n          className="sr-only"\n          disabled={disabled}\n          id={inputId}\n          multiple={multiple}\n          name={name}\n          onChange={(event: ChangeEvent<HTMLInputElement>) => {\n            if (event.target.files) selectFiles(event.target.files);\n            event.target.value = "";\n          }}\n          ref={inputRef}\n          type="file"\n        />\n        {children}\n      </div>\n    </FileUploadContext.Provider>\n  );\n}\n\nexport function FileUploadDropzone({\n  className = "",\n  disabled: disabledProp = false,\n  onDragEnter,\n  onDragLeave,\n  onDragOver,\n  onDrop,\n  onClick,\n  type = "button",\n  ...props\n}: ButtonHTMLAttributes<HTMLButtonElement>) {\n  const { disabled, openPicker, selectFiles } = useFileUpload();\n  const [dragging, setDragging] = useState(false);\n  const isDisabled = disabled || disabledProp;\n\n  return (\n    <button\n      className={cx(\n        "group grid min-h-40 w-full place-items-center rounded-[0.5rem] border border-dashed border-border bg-surface px-6 py-8 text-center",\n        "hover:border-foreground/35 hover:bg-muted/45 active:scale-[0.997] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",\n        "data-[dragging=true]:border-primary data-[dragging=true]:bg-primary/5 data-[dragging=true]:shadow-[inset_0_0_0_1px_color-mix(in_oklch,var(--brilliant-primary)_22%,transparent)]",\n        "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",\n        "disabled:pointer-events-none disabled:opacity-50",\n        className,\n      )}\n      data-dragging={dragging}\n      disabled={isDisabled}\n      onClick={(event) => {\n        onClick?.(event);\n        if (!event.defaultPrevented) openPicker();\n      }}\n      onDragEnter={(event: DragEvent<HTMLButtonElement>) => {\n        onDragEnter?.(event);\n        if (!event.defaultPrevented) setDragging(true);\n      }}\n      onDragLeave={(event: DragEvent<HTMLButtonElement>) => {\n        onDragLeave?.(event);\n        if (!event.defaultPrevented && !event.currentTarget.contains(event.relatedTarget as Node)) {\n          setDragging(false);\n        }\n      }}\n      onDragOver={(event: DragEvent<HTMLButtonElement>) => {\n        onDragOver?.(event);\n        if (!event.defaultPrevented) {\n          event.preventDefault();\n          event.dataTransfer.dropEffect = "copy";\n        }\n      }}\n      onDrop={(event: DragEvent<HTMLButtonElement>) => {\n        onDrop?.(event);\n        if (!event.defaultPrevented) {\n          event.preventDefault();\n          setDragging(false);\n          selectFiles(event.dataTransfer.files);\n        }\n      }}\n      type={type}\n      {...props}\n    />\n  );\n}\n\nexport function FileUploadIcon({\n  children = "↑",\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLSpanElement>) {\n  return (\n    <span\n      aria-hidden="true"\n      className={cx(\n        "mb-3 grid size-10 place-items-center rounded-full bg-primary/10 text-lg font-medium text-primary",\n        "group-data-[dragging=true]:-translate-y-0.5 group-data-[dragging=true]:scale-105 motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transform-none motion-reduce:transition-none",\n        className,\n      )}\n      {...props}\n    >\n      {children}\n    </span>\n  );\n}\n\nexport function FileUploadTitle({\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLParagraphElement>) {\n  return <p className={cx("text-sm font-medium text-foreground", className)} {...props} />;\n}\n\nexport function FileUploadDescription({\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLParagraphElement>) {\n  return <p className={cx("mt-1 text-xs leading-5 text-muted-foreground", className)} {...props} />;\n}\n\nexport function FileUploadTrigger({\n  className = "",\n  disabled: disabledProp = false,\n  onClick,\n  type = "button",\n  ...props\n}: ButtonHTMLAttributes<HTMLButtonElement>) {\n  const { disabled, openPicker } = useFileUpload();\n  const isDisabled = disabled || disabledProp;\n  return (\n    <button\n      className={cx(\n        "inline-flex h-8 items-center justify-center rounded-[0.25rem] border border-border bg-surface px-3 text-xs font-medium text-foreground shadow-sm",\n        "hover:bg-muted active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",\n        "motion-safe:transition-[background-color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",\n        className,\n      )}\n      disabled={isDisabled}\n      onClick={(event) => {\n        onClick?.(event);\n        if (!event.defaultPrevented) openPicker();\n      }}\n      type={type}\n      {...props}\n    />\n  );\n}\n\nexport function FileUploadList({ className = "", ...props }: HTMLAttributes<HTMLUListElement>) {\n  const { disabled, files, progress, removeFile } = useFileUpload();\n  if (files.length === 0) return null;\n\n  return (\n    <ul aria-label="Selected files" className={cx("grid gap-2", className)} {...props}>\n      {files.map((file) => {\n        const value = progress[file.name];\n        const hasProgress = typeof value === "number";\n        const clampedProgress = hasProgress ? Math.min(100, Math.max(0, value)) : 0;\n\n        return (\n          <li\n            className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 rounded-[0.375rem] border border-border bg-surface px-3 py-2.5 motion-safe:animate-enter motion-reduce:animate-none"\n            key={fileKey(file)}\n          >\n            <span className="min-w-0">\n              <span className="block truncate text-sm font-medium text-foreground">\n                {file.name}\n              </span>\n              <span className="block text-xs text-muted-foreground">{formatBytes(file.size)}</span>\n            </span>\n            <button\n              aria-label={"Remove " + file.name}\n              className="grid size-8 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground active:scale-[0.96] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"\n              disabled={disabled}\n              onClick={() => removeFile(file)}\n              type="button"\n            >\n              ×\n            </button>\n            {hasProgress ? (\n              <span\n                aria-label={file.name + " upload progress"}\n                aria-valuemax={100}\n                aria-valuemin={0}\n                aria-valuenow={clampedProgress}\n                className="col-span-2 h-1 overflow-hidden rounded-full bg-muted"\n                role="progressbar"\n              >\n                <span\n                  className="block h-full rounded-full bg-primary motion-safe:transition-[width] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none"\n                  style={{ width: clampedProgress + "%" }}\n                />\n              </span>\n            ) : null}\n          </li>\n        );\n      })}\n    </ul>\n  );\n}\n\nexport function FileUploadError({\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLParagraphElement>) {\n  const { error } = useFileUpload();\n  if (!error) return null;\n  return (\n    <p className={cx("text-xs font-medium text-critical", className)} role="alert" {...props}>\n      {error}\n    </p>\n  );\n}\n';
+  '// biome-ignore-all lint/style/useTemplate: Concatenation keeps this copied source safe to serialize in the registry.\n\n"use client";\n\nimport type { ButtonHTMLAttributes, ChangeEvent, DragEvent, HTMLAttributes } from "react";\nimport { createContext, useContext, useId, useRef, useState } from "react";\n\ntype ProgressByName = Readonly<Record<string, number>>;\n\ninterface FileUploadContextValue {\n  disabled: boolean;\n  error: string | null;\n  files: readonly File[];\n  inputId: string;\n  openPicker: () => void;\n  progress: ProgressByName;\n  removeFile: (file: File) => void;\n  selectFiles: (files: FileList | readonly File[]) => void;\n}\n\nconst FileUploadContext = createContext<FileUploadContextValue | null>(null);\n\nfunction cx(...classes: Array<string | false | null | undefined>) {\n  return classes.filter(Boolean).join(" ");\n}\n\nfunction useFileUpload() {\n  const context = useContext(FileUploadContext);\n  if (!context) throw new Error("File Upload parts must be rendered inside <FileUpload>.");\n  return context;\n}\n\nfunction fileKey(file: File) {\n  return [file.name, file.size, file.lastModified].join("-");\n}\n\nfunction formatBytes(bytes: number) {\n  if (bytes < 1024) return bytes + " B";\n  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";\n  return (bytes / (1024 * 1024)).toFixed(1) + " MB";\n}\n\nfunction matchesAccept(file: File, accept?: string) {\n  if (!accept) return true;\n  return accept.split(",").some((rawType) => {\n    const type = rawType.trim().toLowerCase();\n    if (type.startsWith(".")) return file.name.toLowerCase().endsWith(type);\n    if (type.endsWith("/*")) return file.type.startsWith(type.slice(0, -1));\n    return file.type === type;\n  });\n}\n\nexport interface FileUploadProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {\n  accept?: string;\n  capture?: "environment" | "user";\n  defaultFiles?: readonly File[];\n  disabled?: boolean;\n  files?: readonly File[];\n  maxFiles?: number;\n  maxSize?: number;\n  multiple?: boolean;\n  name?: string;\n  onFilesChange?: (files: readonly File[]) => void;\n  progress?: ProgressByName;\n}\n\nexport function FileUpload({\n  accept,\n  capture,\n  children,\n  className = "",\n  defaultFiles = [],\n  disabled = false,\n  files: controlledFiles,\n  maxFiles = 1,\n  maxSize = Number.POSITIVE_INFINITY,\n  multiple = false,\n  name,\n  onFilesChange,\n  progress = {},\n  ...props\n}: FileUploadProps) {\n  const inputId = useId();\n  const inputRef = useRef<HTMLInputElement>(null);\n  const [internalFiles, setInternalFiles] = useState<readonly File[]>(defaultFiles);\n  const [error, setError] = useState<string | null>(null);\n  const files = controlledFiles ?? internalFiles;\n\n  const commitFiles = (nextFiles: readonly File[]) => {\n    if (controlledFiles === undefined) setInternalFiles(nextFiles);\n    onFilesChange?.(nextFiles);\n  };\n\n  const selectFiles = (incoming: FileList | readonly File[]) => {\n    if (disabled) return;\n    const candidates = Array.from(incoming);\n    const invalidType = candidates.find((file) => !matchesAccept(file, accept));\n    const oversized = candidates.find((file) => file.size > maxSize);\n\n    if (invalidType) {\n      setError(invalidType.name + " is not an accepted file type.");\n      return;\n    }\n    if (oversized) {\n      setError(oversized.name + " exceeds the " + formatBytes(maxSize) + " limit.");\n      return;\n    }\n\n    const merged = multiple ? [...files, ...candidates] : candidates.slice(0, 1);\n    const unique = merged.filter(\n      (file, index, allFiles) =>\n        allFiles.findIndex((item) => fileKey(item) === fileKey(file)) === index,\n    );\n\n    if (unique.length > maxFiles) {\n      setError("Choose no more than " + maxFiles + " " + (maxFiles === 1 ? "file" : "files") + ".");\n      return;\n    }\n\n    setError(null);\n    commitFiles(unique);\n    if (inputRef.current) inputRef.current.value = "";\n  };\n\n  const removeFile = (file: File) => {\n    setError(null);\n    commitFiles(files.filter((item) => fileKey(item) !== fileKey(file)));\n  };\n\n  return (\n    <FileUploadContext.Provider\n      value={{\n        disabled,\n        error,\n        files,\n        inputId,\n        openPicker: () => inputRef.current?.click(),\n        progress,\n        removeFile,\n        selectFiles,\n      }}\n    >\n      <div className={cx("grid gap-3", className)} data-disabled={disabled || undefined} {...props}>\n        <input\n          accept={accept}\n          capture={capture}\n          className="sr-only"\n          disabled={disabled}\n          id={inputId}\n          multiple={multiple}\n          name={name}\n          onChange={(event: ChangeEvent<HTMLInputElement>) => {\n            if (event.target.files) selectFiles(event.target.files);\n            event.target.value = "";\n          }}\n          ref={inputRef}\n          type="file"\n        />\n        {children}\n      </div>\n    </FileUploadContext.Provider>\n  );\n}\n\nexport function FileUploadDropzone({\n  className = "",\n  disabled: disabledProp = false,\n  onDragEnter,\n  onDragLeave,\n  onDragOver,\n  onDrop,\n  onClick,\n  type = "button",\n  ...props\n}: ButtonHTMLAttributes<HTMLButtonElement>) {\n  const { disabled, openPicker, selectFiles } = useFileUpload();\n  const [dragging, setDragging] = useState(false);\n  const isDisabled = disabled || disabledProp;\n\n  return (\n    <button\n      className={cx(\n        "cursor-pointer group grid min-h-40 w-full place-items-center rounded-[0.5rem] border border-dashed border-border bg-surface px-6 py-8 text-center disabled:cursor-default aria-disabled:cursor-default",\n        "hover:border-foreground/35 hover:bg-muted/45 active:scale-[0.997] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",\n        "data-[dragging=true]:border-primary data-[dragging=true]:bg-primary/5 data-[dragging=true]:shadow-[inset_0_0_0_1px_color-mix(in_oklch,var(--brilliant-primary)_22%,transparent)]",\n        "motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",\n        "disabled:pointer-events-none disabled:opacity-50",\n        className,\n      )}\n      data-dragging={dragging}\n      disabled={isDisabled}\n      onClick={(event) => {\n        onClick?.(event);\n        if (!event.defaultPrevented) openPicker();\n      }}\n      onDragEnter={(event: DragEvent<HTMLButtonElement>) => {\n        onDragEnter?.(event);\n        if (!event.defaultPrevented) setDragging(true);\n      }}\n      onDragLeave={(event: DragEvent<HTMLButtonElement>) => {\n        onDragLeave?.(event);\n        if (!event.defaultPrevented && !event.currentTarget.contains(event.relatedTarget as Node)) {\n          setDragging(false);\n        }\n      }}\n      onDragOver={(event: DragEvent<HTMLButtonElement>) => {\n        onDragOver?.(event);\n        if (!event.defaultPrevented) {\n          event.preventDefault();\n          event.dataTransfer.dropEffect = "copy";\n        }\n      }}\n      onDrop={(event: DragEvent<HTMLButtonElement>) => {\n        onDrop?.(event);\n        if (!event.defaultPrevented) {\n          event.preventDefault();\n          setDragging(false);\n          selectFiles(event.dataTransfer.files);\n        }\n      }}\n      type={type}\n      {...props}\n    />\n  );\n}\n\nexport function FileUploadIcon({\n  children = "↑",\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLSpanElement>) {\n  return (\n    <span\n      aria-hidden="true"\n      className={cx(\n        "mb-3 grid size-10 place-items-center rounded-full bg-primary/10 text-lg font-medium text-primary",\n        "group-data-[dragging=true]:-translate-y-0.5 group-data-[dragging=true]:scale-105 motion-safe:transition-transform motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transform-none motion-reduce:transition-none",\n        className,\n      )}\n      {...props}\n    >\n      {children}\n    </span>\n  );\n}\n\nexport function FileUploadTitle({\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLParagraphElement>) {\n  return <p className={cx("text-sm font-medium text-foreground", className)} {...props} />;\n}\n\nexport function FileUploadDescription({\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLParagraphElement>) {\n  return <p className={cx("mt-1 text-xs leading-5 text-muted-foreground", className)} {...props} />;\n}\n\nexport function FileUploadTrigger({\n  className = "",\n  disabled: disabledProp = false,\n  onClick,\n  type = "button",\n  ...props\n}: ButtonHTMLAttributes<HTMLButtonElement>) {\n  const { disabled, openPicker } = useFileUpload();\n  const isDisabled = disabled || disabledProp;\n  return (\n    <button\n      className={cx(\n        "cursor-pointer inline-flex h-8 items-center justify-center rounded-[0.25rem] border border-border bg-surface px-3 text-xs font-medium text-foreground shadow-sm disabled:cursor-default aria-disabled:cursor-default",\n        "hover:bg-muted active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",\n        "motion-safe:transition-[background-color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",\n        className,\n      )}\n      disabled={isDisabled}\n      onClick={(event) => {\n        onClick?.(event);\n        if (!event.defaultPrevented) openPicker();\n      }}\n      type={type}\n      {...props}\n    />\n  );\n}\n\nexport function FileUploadList({ className = "", ...props }: HTMLAttributes<HTMLUListElement>) {\n  const { disabled, files, progress, removeFile } = useFileUpload();\n  if (files.length === 0) return null;\n\n  return (\n    <ul aria-label="Selected files" className={cx("grid gap-2", className)} {...props}>\n      {files.map((file) => {\n        const value = progress[file.name];\n        const hasProgress = typeof value === "number";\n        const clampedProgress = hasProgress ? Math.min(100, Math.max(0, value)) : 0;\n\n        return (\n          <li\n            className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 rounded-[0.375rem] border border-border bg-surface px-3 py-2.5 motion-safe:animate-enter motion-reduce:animate-none"\n            key={fileKey(file)}\n          >\n            <span className="min-w-0">\n              <span className="block truncate text-sm font-medium text-foreground">\n                {file.name}\n              </span>\n              <span className="block text-xs text-muted-foreground">{formatBytes(file.size)}</span>\n            </span>\n            <button\n              aria-label={"Remove " + file.name}\n              className="cursor-pointer grid size-8 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground active:scale-[0.96] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 disabled:cursor-default aria-disabled:cursor-default"\n              disabled={disabled}\n              onClick={() => removeFile(file)}\n              type="button"\n            >\n              ×\n            </button>\n            {hasProgress ? (\n              <span\n                aria-label={file.name + " upload progress"}\n                aria-valuemax={100}\n                aria-valuemin={0}\n                aria-valuenow={clampedProgress}\n                className="col-span-2 h-1 overflow-hidden rounded-full bg-muted"\n                role="progressbar"\n              >\n                <span\n                  className="block h-full rounded-full bg-primary motion-safe:transition-[width] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none"\n                  style={{ width: clampedProgress + "%" }}\n                />\n              </span>\n            ) : null}\n          </li>\n        );\n      })}\n    </ul>\n  );\n}\n\nexport function FileUploadError({\n  className = "",\n  ...props\n}: HTMLAttributes<HTMLParagraphElement>) {\n  const { error } = useFileUpload();\n  if (!error) return null;\n  return (\n    <p className={cx("text-xs font-medium text-critical", className)} role="alert" {...props}>\n      {error}\n    </p>\n  );\n}\n';
 
 const photoUploadSource =
-  '// biome-ignore-all lint/style/useTemplate: Concatenation keeps this copied source safe to serialize in the registry.\n\n"use client";\n\nimport type { HTMLAttributes } from "react";\nimport { useEffect, useState } from "react";\nimport {\n  FileUpload,\n  FileUploadDescription,\n  FileUploadDropzone,\n  FileUploadError,\n  FileUploadIcon,\n  FileUploadTitle,\n  FileUploadTrigger,\n} from "./file-upload";\nimport { Photo, PhotoFallback, PhotoImage } from "./photo";\n\nexport interface PhotoUploadProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {\n  accept?: string;\n  alt?: string;\n  capture?: "environment" | "user";\n  crop?: "circle" | "rectangle" | "square";\n  defaultFile?: File | null;\n  disabled?: boolean;\n  file?: File | null;\n  maxSize?: number;\n  onFileChange?: (file: File | null) => void;\n  onRemove?: () => void;\n  progress?: number;\n  ratio?: number | string;\n  src?: string;\n}\n\nexport function PhotoUpload({\n  accept = "image/jpeg,image/png,image/webp",\n  alt = "Selected photo preview",\n  capture,\n  className = "",\n  crop = "square",\n  defaultFile = null,\n  disabled = false,\n  file: controlledFile,\n  maxSize = 5 * 1024 * 1024,\n  onFileChange,\n  onRemove,\n  progress,\n  ratio = 4 / 3,\n  src,\n  ...props\n}: PhotoUploadProps) {\n  const [internalFile, setInternalFile] = useState<File | null>(defaultFile);\n  const [previewUrl, setPreviewUrl] = useState<string | null>(null);\n  const [sourceRemoved, setSourceRemoved] = useState(false);\n  const file = controlledFile === undefined ? internalFile : controlledFile;\n\n  useEffect(() => {\n    if (!file) {\n      setPreviewUrl(null);\n      return;\n    }\n\n    const nextUrl = URL.createObjectURL(file);\n    setPreviewUrl(nextUrl);\n    return () => URL.revokeObjectURL(nextUrl);\n  }, [file]);\n\n  useEffect(() => {\n    setSourceRemoved(false);\n  }, [src]);\n\n  const commitFile = (nextFile: File | null) => {\n    if (controlledFile === undefined) setInternalFile(nextFile);\n    setSourceRemoved(nextFile === null);\n    onFileChange?.(nextFile);\n  };\n\n  const removePhoto = () => {\n    commitFile(null);\n    onRemove?.();\n  };\n\n  const displaySrc = previewUrl ?? (sourceRemoved ? undefined : src);\n  const hasProgress = typeof progress === "number";\n  const clampedProgress = hasProgress ? Math.min(100, Math.max(0, progress)) : 0;\n\n  return (\n    <FileUpload\n      accept={accept}\n      className={className}\n      disabled={disabled}\n      files={file ? [file] : []}\n      maxFiles={1}\n      maxSize={maxSize}\n      onFilesChange={(files) => commitFile(files[0] ?? null)}\n      {...(capture ? { capture } : {})}\n      {...props}\n    >\n      {displaySrc ? (\n        <Photo\n          className="group w-full"\n          crop={crop}\n          radius={crop === "circle" ? "full" : "md"}\n          ratio={ratio}\n          variant="surface"\n        >\n          <PhotoFallback>Photo preview unavailable</PhotoFallback>\n          <PhotoImage alt={alt} src={displaySrc} />\n          <span\n            aria-hidden="true"\n            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/55 via-transparent to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 motion-safe:transition-opacity motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none"\n          />\n          <div className="absolute inset-x-3 bottom-3 grid gap-2">\n            <div className="flex translate-y-1 items-center justify-end gap-2 opacity-100 motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-focus-within:translate-y-0 sm:group-focus-within:opacity-100 motion-reduce:transform-none motion-reduce:transition-none">\n              <FileUploadTrigger className="border-transparent bg-background/92 shadow-sm backdrop-blur hover:bg-background">\n                Replace\n              </FileUploadTrigger>\n              <button\n                className="inline-flex h-8 items-center justify-center rounded-[0.25rem] bg-background/92 px-3 text-xs font-medium text-critical shadow-sm backdrop-blur hover:bg-background active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"\n                disabled={disabled}\n                onClick={removePhoto}\n                type="button"\n              >\n                Remove\n              </button>\n            </div>\n            {hasProgress ? (\n              <span\n                aria-label="Photo upload progress"\n                aria-valuemax={100}\n                aria-valuemin={0}\n                aria-valuenow={clampedProgress}\n                className="h-1 overflow-hidden rounded-full bg-background/35 backdrop-blur"\n                role="progressbar"\n              >\n                <span\n                  className="block h-full rounded-full bg-primary motion-safe:transition-[width] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none"\n                  style={{ width: clampedProgress + "%" }}\n                />\n              </span>\n            ) : null}\n          </div>\n        </Photo>\n      ) : (\n        <FileUploadDropzone className="min-h-56">\n          <span>\n            <FileUploadIcon>\n              <svg\n                aria-hidden="true"\n                className="size-5"\n                fill="none"\n                stroke="currentColor"\n                strokeLinecap="round"\n                strokeLinejoin="round"\n                strokeWidth="1.75"\n                viewBox="0 0 24 24"\n              >\n                <path d="M4 8.5h3l1.5-2h7l1.5 2h3v9.5H4V8.5Z" />\n                <circle cx="12" cy="13" r="3" />\n              </svg>\n            </FileUploadIcon>\n            <FileUploadTitle>Drop a photo here or click to browse</FileUploadTitle>\n            <FileUploadDescription>JPEG, PNG, or WebP up to 5 MB.</FileUploadDescription>\n          </span>\n        </FileUploadDropzone>\n      )}\n      <FileUploadError />\n    </FileUpload>\n  );\n}\n';
+  '// biome-ignore-all lint/style/useTemplate: Concatenation keeps this copied source safe to serialize in the registry.\n\n"use client";\n\nimport type { HTMLAttributes } from "react";\nimport { useEffect, useState } from "react";\nimport {\n  FileUpload,\n  FileUploadDescription,\n  FileUploadDropzone,\n  FileUploadError,\n  FileUploadIcon,\n  FileUploadTitle,\n  FileUploadTrigger,\n} from "./file-upload";\nimport { Photo, PhotoFallback, PhotoImage } from "./photo";\n\nexport interface PhotoUploadProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {\n  accept?: string;\n  alt?: string;\n  capture?: "environment" | "user";\n  crop?: "circle" | "rectangle" | "square";\n  defaultFile?: File | null;\n  disabled?: boolean;\n  file?: File | null;\n  maxSize?: number;\n  onFileChange?: (file: File | null) => void;\n  onRemove?: () => void;\n  progress?: number;\n  ratio?: number | string;\n  src?: string;\n}\n\nexport function PhotoUpload({\n  accept = "image/jpeg,image/png,image/webp",\n  alt = "Selected photo preview",\n  capture,\n  className = "",\n  crop = "square",\n  defaultFile = null,\n  disabled = false,\n  file: controlledFile,\n  maxSize = 5 * 1024 * 1024,\n  onFileChange,\n  onRemove,\n  progress,\n  ratio = 4 / 3,\n  src,\n  ...props\n}: PhotoUploadProps) {\n  const [internalFile, setInternalFile] = useState<File | null>(defaultFile);\n  const [previewUrl, setPreviewUrl] = useState<string | null>(null);\n  const [sourceRemoved, setSourceRemoved] = useState(false);\n  const file = controlledFile === undefined ? internalFile : controlledFile;\n\n  useEffect(() => {\n    if (!file) {\n      setPreviewUrl(null);\n      return;\n    }\n\n    const nextUrl = URL.createObjectURL(file);\n    setPreviewUrl(nextUrl);\n    return () => URL.revokeObjectURL(nextUrl);\n  }, [file]);\n\n  useEffect(() => {\n    setSourceRemoved(false);\n  }, [src]);\n\n  const commitFile = (nextFile: File | null) => {\n    if (controlledFile === undefined) setInternalFile(nextFile);\n    setSourceRemoved(nextFile === null);\n    onFileChange?.(nextFile);\n  };\n\n  const removePhoto = () => {\n    commitFile(null);\n    onRemove?.();\n  };\n\n  const displaySrc = previewUrl ?? (sourceRemoved ? undefined : src);\n  const hasProgress = typeof progress === "number";\n  const clampedProgress = hasProgress ? Math.min(100, Math.max(0, progress)) : 0;\n\n  return (\n    <FileUpload\n      accept={accept}\n      className={className}\n      disabled={disabled}\n      files={file ? [file] : []}\n      maxFiles={1}\n      maxSize={maxSize}\n      onFilesChange={(files) => commitFile(files[0] ?? null)}\n      {...(capture ? { capture } : {})}\n      {...props}\n    >\n      {displaySrc ? (\n        <Photo\n          className="group w-full"\n          crop={crop}\n          radius={crop === "circle" ? "full" : "md"}\n          ratio={ratio}\n          variant="surface"\n        >\n          <PhotoFallback>Photo preview unavailable</PhotoFallback>\n          <PhotoImage alt={alt} src={displaySrc} />\n          <span\n            aria-hidden="true"\n            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/55 via-transparent to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 motion-safe:transition-opacity motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none"\n          />\n          <div className="absolute inset-x-3 bottom-3 grid gap-2">\n            <div className="flex translate-y-1 items-center justify-end gap-2 opacity-100 motion-safe:transition-[opacity,transform] motion-safe:duration-[var(--brilliant-duration-fast)] sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-focus-within:translate-y-0 sm:group-focus-within:opacity-100 motion-reduce:transform-none motion-reduce:transition-none">\n              <FileUploadTrigger className="border-transparent bg-background/92 shadow-sm backdrop-blur hover:bg-background">\n                Replace\n              </FileUploadTrigger>\n              <button\n                className="cursor-pointer inline-flex h-8 items-center justify-center rounded-[0.25rem] bg-background/92 px-3 text-xs font-medium text-critical shadow-sm backdrop-blur hover:bg-background active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 disabled:cursor-default aria-disabled:cursor-default"\n                disabled={disabled}\n                onClick={removePhoto}\n                type="button"\n              >\n                Remove\n              </button>\n            </div>\n            {hasProgress ? (\n              <span\n                aria-label="Photo upload progress"\n                aria-valuemax={100}\n                aria-valuemin={0}\n                aria-valuenow={clampedProgress}\n                className="h-1 overflow-hidden rounded-full bg-background/35 backdrop-blur"\n                role="progressbar"\n              >\n                <span\n                  className="block h-full rounded-full bg-primary motion-safe:transition-[width] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none"\n                  style={{ width: clampedProgress + "%" }}\n                />\n              </span>\n            ) : null}\n          </div>\n        </Photo>\n      ) : (\n        <FileUploadDropzone className="min-h-56">\n          <span>\n            <FileUploadIcon>\n              <svg\n                aria-hidden="true"\n                className="size-5"\n                fill="none"\n                stroke="currentColor"\n                strokeLinecap="round"\n                strokeLinejoin="round"\n                strokeWidth="1.75"\n                viewBox="0 0 24 24"\n              >\n                <path d="M4 8.5h3l1.5-2h7l1.5 2h3v9.5H4V8.5Z" />\n                <circle cx="12" cy="13" r="3" />\n              </svg>\n            </FileUploadIcon>\n            <FileUploadTitle>Drop a photo here or click to browse</FileUploadTitle>\n            <FileUploadDescription>JPEG, PNG, or WebP up to 5 MB.</FileUploadDescription>\n          </span>\n        </FileUploadDropzone>\n      )}\n      <FileUploadError />\n    </FileUpload>\n  );\n}\n';
 
 const photoUploadSourcePatched = photoUploadSource
   .replace(
@@ -1978,6 +1982,7 @@ const selectSource = `"use client";
 
 import * as SelectPrimitive from "@radix-ui/react-select";
 import type { ComponentPropsWithoutRef } from "react";
+import { useCallback, useState } from "react";
 
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -1995,7 +2000,7 @@ export function SelectTrigger({
   return (
     <SelectPrimitive.Trigger
       className={cx(
-        "flex h-9 w-full items-center justify-between gap-2 rounded-[0.25rem] border-0 bg-background px-3 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)]",
+        "cursor-pointer flex h-9 w-full items-center justify-between gap-2 rounded-[0.25rem] border-0 bg-background px-3 text-sm text-foreground shadow-[inset_0_0_0_1px_var(--brilliant-control-border)] aria-disabled:cursor-default data-[disabled]:cursor-default",
         "data-[placeholder]:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
         "motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         "hover:bg-muted/50 focus:outline-none focus-visible:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)] data-[state=open]:shadow-[inset_0_0_0_1px_var(--brilliant-control-focus)]",
@@ -2018,8 +2023,15 @@ export function SelectContent({
   position = "popper",
   ...props
 }: ComponentPropsWithoutRef<typeof SelectPrimitive.Content>) {
+  const [container, setContainer] = useState<HTMLDialogElement | null>();
+  const portalAnchor = useCallback((node: HTMLSpanElement | null) => {
+    if (node) setContainer(node.closest<HTMLDialogElement>("dialog"));
+  }, []);
+
   return (
-    <SelectPrimitive.Portal>
+    <>
+      <span hidden ref={portalAnchor} />
+      {container !== undefined && <SelectPrimitive.Portal container={container}>
       <SelectPrimitive.Content
         className={cx(
           "z-50 max-h-[min(18rem,var(--radix-select-content-available-height))] min-w-[8rem] overflow-hidden rounded-[0.375rem] border-hairline border-border bg-surface text-foreground shadow-md",
@@ -2035,7 +2047,8 @@ export function SelectContent({
           {props.children}
         </SelectPrimitive.Viewport>
       </SelectPrimitive.Content>
-    </SelectPrimitive.Portal>
+    </SelectPrimitive.Portal>}
+    </>
   );
 }
 
@@ -2059,7 +2072,7 @@ export function SelectItem({
   return (
     <SelectPrimitive.Item
       className={cx(
-        "relative flex cursor-default select-none items-center rounded-[0.25rem] py-1.5 pr-8 pl-8 text-sm outline-none",
+        "relative flex cursor-pointer select-none items-center rounded-[0.25rem] py-1.5 pr-8 pl-8 text-sm outline-none disabled:cursor-default aria-disabled:cursor-default data-[disabled]:cursor-default",
         "data-[highlighted]:bg-muted data-[highlighted]:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         "motion-safe:transition-colors motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         className,
@@ -2233,7 +2246,7 @@ export function Combobox({
                 <button
                   aria-selected={selected}
                   className={cx(
-                    "relative flex w-full items-center rounded-[0.25rem] py-1.5 pr-3 pl-8 text-left outline-none",
+                    "cursor-pointer relative flex w-full items-center rounded-[0.25rem] py-1.5 pr-3 pl-8 text-left outline-none disabled:cursor-default aria-disabled:cursor-default",
                     "motion-safe:transition-colors motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
                     highlighted && "bg-muted text-foreground",
                     option.disabled && "pointer-events-none opacity-50",
@@ -2271,9 +2284,11 @@ export function Combobox({
 }
 `;
 
-const dialogSource = `import type { DialogHTMLAttributes, HTMLAttributes } from "react";
+const dialogSource = `import type { Ref, DialogHTMLAttributes, HTMLAttributes } from "react";
 
-export interface DialogProps extends DialogHTMLAttributes<HTMLDialogElement> {}
+export interface DialogProps extends DialogHTMLAttributes<HTMLDialogElement> {
+  ref?: Ref<HTMLDialogElement>;
+}
 
 export function Dialog({ className = "", ...props }: DialogProps) {
   return (
@@ -2308,9 +2323,11 @@ export function DialogFooter({ className = "", ...props }: HTMLAttributes<HTMLDi
 }
 `;
 
-const alertDialogSource = `import type { DialogHTMLAttributes, HTMLAttributes } from "react";
+const alertDialogSource = `import type { Ref, DialogHTMLAttributes, HTMLAttributes } from "react";
 
-export interface AlertDialogProps extends DialogHTMLAttributes<HTMLDialogElement> {}
+export interface AlertDialogProps extends DialogHTMLAttributes<HTMLDialogElement> {
+  ref?: Ref<HTMLDialogElement>;
+}
 
 export function AlertDialog({ className = "", ...props }: AlertDialogProps) {
   return (
@@ -2409,13 +2426,16 @@ const dropdownMenuSource = `"use client";
 
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import type { ComponentPropsWithoutRef } from "react";
+import { useCallback, useState } from "react";
 
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
 export const DropdownMenu = DropdownMenuPrimitive.Root;
-export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+export function DropdownMenuTrigger({ className = "", ...props }: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>) {
+  return <DropdownMenuPrimitive.Trigger className={cx("cursor-pointer disabled:cursor-default aria-disabled:cursor-default", className)} {...props} />;
+}
 export const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 export const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
 
@@ -2424,8 +2444,15 @@ export function DropdownMenuContent({
   sideOffset = 6,
   ...props
 }: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>) {
+  const [container, setContainer] = useState<HTMLDialogElement | null>();
+  const portalAnchor = useCallback((node: HTMLSpanElement | null) => {
+    if (node) setContainer(node.closest<HTMLDialogElement>("dialog"));
+  }, []);
+
   return (
-    <DropdownMenuPrimitive.Portal>
+    <>
+      <span hidden ref={portalAnchor} />
+      {container !== undefined && <DropdownMenuPrimitive.Portal container={container}>
       <DropdownMenuPrimitive.Content
         className={cx(
           "z-50 max-h-[min(18rem,var(--radix-dropdown-menu-content-available-height))] min-w-48 overflow-y-auto overscroll-contain rounded-[0.375rem] border-hairline border-border bg-surface p-1 text-sm text-foreground shadow-md [scrollbar-width:thin] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/35 [&::-webkit-scrollbar-track]:bg-transparent",
@@ -2436,7 +2463,8 @@ export function DropdownMenuContent({
         sideOffset={sideOffset}
         {...props}
       />
-    </DropdownMenuPrimitive.Portal>
+    </DropdownMenuPrimitive.Portal>}
+    </>
   );
 }
 
@@ -2447,7 +2475,7 @@ export function DropdownMenuItem({
   return (
     <DropdownMenuPrimitive.Item
       className={cx(
-        "relative flex cursor-default select-none items-center rounded-[0.25rem] px-2 py-1.5 outline-none",
+        "relative flex cursor-pointer select-none items-center rounded-[0.25rem] px-2 py-1.5 outline-none disabled:cursor-default aria-disabled:cursor-default data-[disabled]:cursor-default",
         "data-[highlighted]:bg-muted data-[highlighted]:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         "motion-safe:transition-colors motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         className,
@@ -2466,7 +2494,7 @@ export function DropdownMenuCheckboxItem({
   return (
     <DropdownMenuPrimitive.CheckboxItem
       className={cx(
-        "relative flex cursor-default select-none items-center rounded-[0.25rem] py-1.5 pr-2 pl-8 outline-none",
+        "relative flex cursor-pointer select-none items-center rounded-[0.25rem] py-1.5 pr-2 pl-8 outline-none disabled:cursor-default aria-disabled:cursor-default data-[disabled]:cursor-default",
         "data-[highlighted]:bg-muted data-[highlighted]:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}
@@ -2499,7 +2527,7 @@ export function DropdownMenuRadioItem({
   return (
     <DropdownMenuPrimitive.RadioItem
       className={cx(
-        "relative flex cursor-default select-none items-center rounded-[0.25rem] py-1.5 pr-2 pl-8 outline-none",
+        "relative flex cursor-pointer select-none items-center rounded-[0.25rem] py-1.5 pr-2 pl-8 outline-none disabled:cursor-default aria-disabled:cursor-default data-[disabled]:cursor-default",
         "data-[highlighted]:bg-muted data-[highlighted]:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}
@@ -2557,7 +2585,7 @@ export function Popover({ className = "", ...props }: PopoverProps) {
 }
 
 export function PopoverTrigger({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
-  return <summary className={["list-none cursor-pointer", className].join(" ")} {...props} />;
+  return <summary className={["list-none cursor-pointer aria-disabled:cursor-default", className].join(" ")} {...props} />;
 }
 
 export function PopoverContent({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
@@ -2597,8 +2625,8 @@ export function ContextMenu({ children, className = "", ...props }: ContextMenuP
       {children}
       {open ? (
         <div className="absolute z-50 mt-2 min-w-44 rounded-[0.5rem] border-hairline border-border bg-surface p-1 text-sm shadow-md motion-safe:animate-enter motion-reduce:animate-none" role="menu">
-          <button className="block w-full rounded-[0.25rem] px-2 py-1.5 text-left hover:bg-muted" onClick={() => setOpen(false)} type="button">Open</button>
-          <button className="block w-full rounded-[0.25rem] px-2 py-1.5 text-left hover:bg-muted" onClick={() => setOpen(false)} type="button">Rename</button>
+          <button className="cursor-pointer block w-full rounded-[0.25rem] px-2 py-1.5 text-left hover:bg-muted disabled:cursor-default aria-disabled:cursor-default" onClick={() => setOpen(false)} type="button">Open</button>
+          <button className="cursor-pointer block w-full rounded-[0.25rem] px-2 py-1.5 text-left hover:bg-muted disabled:cursor-default aria-disabled:cursor-default" onClick={() => setOpen(false)} type="button">Rename</button>
         </div>
       ) : null}
     </div>
@@ -2636,7 +2664,7 @@ export function TabsTrigger({
   return (
     <TabsPrimitive.Trigger
       className={cx(
-        "rounded-[0.25rem] px-3 py-1.5 text-sm font-medium text-muted-foreground outline-none",
+        "cursor-pointer rounded-[0.25rem] px-3 py-1.5 text-sm font-medium text-muted-foreground outline-none disabled:cursor-default aria-disabled:cursor-default data-[disabled]:cursor-default",
         "data-[state=active]:bg-surface data-[state=active]:text-foreground data-[state=active]:shadow-sm",
         "hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring",
         "motion-safe:transition-[background-color,color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
@@ -2678,7 +2706,7 @@ export function AccordionItem({ className = "", ...props }: DetailsHTMLAttribute
 }
 
 export function AccordionTrigger({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
-  return <summary className={["cursor-pointer list-none px-4 py-3 text-sm font-medium hover:bg-muted", className].join(" ")} {...props} />;
+  return <summary className={["cursor-pointer list-none px-4 py-3 text-sm font-medium hover:bg-muted aria-disabled:cursor-default", className].join(" ")} {...props} />;
 }
 
 export function AccordionContent({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
@@ -2794,7 +2822,7 @@ export function CarouselPrevious({
     <button
       aria-label="Previous slide"
       className={cx(
-        "inline-flex size-8 items-center justify-center rounded-[0.25rem] border-hairline border-border bg-surface text-sm shadow-sm",
+        "cursor-pointer inline-flex size-8 items-center justify-center rounded-[0.25rem] border-hairline border-border bg-surface text-sm shadow-sm disabled:cursor-default aria-disabled:cursor-default",
         "motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         "hover:-translate-y-px hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:translate-y-0 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40",
         className,
@@ -2819,7 +2847,7 @@ export function CarouselNext({
     <button
       aria-label="Next slide"
       className={cx(
-        "inline-flex size-8 items-center justify-center rounded-[0.25rem] border-hairline border-border bg-surface text-sm shadow-sm",
+        "cursor-pointer inline-flex size-8 items-center justify-center rounded-[0.25rem] border-hairline border-border bg-surface text-sm shadow-sm disabled:cursor-default aria-disabled:cursor-default",
         "motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         "hover:-translate-y-px hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:translate-y-0 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40",
         className,
@@ -2842,7 +2870,7 @@ export function CarouselDots({ className = "", ...props }: HTMLAttributes<HTMLDi
         <button
           aria-label={\`Go to slide \${dotIndex + 1}\`}
           aria-current={index === dotIndex ? "true" : undefined}
-          className="size-1.5 rounded-full bg-muted-foreground/35 transition-[background-color,transform] aria-current:scale-125 aria-current:bg-primary"
+          className="cursor-pointer size-1.5 rounded-full bg-muted-foreground/35 transition-[background-color,transform] aria-current:scale-125 aria-current:bg-primary disabled:cursor-default aria-disabled:cursor-default"
           key={dotIndex}
           onClick={() => setIndex(dotIndex)}
           type="button"
@@ -2879,7 +2907,7 @@ export function NavigationMenu({ className = "", ...props }: HTMLAttributes<HTML
 }
 
 export function NavigationMenuLink({ className = "", ...props }: HTMLAttributes<HTMLAnchorElement>) {
-  return <a className={["rounded-[0.25rem] px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground", className].join(" ")} {...props} />;
+  return <a className={["cursor-pointer rounded-[0.25rem] px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground aria-disabled:cursor-default", className].join(" ")} {...props} />;
 }
 `;
 
@@ -2890,7 +2918,7 @@ export function Menubar({ className = "", ...props }: HTMLAttributes<HTMLDivElem
 }
 
 export function MenubarItem({ className = "", type = "button", ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button className={["rounded-[0.25rem] px-3 py-1.5 text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring", className].join(" ")} role="menuitem" type={type} {...props} />;
+  return <button className={["cursor-pointer rounded-[0.25rem] px-3 py-1.5 text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-default aria-disabled:cursor-default", className].join(" ")} role="menuitem" type={type} {...props} />;
 }
 `;
 
@@ -2909,7 +2937,7 @@ export function PaginationItem({ className = "", ...props }: HTMLAttributes<HTML
 }
 
 export function PaginationLink({ className = "", ...props }: HTMLAttributes<HTMLAnchorElement>) {
-  return <a className={["inline-flex size-9 items-center justify-center rounded-[0.25rem] text-sm hover:bg-muted aria-current:bg-primary aria-current:text-primary-foreground", className].join(" ")} {...props} />;
+  return <a className={["cursor-pointer inline-flex size-9 items-center justify-center rounded-[0.25rem] text-sm hover:bg-muted aria-current:bg-primary aria-current:text-primary-foreground aria-disabled:cursor-default", className].join(" ")} {...props} />;
 }
 `;
 
@@ -3030,8 +3058,9 @@ export function ScrollBar({
 
 const toastSource = `"use client";
 
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 export interface ToastMessage {
   description?: ReactNode;
@@ -3051,14 +3080,43 @@ function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
+function activeToastDialog(): HTMLDialogElement | null {
+  if (typeof document === "undefined") return null;
+  const focusedDialog = document.activeElement?.closest<HTMLDialogElement>("dialog:modal");
+  if (focusedDialog) return focusedDialog;
+  const dialogs = document.querySelectorAll<HTMLDialogElement>("dialog:modal");
+  return dialogs.item(dialogs.length - 1);
+}
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [messages, setMessages] = useState<ToastMessage[]>([]);
+  const [container, setContainer] = useState<HTMLDialogElement | null>(null);
+
+  useEffect(() => {
+    if (!container) return;
+    const restore = () => setContainer(activeToastDialog());
+    container.addEventListener("close", restore);
+    const observer = new MutationObserver(() => {
+      if (!container.isConnected || !container.open) restore();
+    });
+    observer.observe(document.body, {
+      attributeFilter: ["open"],
+      attributes: true,
+      childList: true,
+      subtree: true,
+    });
+    return () => {
+      container.removeEventListener("close", restore);
+      observer.disconnect();
+    };
+  }, [container]);
 
   const dismiss = useCallback((id: string) => {
     setMessages((current) => current.filter((message) => message.id !== id));
   }, []);
 
   const toast = useCallback((message: Omit<ToastMessage, "id"> & { id?: string }) => {
+    setContainer(activeToastDialog());
     const id = message.id ?? crypto.randomUUID();
     setMessages((current) => [{ ...message, id }, ...current].slice(0, 4));
     return id;
@@ -3066,9 +3124,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(() => ({ dismiss, toast }), [dismiss, toast]);
 
-  return (
-    <ToastContext.Provider value={value}>
-      {children}
+  const region = (
       <ToastRegion>
         {messages.map((message) => (
           <Toast key={message.id} variant={message.variant}>
@@ -3080,6 +3136,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           </Toast>
         ))}
       </ToastRegion>
+  );
+
+  return (
+    <ToastContext.Provider value={value}>
+      {children}
+      {container ? createPortal(region, container) : region}
     </ToastContext.Provider>
   );
 }
@@ -3127,7 +3189,7 @@ export function ToastClose({
   type = "button",
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button aria-label="Dismiss toast" className={cx("grid size-7 shrink-0 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring", className)} type={type} {...props}>×</button>;
+  return <button aria-label="Dismiss toast" className={cx("cursor-pointer grid size-7 shrink-0 place-items-center rounded-[0.25rem] text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-default aria-disabled:cursor-default", className)} type={type} {...props}>×</button>;
 }
 `;
 
@@ -3368,7 +3430,7 @@ export function HeaderBrand({ className = "", ...props }: AnchorHTMLAttributes<H
   return (
     <a
       className={cx(
-        "inline-flex shrink-0 items-center gap-2 rounded-[0.25rem] font-semibold tracking-[-0.015em] outline-none md:mr-3",
+        "cursor-pointer inline-flex shrink-0 items-center gap-2 rounded-[0.25rem] font-semibold tracking-[-0.015em] outline-none md:mr-3 aria-disabled:cursor-default",
         "focus-visible:ring-1 focus-visible:ring-ring",
         className,
       )}
@@ -3417,7 +3479,7 @@ export function HeaderLink({
     <a
       aria-current={active ? "page" : undefined}
       className={cx(
-        "rounded-[0.25rem] px-3 py-2 text-sm outline-none",
+        "cursor-pointer rounded-[0.25rem] px-3 py-2 text-sm outline-none aria-disabled:cursor-default",
         "motion-safe:transition-[color,background-color] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         "focus-visible:ring-1 focus-visible:ring-ring",
         active
@@ -3452,7 +3514,7 @@ export function HeaderMobileTrigger({
       aria-expanded={menuOpen}
       aria-label={menuOpen ? "Close navigation" : "Open navigation"}
       className={cx(
-        "ml-auto inline-grid size-9 place-items-center rounded-[0.25rem] text-foreground md:hidden",
+        "cursor-pointer ml-auto inline-grid size-9 place-items-center rounded-[0.25rem] text-foreground md:hidden disabled:cursor-default aria-disabled:cursor-default",
         "hover:bg-muted active:scale-[0.97] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         "motion-safe:transition-[background-color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         className,
@@ -3523,7 +3585,7 @@ export function FooterBrand({ className = "", ...props }: AnchorHTMLAttributes<H
   return (
     <a
       className={cx(
-        "inline-flex items-center gap-2 rounded-[0.25rem] font-semibold tracking-[-0.015em] text-foreground outline-none",
+        "cursor-pointer inline-flex items-center gap-2 rounded-[0.25rem] font-semibold tracking-[-0.015em] text-foreground outline-none aria-disabled:cursor-default",
         "focus-visible:ring-1 focus-visible:ring-ring",
         className,
       )}
@@ -3566,7 +3628,7 @@ export function FooterLink({ className = "", ...props }: AnchorHTMLAttributes<HT
   return (
     <a
       className={cx(
-        "w-fit rounded-[0.2rem] leading-6 outline-none hover:text-foreground",
+        "cursor-pointer w-fit rounded-[0.2rem] leading-6 outline-none hover:text-foreground aria-disabled:cursor-default",
         "motion-safe:transition-colors motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         "focus-visible:ring-1 focus-visible:ring-ring",
         className,
@@ -3772,7 +3834,7 @@ export function ApplicationShellHeaderBrand({
   return (
     <a
       className={cx(
-        "inline-flex shrink-0 items-center gap-2 rounded-[0.375rem] text-sm font-semibold text-foreground md:hidden",
+        "cursor-pointer inline-flex shrink-0 items-center gap-2 rounded-[0.375rem] text-sm font-semibold text-foreground md:hidden aria-disabled:cursor-default",
         "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         className,
       )}
@@ -3845,7 +3907,7 @@ export function ApplicationShellHeaderAction({
   return (
     <button
       className={cx(
-        "relative inline-flex size-9 items-center justify-center rounded-[0.25rem] text-sm text-muted-foreground",
+        "cursor-pointer relative inline-flex size-9 items-center justify-center rounded-[0.25rem] text-sm text-muted-foreground disabled:cursor-default aria-disabled:cursor-default",
         "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97]",
         "motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         className,
@@ -3868,7 +3930,7 @@ export function ApplicationShellMobileTrigger({
     <button
       aria-label="Open navigation"
       className={cx(
-        "inline-flex size-9 shrink-0 items-center justify-center rounded-[0.25rem] border-hairline border-border bg-surface text-sm text-foreground shadow-sm",
+        "cursor-pointer inline-flex size-9 shrink-0 items-center justify-center rounded-[0.25rem] border-hairline border-border bg-surface text-sm text-foreground shadow-sm disabled:cursor-default aria-disabled:cursor-default",
         "motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         "hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.98] md:hidden",
         className,
@@ -3898,7 +3960,7 @@ export function ApplicationShellSidebarToggle({
       aria-expanded={!collapsed}
       aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
       className={cx(
-        "hidden size-9 shrink-0 items-center justify-center rounded-[0.25rem] text-muted-foreground md:inline-flex",
+        "cursor-pointer hidden size-9 shrink-0 items-center justify-center rounded-[0.25rem] text-muted-foreground md:inline-flex disabled:cursor-default aria-disabled:cursor-default",
         "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.97]",
         "motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         className,
@@ -3940,7 +4002,7 @@ export function ApplicationShellSidebar({ className = "", ...props }: HTMLAttrib
       <button
         aria-hidden={!mobileNavOpen}
         className={cx(
-          "fixed inset-0 z-40 bg-foreground/20 backdrop-blur-[2px] transition-opacity md:hidden",
+          "cursor-pointer fixed inset-0 z-40 bg-foreground/20 backdrop-blur-[2px] transition-opacity md:hidden disabled:cursor-default aria-disabled:cursor-default",
           mobileNavOpen ? "opacity-100" : "pointer-events-none opacity-0",
         )}
         onClick={closeMobileNav}
@@ -3985,7 +4047,7 @@ export function ApplicationShellBrand({ className = "", ...props }: AnchorHTMLAt
   return (
     <a
       className={cx(
-        "flex min-w-0 max-w-[14rem] flex-1 items-center gap-3 overflow-hidden whitespace-nowrap rounded-[0.25rem] text-foreground opacity-100 outline-none focus-visible:ring-1 focus-visible:ring-ring md:group-data-[collapsed=true]/sidebar:pointer-events-none md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+        "cursor-pointer flex min-w-0 max-w-[14rem] flex-1 items-center gap-3 overflow-hidden whitespace-nowrap rounded-[0.25rem] text-foreground opacity-100 outline-none focus-visible:ring-1 focus-visible:ring-ring md:group-data-[collapsed=true]/sidebar:pointer-events-none md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none aria-disabled:cursor-default",
         className,
       )}
       {...props}
@@ -4041,7 +4103,7 @@ export function ApplicationShellSidebarFooterAction({
   return (
     <button
       className={cx(
-        "flex h-8 w-full items-center gap-2 rounded-[0.375rem] px-2 text-left text-sm text-muted-foreground md:group-data-[collapsed=true]/sidebar:justify-center",
+        "cursor-pointer flex h-8 w-full items-center gap-2 rounded-[0.375rem] px-2 text-left text-sm text-muted-foreground md:group-data-[collapsed=true]/sidebar:justify-center disabled:cursor-default aria-disabled:cursor-default",
         "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.99]",
         "motion-safe:transition-[background-color,color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         className,
@@ -4066,7 +4128,7 @@ export function ApplicationShellSearch({ className = "", ...props }: AnchorHTMLA
   return (
     <a
       className={cx(
-        "mb-5 flex h-9 items-center gap-2 rounded-[0.375rem] border-hairline border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm [&>kbd]:overflow-hidden [&>kbd]:transition-[max-width,opacity,padding,border-width] [&>span:not(:first-child)]:overflow-hidden [&>span:not(:first-child)]:transition-[max-width,opacity] md:group-data-[collapsed=true]/sidebar:justify-center md:group-data-[collapsed=true]/sidebar:px-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:max-w-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:border-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:p-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:opacity-0 md:group-data-[collapsed=true]/sidebar:[&>span:not(:first-child)]:max-w-0 md:group-data-[collapsed=true]/sidebar:[&>span:not(:first-child)]:opacity-0 motion-safe:[&>kbd]:duration-[var(--brilliant-duration-normal)] motion-safe:[&>span:not(:first-child)]:duration-[var(--brilliant-duration-normal)] motion-reduce:[&>kbd]:transition-none motion-reduce:[&>span:not(:first-child)]:transition-none",
+        "cursor-pointer mb-5 flex h-9 items-center gap-2 rounded-[0.375rem] border-hairline border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm [&>kbd]:overflow-hidden [&>kbd]:transition-[max-width,opacity,padding,border-width] [&>span:not(:first-child)]:overflow-hidden [&>span:not(:first-child)]:transition-[max-width,opacity] md:group-data-[collapsed=true]/sidebar:justify-center md:group-data-[collapsed=true]/sidebar:px-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:max-w-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:border-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:p-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:opacity-0 md:group-data-[collapsed=true]/sidebar:[&>span:not(:first-child)]:max-w-0 md:group-data-[collapsed=true]/sidebar:[&>span:not(:first-child)]:opacity-0 motion-safe:[&>kbd]:duration-[var(--brilliant-duration-normal)] motion-safe:[&>span:not(:first-child)]:duration-[var(--brilliant-duration-normal)] motion-reduce:[&>kbd]:transition-none motion-reduce:[&>span:not(:first-child)]:transition-none aria-disabled:cursor-default",
         "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         className,
       )}
@@ -4113,7 +4175,7 @@ export function ApplicationShellNavItem({
     <a
       aria-current={active ? "page" : undefined}
       className={cx(
-        "group flex items-center gap-2 rounded-[0.375rem] px-2 py-1.5 leading-5 transition-colors md:group-data-[collapsed=true]/sidebar:justify-center",
+        "cursor-pointer group flex items-center gap-2 rounded-[0.375rem] px-2 py-1.5 leading-5 transition-colors md:group-data-[collapsed=true]/sidebar:justify-center aria-disabled:cursor-default",
         active
           ? "bg-muted font-medium text-foreground"
           : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -4200,7 +4262,7 @@ export function ApplicationShellNavGroupItem({
     <a
       aria-current={active ? "page" : undefined}
       className={cx(
-        "group flex items-center gap-3 rounded-[0.5rem] px-2 py-2 transition-colors md:group-data-[collapsed=true]/sidebar:justify-center",
+        "cursor-pointer group flex items-center gap-3 rounded-[0.5rem] px-2 py-2 transition-colors md:group-data-[collapsed=true]/sidebar:justify-center aria-disabled:cursor-default",
         active
           ? "bg-muted text-foreground"
           : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -4279,7 +4341,7 @@ export function ApplicationShellMenuItem({
   return (
     <button
       className={cx(
-        "flex w-full items-center gap-3 px-4 py-2 text-left text-sm transition-colors",
+        "cursor-pointer flex w-full items-center gap-3 px-4 py-2 text-left text-sm transition-colors disabled:cursor-default aria-disabled:cursor-default",
         active ? "bg-muted text-foreground" : "text-foreground hover:bg-muted",
         "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring",
         className,
@@ -4348,7 +4410,7 @@ export function ApplicationShellProfileTrigger({
   return (
     <summary
       className={cx(
-        "flex w-full cursor-pointer list-none items-center gap-3 rounded-[0.5rem] px-2 py-2 text-left text-foreground md:group-data-[collapsed=true]/sidebar:justify-center",
+        "flex w-full cursor-pointer list-none items-center gap-3 rounded-[0.5rem] px-2 py-2 text-left text-foreground md:group-data-[collapsed=true]/sidebar:justify-center aria-disabled:cursor-default",
         "hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring active:scale-[0.995]",
         "motion-safe:transition-[background-color,transform] motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
         className,
@@ -4390,7 +4452,7 @@ export function ApplicationShellAccountItem({
   return (
     <button
       className={cx(
-        "flex w-full items-center gap-3 rounded-[0.5rem] px-2 py-2 text-left transition-colors",
+        "cursor-pointer flex w-full items-center gap-3 rounded-[0.5rem] px-2 py-2 text-left transition-colors disabled:cursor-default aria-disabled:cursor-default",
         active ? "bg-muted text-foreground" : "text-foreground hover:bg-muted",
         "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         className,
@@ -4589,7 +4651,7 @@ export function OnboardingWizardStep({
       <button
         aria-current={state === "current" ? "step" : undefined}
         className={cx(
-          "group flex w-full items-start gap-3 rounded-[0.5rem] px-3 py-2.5 text-left transition-[background-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)]",
+          "cursor-pointer group flex w-full items-start gap-3 rounded-[0.5rem] px-3 py-2.5 text-left transition-[background-color,box-shadow,transform] duration-[var(--brilliant-duration-fast)] disabled:cursor-default aria-disabled:cursor-default",
           "hover:bg-muted active:scale-[0.99] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
           state === "current" && "bg-muted shadow-[inset_0_0_0_0.5px_var(--brilliant-control-border)]",
           className,
@@ -5244,6 +5306,7 @@ export const registry = [
       accessibility: [
         "Uses Radix Select for keyboard navigation and managed ARIA behavior.",
         "Pair the trigger with a visible label or aria-label.",
+        "Content portals stay within their containing native dialog so options remain operable in its modal top layer.",
         "Items expose selected and highlighted states without relying on color alone.",
         "Long option lists retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
       ],
@@ -5309,7 +5372,11 @@ export const registry = [
     metadata: {
       purpose: "Shows focused content or tasks above the page.",
       slots: ["root", "header", "title", "description", "content", "footer"],
-      accessibility: ["Uses native dialog semantics.", "Use showModal() and provide a title."],
+      accessibility: [
+        "Uses native dialog semantics.",
+        "Accepts a React 19 ref for showModal(), close(), and focus management.",
+        "Use showModal() and provide a title.",
+      ],
       usage: ["Use for focused tasks.", "Keep actions in the footer."],
       avoid: ["Do not put long multi-page flows in one dialog."],
     },
@@ -5327,7 +5394,11 @@ export const registry = [
     metadata: {
       purpose: "Confirms destructive, irreversible, or high-risk actions.",
       slots: ["root", "header", "title", "description", "content", "footer"],
-      accessibility: ["Uses native dialog semantics.", "Use clear confirm and cancel actions."],
+      accessibility: [
+        "Uses native dialog semantics.",
+        "Accepts a React 19 ref for showModal(), close(), and focus management.",
+        "Use clear confirm and cancel actions.",
+      ],
       usage: ["Use for destructive confirmation.", "Make consequences explicit."],
       avoid: ["Do not use for ordinary informational messages."],
     },
@@ -5388,6 +5459,7 @@ export const registry = [
       ],
       accessibility: [
         "Uses Radix Dropdown Menu for keyboard navigation and menu semantics.",
+        "Content portals stay within their containing native dialog so actions remain operable in its modal top layer.",
         "Keep destructive actions clearly labeled.",
         "Do not make menu-only actions essential.",
         "Long menus retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
@@ -6332,6 +6404,7 @@ export const registry = [
       usage: [
         "Wrap the app or route segment in ToastProvider.",
         "Call useToast().toast(...) from event handlers.",
+        "Toasts emitted during a native modal task stay in that dialog and return to the remaining modal or application when it closes or unmounts.",
         "Use variants for default, primary, or critical non-blocking feedback.",
       ],
       avoid: ["Do not use toast as the only error recovery path."],

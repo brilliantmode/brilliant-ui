@@ -1,5 +1,5 @@
 /* Generated from the Brilliant UI registry. Do not edit directly. */
-export const packageVersion = "0.3.0";
+export const packageVersion = "0.3.1";
 export const componentCatalog = [
   {
     dependencies: [],
@@ -724,6 +724,7 @@ export const componentCatalog = [
       accessibility: [
         "Uses Radix Select for keyboard navigation and managed ARIA behavior.",
         "Pair the trigger with a visible label or aria-label.",
+        "Content portals stay within their containing native dialog so options remain operable in its modal top layer.",
         "Items expose selected and highlighted states without relying on color alone.",
         "Long option lists retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
       ],
@@ -818,7 +819,11 @@ export const componentCatalog = [
     metadata: {
       purpose: "Shows focused content or tasks above the page.",
       slots: ["root", "header", "title", "description", "content", "footer"],
-      accessibility: ["Uses native dialog semantics.", "Use showModal() and provide a title."],
+      accessibility: [
+        "Uses native dialog semantics.",
+        "Accepts a React 19 ref for showModal(), close(), and focus management.",
+        "Use showModal() and provide a title.",
+      ],
       usage: ["Use for focused tasks.", "Keep actions in the footer."],
       avoid: ["Do not put long multi-page flows in one dialog."],
     },
@@ -853,7 +858,11 @@ export const componentCatalog = [
     metadata: {
       purpose: "Confirms destructive, irreversible, or high-risk actions.",
       slots: ["root", "header", "title", "description", "content", "footer"],
-      accessibility: ["Uses native dialog semantics.", "Use clear confirm and cancel actions."],
+      accessibility: [
+        "Uses native dialog semantics.",
+        "Accepts a React 19 ref for showModal(), close(), and focus management.",
+        "Use clear confirm and cancel actions.",
+      ],
       usage: ["Use for destructive confirmation.", "Make consequences explicit."],
       avoid: ["Do not use for ordinary informational messages."],
     },
@@ -957,6 +966,7 @@ export const componentCatalog = [
       ],
       accessibility: [
         "Uses Radix Dropdown Menu for keyboard navigation and menu semantics.",
+        "Content portals stay within their containing native dialog so actions remain operable in its modal top layer.",
         "Keep destructive actions clearly labeled.",
         "Do not make menu-only actions essential.",
         "Long menus retain keyboard, wheel, and touch scrolling with a visible overflow scrollbar.",
@@ -2272,6 +2282,7 @@ export const componentCatalog = [
       usage: [
         "Wrap the app or route segment in ToastProvider.",
         "Call useToast().toast(...) from event handlers.",
+        "Toasts emitted during a native modal task stay in that dialog and return to the remaining modal or application when it closes or unmounts.",
         "Use variants for default, primary, or critical non-blocking feedback.",
       ],
       avoid: ["Do not use toast as the only error recovery path."],
