@@ -1,6 +1,6 @@
 # Releasing @brilliantmode/ui
 
-Publish through GitHub Actions. Do not run `npm publish` locally.
+Publish through GitHub Actions. Do not run `pnpm publish` locally.
 
 1. Add a Changeset for package changes and run `pnpm release:version`.
 2. Run `pnpm --filter @brilliantmode/ui generate`, then `pnpm check`.

@@ -19,12 +19,12 @@ try {
     mkdir(consumerDirectory, { recursive: true }),
   ]);
 
-  await execFileAsync("npm", ["pack", "--pack-destination", packDirectory], {
+  await execFileAsync("pnpm", ["pack", "--pack-destination", packDirectory], {
     cwd: packageRoot,
   });
 
   const tarballName = (await readdir(packDirectory)).find((name) => name.endsWith(".tgz"));
-  if (!tarballName) throw new Error("npm pack did not produce a package tarball.");
+  if (!tarballName) throw new Error("pnpm pack did not produce a package tarball.");
 
   const tarballPath = join(packDirectory, tarballName);
   const { stdout: packedManifestText } = await execFileAsync(
@@ -50,7 +50,7 @@ try {
     "utf8",
   );
 
-  await execFileAsync("npm", ["install", "--ignore-scripts", tarballPath], {
+  await execFileAsync("pnpm", ["add", "--ignore-scripts", tarballPath], {
     cwd: consumerDirectory,
   });
 

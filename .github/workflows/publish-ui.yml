@@ -47,7 +47,7 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Setup npm for trusted publishing
-        run: npm install --global npm@11.19.1
+        run: pnpm add --global npm@11.19.1
 
       - name: Verify release tag
         env:
@@ -75,14 +75,14 @@ jobs:
       - name: Publish to npm using trusted publishing
         if: github.event_name == 'push' || !inputs.verify_only
         working-directory: packages/components
-        run: npm publish --access public --provenance
+        run: pnpm publish --no-git-checks --access public --provenance
 
       - name: Verify published version
         working-directory: packages/components
         run: |
           version=$(node -p 'require("./package.json").version')
           for attempt in {1..20}; do
-            if npm view "@brilliantmode/ui@$version" version dist.integrity; then
+            if pnpm view "@brilliantmode/ui@$version" version dist.integrity; then
               exit 0
             fi
             echo "Waiting for npm registry processing (attempt $attempt/20)..."
