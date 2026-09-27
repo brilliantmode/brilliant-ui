@@ -951,6 +951,37 @@ export function Example() {
 export function Example() {
   return <Progress aria-label="Sync progress" value={64} />;
 }`,
+  "signal-orb": `"use client";
+
+import { useState } from "react";
+import { SignalOrb, type SignalOrbState } from "@brilliantmode/ui/signal-orb";
+
+const states = ["listening", "thinking", "searching", "done"] as const;
+
+export function Example() {
+  const [state, setState] = useState<SignalOrbState>("listening");
+  const [paused, setPaused] = useState(false);
+
+  return (
+    <div className="grid justify-items-center gap-4">
+      <SignalOrb state={state} level={0.5} size="lg" paused={paused} />
+      <p className="text-sm capitalize">{state}</p>
+      <fieldset aria-label="Assistant state" className="flex flex-wrap gap-2">
+        {states.map((value) => (
+          <button key={value} type="button" aria-pressed={state === value}
+            onClick={() => setState(value)}
+            className="rounded-md border border-border px-3 py-2 text-sm capitalize hover:bg-muted active:scale-[0.98] aria-pressed:bg-primary aria-pressed:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring motion-reduce:transform-none">
+            {value}
+          </button>
+        ))}
+      </fieldset>
+      <button type="button" data-paused={paused} onClick={() => setPaused((value) => !value)}
+        className="min-w-32 rounded-md border border-border px-3 py-2 text-sm hover:bg-muted data-[paused=true]:border-primary/30 data-[paused=true]:bg-primary/10 data-[paused=true]:text-primary focus-visible:outline-2 focus-visible:outline-ring">
+        {paused ? "Resume motion" : "Pause motion"}
+      </button>
+    </div>
+  );
+}`,
   spinner: `import { Spinner } from "@brilliantmode/ui/spinner";
 
 export function Example() {

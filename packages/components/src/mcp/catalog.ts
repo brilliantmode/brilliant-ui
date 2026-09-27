@@ -1182,6 +1182,44 @@ export const componentCatalog = [
   },
   {
     dependencies: [],
+    description:
+      "A particle orb that morphs between listening, thinking, searching, and completion states.",
+    exports: ["SignalOrbState", "SignalOrbProps", "SignalOrb"],
+    importPath: "@brilliantmode/ui/signal-orb",
+    kind: "component",
+    metadata: {
+      purpose:
+        "Communicates an assistant's current activity through a controlled, themeable WebGL particle visualization. Independently implemented, inspired by Ship Notes Signal Orb.",
+      slots: ["root", "glow", "completion", "canvas", "fallback", "label"],
+      accessibility: [
+        "The label is a polite, atomic status region; customize it with meaningful task text.",
+        "Canvas and SVG are decorative; pair the orb with visible status text.",
+        "Reduced-motion preferences and paused render a still frame, with immediate state changes.",
+        "A static SVG fallback remains available without WebGL, during context loss, and in forced colors.",
+      ],
+      usage: [
+        "Set state to listening, thinking, searching, or done from real application state.",
+        "Thinking uses shifting particle clusters and traveling signal pulses that disperse and reconnect.",
+        "Done resolves into an opaque ring and checkmark. Particles fade out completely as the solid completion mark appears.",
+        "Pass a normalized level from 0 to 1 to control the listening pulse. Audio capture is owned by the application.",
+        "Use size sm, md, or lg; override width with style for custom dimensions.",
+        "Override color with a CSS color or token. Defaults use chart-4, primary, chart-2, and chart-3 respectively.",
+        "Use paused for user-controlled motion. Rendering also stops offscreen and in hidden tabs; slow devices reduce particle density.",
+      ],
+      avoid: [
+        "Do not imply microphone access or completed work unless the application actually entered that state.",
+        "Do not use the orb as the only visible status message or as a percentage progress indicator.",
+      ],
+    },
+    name: "signal-orb",
+    registryDependencies: [],
+    title: "Signal Orb",
+    usageExample:
+      '"use client";\n\nimport { useState } from "react";\nimport { SignalOrb, type SignalOrbState } from "@brilliantmode/ui/signal-orb";\n\nconst states = ["listening", "thinking", "searching", "done"] as const;\n\nexport function Example() {\n  const [state, setState] = useState<SignalOrbState>("listening");\n  const [paused, setPaused] = useState(false);\n\n  return (\n    <div className="grid justify-items-center gap-4">\n      <SignalOrb state={state} level={0.5} size="lg" paused={paused} />\n      <p className="text-sm capitalize">{state}</p>\n      <fieldset aria-label="Assistant state" className="flex flex-wrap gap-2">\n        {states.map((value) => (\n          <button key={value} type="button" aria-pressed={state === value}\n            onClick={() => setState(value)}\n            className="rounded-md border border-border px-3 py-2 text-sm capitalize hover:bg-muted active:scale-[0.98] aria-pressed:bg-primary aria-pressed:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring motion-reduce:transform-none">\n            {value}\n          </button>\n        ))}\n      </fieldset>\n      <button type="button" data-paused={paused} onClick={() => setPaused((value) => !value)}\n        className="min-w-32 rounded-md border border-border px-3 py-2 text-sm hover:bg-muted data-[paused=true]:border-primary/30 data-[paused=true]:bg-primary/10 data-[paused=true]:text-primary focus-visible:outline-2 focus-visible:outline-ring">\n        {paused ? "Resume motion" : "Pause motion"}\n      </button>\n    </div>\n  );\n}',
+    valueExports: ["SignalOrb"],
+  },
+  {
+    dependencies: [],
     description: "A compact loading status primitive with accessible status text.",
     exports: ["SpinnerProps", "Spinner"],
     importPath: "@brilliantmode/ui/spinner",

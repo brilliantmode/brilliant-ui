@@ -108,6 +108,7 @@ import {
   registry,
 } from "../../../packages/registry/src/index";
 import { semanticColors } from "../../../packages/tokens/src/index";
+import { SignalOrbDocumentation, SignalOrbPreview } from "./signal-orb-demo";
 import "./styles.css";
 
 type NavItem = readonly [label: string, href: string];
@@ -267,6 +268,7 @@ const navGroups = [
       ["Skeleton", "/components/skeleton"],
       ["Progress", "/components/progress"],
       ["Spinner", "/components/spinner"],
+      ["Signal Orb", "/components/signal-orb"],
       ["Empty State", "/components/empty-state"],
       ["Toast", "/components/toast"],
     ],
@@ -3529,6 +3531,7 @@ function ComponentMiniPreview({ name }: { name: string }) {
   >("integrated");
 
   if (name === "chart") return <ChartPreview />;
+  if (name === "signal-orb") return <SignalOrbPreview />;
   if (name === "stat") return <StatPreview />;
   if (name === "status") return <StatusPreview />;
   if (name === "meter") return <MeterPreview />;
@@ -6949,6 +6952,8 @@ import "@brilliantmode/ui/styles.css"`}</MiniTerminal>
                       <ComponentMiniPreview name={item.name} />
                     </ExamplePanel>
 
+                    {item.name === "signal-orb" ? <SignalOrbDocumentation /> : null}
+
                     {item.name === "card-flip" ? (
                       <div className="space-y-3 border-t border-border pt-6">
                         <div>
@@ -7653,15 +7658,17 @@ import "@brilliantmode/ui/styles.css"`}</MiniTerminal>
                       <div className="space-y-3">
                         <h3 className="text-lg font-semibold">Micro UX</h3>
                         <div className="rounded-lg border border-border bg-surface p-4 text-sm leading-6 text-muted-foreground">
-                          {item.name === "card"
-                            ? "Interactive cards lift by 1px, increase elevation, soften the border toward primary, and compress to 99.5% on press. The beam variant adds a rotating conic border animation and disables it for reduced-motion users."
-                            : item.name === "text"
-                              ? "Glow adds a token-colored premium aura. Shimmer animates a tokenized gradient across the glyphs and falls back to static text for reduced-motion users."
-                              : item.name === "photo"
-                                ? "Photo reserves layout space with ratio, fades loaded images in from a subtle blur, and smoothly transitions filter and tint changes. Fallback and caption layers remain semantic, and motion is disabled for reduced-motion users."
-                                : item.name === "switch"
-                                  ? "The thumb uses a spring-timed snap, stretches slightly on press, and the active track gains a subtle inset highlight. Motion is disabled for reduced-motion users."
-                                  : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
+                          {item.name === "signal-orb"
+                            ? "Particle shapes blend smoothly between states. Completion settles and stops; paused and reduced-motion states update immediately. Rendering sleeps offscreen and in hidden tabs, and releases GPU resources when unmounted."
+                            : item.name === "card"
+                              ? "Interactive cards lift by 1px, increase elevation, soften the border toward primary, and compress to 99.5% on press. The beam variant adds a rotating conic border animation and disables it for reduced-motion users."
+                              : item.name === "text"
+                                ? "Glow adds a token-colored premium aura. Shimmer animates a tokenized gradient across the glyphs and falls back to static text for reduced-motion users."
+                                : item.name === "photo"
+                                  ? "Photo reserves layout space with ratio, fades loaded images in from a subtle blur, and smoothly transitions filter and tint changes. Fallback and caption layers remain semantic, and motion is disabled for reduced-motion users."
+                                  : item.name === "switch"
+                                    ? "The thumb uses a spring-timed snap, stretches slightly on press, and the active track gains a subtle inset highlight. Motion is disabled for reduced-motion users."
+                                    : "Uses Brilliant tokens for focus, density, radius, and motion. Motion-bearing states are guarded with reduced-motion behavior in the generated source."}
                         </div>
                       </div>
                     </div>

@@ -105,6 +105,24 @@ try {
       throw new Error("Packaged Button declarations did not expose loading state.");
     }
 
+    const signalOrb = await client.callTool({
+      arguments: { name: "signal-orb" },
+      name: "get_component",
+    });
+    const structuredSignalOrb = signalOrb.structuredContent as
+      | { apiDeclarations?: string; found?: boolean; usageExample?: string }
+      | undefined;
+    if (
+      !structuredSignalOrb?.found ||
+      !structuredSignalOrb.apiDeclarations?.includes("SignalOrbState") ||
+      !structuredSignalOrb.apiDeclarations.includes("paused?: boolean") ||
+      !structuredSignalOrb.apiDeclarations.includes("particleCount?: number") ||
+      !structuredSignalOrb.usageExample?.includes("<SignalOrb") ||
+      !structuredSignalOrb.usageExample.includes("setState(value)")
+    ) {
+      throw new Error("Packaged Signal Orb did not expose its controlled API and example.");
+    }
+
     const applicationShell = await client.callTool({
       arguments: { name: "application-shell" },
       name: "get_component",

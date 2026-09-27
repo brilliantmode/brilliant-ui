@@ -3,6 +3,7 @@ import {
   capacityDashboardSource,
   systemHealthDashboardSource,
 } from "./dashboard-sources";
+import { signalOrbSource } from "./signal-orb-source";
 
 export { componentUsageExamples } from "./examples";
 export { type DocumentationGuide, documentationGuides } from "./guides";
@@ -5640,6 +5641,40 @@ export const registry = [
         "Keep critical progress for risky, blocking, or destructive flows.",
       ],
       avoid: ["Do not show fake percentages when progress is unknown."],
+    },
+  },
+  {
+    name: "signal-orb",
+    title: "Signal Orb",
+    description:
+      "A particle orb that morphs between listening, thinking, searching, and completion states.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "signal-orb.tsx", content: signalOrbSource, target: "ui/signal-orb.tsx" }],
+    metadata: {
+      purpose:
+        "Communicates an assistant's current activity through a controlled, themeable WebGL particle visualization. Independently implemented, inspired by Ship Notes Signal Orb.",
+      slots: ["root", "glow", "completion", "canvas", "fallback", "label"],
+      accessibility: [
+        "The label is a polite, atomic status region; customize it with meaningful task text.",
+        "Canvas and SVG are decorative; pair the orb with visible status text.",
+        "Reduced-motion preferences and paused render a still frame, with immediate state changes.",
+        "A static SVG fallback remains available without WebGL, during context loss, and in forced colors.",
+      ],
+      usage: [
+        "Set state to listening, thinking, searching, or done from real application state.",
+        "Thinking uses shifting particle clusters and traveling signal pulses that disperse and reconnect.",
+        "Done resolves into an opaque ring and checkmark. Particles fade out completely as the solid completion mark appears.",
+        "Pass a normalized level from 0 to 1 to control the listening pulse. Audio capture is owned by the application.",
+        "Use size sm, md, or lg; override width with style for custom dimensions.",
+        "Override color with a CSS color or token. Defaults use chart-4, primary, chart-2, and chart-3 respectively.",
+        "Use paused for user-controlled motion. Rendering also stops offscreen and in hidden tabs; slow devices reduce particle density.",
+      ],
+      avoid: [
+        "Do not imply microphone access or completed work unless the application actually entered that state.",
+        "Do not use the orb as the only visible status message or as a percentage progress indicator.",
+      ],
     },
   },
   {
