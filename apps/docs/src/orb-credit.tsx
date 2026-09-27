@@ -15,7 +15,7 @@ export function OrbCredit({ component }: { component: "signal-orb" | "voice-orb"
         .{" "}
         {component === "voice-orb" ? (
           <>
-            The renderer, particle sampling, audio response, and demo samples are adapted from the
+            The renderer, particle sampling, audio response, and beat demo are adapted from the
             creator’s MIT-licensed code. Brilliant UI adds React integration, theme overrides,
             motion controls, and accessible status. The original copyright and license are retained.
           </>

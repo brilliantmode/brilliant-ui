@@ -4,7 +4,7 @@
 
 Voice Orb's shaders, sphere sampling, and audio response are adapted from
 [Ship Notes / aqualang89](https://github.com/aqualang89/shipnotes-components/tree/main/components/voice-orb).
-The documentation's synthesized audio samples are also adapted from that project's demo.
+The documentation's synthesized beat is also adapted from that project's demo.
 
 Upstream renderer SHA-256: `d67debe170f0b41a1cfdd8bda43c47f8ef7427506d7611cb30c5ba6c5374fd65`.
 

@@ -1,7 +1,8 @@
 import { VoiceOrb, type VoiceOrbState } from "@brilliantmode/ui/voice-orb";
 import { useCallback, useEffect, useRef, useState } from "react";
+import voiceSampleUrl from "./assets/voice-orb-sample.mp3";
 import { OrbCredit } from "./orb-credit";
-import { makeVoiceSample } from "./voice-orb-samples";
+import { makeVoiceBeat } from "./voice-orb-samples";
 
 const states = {
   idle: { title: "Idle", description: "Ready when you are." },
@@ -14,10 +15,12 @@ const buttonClass =
 
 type AudioSession = {
   context: AudioContext;
+  abort: AbortController;
   stream?: MediaStream;
 };
 function disposeAudio(session: AudioSession | null) {
   if (!session) return;
+  session.abort.abort();
   for (const track of session.stream?.getTracks() ?? []) track.stop();
   if (session.context.state !== "closed") void session.context.close().catch(() => {});
 }
@@ -64,7 +67,7 @@ export function VoiceOrbPreview() {
       if (typeof AudioContext === "undefined")
         throw new Error("Web Audio is unavailable in this browser.");
       const context = new AudioContext();
-      const active: AudioSession = { context };
+      const active: AudioSession = { context, abort: new AbortController() };
       session.current = active;
       await context.resume();
       if (request.current !== id) return;
@@ -101,7 +104,16 @@ export function VoiceOrbPreview() {
         const output = context.createGain();
         output.gain.value = 0.7;
         const source = context.createBufferSource();
-        source.buffer = makeVoiceSample(context, mode);
+        if (mode === "sample") {
+          const response = await fetch(voiceSampleUrl, { signal: active.abort.signal });
+          if (!response.ok) throw new Error("The voice sample could not load. Please try again.");
+          const bytes = await response.arrayBuffer();
+          if (request.current !== id) return;
+          source.buffer = await context.decodeAudioData(bytes);
+          if (request.current !== id) return;
+        } else {
+          source.buffer = makeVoiceBeat(context);
+        }
         source.connect(tap);
         tap.connect(output);
         output.connect(context.destination);
@@ -207,8 +219,8 @@ export function VoiceOrbPreview() {
               : input === "beat"
                 ? "112 BPM. Bass, kick, and hats, with a break and drop. Audio stays in this browser."
                 : input === "sample"
-                  ? "Playing a synthesized sample. Audio stays in this browser."
-                  : "Try a local sample, or enable your microphone. State buttons only preview the animation.")}
+                  ? "Playing an AI-generated voice sample. Audio stays in this browser."
+                  : "Try the voice sample, play a beat, or enable your microphone. State buttons only preview the animation.")}
         {paused && input !== "none" ? " Motion is paused; use Stop to end audio." : ""}
       </p>
     </div>
@@ -346,6 +358,18 @@ await context.close();`}</code>
         </p>
       </div>
       <OrbCredit component="voice-orb" />
+      <p className="text-xs leading-6 text-muted-foreground">
+        The spoken demo clip is AI-generated with{" "}
+        <a
+          className="underline underline-offset-4 hover:text-foreground"
+          href="https://huggingface.co/hexgrad/Kokoro-82M"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Kokoro
+        </a>{" "}
+        (Heart voice). It is bundled with the documentation and plays locally.
+      </p>
     </div>
   );
 }
