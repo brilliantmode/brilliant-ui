@@ -4,6 +4,7 @@ import {
   systemHealthDashboardSource,
 } from "./dashboard-sources";
 import { signalOrbSource } from "./signal-orb-source";
+import { voiceOrbSource } from "./voice-orb-source";
 
 export { componentUsageExamples } from "./examples";
 export { type DocumentationGuide, documentationGuides } from "./guides";
@@ -5654,7 +5655,7 @@ export const registry = [
     files: [{ path: "signal-orb.tsx", content: signalOrbSource, target: "ui/signal-orb.tsx" }],
     metadata: {
       purpose:
-        "Communicates an assistant's current activity through a controlled, themeable WebGL particle visualization. Independently implemented, inspired by Ship Notes Signal Orb.",
+        "Communicates an assistant's current activity through a controlled, themeable WebGL particle visualization. Independently implemented; original visual concept by Ship Notes / aqualang89: https://aqualang89.github.io/shipnotes-components/components/signal-orb/demo.html",
       slots: ["root", "glow", "completion", "canvas", "fallback", "label"],
       accessibility: [
         "The label is a polite, atomic status region; customize it with meaningful task text.",
@@ -5674,6 +5675,38 @@ export const registry = [
       avoid: [
         "Do not imply microphone access or completed work unless the application actually entered that state.",
         "Do not use the orb as the only visible status message or as a percentage progress indicator.",
+      ],
+    },
+  },
+  {
+    name: "voice-orb",
+    title: "Voice Orb",
+    description:
+      "An audio-reactive particle surface for idle, listening, thinking, and speaking states.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "voice-orb.tsx", content: voiceOrbSource, target: "ui/voice-orb.tsx" }],
+    metadata: {
+      purpose:
+        "Visualizes voice interactions with an independently implemented React/WebGL surface. Original visual concept by Ship Notes / aqualang89: https://aqualang89.github.io/shipnotes-components/components/voice-orb/demo.html",
+      slots: ["root", "glow", "canvas", "fallback", "label"],
+      accessibility: [
+        "The customizable label is a polite, atomic status region. Keep a visible status message beside the decorative canvas.",
+        "Paused and reduced-motion instances render still frames with immediate state changes.",
+        "A static SVG fallback is available without WebGL, during context loss, and in forced colors.",
+      ],
+      usage: [
+        "Control idle, listening, thinking, and speaking from actual application state. Selecting listening does not activate a microphone.",
+        "Pass an existing AnalyserNode to analyser, or normalized low, mid, and high values to bands. analyser takes precedence.",
+        "Bass expands the surface, mids form traveling folds, and highs add fine detail. Audio is smoothed with a fast attack and gentle release.",
+        "The component only reads frequency data. The caller owns microphone permissions, audio connections, playback, stream tracks, and AudioContext cleanup.",
+        "Use size sm, md, or lg; color accepts a CSS color or token. The default palette uses primary, chart-3, chart-4, and chart-5 respectively.",
+        "Offer a paused control for longer sessions. Hidden and offscreen rendering stops; slow devices reduce particle density.",
+      ],
+      avoid: [
+        "Do not request microphone permission on mount or imply recording without an active input.",
+        "Do not use the orb as the only status message, a decibel meter, or a speech-recognition engine.",
       ],
     },
   },

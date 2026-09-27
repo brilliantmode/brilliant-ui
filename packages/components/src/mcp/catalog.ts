@@ -1189,7 +1189,7 @@ export const componentCatalog = [
     kind: "component",
     metadata: {
       purpose:
-        "Communicates an assistant's current activity through a controlled, themeable WebGL particle visualization. Independently implemented, inspired by Ship Notes Signal Orb.",
+        "Communicates an assistant's current activity through a controlled, themeable WebGL particle visualization. Independently implemented; original visual concept by Ship Notes / aqualang89: https://aqualang89.github.io/shipnotes-components/components/signal-orb/demo.html",
       slots: ["root", "glow", "completion", "canvas", "fallback", "label"],
       accessibility: [
         "The label is a polite, atomic status region; customize it with meaningful task text.",
@@ -1217,6 +1217,42 @@ export const componentCatalog = [
     usageExample:
       '"use client";\n\nimport { useState } from "react";\nimport { SignalOrb, type SignalOrbState } from "@brilliantmode/ui/signal-orb";\n\nconst states = ["listening", "thinking", "searching", "done"] as const;\n\nexport function Example() {\n  const [state, setState] = useState<SignalOrbState>("listening");\n  const [paused, setPaused] = useState(false);\n\n  return (\n    <div className="grid justify-items-center gap-4">\n      <SignalOrb state={state} level={0.5} size="lg" paused={paused} />\n      <p className="text-sm capitalize">{state}</p>\n      <fieldset aria-label="Assistant state" className="flex flex-wrap gap-2">\n        {states.map((value) => (\n          <button key={value} type="button" aria-pressed={state === value}\n            onClick={() => setState(value)}\n            className="rounded-md border border-border px-3 py-2 text-sm capitalize hover:bg-muted active:scale-[0.98] aria-pressed:bg-primary aria-pressed:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring motion-reduce:transform-none">\n            {value}\n          </button>\n        ))}\n      </fieldset>\n      <button type="button" data-paused={paused} onClick={() => setPaused((value) => !value)}\n        className="min-w-32 rounded-md border border-border px-3 py-2 text-sm hover:bg-muted data-[paused=true]:border-primary/30 data-[paused=true]:bg-primary/10 data-[paused=true]:text-primary focus-visible:outline-2 focus-visible:outline-ring">\n        {paused ? "Resume motion" : "Pause motion"}\n      </button>\n    </div>\n  );\n}',
     valueExports: ["SignalOrb"],
+  },
+  {
+    dependencies: [],
+    description:
+      "An audio-reactive particle surface for idle, listening, thinking, and speaking states.",
+    exports: ["VoiceOrbState", "VoiceOrbBands", "VoiceOrbProps", "VoiceOrb"],
+    importPath: "@brilliantmode/ui/voice-orb",
+    kind: "component",
+    metadata: {
+      purpose:
+        "Visualizes voice interactions with an independently implemented React/WebGL surface. Original visual concept by Ship Notes / aqualang89: https://aqualang89.github.io/shipnotes-components/components/voice-orb/demo.html",
+      slots: ["root", "glow", "canvas", "fallback", "label"],
+      accessibility: [
+        "The customizable label is a polite, atomic status region. Keep a visible status message beside the decorative canvas.",
+        "Paused and reduced-motion instances render still frames with immediate state changes.",
+        "A static SVG fallback is available without WebGL, during context loss, and in forced colors.",
+      ],
+      usage: [
+        "Control idle, listening, thinking, and speaking from actual application state. Selecting listening does not activate a microphone.",
+        "Pass an existing AnalyserNode to analyser, or normalized low, mid, and high values to bands. analyser takes precedence.",
+        "Bass expands the surface, mids form traveling folds, and highs add fine detail. Audio is smoothed with a fast attack and gentle release.",
+        "The component only reads frequency data. The caller owns microphone permissions, audio connections, playback, stream tracks, and AudioContext cleanup.",
+        "Use size sm, md, or lg; color accepts a CSS color or token. The default palette uses primary, chart-3, chart-4, and chart-5 respectively.",
+        "Offer a paused control for longer sessions. Hidden and offscreen rendering stops; slow devices reduce particle density.",
+      ],
+      avoid: [
+        "Do not request microphone permission on mount or imply recording without an active input.",
+        "Do not use the orb as the only status message, a decibel meter, or a speech-recognition engine.",
+      ],
+    },
+    name: "voice-orb",
+    registryDependencies: [],
+    title: "Voice Orb",
+    usageExample:
+      '"use client";\n\nimport { useState } from "react";\nimport { VoiceOrb, type VoiceOrbState } from "@brilliantmode/ui/voice-orb";\n\n// Supply an analyser connected to your microphone or playback graph.\n// This component never requests microphone access or starts playback.\nexport function Example({ analyser = null }: { analyser?: AnalyserNode | null }) {\n  const [state, setState] = useState<VoiceOrbState>("idle");\n  const [paused, setPaused] = useState(false);\n\n  return (\n    <div className="grid justify-items-center gap-4">\n      <VoiceOrb state={state} analyser={analyser} size="lg" paused={paused} />\n      <p className="text-sm capitalize">{state}</p>\n      <fieldset aria-label="Voice state" className="flex flex-wrap gap-2">\n        {(["idle", "listening", "thinking", "speaking"] as const).map((value) => (\n          <button key={value} type="button" aria-pressed={state === value}\n            onClick={() => setState(value)}\n            className="rounded-md border border-border px-3 py-2 text-sm capitalize hover:bg-muted aria-pressed:bg-primary aria-pressed:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring">\n            {value}\n          </button>\n        ))}\n      </fieldset>\n      <button type="button" onClick={() => setPaused((value) => !value)}\n        className="min-w-32 rounded-md border border-border px-3 py-2 text-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">\n        {paused ? "Resume motion" : "Pause motion"}\n      </button>\n    </div>\n  );\n}',
+    valueExports: ["VoiceOrb"],
   },
   {
     dependencies: [],

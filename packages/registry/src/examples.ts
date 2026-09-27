@@ -982,6 +982,37 @@ export function Example() {
     </div>
   );
 }`,
+  "voice-orb": `"use client";
+
+import { useState } from "react";
+import { VoiceOrb, type VoiceOrbState } from "@brilliantmode/ui/voice-orb";
+
+// Supply an analyser connected to your microphone or playback graph.
+// This component never requests microphone access or starts playback.
+export function Example({ analyser = null }: { analyser?: AnalyserNode | null }) {
+  const [state, setState] = useState<VoiceOrbState>("idle");
+  const [paused, setPaused] = useState(false);
+
+  return (
+    <div className="grid justify-items-center gap-4">
+      <VoiceOrb state={state} analyser={analyser} size="lg" paused={paused} />
+      <p className="text-sm capitalize">{state}</p>
+      <fieldset aria-label="Voice state" className="flex flex-wrap gap-2">
+        {(["idle", "listening", "thinking", "speaking"] as const).map((value) => (
+          <button key={value} type="button" aria-pressed={state === value}
+            onClick={() => setState(value)}
+            className="rounded-md border border-border px-3 py-2 text-sm capitalize hover:bg-muted aria-pressed:bg-primary aria-pressed:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring">
+            {value}
+          </button>
+        ))}
+      </fieldset>
+      <button type="button" onClick={() => setPaused((value) => !value)}
+        className="min-w-32 rounded-md border border-border px-3 py-2 text-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">
+        {paused ? "Resume motion" : "Pause motion"}
+      </button>
+    </div>
+  );
+}`,
   spinner: `import { Spinner } from "@brilliantmode/ui/spinner";
 
 export function Example() {

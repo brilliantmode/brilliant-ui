@@ -123,6 +123,24 @@ try {
       throw new Error("Packaged Signal Orb did not expose its controlled API and example.");
     }
 
+    const voiceOrb = await client.callTool({
+      arguments: { name: "voice-orb" },
+      name: "get_component",
+    });
+    const structuredVoiceOrb = voiceOrb.structuredContent as
+      | { apiDeclarations?: string; found?: boolean; usageExample?: string }
+      | undefined;
+    if (
+      !structuredVoiceOrb?.found ||
+      !structuredVoiceOrb.apiDeclarations?.includes("VoiceOrbState") ||
+      !structuredVoiceOrb.apiDeclarations.includes("VoiceOrbBands") ||
+      !structuredVoiceOrb.apiDeclarations.includes("analyser?: AnalyserNode | null") ||
+      !structuredVoiceOrb.apiDeclarations.includes("bands?: Partial<VoiceOrbBands>") ||
+      !structuredVoiceOrb.usageExample?.includes("analyser={analyser}")
+    ) {
+      throw new Error("Packaged Voice Orb did not expose its audio API and example.");
+    }
+
     const applicationShell = await client.callTool({
       arguments: { name: "application-shell" },
       name: "get_component",

@@ -1,5 +1,6 @@
 import { SignalOrb, type SignalOrbState } from "@brilliantmode/ui/signal-orb";
 import { useId, useState } from "react";
+import { OrbCredit } from "./orb-credit";
 
 const stateDetails = {
   listening: { title: "Listening", description: "Ready for your next thought." },
@@ -137,18 +138,7 @@ export function SignalOrbDocumentation() {
           To install editable source: <code>npx brilliant-ui add signal-orb</code>.
         </p>
       </div>
-      <p className="border-t border-border pt-4 text-xs leading-6 text-muted-foreground">
-        Inspired by{" "}
-        <a
-          className="underline underline-offset-4 hover:text-foreground"
-          href="https://aqualang89.github.io/shipnotes-components/components/signal-orb/demo.html"
-          rel="noreferrer"
-          target="_blank"
-        >
-          Signal Orb by Ship Notes
-        </a>
-        . Independently implemented for Brilliant UI in React and WebGL.
-      </p>
+      <OrbCredit component="signal-orb" />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 export const signalOrbSource = `"use client";
 
-// Independently implemented; visual inspiration: Ship Notes Signal Orb.
+// Independently implemented; original visual concept: Ship Notes / aqualang89.
+// https://github.com/aqualang89
 // https://aqualang89.github.io/shipnotes-components/components/signal-orb/demo.html
 
 import type { HTMLAttributes } from "react";
