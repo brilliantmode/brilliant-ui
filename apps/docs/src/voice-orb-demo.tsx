@@ -1,11 +1,12 @@
 import { VoiceOrb, type VoiceOrbState } from "@brilliantmode/ui/voice-orb";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { OrbCredit } from "./orb-credit";
+import { makeVoiceSample } from "./voice-orb-samples";
 
 const states = {
   idle: { title: "Idle", description: "Ready when you are." },
   listening: { title: "Listening", description: "Soft waves gather inward." },
-  thinking: { title: "Thinking", description: "Folds turn and work through the surface." },
+  thinking: { title: "Thinking", description: "Three illuminated bands follow a turning surface." },
   speaking: { title: "Speaking", description: "Sound sends ripples outward." },
 } as const;
 const buttonClass =
@@ -14,11 +15,9 @@ const buttonClass =
 type AudioSession = {
   context: AudioContext;
   stream?: MediaStream;
-  timer?: ReturnType<typeof setTimeout>;
 };
 function disposeAudio(session: AudioSession | null) {
   if (!session) return;
-  clearTimeout(session.timer);
   for (const track of session.stream?.getTracks() ?? []) track.stop();
   if (session.context.state !== "closed") void session.context.close().catch(() => {});
 }
@@ -27,7 +26,9 @@ export function VoiceOrbPreview() {
   const [state, setState] = useState<VoiceOrbState>("idle");
   const [paused, setPaused] = useState(false);
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
-  const [input, setInput] = useState<"none" | "starting" | "sample" | "microphone">("none");
+  const [input, setInput] = useState<"none" | "starting" | "sample" | "beat" | "microphone">(
+    "none",
+  );
   const [error, setError] = useState("");
   const session = useRef<AudioSession | null>(null);
   const request = useRef(0);
@@ -54,7 +55,7 @@ export function VoiceOrbPreview() {
     };
   }, [stop]);
 
-  const start = async (mode: "sample" | "microphone") => {
+  const start = async (mode: "sample" | "beat" | "microphone") => {
     stop();
     const id = request.current;
     setError("");
@@ -69,7 +70,9 @@ export function VoiceOrbPreview() {
       if (request.current !== id) return;
       const tap = context.createAnalyser();
       tap.fftSize = 2048;
-      tap.smoothingTimeConstant = 0.35;
+      tap.smoothingTimeConstant = 0;
+      tap.minDecibels = -85;
+      tap.maxDecibels = -10;
       if (mode === "microphone") {
         if (!navigator.mediaDevices?.getUserMedia)
           throw new Error("Microphone access needs a supported browser and a secure connection.");
@@ -80,7 +83,11 @@ export function VoiceOrbPreview() {
         }
         active.stream = stream;
         context.createMediaStreamSource(stream).connect(tap);
-        // Never monitor microphone input through speakers.
+        // A silent sink keeps analysis active without monitoring the microphone.
+        const mute = context.createGain();
+        mute.gain.value = 0;
+        tap.connect(mute);
+        mute.connect(context.destination);
         for (const track of stream.getTracks())
           track.addEventListener(
             "ended",
@@ -91,34 +98,17 @@ export function VoiceOrbPreview() {
           );
         setState("listening");
       } else {
-        // A quiet, local eight-second phrase made from three synthesized frequency bands.
         const output = context.createGain();
-        output.gain.value = 0.16;
+        output.gain.value = 0.7;
+        const source = context.createBufferSource();
+        source.buffer = makeVoiceSample(context, mode);
+        source.connect(tap);
         tap.connect(output);
         output.connect(context.destination);
-        const startAt = context.currentTime + 0.05;
-        for (const [index, frequency] of [140, 720, 3200].entries()) {
-          const tone = context.createOscillator();
-          const envelope = context.createGain();
-          tone.type = "sine";
-          tone.frequency.value = frequency;
-          envelope.gain.setValueAtTime(0, startAt);
-          for (let beat = 0; beat < 12; beat++) {
-            const at = startAt + beat * 0.62 + index * 0.035;
-            const amplitude =
-              (index === 0 ? 0.5 : index === 1 ? 0.3 : 0.12) * (0.55 + (beat % 3) * 0.2);
-            envelope.gain.setTargetAtTime(amplitude, at, 0.025);
-            envelope.gain.setTargetAtTime(0, at + 0.2 + (beat % 2) * 0.08, 0.05);
-            tone.frequency.setTargetAtTime(frequency * (1 + (beat % 3) * 0.14), at, 0.04);
-          }
-          tone.connect(envelope);
-          envelope.connect(tap);
-          tone.start(startAt);
-          tone.stop(startAt + 8);
-        }
-        active.timer = setTimeout(() => {
+        source.onended = () => {
           if (request.current === id) stop();
-        }, 8300);
+        };
+        source.start();
         setState("speaking");
       }
       setAnalyser(tap);
@@ -137,19 +127,18 @@ export function VoiceOrbPreview() {
   };
 
   return (
-    <div className="mx-auto grid w-full min-w-0 max-w-lg grid-cols-1 gap-5">
-      <div className="grid min-w-0 grid-cols-1 justify-items-center rounded-md bg-muted/25 px-3 pb-7">
+    <div className="mx-auto grid w-full min-w-0 max-w-2xl grid-cols-1 gap-5">
+      <div className="grid min-w-0 grid-cols-1 justify-items-center rounded-md bg-[var(--brilliant-voice-surface,#050507)] px-3 pb-7 text-[var(--brilliant-voice-foreground,#eeeaf6)]">
         <VoiceOrb
           analyser={analyser}
           label={`${states[state].title}. ${input === "microphone" ? "Microphone active." : states[state].description}`}
           paused={paused}
           size="lg"
           state={state}
+          style={{ width: "100%", maxWidth: 570 }}
         />
         <p className="text-lg font-medium tracking-tight">{states[state].title}</p>
-        <p className="mt-1 text-center text-sm text-muted-foreground">
-          {states[state].description}
-        </p>
+        <p className="mt-1 text-center text-sm opacity-60">{states[state].description}</p>
       </div>
       <fieldset
         aria-label="Voice state"
@@ -182,6 +171,14 @@ export function VoiceOrbPreview() {
         <button
           className={buttonClass}
           disabled={input === "starting"}
+          onClick={() => (input === "beat" ? stop() : void start("beat"))}
+          type="button"
+        >
+          {input === "beat" ? "Stop beat" : "Play beat"}
+        </button>
+        <button
+          className={buttonClass}
+          disabled={input === "starting"}
           onClick={() => (input === "microphone" ? stop() : void start("microphone"))}
           type="button"
         >
@@ -207,9 +204,11 @@ export function VoiceOrbPreview() {
             ? "Starting audio…"
             : input === "microphone"
               ? "Microphone active. Nothing is recorded or sent."
-              : input === "sample"
-                ? "Playing a synthesized sample. Audio stays in this browser."
-                : "Try a local sample, or enable your microphone. State buttons only preview the animation.")}
+              : input === "beat"
+                ? "112 BPM. Bass, kick, and hats, with a break and drop. Audio stays in this browser."
+                : input === "sample"
+                  ? "Playing a synthesized sample. Audio stays in this browser."
+                  : "Try a local sample, or enable your microphone. State buttons only preview the animation.")}
         {paused && input !== "none" ? " Motion is paused; use Stop to end audio." : ""}
       </p>
     </div>
@@ -222,10 +221,11 @@ export function VoiceOrbDocumentation() {
       <div className="space-y-3">
         <h3 className="text-lg font-semibold">States and sound</h3>
         <p className="text-sm leading-6 text-muted-foreground">
-          Idle breathes gently. Listening gathers waves inward. Thinking turns interlocking folds
-          across the surface. Speaking sends ripples outward. Low frequencies expand the sphere,
-          mids bend its surface, and highs add fine detail. State transitions blend smoothly,
-          including when interrupted.
+          The renderer preserves the original Ship Notes visual design: a fine particle surface with
+          layered color and luminous edges. Idle breathes gently. Listening draws ripples inward.
+          Thinking rotates three illuminated bands over a twisting sphere. Speaking pushes waves
+          outward, with bass impacts and brief high-frequency highlights. State transitions blend
+          smoothly, including when interrupted.
         </p>
         <div className="overflow-x-auto rounded-md border border-border">
           <table className="w-full border-collapse text-left text-sm">
@@ -254,14 +254,22 @@ export function VoiceOrbDocumentation() {
                   "Object with low, mid, and high values, each clamped to 0–1. Missing values are zero.",
                 ],
                 ["size", "md", "sm: 128px · md: 240px · lg: 360px. Shrinks to fit."],
-                ["color", "State palette", "CSS color or token. style.color takes precedence."],
+                [
+                  "color",
+                  "Original palette",
+                  "Optional brand color or token. style.color takes precedence; light and dark tints retain surface depth.",
+                ],
                 ["label", "Voice assistant + state", "Custom accessible status text."],
                 [
                   "paused",
                   "false",
                   "Freezes motion and analyser sampling. Does not stop audio playback or capture.",
                 ],
-                ["particleCount", "9000", "300–12,000; adapts downward on slower devices."],
+                [
+                  "particleCount",
+                  "12000",
+                  "300–20,000; adapts downward on slower devices while preserving full sphere coverage.",
+                ],
               ].map(([prop, value, description]) => (
                 <tr className="border-t border-border" key={prop}>
                   <td className="px-4 py-3 font-mono text-xs">{prop}</td>
@@ -278,9 +286,9 @@ export function VoiceOrbDocumentation() {
         <p className="text-sm leading-6 text-muted-foreground">
           Create an AudioContext in response to a user action, connect your input to an
           AnalyserNode, then pass that node to <code>analyser</code>. Use an FFT size of 2048 for a
-          useful balance of detail and speed. The orb reads bands at 50–250 Hz, 250–2400 Hz, and
-          2400–12,000 Hz with a quick attack and gentle release. These values are for animation, not
-          calibrated loudness measurements.
+          useful balance of detail and speed. The orb reads bands at 45–250 Hz, 250–2400 Hz, and
+          2400–12,000 Hz with per-band attack/release smoothing and bass transient detection. These
+          values are for animation, not calibrated loudness measurements.
         </p>
         <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-4 text-xs leading-6">
           <code>{`// Inside an explicit microphone-start action:
@@ -289,13 +297,20 @@ await context.resume();
 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 const analyser = context.createAnalyser();
 analyser.fftSize = 2048;
+analyser.smoothingTimeConstant = 0;
 const source = context.createMediaStreamSource(stream);
-source.connect(analyser); // Do not connect microphone input to speakers.
+source.connect(analyser);
+const silent = context.createGain();
+silent.gain.value = 0; // Analyse without monitoring the microphone.
+analyser.connect(silent);
+silent.connect(context.destination);
 
 // Render: <VoiceOrb state="listening" analyser={analyser} />
 
 // When your session ends or the view unmounts:
 source.disconnect();
+analyser.disconnect();
+silent.disconnect();
 stream.getTracks().forEach(track => track.stop());
 await context.close();`}</code>
         </pre>
@@ -316,11 +331,15 @@ await context.close();`}</code>
       <div className="space-y-3">
         <h3 className="text-lg font-semibold">Theme and motion</h3>
         <p className="text-sm leading-6 text-muted-foreground">
-          The palette follows primary, chart-3, chart-4, and chart-5 for idle, listening, thinking,
-          and speaking. Override <code>color</code> with a brand token and <code>style</code> for a
-          custom width. Rendering stops offscreen and in hidden tabs; reduced motion shows a static
-          state. Keep a visible status message and provide a pause control. Audio lifecycle stays
-          separate from visual motion.
+          The default palette preserves the original lilac, turquoise, amber, and pink/violet
+          shading. Use <code>color</code> for a single brand color, or customize both ends of each
+          state with <code>--brilliant-voice-idle-low</code> and{" "}
+          <code>--brilliant-voice-idle-high</code> (likewise listening, thinking, and speaking). The
+          transparent luminous canvas is intended for a dark surface; this preview uses{" "}
+          <code>--brilliant-voice-surface</code>, defaulting to near-black, in both themes. Use{" "}
+          <code>style</code> for a custom width. Rendering stops offscreen and in hidden tabs;
+          reduced motion shows a static state. Keep a visible status message and provide a pause
+          control. Audio lifecycle stays separate from visual motion.
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
           To install editable source: <code>npx brilliant-ui add voice-orb</code>.

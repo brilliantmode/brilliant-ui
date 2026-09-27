@@ -29,7 +29,8 @@
   },
   "files": [
     "dist",
-    "src/styles.css"
+    "src/styles.css",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "sideEffects": [
     "**/*.css"

@@ -5689,7 +5689,7 @@ export const registry = [
     files: [{ path: "voice-orb.tsx", content: voiceOrbSource, target: "ui/voice-orb.tsx" }],
     metadata: {
       purpose:
-        "Visualizes voice interactions with an independently implemented React/WebGL surface. Original visual concept by Ship Notes / aqualang89: https://aqualang89.github.io/shipnotes-components/components/voice-orb/demo.html",
+        "Adapts the MIT-licensed Ship Notes / aqualang89 renderer, sphere sampling, and audio response into a controlled React component: https://aqualang89.github.io/shipnotes-components/components/voice-orb/demo.html",
       slots: ["root", "glow", "canvas", "fallback", "label"],
       accessibility: [
         "The customizable label is a polite, atomic status region. Keep a visible status message beside the decorative canvas.",
@@ -5699,9 +5699,9 @@ export const registry = [
       usage: [
         "Control idle, listening, thinking, and speaking from actual application state. Selecting listening does not activate a microphone.",
         "Pass an existing AnalyserNode to analyser, or normalized low, mid, and high values to bands. analyser takes precedence.",
-        "Bass expands the surface, mids form traveling folds, and highs add fine detail. Audio is smoothed with a fast attack and gentle release.",
+        "Bass deforms the sphere, mids drive traveling waves, and highs add brief highlights. Per-band attack/release and transient detection preserve note and beat response; thinking traces three illuminated belts.",
         "The component only reads frequency data. The caller owns microphone permissions, audio connections, playback, stream tracks, and AudioContext cleanup.",
-        "Use size sm, md, or lg; color accepts a CSS color or token. The default palette uses primary, chart-3, chart-4, and chart-5 respectively.",
+        "Use size sm, md, or lg; color accepts a CSS color or token. The default palette preserves the original lilac, turquoise, amber, and pink/violet shading. Per-state --brilliant-voice-STATE-low and -high CSS variables customize the two-tone palette. The transparent luminous canvas is intended for dark surfaces.",
         "Offer a paused control for longer sessions. Hidden and offscreen rendering stops; slow devices reduce particle density.",
       ],
       avoid: [

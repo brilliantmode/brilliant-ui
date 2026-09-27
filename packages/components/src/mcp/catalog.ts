@@ -1227,7 +1227,7 @@ export const componentCatalog = [
     kind: "component",
     metadata: {
       purpose:
-        "Visualizes voice interactions with an independently implemented React/WebGL surface. Original visual concept by Ship Notes / aqualang89: https://aqualang89.github.io/shipnotes-components/components/voice-orb/demo.html",
+        "Adapts the MIT-licensed Ship Notes / aqualang89 renderer, sphere sampling, and audio response into a controlled React component: https://aqualang89.github.io/shipnotes-components/components/voice-orb/demo.html",
       slots: ["root", "glow", "canvas", "fallback", "label"],
       accessibility: [
         "The customizable label is a polite, atomic status region. Keep a visible status message beside the decorative canvas.",
@@ -1237,9 +1237,9 @@ export const componentCatalog = [
       usage: [
         "Control idle, listening, thinking, and speaking from actual application state. Selecting listening does not activate a microphone.",
         "Pass an existing AnalyserNode to analyser, or normalized low, mid, and high values to bands. analyser takes precedence.",
-        "Bass expands the surface, mids form traveling folds, and highs add fine detail. Audio is smoothed with a fast attack and gentle release.",
+        "Bass deforms the sphere, mids drive traveling waves, and highs add brief highlights. Per-band attack/release and transient detection preserve note and beat response; thinking traces three illuminated belts.",
         "The component only reads frequency data. The caller owns microphone permissions, audio connections, playback, stream tracks, and AudioContext cleanup.",
-        "Use size sm, md, or lg; color accepts a CSS color or token. The default palette uses primary, chart-3, chart-4, and chart-5 respectively.",
+        "Use size sm, md, or lg; color accepts a CSS color or token. The default palette preserves the original lilac, turquoise, amber, and pink/violet shading. Per-state --brilliant-voice-STATE-low and -high CSS variables customize the two-tone palette. The transparent luminous canvas is intended for dark surfaces.",
         "Offer a paused control for longer sessions. Hidden and offscreen rendering stops; slow devices reduce particle density.",
       ],
       avoid: [
@@ -1251,7 +1251,7 @@ export const componentCatalog = [
     registryDependencies: [],
     title: "Voice Orb",
     usageExample:
-      '"use client";\n\nimport { useState } from "react";\nimport { VoiceOrb, type VoiceOrbState } from "@brilliantmode/ui/voice-orb";\n\n// Supply an analyser connected to your microphone or playback graph.\n// This component never requests microphone access or starts playback.\nexport function Example({ analyser = null }: { analyser?: AnalyserNode | null }) {\n  const [state, setState] = useState<VoiceOrbState>("idle");\n  const [paused, setPaused] = useState(false);\n\n  return (\n    <div className="grid justify-items-center gap-4">\n      <VoiceOrb state={state} analyser={analyser} size="lg" paused={paused} />\n      <p className="text-sm capitalize">{state}</p>\n      <fieldset aria-label="Voice state" className="flex flex-wrap gap-2">\n        {(["idle", "listening", "thinking", "speaking"] as const).map((value) => (\n          <button key={value} type="button" aria-pressed={state === value}\n            onClick={() => setState(value)}\n            className="rounded-md border border-border px-3 py-2 text-sm capitalize hover:bg-muted aria-pressed:bg-primary aria-pressed:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring">\n            {value}\n          </button>\n        ))}\n      </fieldset>\n      <button type="button" onClick={() => setPaused((value) => !value)}\n        className="min-w-32 rounded-md border border-border px-3 py-2 text-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">\n        {paused ? "Resume motion" : "Pause motion"}\n      </button>\n    </div>\n  );\n}',
+      '"use client";\n\nimport { useState } from "react";\nimport { VoiceOrb, type VoiceOrbState } from "@brilliantmode/ui/voice-orb";\n\n// Supply an analyser connected to your microphone or playback graph.\n// This component never requests microphone access or starts playback.\nexport function Example({ analyser = null }: { analyser?: AnalyserNode | null }) {\n  const [state, setState] = useState<VoiceOrbState>("idle");\n  const [paused, setPaused] = useState(false);\n\n  return (\n    <div className="grid justify-items-center gap-4">\n      <div className="grid w-full max-w-2xl place-items-center rounded-md bg-[var(--brilliant-voice-surface,#050507)]">\n        <VoiceOrb state={state} analyser={analyser} size="lg" paused={paused}\n          style={{ width: "min(100%, 570px)" }} />\n      </div>\n      <p className="text-sm capitalize">{state}</p>\n      <fieldset aria-label="Voice state" className="flex flex-wrap gap-2">\n        {(["idle", "listening", "thinking", "speaking"] as const).map((value) => (\n          <button key={value} type="button" aria-pressed={state === value}\n            onClick={() => setState(value)}\n            className="rounded-md border border-border px-3 py-2 text-sm capitalize hover:bg-muted aria-pressed:bg-primary aria-pressed:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring">\n            {value}\n          </button>\n        ))}\n      </fieldset>\n      <button type="button" onClick={() => setPaused((value) => !value)}\n        className="min-w-32 rounded-md border border-border px-3 py-2 text-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">\n        {paused ? "Resume motion" : "Pause motion"}\n      </button>\n    </div>\n  );\n}',
     valueExports: ["VoiceOrb"],
   },
   {

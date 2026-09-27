@@ -995,7 +995,10 @@ export function Example({ analyser = null }: { analyser?: AnalyserNode | null })
 
   return (
     <div className="grid justify-items-center gap-4">
-      <VoiceOrb state={state} analyser={analyser} size="lg" paused={paused} />
+      <div className="grid w-full max-w-2xl place-items-center rounded-md bg-[var(--brilliant-voice-surface,#050507)]">
+        <VoiceOrb state={state} analyser={analyser} size="lg" paused={paused}
+          style={{ width: "min(100%, 570px)" }} />
+      </div>
       <p className="text-sm capitalize">{state}</p>
       <fieldset aria-label="Voice state" className="flex flex-wrap gap-2">
         {(["idle", "listening", "thinking", "speaking"] as const).map((value) => (

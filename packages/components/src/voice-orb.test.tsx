@@ -107,6 +107,7 @@ beforeEach(() => {
   gl = fakeWebGL();
   const context = {
     clearRect: vi.fn(),
+    createRadialGradient: () => ({ addColorStop: vi.fn() }),
     fillRect: vi.fn(),
     fillStyle: "",
     getImageData: () => ({ data: [127, 64, 255, 255] }),
@@ -162,15 +163,15 @@ describe("Voice Orb", () => {
   it("clamps unsafe numerical inputs and updates paused states without rebuilding the renderer", () => {
     act(() =>
       root.render(
-        <VoiceOrb bands={{ low: 9, mid: -1, high: Number.NaN }} particleCount={20000} paused />,
+        <VoiceOrb bands={{ low: 9, mid: -1, high: Number.NaN }} particleCount={40000} paused />,
       ),
     );
     nextFrame();
-    expect(gl.drawArrays).toHaveBeenLastCalledWith(gl.POINTS, 0, 12000);
+    expect(gl.drawArrays).toHaveBeenLastCalledWith(gl.POINTS, 0, 20000);
     expect(gl.uniform3f).toHaveBeenCalledWith("uBands", 1, 0, 0);
     expect(frames.size).toBe(0);
     act(() =>
-      root.render(<VoiceOrb bands={{ mid: 0.4 }} particleCount={20000} paused state="speaking" />),
+      root.render(<VoiceOrb bands={{ mid: 0.4 }} particleCount={40000} paused state="speaking" />),
     );
     nextFrame();
     expect(gl.uniform3f).toHaveBeenCalledWith("uBands", 0, 0.4, 0);
@@ -253,7 +254,11 @@ describe("Voice Orb", () => {
   it("reduces density on slow frames while preserving the surface animation", () => {
     act(() => root.render(<VoiceOrb />));
     for (let i = 0; i < 40; i++) nextFrame(40);
-    expect(gl.drawArrays).toHaveBeenLastCalledWith(gl.POINTS, 0, 4500);
+    expect(gl.drawArrays).toHaveBeenLastCalledWith(gl.POINTS, 0, 6000);
+    const data = gl.bufferData.mock.calls.at(-1)?.[1] as Float32Array;
+    const ys = Array.from(data).filter((_value, index) => index % 4 === 1);
+    expect(Math.min(...ys)).toBeLessThan(-0.99);
+    expect(Math.max(...ys)).toBeGreaterThan(0.99);
     expect(frames.size).toBe(1);
   });
 
@@ -265,9 +270,9 @@ describe("Voice Orb", () => {
       frequencyBinCount: 1024,
       connect: vi.fn(),
       disconnect: vi.fn(),
-      getByteFrequencyData: vi.fn((data: Uint8Array) => {
+      getFloatFrequencyData: vi.fn((data: Float32Array) => {
         expect(data.length).toBe(node.frequencyBinCount);
-        data.fill(0);
+        data.fill(-Infinity);
         for (let i = 0; i < data.length; i++) {
           const hz = (i * node.context.sampleRate) / node.fftSize;
           if (
@@ -275,7 +280,7 @@ describe("Voice Orb", () => {
             (activeBand === "mid" && hz >= 250 && hz < 2400) ||
             (activeBand === "high" && hz >= 2400 && hz < 12000)
           )
-            data[i] = 255;
+            data[i] = 0;
         }
       }),
     };
@@ -303,9 +308,9 @@ describe("Voice Orb", () => {
     expect(currentBands()[1]).toBeCloseTo(0);
     expect(currentBands()[2]).toBeCloseTo(1);
     act(() => root.render(<VoiceOrb analyser={node as unknown as AnalyserNode} paused />));
-    const reads = node.getByteFrequencyData.mock.calls.length;
+    const reads = node.getFloatFrequencyData.mock.calls.length;
     nextFrame();
-    expect(node.getByteFrequencyData).toHaveBeenCalledTimes(reads);
+    expect(node.getFloatFrequencyData).toHaveBeenCalledTimes(reads);
     expect(frames.size).toBe(0);
     act(() => root.render(null));
     expect(node.connect).not.toHaveBeenCalled();
@@ -321,7 +326,7 @@ describe("Voice Orb", () => {
       context: { sampleRate: 44100 },
       fftSize: 2048,
       frequencyBinCount: 1024,
-      getByteFrequencyData: vi.fn((data: Uint8Array) => data.fill(255)),
+      getFloatFrequencyData: vi.fn((data: Float32Array) => data.fill(0)),
     };
     act(() => root.render(<VoiceOrb analyser={node as unknown as AnalyserNode} />));
     nextFrame();
@@ -330,7 +335,7 @@ describe("Voice Orb", () => {
     expect(attack).toBeLessThan(1);
     for (let i = 0; i < 60; i++) nextFrame();
     const peak = currentLow();
-    node.getByteFrequencyData.mockImplementation(() => {
+    node.getFloatFrequencyData.mockImplementation(() => {
       throw new Error("Unavailable");
     });
     nextFrame();
@@ -339,6 +344,34 @@ describe("Voice Orb", () => {
     for (let i = 0; i < 100; i++) nextFrame();
     expect(currentLow()).toBeCloseTo(0);
     expect(frames.size).toBe(1);
+  });
+
+  it("preserves narrow bass notes and distinguishes their onset from sustained energy", () => {
+    const node = {
+      context: { sampleRate: 48000 },
+      fftSize: 2048,
+      frequencyBinCount: 1024,
+      getFloatFrequencyData: (data: Float32Array) => {
+        data.fill(-Infinity);
+        data[5] = -24;
+      },
+    };
+    const latestOnset = () =>
+      gl.uniform1f.mock.calls.filter(([uniform]) => uniform === "uOnset").at(-1)?.[1] as number;
+    act(() =>
+      root.render(<VoiceOrb analyser={node as unknown as AnalyserNode} state="speaking" />),
+    );
+    nextFrame();
+    expect(latestOnset()).toBe(1);
+    for (let i = 0; i < 90; i++) nextFrame();
+    const bands = gl.uniform3f.mock.calls
+      .filter(([uniform]) => uniform === "uBands")
+      .at(-1)
+      ?.slice(1) as number[];
+    expect(bands[0]).toBeGreaterThan(0.45);
+    expect(bands[0]).toBeLessThan(0.55);
+    expect(bands.slice(1)).toEqual([0, 0]);
+    expect(latestOnset()).toBeLessThan(0.01);
   });
 
   it("recovers from context loss and releases resources under Strict Mode", () => {
@@ -352,7 +385,7 @@ describe("Voice Orb", () => {
     nextFrame();
     expect(gl.createProgram).toHaveBeenCalledTimes(2);
     expect(gl.deleteProgram).toHaveBeenCalledOnce();
-    const canvas = host.querySelector("canvas");
+    const canvas = host.querySelector('[data-slot="canvas"]');
     if (!canvas) throw new Error("Missing canvas");
     const lost = new Event("webglcontextlost", { cancelable: true });
     act(() => canvas.dispatchEvent(lost));

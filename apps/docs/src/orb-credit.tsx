@@ -12,7 +12,17 @@ export function OrbCredit({ component }: { component: "signal-orb" | "voice-orb"
         >
           Ship Notes / aqualang89
         </a>
-        . Brilliant UI’s React and WebGL implementation is independently written. Explore the{" "}
+        .{" "}
+        {component === "voice-orb" ? (
+          <>
+            The renderer, particle sampling, audio response, and demo samples are adapted from the
+            creator’s MIT-licensed code. Brilliant UI adds React integration, theme overrides,
+            motion controls, and accessible status. The original copyright and license are retained.
+          </>
+        ) : (
+          <>Brilliant UI’s React and WebGL implementation is independently written.</>
+        )}{" "}
+        Explore the{" "}
         <a
           className="underline underline-offset-4 hover:text-foreground"
           href={`https://aqualang89.github.io/shipnotes-components/components/${component}/demo.html`}

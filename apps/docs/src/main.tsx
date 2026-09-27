@@ -7665,7 +7665,7 @@ import "@brilliantmode/ui/styles.css"`}</MiniTerminal>
                           {item.name === "signal-orb"
                             ? "Particle shapes blend smoothly between states. Completion settles and stops; paused and reduced-motion states update immediately. Rendering sleeps offscreen and in hidden tabs, and releases GPU resources when unmounted."
                             : item.name === "voice-orb"
-                              ? "Frequency bands shape a continuous particle surface with quick attack and gentle release. State changes blend smoothly; pause and reduced motion show still frames. Rendering sleeps offscreen and in hidden tabs. Caller-owned audio is never modified."
+                              ? "The original Ship Notes shaders retain layered color, luminous edges, and moving thinking bands. Frequency bands and bass transients drive the surface. State changes blend smoothly; pause and reduced motion show still frames. Rendering sleeps offscreen and in hidden tabs. Caller-owned audio is never modified."
                               : item.name === "card"
                                 ? "Interactive cards lift by 1px, increase elevation, soften the border toward primary, and compress to 99.5% on press. The beam variant adds a rotating conic border animation and disables it for reduced-motion users."
                                 : item.name === "text"

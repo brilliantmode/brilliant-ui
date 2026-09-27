@@ -36,6 +36,18 @@ try {
     throw new Error("Packed package.json contains pnpm catalog dependency specifiers.");
   }
 
+  for (const file of ["THIRD_PARTY_NOTICES.md", "dist/generated/voice-orb.js"]) {
+    const { stdout } = await execFileAsync("tar", ["-xOf", tarballPath, `package/${file}`], {
+      encoding: "utf8",
+    });
+    if (
+      !stdout.includes("Copyright (c) 2026 Ship Notes") ||
+      !stdout.includes("Permission is hereby granted")
+    ) {
+      throw new Error(`Ship Notes license notice is missing from packaged ${file}.`);
+    }
+  }
+
   await writeFile(
     join(consumerDirectory, "package.json"),
     `${JSON.stringify(
