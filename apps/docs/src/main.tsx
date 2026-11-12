@@ -1,3 +1,4 @@
+import { ButtonLink } from "@brilliantmode/ui/button-link";
 import {
   Card,
   CardContent,
@@ -64,6 +65,7 @@ import {
   HeaderMobileTrigger,
   HeaderNav,
 } from "@brilliantmode/ui/header";
+import { Link } from "@brilliantmode/ui/link";
 import { Meter } from "@brilliantmode/ui/meter";
 import { PhotoUpload } from "@brilliantmode/ui/photo-upload";
 import { QRCode } from "@brilliantmode/ui/qr-code";
@@ -284,6 +286,8 @@ const navGroups = [
       ["Carousel", "/components/carousel"],
       ["Table", "/components/table"],
       ["Scroll Area", "/components/scroll-area"],
+      ["Link", "/components/link"],
+      ["Button Link", "/components/button-link"],
       ["Breadcrumb", "/components/breadcrumb"],
       ["Navigation Menu", "/components/navigation-menu"],
       ["Menubar", "/components/menubar"],
@@ -4933,6 +4937,34 @@ function ComponentMiniPreview({ name }: { name: string }) {
           </div>
         </div>
       </div>
+    );
+  }
+
+  if (name === "button-link") {
+    return (
+      <div className="flex flex-wrap items-center gap-3">
+        <ButtonLink href="#preview">Connect a provider</ButtonLink>
+        <ButtonLink href="#preview" variant="outline">
+          See ranked creators
+        </ButtonLink>
+        <ButtonLink href="#preview" size="sm" variant="ghost">
+          View all
+        </ButtonLink>
+      </div>
+    );
+  }
+
+  if (name === "link") {
+    return (
+      <p className="max-w-prose text-sm text-muted-foreground">
+        Renders a plain anchor by default:{" "}
+        <Link className="text-foreground underline" href="#preview">
+          Open campaigns
+        </Link>
+        . Wrap the app once in LinkProvider with your router&apos;s link, and every Brilliant UI
+        link (application shell, header, footer, breadcrumb, pagination, navigation menu, button
+        link) navigates with your router.
+      </p>
     );
   }
 

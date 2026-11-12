@@ -1016,6 +1016,38 @@ export function Example({ analyser = null }: { analyser?: AnalyserNode | null })
     </div>
   );
 }`,
+  "button-link": `import { ButtonLink } from "@brilliantmode/ui/button-link";
+
+export function Example() {
+  return (
+    <ButtonLink href="/settings/providers" variant="outline">
+      Connect a provider
+    </ButtonLink>
+  );
+}`,
+  link: `"use client";
+
+import NextLink from "next/link";
+import { LinkProvider } from "@brilliantmode/ui/link";
+import {
+  ApplicationShellNav,
+  ApplicationShellNavItem,
+} from "@brilliantmode/ui/application-shell";
+
+// Set once (e.g. in a client providers component in the root layout); every
+// Brilliant UI link below it then navigates with the Next.js router.
+export function Example() {
+  return (
+    <LinkProvider component={NextLink}>
+      <ApplicationShellNav aria-label="Workspace">
+        <ApplicationShellNavItem href="/campaigns" active>
+          Campaigns
+        </ApplicationShellNavItem>
+        <ApplicationShellNavItem href="/creators">Creators</ApplicationShellNavItem>
+      </ApplicationShellNav>
+    </LinkProvider>
+  );
+}`,
   spinner: `import { Spinner } from "@brilliantmode/ui/spinner";
 
 export function Example() {

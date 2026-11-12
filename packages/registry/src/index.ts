@@ -146,11 +146,14 @@ const sizes = {
   icon: "size-9 px-0",
 } as const;
 
+export type ButtonVariant = keyof typeof variants;
+export type ButtonSize = keyof typeof sizes;
+
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   loadingLabel?: ReactNode;
-  size?: keyof typeof sizes;
-  variant?: keyof typeof variants;
+  size?: ButtonSize;
+  variant?: ButtonVariant;
 }
 
 export function Button({
@@ -167,15 +170,7 @@ export function Button({
   return (
     <button
       aria-busy={loading || undefined}
-      className={[
-        "cursor-pointer relative isolate inline-flex shrink-0 appearance-none items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em] disabled:cursor-default aria-disabled:cursor-default",
-        "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
-        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-        "focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50",
-        variants[variant],
-        sizes[size],
-        className,
-      ].join(" ")}
+      className={buttonClassName({ className, size, variant })}
       disabled={disabled || loading}
       type={type}
       {...props}
@@ -211,6 +206,55 @@ export function Button({
       )}
     </button>
   );
+}
+
+/**
+ * The button's classes, for elements that must look like a button but are not one,
+ * e.g. a link (see ButtonLink). Never nest a Button inside a link.
+ */
+export function buttonClassName({
+  className = "",
+  size = "md",
+  variant = "primary",
+}: {
+  className?: string;
+  size?: ButtonSize;
+  variant?: ButtonVariant;
+} = {}) {
+  return [
+    "cursor-pointer relative isolate inline-flex shrink-0 appearance-none items-center justify-center gap-2 rounded-[0.25rem] font-medium tracking-[-0.005em] disabled:cursor-default aria-disabled:cursor-default",
+    "motion-safe:transition-[color,background-color,border-color,box-shadow,transform,opacity] motion-safe:duration-[var(--brilliant-duration-fast)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none",
+    "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+    "focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
+    variants[variant],
+    sizes[size],
+    className,
+  ].join(" ");
+}
+`;
+
+const buttonLinkSource = `import type { AnchorHTMLAttributes } from "react";
+import { type ButtonSize, type ButtonVariant, buttonClassName } from "@/components/ui/button";
+import { Link } from "@/components/ui/link";
+
+export interface ButtonLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+  href: string;
+  size?: ButtonSize;
+  variant?: ButtonVariant;
+}
+
+/**
+ * A link that looks like a Button. Use it for navigation ("Connect a provider",
+ * "See ranked creators") instead of putting a Button inside a link. It goes through
+ * LinkProvider, so it navigates with the app's router.
+ */
+export function ButtonLink({
+  className = "",
+  size = "md",
+  variant = "primary",
+  ...props
+}: ButtonLinkProps) {
+  return <Link className={buttonClassName({ className, size, variant })} {...props} />;
 }
 `;
 
@@ -2896,7 +2940,57 @@ export function CarouselDots({ className = "", ...props }: HTMLAttributes<HTMLDi
 }
 `;
 
-const breadcrumbSource = `import type { HTMLAttributes } from "react";
+const linkSource = `"use client";
+
+import type { AnchorHTMLAttributes, ComponentType, ReactNode, Ref } from "react";
+import { createContext, useContext } from "react";
+
+export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+  href: string;
+  ref?: Ref<HTMLAnchorElement>;
+};
+
+/** A router link component, e.g. the Next.js Link or a React Router adapter. */
+export type LinkComponent = ComponentType<LinkProps>;
+
+const LinkComponentContext = createContext<LinkComponent | null>(null);
+
+/**
+ * Sets the link component every Brilliant UI link renders with. Wrap the app once,
+ * e.g. LinkProvider with component set to the Next.js Link, so navigation stays in the app router.
+ */
+export function LinkProvider({
+  children,
+  component,
+}: {
+  children: ReactNode;
+  component: LinkComponent;
+}) {
+  return <LinkComponentContext.Provider value={component}>{children}</LinkComponentContext.Provider>;
+}
+
+/** The link component set by the nearest LinkProvider, or null for plain anchors. */
+export function useLinkComponent(): LinkComponent | null {
+  return useContext(LinkComponentContext);
+}
+
+/**
+ * Renders the app's router link when a LinkProvider sets one, otherwise a plain anchor.
+ * Anchors without an href always stay plain.
+ */
+export function Link({
+  href,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { ref?: Ref<HTMLAnchorElement> }) {
+  const Component = useContext(LinkComponentContext);
+  if (!Component || href === undefined) return <a href={href} {...props} />;
+  return <Component href={href} {...props} />;
+}
+`;
+
+const breadcrumbSource = `import type { AnchorHTMLAttributes, HTMLAttributes } from "react";
+import { Link } from "@/components/ui/link";
+
 
 export function Breadcrumb({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
   return <nav aria-label="Breadcrumb" className={className} {...props} />;
@@ -2910,19 +3004,29 @@ export function BreadcrumbItem({ className = "", ...props }: HTMLAttributes<HTML
   return <li className={["inline-flex items-center gap-1", className].join(" ")} {...props} />;
 }
 
+export function BreadcrumbLink({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  return <Link className={["cursor-pointer rounded-[0.2rem] hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring", className].join(" ")} {...props} />;
+}
+
+export function BreadcrumbPage({ className = "", ...props }: HTMLAttributes<HTMLSpanElement>) {
+  return <span aria-current="page" className={["font-medium text-foreground", className].join(" ")} {...props} />;
+}
+
 export function BreadcrumbSeparator({ className = "", ...props }: HTMLAttributes<HTMLSpanElement>) {
   return <span aria-hidden="true" className={["text-muted-foreground/70", className].join(" ")} {...props}>/</span>;
 }
 `;
 
-const navigationMenuSource = `import type { HTMLAttributes } from "react";
+const navigationMenuSource = `import type { AnchorHTMLAttributes, HTMLAttributes } from "react";
+import { Link } from "@/components/ui/link";
+
 
 export function NavigationMenu({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
   return <nav className={["flex items-center gap-1", className].join(" ")} {...props} />;
 }
 
-export function NavigationMenuLink({ className = "", ...props }: HTMLAttributes<HTMLAnchorElement>) {
-  return <a className={["cursor-pointer rounded-[0.25rem] px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground aria-disabled:cursor-default", className].join(" ")} {...props} />;
+export function NavigationMenuLink({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  return <Link className={["cursor-pointer rounded-[0.25rem] px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground aria-disabled:cursor-default", className].join(" ")} {...props} />;
 }
 `;
 
@@ -2937,7 +3041,9 @@ export function MenubarItem({ className = "", type = "button", ...props }: Butto
 }
 `;
 
-const paginationSource = `import type { HTMLAttributes } from "react";
+const paginationSource = `import type { AnchorHTMLAttributes, HTMLAttributes } from "react";
+import { Link } from "@/components/ui/link";
+
 
 export function Pagination({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
   return <nav aria-label="Pagination" className={className} {...props} />;
@@ -2951,8 +3057,8 @@ export function PaginationItem({ className = "", ...props }: HTMLAttributes<HTML
   return <li className={className} {...props} />;
 }
 
-export function PaginationLink({ className = "", ...props }: HTMLAttributes<HTMLAnchorElement>) {
-  return <a className={["cursor-pointer inline-flex size-9 items-center justify-center rounded-[0.25rem] text-sm hover:bg-muted aria-current:bg-primary aria-current:text-primary-foreground aria-disabled:cursor-default", className].join(" ")} {...props} />;
+export function PaginationLink({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  return <Link className={["cursor-pointer inline-flex size-9 items-center justify-center rounded-[0.25rem] text-sm hover:bg-muted aria-current:bg-primary aria-current:text-primary-foreground aria-disabled:cursor-default", className].join(" ")} {...props} />;
 }
 `;
 
@@ -3254,6 +3360,7 @@ import type {
   HTMLAttributes,
   ReactNode,
 } from "react";
+import { Link } from "@/components/ui/link";
 
 const positions = {
   static: "relative",
@@ -3443,7 +3550,7 @@ export function HeaderContainer({ className = "", ...props }: HTMLAttributes<HTM
 
 export function HeaderBrand({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
-    <a
+    <Link
       className={cx(
         "cursor-pointer inline-flex shrink-0 items-center gap-2 rounded-[0.25rem] font-semibold tracking-[-0.015em] outline-none md:mr-3 aria-disabled:cursor-default",
         "focus-visible:ring-1 focus-visible:ring-ring",
@@ -3491,7 +3598,7 @@ export function HeaderLink({
   const { closeMenu } = useHeader();
 
   return (
-    <a
+    <Link
       aria-current={active ? "page" : undefined}
       className={cx(
         "cursor-pointer rounded-[0.25rem] px-3 py-2 text-sm outline-none aria-disabled:cursor-default",
@@ -3553,6 +3660,7 @@ export function HeaderMobileTrigger({
 `;
 
 const footerSource = `import type { AnchorHTMLAttributes, HTMLAttributes } from "react";
+import { Link } from "@/components/ui/link";
 
 const variants = {
   surface: "border-t border-border bg-background",
@@ -3598,7 +3706,7 @@ export function FooterMain({ className = "", ...props }: HTMLAttributes<HTMLDivE
 
 export function FooterBrand({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
-    <a
+    <Link
       className={cx(
         "cursor-pointer inline-flex items-center gap-2 rounded-[0.25rem] font-semibold tracking-[-0.015em] text-foreground outline-none aria-disabled:cursor-default",
         "focus-visible:ring-1 focus-visible:ring-ring",
@@ -3641,7 +3749,7 @@ export function FooterGroup({
 
 export function FooterLink({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
-    <a
+    <Link
       className={cx(
         "cursor-pointer w-fit rounded-[0.2rem] leading-6 outline-none hover:text-foreground aria-disabled:cursor-default",
         "motion-safe:transition-colors motion-safe:duration-[var(--brilliant-duration-fast)] motion-reduce:transition-none",
@@ -3682,6 +3790,7 @@ import type {
   HTMLAttributes,
   ReactNode,
 } from "react";
+import { Link } from "@/components/ui/link";
 
 interface ApplicationShellContextValue {
   closeMobileNav: () => void;
@@ -3847,7 +3956,7 @@ export function ApplicationShellHeaderBrand({
   ...props
 }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
-    <a
+    <Link
       className={cx(
         "cursor-pointer inline-flex shrink-0 items-center gap-2 rounded-[0.375rem] text-sm font-semibold text-foreground md:hidden aria-disabled:cursor-default",
         "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
@@ -4060,7 +4169,7 @@ export function ApplicationShellSidebarHeader({
 
 export function ApplicationShellBrand({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
-    <a
+    <Link
       className={cx(
         "cursor-pointer flex min-w-0 max-w-[14rem] flex-1 items-center gap-3 overflow-hidden whitespace-nowrap rounded-[0.25rem] text-foreground opacity-100 outline-none focus-visible:ring-1 focus-visible:ring-ring md:group-data-[collapsed=true]/sidebar:pointer-events-none md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-safe:ease-[var(--brilliant-ease-standard)] motion-reduce:transition-none aria-disabled:cursor-default",
         className,
@@ -4141,7 +4250,7 @@ export function ApplicationShellSidebarFooterAction({
 
 export function ApplicationShellSearch({ className = "", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
-    <a
+    <Link
       className={cx(
         "cursor-pointer mb-5 flex h-9 items-center gap-2 rounded-[0.375rem] border-hairline border-border bg-surface px-3 text-sm text-muted-foreground shadow-sm [&>kbd]:overflow-hidden [&>kbd]:transition-[max-width,opacity,padding,border-width] [&>span:not(:first-child)]:overflow-hidden [&>span:not(:first-child)]:transition-[max-width,opacity] md:group-data-[collapsed=true]/sidebar:justify-center md:group-data-[collapsed=true]/sidebar:px-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:max-w-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:border-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:p-0 md:group-data-[collapsed=true]/sidebar:[&>kbd]:opacity-0 md:group-data-[collapsed=true]/sidebar:[&>span:not(:first-child)]:max-w-0 md:group-data-[collapsed=true]/sidebar:[&>span:not(:first-child)]:opacity-0 motion-safe:[&>kbd]:duration-[var(--brilliant-duration-normal)] motion-safe:[&>span:not(:first-child)]:duration-[var(--brilliant-duration-normal)] motion-reduce:[&>kbd]:transition-none motion-reduce:[&>span:not(:first-child)]:transition-none aria-disabled:cursor-default",
         "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
@@ -4187,7 +4296,7 @@ export function ApplicationShellNavItem({
   const { closeMobileNav } = useApplicationShell();
 
   return (
-    <a
+    <Link
       aria-current={active ? "page" : undefined}
       className={cx(
         "cursor-pointer group flex items-center gap-2 rounded-[0.375rem] px-2 py-1.5 leading-5 transition-colors md:group-data-[collapsed=true]/sidebar:justify-center aria-disabled:cursor-default",
@@ -4217,7 +4326,7 @@ export function ApplicationShellNavItem({
         </span>
       ) : null}
       <span className="min-w-0 max-w-[12rem] truncate opacity-100 md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none">{children}</span>
-    </a>
+    </Link>
   );
 }
 
@@ -4274,7 +4383,7 @@ export function ApplicationShellNavGroupItem({
   const { closeMobileNav } = useApplicationShell();
 
   return (
-    <a
+    <Link
       aria-current={active ? "page" : undefined}
       className={cx(
         "cursor-pointer group flex items-center gap-3 rounded-[0.5rem] px-2 py-2 transition-colors md:group-data-[collapsed=true]/sidebar:justify-center aria-disabled:cursor-default",
@@ -4300,7 +4409,7 @@ export function ApplicationShellNavGroupItem({
         ) : null}
       </span>
       {trailing ? <span className="max-w-8 shrink-0 overflow-hidden text-muted-foreground opacity-100 md:group-data-[collapsed=true]/sidebar:max-w-0 md:group-data-[collapsed=true]/sidebar:opacity-0 motion-safe:transition-[max-width,opacity] motion-safe:duration-[var(--brilliant-duration-normal)] motion-reduce:transition-none">{trailing}</span> : null}
-    </a>
+    </Link>
   );
 }
 
@@ -4778,6 +4887,28 @@ export const registry = [
         "Do not disable without explaining why.",
         "Do not leave a button loading indefinitely; surface an error or recovery path when the action fails.",
       ],
+    },
+  },
+  {
+    name: "button-link",
+    title: "Button Link",
+    description: "A link styled as a button, for navigation actions, routed through LinkProvider.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: ["button", "link"],
+    files: [{ path: "button-link.tsx", content: buttonLinkSource, target: "ui/button-link.tsx" }],
+    metadata: {
+      purpose: "Gives navigation actions the button look without nesting a button inside a link.",
+      slots: ["root"],
+      accessibility: [
+        "Renders one anchor, so keyboard and screen-reader users get a single link, not a link wrapping a button.",
+        "Supports aria-disabled for unavailable destinations.",
+      ],
+      usage: [
+        "Use for actions that go to another page.",
+        "Use Button for actions that change data or submit forms.",
+      ],
+      avoid: ["Do not wrap a Button in a link; use ButtonLink instead."],
     },
   },
   {
@@ -5910,12 +6041,37 @@ export const registry = [
     },
   },
   {
+    name: "link",
+    title: "Link",
+    description:
+      "Routes every Brilliant UI link through your app router (Next.js, React Router) via one provider.",
+    kind: "component",
+    dependencies: [],
+    registryDependencies: [],
+    files: [{ path: "link.tsx", content: linkSource, target: "ui/link.tsx" }],
+    metadata: {
+      purpose:
+        "Lets navigation components (application shell, header, footer, breadcrumb, pagination, navigation menu) navigate client-side instead of reloading the page.",
+      slots: ["root"],
+      accessibility: [
+        "Renders a real anchor, so links keep keyboard, middle-click and open-in-new-tab behavior.",
+        "Passes aria attributes such as aria-current through to the rendered anchor.",
+      ],
+      usage: [
+        "Wrap the app once in LinkProvider with your router's link component.",
+        "Without a provider, links render as plain anchors.",
+        "Use Link directly for custom links that should follow the same routing.",
+      ],
+      avoid: ["Do not wrap links in a second router link; the provider already applies it."],
+    },
+  },
+  {
     name: "breadcrumb",
     title: "Breadcrumb",
     description: "A semantic breadcrumb navigation primitive.",
     kind: "component",
     dependencies: [],
-    registryDependencies: [],
+    registryDependencies: ["link"],
     files: [{ path: "breadcrumb.tsx", content: breadcrumbSource, target: "ui/breadcrumb.tsx" }],
     metadata: {
       purpose: "Shows the current location in a hierarchy.",
@@ -5931,7 +6087,7 @@ export const registry = [
     description: "A simple semantic navigation menu primitive.",
     kind: "component",
     dependencies: [],
-    registryDependencies: [],
+    registryDependencies: ["link"],
     files: [
       {
         path: "navigation-menu.tsx",
@@ -5954,7 +6110,7 @@ export const registry = [
       "A responsive site header with sticky, fixed, and static positioning plus built-in mobile navigation.",
     kind: "layout",
     dependencies: [],
-    registryDependencies: [],
+    registryDependencies: ["link"],
     files: [{ path: "header.tsx", content: headerSource, target: "ui/header.tsx" }],
     metadata: {
       purpose:
@@ -5994,7 +6150,7 @@ export const registry = [
       "A responsive footer composition with brand copy, grouped navigation, legal links, and surface variants.",
     kind: "layout",
     dependencies: [],
-    registryDependencies: [],
+    registryDependencies: ["link"],
     files: [{ path: "footer.tsx", content: footerSource, target: "ui/footer.tsx" }],
     metadata: {
       purpose:
@@ -6034,7 +6190,7 @@ export const registry = [
       "A responsive app frame for integrated products, spacious portals, and focused kiosk experiences.",
     kind: "layout",
     dependencies: [],
-    registryDependencies: [],
+    registryDependencies: ["link"],
     files: [
       {
         path: "application-shell.tsx",
@@ -6464,7 +6620,7 @@ export const registry = [
     description: "A semantic pagination navigation primitive.",
     kind: "component",
     dependencies: [],
-    registryDependencies: [],
+    registryDependencies: ["link"],
     files: [{ path: "pagination.tsx", content: paginationSource, target: "ui/pagination.tsx" }],
     metadata: {
       purpose: "Navigates paged collections.",
