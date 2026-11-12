@@ -1,10 +1,10 @@
 /* Generated from the Brilliant UI registry. Do not edit directly. */
-export const packageVersion = "0.4.0";
+export const packageVersion = "0.5.0";
 export const componentCatalog = [
   {
     dependencies: [],
     description: "An accessible action control with semantic visual hierarchy.",
-    exports: ["ButtonProps", "Button"],
+    exports: ["ButtonVariant", "ButtonSize", "ButtonProps", "Button", "buttonClassName"],
     importPath: "@brilliantmode/ui/button",
     kind: "component",
     metadata: {
@@ -40,7 +40,33 @@ export const componentCatalog = [
     title: "Button",
     usageExample:
       'import { Button } from "@brilliantmode/ui/button";\n\nexport function Example() {\n  return (\n    <Button size="md" variant="glow">\n      Continue\n    </Button>\n  );\n}\n\nexport function KioskExample() {\n  return (\n    <div className="flex flex-wrap gap-6">\n      <Button size="kiosk" variant="tactile">Confirm</Button>\n      <Button size="kiosk" variant="molded">Push</Button>\n      <Button size="kiosk" variant="gel">Start</Button>\n    </div>\n  );\n}\n\nexport function LoadingExample() {\n  return (\n    <div className="flex flex-wrap gap-3">\n      <Button loading loadingLabel="Saving">Save changes</Button>\n      <Button loading loadingLabel="Checking in" size="kiosk" variant="tactile">\n        Check in\n      </Button>\n      <Button aria-label="Loading" loading loadingLabel={null} size="icon" />\n    </div>\n  );\n}',
-    valueExports: ["Button"],
+    valueExports: ["Button", "buttonClassName"],
+  },
+  {
+    dependencies: [],
+    description: "A link styled as a button, for navigation actions, routed through LinkProvider.",
+    exports: ["ButtonLinkProps", "ButtonLink"],
+    importPath: "@brilliantmode/ui/button-link",
+    kind: "component",
+    metadata: {
+      purpose: "Gives navigation actions the button look without nesting a button inside a link.",
+      slots: ["root"],
+      accessibility: [
+        "Renders one anchor, so keyboard and screen-reader users get a single link, not a link wrapping a button.",
+        "Supports aria-disabled for unavailable destinations.",
+      ],
+      usage: [
+        "Use for actions that go to another page.",
+        "Use Button for actions that change data or submit forms.",
+      ],
+      avoid: ["Do not wrap a Button in a link; use ButtonLink instead."],
+    },
+    name: "button-link",
+    registryDependencies: ["button", "link"],
+    title: "Button Link",
+    usageExample:
+      'import { ButtonLink } from "@brilliantmode/ui/button-link";\n\nexport function Example() {\n  return (\n    <ButtonLink href="/settings/providers" variant="outline">\n      Connect a provider\n    </ButtonLink>\n  );\n}',
+    valueExports: ["ButtonLink"],
   },
   {
     dependencies: [],
@@ -1559,8 +1585,44 @@ export const componentCatalog = [
   },
   {
     dependencies: [],
+    description:
+      "Routes every Brilliant UI link through your app router (Next.js, React Router) via one provider.",
+    exports: ["LinkProps", "LinkComponent", "LinkProvider", "useLinkComponent", "Link"],
+    importPath: "@brilliantmode/ui/link",
+    kind: "component",
+    metadata: {
+      purpose:
+        "Lets navigation components (application shell, header, footer, breadcrumb, pagination, navigation menu) navigate client-side instead of reloading the page.",
+      slots: ["root"],
+      accessibility: [
+        "Renders a real anchor, so links keep keyboard, middle-click and open-in-new-tab behavior.",
+        "Passes aria attributes such as aria-current through to the rendered anchor.",
+      ],
+      usage: [
+        "Wrap the app once in LinkProvider with your router's link component.",
+        "Without a provider, links render as plain anchors.",
+        "Use Link directly for custom links that should follow the same routing.",
+      ],
+      avoid: ["Do not wrap links in a second router link; the provider already applies it."],
+    },
+    name: "link",
+    registryDependencies: [],
+    title: "Link",
+    usageExample:
+      '"use client";\n\nimport NextLink from "next/link";\nimport { LinkProvider } from "@brilliantmode/ui/link";\nimport {\n  ApplicationShellNav,\n  ApplicationShellNavItem,\n} from "@brilliantmode/ui/application-shell";\n\n// Set once (e.g. in a client providers component in the root layout); every\n// Brilliant UI link below it then navigates with the Next.js router.\nexport function Example() {\n  return (\n    <LinkProvider component={NextLink}>\n      <ApplicationShellNav aria-label="Workspace">\n        <ApplicationShellNavItem href="/campaigns" active>\n          Campaigns\n        </ApplicationShellNavItem>\n        <ApplicationShellNavItem href="/creators">Creators</ApplicationShellNavItem>\n      </ApplicationShellNav>\n    </LinkProvider>\n  );\n}',
+    valueExports: ["LinkProvider", "useLinkComponent", "Link"],
+  },
+  {
+    dependencies: [],
     description: "A semantic breadcrumb navigation primitive.",
-    exports: ["Breadcrumb", "BreadcrumbList", "BreadcrumbItem", "BreadcrumbSeparator"],
+    exports: [
+      "Breadcrumb",
+      "BreadcrumbList",
+      "BreadcrumbItem",
+      "BreadcrumbLink",
+      "BreadcrumbPage",
+      "BreadcrumbSeparator",
+    ],
     importPath: "@brilliantmode/ui/breadcrumb",
     kind: "component",
     metadata: {
@@ -1571,11 +1633,18 @@ export const componentCatalog = [
       avoid: ["Do not use as the only navigation."],
     },
     name: "breadcrumb",
-    registryDependencies: [],
+    registryDependencies: ["link"],
     title: "Breadcrumb",
     usageExample:
       'import {\n  Breadcrumb,\n  BreadcrumbItem,\n  BreadcrumbList,\n  BreadcrumbSeparator,\n} from "@brilliantmode/ui/breadcrumb";\n\nexport function Example() {\n  return (\n    <Breadcrumb>\n      <BreadcrumbList>\n        <BreadcrumbItem>Workspace</BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>Settings</BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>API keys</BreadcrumbItem>\n      </BreadcrumbList>\n    </Breadcrumb>\n  );\n}',
-    valueExports: ["Breadcrumb", "BreadcrumbList", "BreadcrumbItem", "BreadcrumbSeparator"],
+    valueExports: [
+      "Breadcrumb",
+      "BreadcrumbList",
+      "BreadcrumbItem",
+      "BreadcrumbLink",
+      "BreadcrumbPage",
+      "BreadcrumbSeparator",
+    ],
   },
   {
     dependencies: [],
@@ -1591,7 +1660,7 @@ export const componentCatalog = [
       avoid: ["Do not use buttons for navigation destinations."],
     },
     name: "navigation-menu",
-    registryDependencies: [],
+    registryDependencies: ["link"],
     title: "Navigation Menu",
     usageExample:
       'import {\n  NavigationMenu,\n  NavigationMenuLink,\n} from "@brilliantmode/ui/navigation-menu";\n\nexport function Example() {\n  return (\n    <NavigationMenu>\n      <NavigationMenuLink href="/dashboard">Dashboard</NavigationMenuLink>\n      <NavigationMenuLink href="/usage">Usage</NavigationMenuLink>\n      <NavigationMenuLink href="/settings">Settings</NavigationMenuLink>\n    </NavigationMenu>\n  );\n}',
@@ -1646,7 +1715,7 @@ export const componentCatalog = [
       ],
     },
     name: "header",
-    registryDependencies: [],
+    registryDependencies: ["link"],
     title: "Header",
     usageExample:
       'import {\n  Header,\n  HeaderActions,\n  HeaderBrand,\n  HeaderContainer,\n  HeaderLink,\n  HeaderMobileTrigger,\n  HeaderNav,\n} from "@brilliantmode/ui/header";\nimport { Button } from "@brilliantmode/ui/button";\n\nexport function Example() {\n  return (\n    <Header\n      behavior="elevate"\n      position="sticky"\n      scrollThreshold={24}\n      surface="solid"\n    >\n      <HeaderContainer>\n        <HeaderBrand href="/">\n          <img alt="" className="size-8" src="/images/brilliant-mark.svg" />\n          <span>Brilliant</span>\n        </HeaderBrand>\n        <HeaderMobileTrigger />\n        <HeaderNav align="center">\n          <HeaderLink active href="/dashboard">Dashboard</HeaderLink>\n          <HeaderLink href="/projects">Projects</HeaderLink>\n          <HeaderLink href="/settings">Settings</HeaderLink>\n        </HeaderNav>\n        <HeaderActions className="hidden md:flex">\n          <Button size="sm">New project</Button>\n        </HeaderActions>\n      </HeaderContainer>\n    </Header>\n  );\n}',
@@ -1709,7 +1778,7 @@ export const componentCatalog = [
       ],
     },
     name: "footer",
-    registryDependencies: [],
+    registryDependencies: ["link"],
     title: "Footer",
     usageExample:
       'import {\n  Footer,\n  FooterBottom,\n  FooterBrand,\n  FooterContainer,\n  FooterDescription,\n  FooterGroup,\n  FooterLink,\n  FooterMain,\n  FooterNav,\n} from "@brilliantmode/ui/footer";\n\nexport function Example() {\n  return (\n    <Footer variant="surface">\n      <FooterContainer>\n        <FooterMain>\n          <div>\n            <FooterBrand href="/">Brilliant UI</FooterBrand>\n            <FooterDescription>\n              App-owned components with enterprise defaults and built-in micro UX.\n            </FooterDescription>\n          </div>\n          <FooterNav>\n            <FooterGroup title="Product">\n              <FooterLink href="/components">Components</FooterLink>\n              <FooterLink href="/blocks">Blocks</FooterLink>\n            </FooterGroup>\n            <FooterGroup title="Resources">\n              <FooterLink href="/docs">Documentation</FooterLink>\n              <FooterLink href="/changelog">Changelog</FooterLink>\n            </FooterGroup>\n            <FooterGroup title="Company">\n              <FooterLink href="/about">About</FooterLink>\n              <FooterLink href="/contact">Contact</FooterLink>\n            </FooterGroup>\n          </FooterNav>\n        </FooterMain>\n        <FooterBottom>\n          <span>© 2026 Brilliant Mode</span>\n          <div className="flex gap-4">\n            <FooterLink href="/privacy">Privacy</FooterLink>\n            <FooterLink href="/terms">Terms</FooterLink>\n          </div>\n        </FooterBottom>\n      </FooterContainer>\n    </Footer>\n  );\n}',
@@ -1852,7 +1921,7 @@ export const componentCatalog = [
       ],
     },
     name: "application-shell",
-    registryDependencies: [],
+    registryDependencies: ["link"],
     title: "Application Shell",
     usageExample:
       'import {\n  ApplicationShell,\n  ApplicationShellBrand,\n  ApplicationShellContent,\n  ApplicationShellHeader,\n  ApplicationShellHeaderAction,\n  ApplicationShellHeaderActions,\n  ApplicationShellHeaderBrand,\n  ApplicationShellHeaderContent,\n  ApplicationShellHeaderDescription,\n  ApplicationShellHeaderTitle,\n  ApplicationShellFooter,\n  ApplicationShellMain,\n  ApplicationShellMenuItem,\n  ApplicationShellMenuSection,\n  ApplicationShellMobileTrigger,\n  ApplicationShellNav,\n  ApplicationShellNavGroupItem,\n  ApplicationShellNavItem,\n  ApplicationShellNavMedia,\n  ApplicationShellNavSection,\n  ApplicationShellSearch,\n  ApplicationShellSidebar,\n  ApplicationShellSidebarContent,\n  ApplicationShellSidebarFooter,\n  ApplicationShellSidebarFooterAction,\n  ApplicationShellSidebarFooterActions,\n  ApplicationShellSidebarHeader,\n  ApplicationShellSidebarToggle,\n  ApplicationShellTopbar,\n  ApplicationShellProfile,\n  ApplicationShellProfileMenu,\n  ApplicationShellProfileTrigger,\n} from "@brilliantmode/ui/application-shell";\nimport { Button } from "@brilliantmode/ui/button";\n\nexport function Example() {\n  return (\n    <ApplicationShell>\n      <ApplicationShellSidebar>\n        <ApplicationShellSidebarHeader>\n          <ApplicationShellBrand href="/">\n            <img alt="" className="size-9" src="/images/brilliant-mark.svg" />\n            <span>\n              <span className="block text-sm font-semibold">Brilliant</span>\n              <span className="block text-xs text-muted-foreground">Component system</span>\n            </span>\n          </ApplicationShellBrand>\n          <ApplicationShellSidebarToggle />\n        </ApplicationShellSidebarHeader>\n        <ApplicationShellSidebarContent>\n          <ApplicationShellSearch href="/search">\n            <span aria-hidden="true">⌕</span>\n            <span className="flex-1">Search docs</span>\n            <kbd>/</kbd>\n          </ApplicationShellSearch>\n\n          <ApplicationShellNav>\n            <ApplicationShellNavSection title="Main">\n              <ApplicationShellNavItem\n                className="font-medium text-foreground"\n                href="/contracts"\n                icon="□"\n              >\n                Contracts\n              </ApplicationShellNavItem>\n              <ApplicationShellNavItem href="/analysts" icon="□">\n                Analysts\n              </ApplicationShellNavItem>\n              <ApplicationShellNavItem href="/settings" icon="□">\n                Setting\n              </ApplicationShellNavItem>\n            </ApplicationShellNavSection>\n\n            <ApplicationShellNavSection title="Inboxes">\n              <ApplicationShellNavGroupItem\n                description="(209) 555-0104"\n                href="/clients"\n                media={<ApplicationShellNavMedia tone="primary">C</ApplicationShellNavMedia>}\n              >\n                Clients\n              </ApplicationShellNavGroupItem>\n              <ApplicationShellNavGroupItem\n                description="(239) 555-0108"\n                href="/personal"\n                media={<ApplicationShellNavMedia tone="warning">P</ApplicationShellNavMedia>}\n              >\n                Personal\n              </ApplicationShellNavGroupItem>\n            </ApplicationShellNavSection>\n          </ApplicationShellNav>\n        </ApplicationShellSidebarContent>\n\n        <ApplicationShellSidebarFooter>\n          <ApplicationShellSidebarFooterActions>\n            <ApplicationShellSidebarFooterAction icon="?">\n              Help and support\n            </ApplicationShellSidebarFooterAction>\n            <ApplicationShellSidebarFooterAction icon="◐" trailing="⌘ T">\n              Appearance\n            </ApplicationShellSidebarFooterAction>\n          </ApplicationShellSidebarFooterActions>\n          <ApplicationShellProfile>\n            <ApplicationShellProfileMenu>\n              <ApplicationShellMenuSection title="Workspace">\n                <ApplicationShellMenuItem trailing="✓">Brilliant Labs</ApplicationShellMenuItem>\n                <ApplicationShellMenuItem>Acme Studio</ApplicationShellMenuItem>\n              </ApplicationShellMenuSection>\n              <ApplicationShellMenuSection>\n                <ApplicationShellMenuItem icon="○">Profile settings</ApplicationShellMenuItem>\n                <ApplicationShellMenuItem icon="?">Help and support</ApplicationShellMenuItem>\n                <ApplicationShellMenuItem icon="↪">Sign out</ApplicationShellMenuItem>\n              </ApplicationShellMenuSection>\n            </ApplicationShellProfileMenu>\n            <ApplicationShellProfileTrigger\n              description="dianne@brilliant.dev"\n              media={<ApplicationShellNavMedia>DR</ApplicationShellNavMedia>}\n              trailing="⌃"\n            >\n              Dianne Russell\n            </ApplicationShellProfileTrigger>\n          </ApplicationShellProfile>\n        </ApplicationShellSidebarFooter>\n      </ApplicationShellSidebar>\n\n      <ApplicationShellContent>\n        <ApplicationShellHeader>\n          <ApplicationShellMobileTrigger />\n          <ApplicationShellHeaderBrand href="/">\n            <img alt="" className="size-7" src="/images/brilliant-mark.svg" />\n            <span className="hidden sm:inline">Brilliant</span>\n          </ApplicationShellHeaderBrand>\n          <ApplicationShellHeaderContent>\n            <ApplicationShellHeaderTitle>Dashboard</ApplicationShellHeaderTitle>\n            <ApplicationShellHeaderDescription>Live workspace overview</ApplicationShellHeaderDescription>\n          </ApplicationShellHeaderContent>\n          <ApplicationShellHeaderActions>\n            <ApplicationShellHeaderAction aria-label="Help">?</ApplicationShellHeaderAction>\n            <ApplicationShellHeaderAction aria-label="Notifications">\n              ♢\n              <span className="absolute right-2 top-2 size-1.5 rounded-full bg-primary" />\n            </ApplicationShellHeaderAction>\n            <Button className="ml-1" size="sm" variant="glow">\n              New report\n            </Button>\n          </ApplicationShellHeaderActions>\n        </ApplicationShellHeader>\n        <ApplicationShellMain>\n          <div className="grid gap-4">\n            <div className="grid gap-4 sm:grid-cols-3">\n              {["Usage", "Members", "Revenue"].map((item) => (\n                <div className="rounded-lg border border-border bg-surface p-4" key={item}>\n                  <div className="text-sm font-medium">{item}</div>\n                  <div className="mt-1 text-2xl font-semibold tracking-tight">24K</div>\n                </div>\n              ))}\n            </div>\n            <div className="rounded-lg border border-border bg-surface p-4">\n              <div className="h-3 w-1/3 rounded bg-muted" />\n              <div className="mt-3 h-3 w-2/3 rounded bg-muted" />\n            </div>\n          </div>\n        </ApplicationShellMain>\n        <ApplicationShellFooter className="flex flex-wrap items-center justify-between gap-3">\n          <span>© 2026 Brilliant</span>\n          <a className="hover:text-foreground" href="/status">System status</a>\n        </ApplicationShellFooter>\n      </ApplicationShellContent>\n    </ApplicationShell>\n  );\n}\n\nexport function PortalExample() {\n  return (\n    <ApplicationShell variant="portal">\n      <ApplicationShellTopbar>\n        <a className="inline-flex items-center gap-2 font-semibold" href="/">\n          <img alt="" className="size-7" src="/images/brilliant-mark.svg" />\n          Brilliant\n        </a>\n        <button className="ml-auto text-sm text-muted-foreground" type="button">\n          Sign out\n        </button>\n      </ApplicationShellTopbar>\n\n      <ApplicationShellSidebar>\n        <ApplicationShellSidebarContent>\n          <ApplicationShellNav>\n            <ApplicationShellNavSection>\n              {[\'Overview\', \'Applications\', \'Channel partners\', \'Settings\'].map((item, index) => (\n                <ApplicationShellNavItem\n                  aria-current={index === 1 ? \'page\' : undefined}\n                  href={\'/\' + item.toLowerCase().replace(\' \', \'-\')}\n                  icon="□"\n                  key={item}\n                >\n                  {item}\n                </ApplicationShellNavItem>\n              ))}\n            </ApplicationShellNavSection>\n          </ApplicationShellNav>\n        </ApplicationShellSidebarContent>\n      </ApplicationShellSidebar>\n\n      <ApplicationShellContent>\n        <ApplicationShellHeader>\n          <ApplicationShellMobileTrigger />\n          <ApplicationShellHeaderContent>\n            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-primary">\n              UF internal\n            </p>\n            <ApplicationShellHeaderTitle>Channel partner operations</ApplicationShellHeaderTitle>\n            <ApplicationShellHeaderDescription>\n              Review applications, approve accounts, and manage the partner portal surface.\n            </ApplicationShellHeaderDescription>\n          </ApplicationShellHeaderContent>\n          <ApplicationShellHeaderActions>\n            <span className="rounded bg-primary/10 px-3 py-2 text-sm font-medium text-primary">\n              Super admin\n            </span>\n          </ApplicationShellHeaderActions>\n        </ApplicationShellHeader>\n        <ApplicationShellMain>\n          <section className="rounded-[0.75rem] border border-border bg-surface p-6 shadow-sm">\n            <h2 className="text-xl font-semibold">Channel partner applications</h2>\n            <p className="mt-2 text-sm text-muted-foreground">\n              Submitted self-serve and operator-entered applications.\n            </p>\n          </section>\n        </ApplicationShellMain>\n        <ApplicationShellFooter className="flex flex-wrap items-center justify-between gap-3">\n          <span>Partner operations</span>\n          <a className="hover:text-foreground" href="/support">Support</a>\n        </ApplicationShellFooter>\n      </ApplicationShellContent>\n    </ApplicationShell>\n  );\n}\n\nfunction KioskActionIcon({\n  name,\n}: {\n  name: "check-in" | "tickets" | "booking" | "help";\n}) {\n  const paths = {\n    "check-in": "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M19 8v6 M22 11h-6",\n    tickets: "M2 9a3 3 0 0 0 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 0 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z M13 5v2 M13 17v2 M13 11v2",\n    booking: "M8 2v4 M16 2v4 M3 10h18 M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2 M9 15l2 2 4-4",\n    help: "M4 13a8 8 0 0 1 16 0 M4 13v5a2 2 0 0 0 2 2h2v-7H4 M20 13h-4v7h2a2 2 0 0 0 2-2z M16 20c0 1.1-.9 2-2 2h-2",\n  } as const;\n\n  return (\n    <svg\n      aria-hidden="true"\n      className="size-6 shrink-0"\n      fill="none"\n      stroke="currentColor"\n      strokeLinecap="round"\n      strokeLinejoin="round"\n      strokeWidth="1.8"\n      viewBox="0 0 24 24"\n    >\n      <path d={paths[name]} />\n    </svg>\n  );\n}\n\nexport function KioskExample() {\n  return (\n    <ApplicationShell variant="kiosk">\n      <ApplicationShellTopbar>\n        <a className="inline-flex items-center gap-2 font-semibold" href="/">\n          <img alt="" className="size-8" src="/images/brilliant-mark.svg" />\n          Brilliant\n        </a>\n        <div className="ml-auto flex items-center gap-2">\n          <Button size="kiosk" variant="molded">English</Button>\n          <Button aria-label="Accessibility options" size="kiosk" variant="molded">\n            Aa\n          </Button>\n        </div>\n      </ApplicationShellTopbar>\n\n      <ApplicationShellContent>\n        <ApplicationShellHeader>\n          <ApplicationShellHeaderContent>\n            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-primary">\n              Step 1 of 3\n            </p>\n            <ApplicationShellHeaderTitle>How can we help?</ApplicationShellHeaderTitle>\n            <ApplicationShellHeaderDescription>\n              Choose one option to begin. You can return to this screen at any time.\n            </ApplicationShellHeaderDescription>\n          </ApplicationShellHeaderContent>\n        </ApplicationShellHeader>\n\n        <ApplicationShellMain>\n          <div className="grid w-full max-w-3xl gap-5 sm:grid-cols-2">\n            <Button size="kiosk" variant="tactile">\n              <KioskActionIcon name="check-in" />\n              Check in\n            </Button>\n            <Button size="kiosk" variant="tactile">\n              <KioskActionIcon name="tickets" />\n              Buy tickets\n            </Button>\n            <Button size="kiosk" variant="gel">\n              <KioskActionIcon name="booking" />\n              Find a booking\n            </Button>\n            <Button size="kiosk" variant="gel">\n              <KioskActionIcon name="help" />\n              Ask for help\n            </Button>\n          </div>\n        </ApplicationShellMain>\n\n        <ApplicationShellFooter className="flex items-center justify-between gap-4">\n          <span>This session resets after 60 seconds of inactivity.</span>\n          <Button size="kiosk" variant="molded">Start over</Button>\n        </ApplicationShellFooter>\n      </ApplicationShellContent>\n    </ApplicationShell>\n  );\n}',
@@ -2335,7 +2404,7 @@ export const componentCatalog = [
       avoid: ["Do not use pagination for tiny collections."],
     },
     name: "pagination",
-    registryDependencies: [],
+    registryDependencies: ["link"],
     title: "Pagination",
     usageExample:
       'import {\n  Pagination,\n  PaginationItem,\n  PaginationLink,\n  PaginationList,\n} from "@brilliantmode/ui/pagination";\n\nexport function Example() {\n  return (\n    <Pagination>\n      <PaginationList>\n        <PaginationItem><PaginationLink href="?page=1">1</PaginationLink></PaginationItem>\n        <PaginationItem><PaginationLink aria-current="page" href="?page=2">2</PaginationLink></PaginationItem>\n        <PaginationItem><PaginationLink href="?page=3">3</PaginationLink></PaginationItem>\n      </PaginationList>\n    </Pagination>\n  );\n}',

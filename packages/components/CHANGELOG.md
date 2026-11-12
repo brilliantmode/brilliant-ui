@@ -1,5 +1,13 @@
 # @brilliantmode/ui
 
+## 0.5.0
+
+### Minor Changes
+
+- Route every Brilliant UI link through the app's router. Add `LinkProvider` and `Link`: wrap the app once with your router's link component (for example the Next.js `Link`), and the Application Shell (brand, header brand, search, nav items, nav group items), Header, Footer, Breadcrumb, Pagination and Navigation Menu links navigate client-side instead of reloading the page. Without a provider they render plain anchors as before.
+  
+  Add `ButtonLink` and `buttonClassName` so navigation actions can look like buttons without nesting a button inside a link. Add `BreadcrumbLink` and `BreadcrumbPage`. Fix `NavigationMenuLink` and `PaginationLink` props to accept anchor attributes such as `href`.
+
 ## 0.4.0
 
 ### Minor Changes
