@@ -10,6 +10,7 @@
     "build": "turbo build",
     "changeset": "changeset",
     "dev": "turbo dev",
+    "deploy:docs": "turbo build --filter=@brilliant-ui/docs... && wrangler deploy --config apps/docs/wrangler.jsonc",
     "license:check": "pnpm licenses list --prod",
     "lint": "turbo lint",
     "release:version": "changeset version",
@@ -22,6 +23,7 @@
     "@changesets/cli": "^3.0.0",
     "turbo": "^2.5.0",
     "typescript": "^5.9.0",
-    "vitest": "^3.2.0"
+    "vitest": "^3.2.0",
+    "wrangler": "4.162.0"
   }
 }

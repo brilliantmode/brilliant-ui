@@ -64,6 +64,26 @@ For AI coding tools, the same package includes a user-initiated stdio MCP server
 }
 ```
 
+## Website deployment
+
+The documentation site at [brilliant-ui.dev](https://brilliant-ui.dev) is hosted with
+[Cloudflare Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/).
+The configuration is in `apps/docs/wrangler.jsonc`, including the custom domain and the
+single-page application fallback for direct links to documentation pages.
+
+Use Node.js 22.12 or newer for Wrangler. From the repository root, authenticate with
+the Brilliant Cloudflare account and deploy:
+
+```sh
+pnpm exec wrangler login
+pnpm check
+pnpm deploy:docs
+```
+
+`deploy:docs` builds the documentation and its workspace dependencies, then uploads
+`apps/docs/dist` to the `brilliant-ui` Worker. Cloudflare manages the domain's DNS record
+and HTTPS certificate. Deployment is manual; pushing to GitHub does not deploy the site.
+
 ## Public package
 
 | Package | Purpose |
