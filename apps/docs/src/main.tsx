@@ -104,6 +104,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { version as uiVersion } from "../../../packages/components/package.json";
 import {
   componentUsageExamples,
   documentationGuides,
@@ -6111,7 +6112,7 @@ function AppHeader({
         </HeaderNav>
         <HeaderActions className="shrink-0 gap-2">
           <span className="hidden xl:inline-flex">
-            <Badge tone="ready">v0.1</Badge>
+            <Badge tone="ready">v{uiVersion}</Badge>
           </span>
           <button
             aria-haspopup="dialog"
