@@ -83,6 +83,9 @@ pnpm deploy:docs
 `deploy:docs` builds the documentation and its workspace dependencies, then uploads
 `apps/docs/dist` to the `brilliant-ui` Worker. Cloudflare manages the domain's DNS record
 and HTTPS certificate. Deployment is manual; pushing to GitHub does not deploy the site.
+The same deployment is also available at
+[brilliant-ui.abdul-fe6.workers.dev](https://brilliant-ui.abdul-fe6.workers.dev) if the
+custom domain is temporarily unavailable while DNS caches refresh.
 
 ## Public package
 

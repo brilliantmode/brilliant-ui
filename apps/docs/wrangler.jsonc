@@ -3,7 +3,7 @@
   "name": "brilliant-ui",
   "account_id": "fe6ebdadae8c20061dc2f277cd6b7f0a",
   "compatibility_date": "2026-11-15",
-  "workers_dev": false,
+  "workers_dev": true,
   "preview_urls": false,
   "assets": {
     "directory": "./dist",
